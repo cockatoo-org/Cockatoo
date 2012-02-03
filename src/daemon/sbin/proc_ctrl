@@ -1,0 +1,152 @@
+export PATH=$PATH:/usr/bin:/bin
+if [ "$RPC" == "" ]; then
+    echo setsid $0 $@
+    RPC=SID setsid $0 $@
+    exit $?;
+fi
+if [ "$STDOUT" == "" ]; then
+    STDOUT=/dev/null
+fi
+if [ "$STDERR" == "" ]; then
+    STDERR=/dev/null
+fi
+# Definition validator
+if [ "$PIDFILE" == "" ]; then
+    echo Must be specified \$PIDFILE !
+    exit 1;
+fi
+if [ "$EXECUTE" == "" ]; then
+    echo Must be specified \$EXECUTE !
+    exit 1;
+fi
+if [ "$SIG" == "" ]; then
+    SIG=TERM
+fi
+if [ "$WAIT" == "" ]; then
+    WAIT=30
+fi
+
+mkdir -p `dirname $PIDFILE`
+
+function run () {
+    if [ "$1" == "" ]; then
+	return 1;
+    fi
+    VAR=($1)
+    ${VAR[@]}    
+}
+
+# Check process : pidfile => ps => grep execmd
+function check () {
+    MSG=$1
+    if [ -f $PIDFILE ]; then
+	ps vp `cat $PIDFILE` | grep $EXECUTE > /dev/null 2>&1
+	if [ $? == 0 ]; then
+	    cat $PIDFILE | xargs echo "process running...  " $MSG " "
+	    return 0;
+	fi
+	cat $PIDFILE | xargs echo "process not running...  " $MSG " "
+    fi
+    echo "process not running...  "
+    return 1;
+}
+
+# Start process : check process => startup => mk pidfile
+function start () {
+    check;
+    if [ $? == 0 ]; then
+	return 1;
+    fi
+    run "$PRE_START"
+    ARG=($ARGS)
+    echo "starting process : $EXECUTE ${ARG[@]} >$STDOUT 2>$STDERR < /dev/null & "
+    #   exec command ! : ($CMD $* > /dev/null 2> /dev/null < /dev/null & echo $! > $PIDFILE )
+    shift
+    if [ "$1" = "-debug" ]; then
+	eval "$EXECUTE ${ARG[@]}"
+	return 0;
+    fi
+    case $STDERR in
+	STDOUT)
+	    eval "$EXECUTE ${ARG[@]} >$STDOUT 2>&1 </dev/null 3>/dev/null 4>/dev/null 5>/dev/null & "
+	    ;;
+	*)
+	    eval "$EXECUTE ${ARG[@]} >$STDOUT 2>$STDERR </dev/null 3>/dev/null 4>/dev/null 5>/dev/null & "
+	    ;;
+    esac
+    echo $! > $PIDFILE
+    sleep 1;
+    check;
+    if [ $? == 0 ]; then
+	run "$POST_START"
+    fi
+    return 0
+}
+
+# Send HUP  : check process => signal
+function hup () {
+    check;
+    if [ $? != 0 ];then
+	echo "process not running...  "
+	return 1;
+    fi
+    kill -SIGHUP  `cat $PIDFILE`
+    if [ $? != 0 ]; then
+	return 1;
+    fi
+}
+# Stop process : check process => signal => wait-for => then-timeout => rise kill !! => rm pidfile
+function stop () {
+    check;
+    if [ $? != 0 ];then
+	echo "process not running...  "
+	return 1;
+    fi
+    run "$PRE_STOP"
+    # kill and wait
+    kill -$SIG  `cat $PIDFILE`
+    if [ $? != 0 ]; then
+	return 1;
+    fi
+    # wait
+    for i in `eval echo "{1..$WAIT}"`
+    do
+      check "($i/$WAIT)";
+      if [ $? != 0 ] ;then
+	  rm -f $PIDFILE
+	  run "$POST_STOP"
+	  return 0;
+      fi
+      sleep 1;
+    done
+    echo "process cannot terminate ! so send kill -9 !! "
+    kill  -9 `cat $PIDFILE`
+    rm -f $PIDFILE
+    run "$POST_STOP"
+    return 1;
+}
+
+# Main dispatcher
+case $1 in
+    start)
+	start $*;
+	;;
+    stop)
+	stop $*;
+	;;
+    hup)
+	hup $*;
+	;;
+    restart)
+	stop $*;
+	start $*;
+	;;
+    check)
+	check $*;
+	;;
+    *)
+	echo "USAGE : (start|stop|check|restart)"
+	exit 1;
+	;;
+esac
+exit $?;

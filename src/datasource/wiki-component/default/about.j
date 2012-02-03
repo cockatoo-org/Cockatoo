@@ -1,0 +1,1 @@
+{"@R":"1328254287","type":"HorizontalWidget","subject":"about","description":"about","css":"","js":"","id":"","class":"","body":"<div id=\"page\">\n<h1>Wiki\u306b\u3064\u3044\u3066<\/h1>\n\u307e\u3060\u7d30\u304b\u3044\u6240\u307e\u3067\u4f5c\u308c\u3066\u306a\u3044\u3088\u30fb\u30fb\u30fb","action":[""],"_u":"about"}

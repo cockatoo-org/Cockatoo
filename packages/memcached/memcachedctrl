@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export PATH=/usr/local/bin:$PATH
+
+#----------------------------
+# Usage
+function usage {
+    cat <<EOF
+Usage:
+   memcachedctrl <operation>
+
+Operations:
+   help    : This message.
+   start   : Start memcached
+   stop    : Stop memcached
+
+Examples:
+   $ memcachedctrl start
+   $ memcachedctrl stop
+EOF
+    exit $1;
+}
+#----------------------------
+# Arguments
+if [ "${MEMCACHED_HOME}" = "" ]; then
+    MEMCACHED_HOME=`dirname $0`
+fi
+OP=$1
+#----------------------------
+# Host specialized
+source ${MEMCACHED_HOME}/memcached.conf
+if [ "${PIDFILE}" = "" ]; then
+    PIDFILE=${MEMCACHED_HOME}/logs/memcached.pid
+fi
+if [ "${LOGFILE}" = "" ]; then
+    LOGFILE=${MEMCACHED_HOME}/logs/memcached.log
+fi
+if [ "${MEMCACHED}" = "" ]; then
+    MEMCACHED=${MEMCACHED_HOME}/bin/memcached
+fi
+if [ "${MEMCACHED_PORT}" = "" ]; then
+    MEMCACHED_PORT=11211
+fi
+if [ "${MEMCACHED_MAX_MEM}" = "" ]; then
+    MEMCACHED_MAX_MEM='3072'
+fi
+if [ "${MEMCACHED_MIN_DATA}" = "" ]; then
+    MEMCACHED_MIN_DATA='256'
+fi
+if [ "${MEMCACHED_CONN}" = "" ]; then
+    MEMCACHED_CONN=32768
+fi
+if [ "${MEMCACHED_THREAD}" = "" ]; then
+    MEMCACHED_THREAD=4
+fi
+if [ "${MEMCACHED_OWNER}" = "" ]; then
+    MEMCACHED_OWNER='root'
+fi
+
+#----------------------------
+# Check
+function check () {
+    if [ -f ${PIDFILE} ]; then
+        ps vp `cat ${PIDFILE}` | grep memcached > /dev/null 2>&1
+        if [ $? = 0 ]; then
+            cat ${PIDFILE} | xargs echo "memcached process running...  "
+            return 0;
+        fi
+        cat ${PIDFILE} | xargs echo "memcached process not running...  "
+    fi
+    echo "memcached process not running...  "
+    return 1;
+}
+
+#----------------------------
+# Operation dispatcher. ( help /start / stop / status )
+case ${OP} in
+    help)
+        usage 0
+        ;;
+    start)
+        check
+        if [ $? = 0 ];then
+            echo memcached already alived !
+            exit 0;
+        fi
+	${MEMCACHED} -d -p ${MEMCACHED_PORT} -m ${MEMCACHED_MAX_MEM} -P ${PIDFILE} -n ${MEMCACHED_MIN_DATA} -t ${MEMCACHED_THREAD} -c ${MEMCACHED_CONN} -u ${MEMCACHED_OWNER} > ${LOGFILE} 2>&1
+        exit $?
+        ;;
+    stop)
+        check
+        if [ $? = 1 ];then
+            echo memcached not alived !
+            exit 0;
+        fi
+	kill -15 `cat ${PIDFILE}`
+	if [ $? != 0 ]; then
+	    return 1;
+	fi
+        # wait 30 sec
+	for i in {1..30}
+	  do
+	  check;
+	  if [ $? = 1 ] ;then
+	      exit 0;
+	  fi
+	  sleep 1;
+	done
+	echo "process cannot terminate ! so send kill -9 !! "
+	kill  -9 `cat $PIDFILE`
+        exit $?
+        ;;
+    status)
+        exit $?
+        ;;
+    *)
+        echo "USAGE : (help|start|stop|status)"
+        exit 1;
+        ;;
+esac
+exit $?

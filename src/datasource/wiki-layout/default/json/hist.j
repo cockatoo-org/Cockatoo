@@ -1,0 +1,1 @@
+{"@R":"1311603672","eredirect":"","redirect":"","pre_action":"","post_action":"","session_exp":"1800","header":"<meta name=\"description\" content=\"\">\n","pheader":"","layout":{"type":"JsonWidget","class":"","height":"","width":"","min_height":"","min_width":"","extra":"","component":"component:\/\/wiki-component\/default\/hist\/json?get","children":[]},"_u":"json\/hist"}

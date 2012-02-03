@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+function run {
+    echo '# ' $@
+    "$@"
+    if [ $? != 0 ]; then exit 1; fi
+}
+
+
+ROOT=`dirname $0`
+cd ${ROOT}
+ROOT=`pwd`
+
+VERSION='0.9.8k'
+NAME=openssl-${VERSION}
+
+rm -rf ${NAME}
+rm -rf usr
+run tar xzvf ${NAME}.tar.gz
+
+function build_openssl(){
+    pushd ${NAME}
+    run ./config --prefix=/usr/local/ssl${VERSION} \
+	--openssldir=/usr/local/ssl${VERSION} \
+	threads \
+	shared \
+	zlib-dynamic
+    run make
+    run make install INSTALL_PREFIX=${ROOT}
+    run sudo ln -sfT /usr/local/ssl${VERSION} /usr/local/ssl
+    run sudo make install
+    popd
+}
+
+build_openssl
+

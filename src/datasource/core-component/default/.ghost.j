@@ -1,0 +1,1 @@
+{"type":"GhostWidget","subject":"","description":"","class":"","javascript":"","body":"","action":[],"_u":".ghost"}

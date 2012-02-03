@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+function run {
+    echo '# ' $@
+    "$@"
+    if [ $? != 0 ]; then exit 1; fi
+}
+
+
+ROOT=`dirname $0`
+cd ${ROOT}
+ROOT=`pwd`
+
+NAME='curl-7.21.3'
+
+rm -rf ${NAME}
+rm -rf usr
+run tar xzvf ${NAME}.tar.gz
+
+function build_libcurl(){
+    pushd ${NAME}
+    run ./configure \
+	--prefix=/usr/local \
+	--with-ssl=/usr/local/ssl \
+	--disable-ldap \
+	--disable-ldaps \
+	LDFLAGS='-L/usr/local/ssl/lib -R/usr/local/ssl/lib'
+    run make install DESTDIR=${ROOT}
+    run sudo make install
+    popd
+}
+
+build_libcurl
+
+

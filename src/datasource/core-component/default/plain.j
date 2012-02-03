@@ -1,0 +1,1 @@
+{"type":"PlainWidget","subject":"(plain)","description":"","class":"","javascript":"","body":"","action":[],"_u":"plain"}

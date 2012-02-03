@@ -1,0 +1,55 @@
+diff -ur PHPUnit/TextUI/Command.php PHPUnit.patch/TextUI/Command.php
+--- PHPUnit/TextUI/Command.php	2011-02-24 18:35:14.000000000 +0900
++++ PHPUnit.patch/TextUI/Command.php	2011-03-02 15:34:19.000000000 +0900
+@@ -77,6 +77,7 @@
+      * @var array
+      */
+     protected $longOptions = array(
++      'aggregate=' => NULL,
+       'colors' => NULL,
+       'bootstrap=' => NULL,
+       'configuration=' => NULL,
+@@ -285,6 +286,11 @@
+                 }
+                 break;
+ 
++                case '--aggregate': {
++                  $this->arguments['aggregate'] = $option[1];
++                }
++                break;
++
+                 case '--coverage-html': {
+                     if (extension_loaded('tokenizer') &&
+                         extension_loaded('xdebug')) {
+@@ -828,6 +834,7 @@
+   --log-dbus                Log test execution to DBUS.
+   --log-json <file>         Log test execution in JSON format.
+ 
++  --aggregate <file>        Aggregate data from previous runs. And overwrites file with the merged data.
+   --coverage-html <dir>     Generate code coverage report in HTML format.
+   --coverage-clover <file>  Write code coverage data in Clover XML format.
+ 
+diff -ur PHPUnit/TextUI/TestRunner.php PHPUnit.patch/TextUI/TestRunner.php
+--- PHPUnit/TextUI/TestRunner.php	2011-02-24 18:35:14.000000000 +0900
++++ PHPUnit.patch/TextUI/TestRunner.php	2011-03-02 15:37:23.000000000 +0900
+@@ -312,6 +312,20 @@
+         }
+ 
+         if (extension_loaded('tokenizer') && extension_loaded('xdebug')) {
++            if ( $arguments['aggregate'] ) {
++                $aggregate = $arguments['aggregate'];
++                $codeCoverage = &$result->getCodeCoverage();
++                if ( is_file($aggregate) ){
++                  $data = file_get_contents($aggregate);
++                  $agCoverage = unserialize($data);
++                  if ( $agCoverage) {
++                    $codeCoverage->merge($agCoverage);
++                  }
++                }
++                $data = serialize($codeCoverage);
++                file_put_contents($aggregate,$data);
++            }
++
+             if (isset($arguments['coverageClover'])) {
+                 $this->printer->write(
+                   "\nWriting code coverage data to XML file, this may take " .

@@ -1,0 +1,19 @@
+diff -ui -r mongo-php-driver/cursor.c mongo1.2.2.non-wait.patch/cursor.c
+--- mongo-php-driver/cursor.c	2011-07-22 00:17:50.000000000 +0900
++++ mongo1.2.2.non-wait.patch/cursor.c	2011-08-17 20:42:53.000000000 +0900
+@@ -596,13 +596,13 @@
+ 
+   PHP_MONGO_GET_CURSOR(getThis());
+ 
+-  while (mongo_cursor__should_retry(cursor)) {
++  do {
+     MONGO_METHOD(MongoCursor, reset, return_value, getThis());
+     if (mongo_cursor__do_query(getThis(), return_value TSRMLS_CC) == SUCCESS ||
+         EG(exception)) {
+       return;
+     }
+-  }
++  }while (mongo_cursor__should_retry(cursor));
+ 
+   zend_throw_exception(mongo_ce_CursorException,
+                        "max number of retries exhausted, couldn't send query",

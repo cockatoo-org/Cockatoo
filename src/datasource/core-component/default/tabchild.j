@@ -1,0 +1,1 @@
+{"type":"TabChildWidget","subject":"(tabchild)","description":"\u6c4e\u7528\u30ec\u30a4\u30a2\u30a6\u30c8\uff08\u30bf\u30d6\u306e\u5b50\u8981\u7d20\uff09","class":"","javascript":"","body":"","action":[""],"_u":"tabchild"}

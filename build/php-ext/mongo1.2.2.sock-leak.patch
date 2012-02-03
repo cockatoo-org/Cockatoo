@@ -1,0 +1,61 @@
+diff -ui -r mongo-php-driver/util/connect.c mongo1.2.2.patch/util/connect.c
+--- mongo-php-driver/util/connect.c	2011-08-17 16:03:48.000000000 +0900
++++ mongo1.2.2.patch/util/connect.c	2011-08-17 15:58:52.000000000 +0900
+@@ -98,6 +98,7 @@
+ 
+   // get addresses
+   if (mongo_util_connect__sockaddr(sa, family, server->host, server->port, errmsg) == FAILURE) {
++    mongo_util_disconnect(server);
+     // errmsg set in mongo_get_sockaddr
+     return FAILURE;
+   }
+@@ -122,6 +123,7 @@
+ #endif
+     {
+       ZVAL_STRING(errmsg, strerror(errno), 1);
++      mongo_util_disconnect(server);
+       return FAILURE;
+     }
+ 
+@@ -137,12 +139,14 @@
+ 
+       if (select(server->socket+1, &rset, &wset, &eset, &tval) == 0) {
+         ZVAL_STRING(errmsg, strerror(errno), 1);
++        mongo_util_disconnect(server);
+         return FAILURE;
+       }
+ 
+       // if our descriptor has an error
+       if (FD_ISSET(server->socket, &eset)) {
+         ZVAL_STRING(errmsg, strerror(errno), 1);
++        mongo_util_disconnect(server);
+         return FAILURE;
+       }
+ 
+@@ -157,6 +161,7 @@
+     connected = getpeername(server->socket, sa, &size);
+     if (connected == FAILURE) {
+       ZVAL_STRING(errmsg, strerror(errno), 1);
++      mongo_util_disconnect(server);
+       return FAILURE;
+     }
+ 
+@@ -301,13 +306,14 @@
+ 
+ 
+ int mongo_util_disconnect(mongo_server *server) {
+-  if (!server || !server->connected) {
++  if (!server) {
+     return 0;
+   }
+-
+-  server->connected = 0;
+   MONGO_UTIL_DISCONNECT(server->socket);
+-
++  if ( ! server->connected ){
++    return 0;
++  }
++  server->connected = 0;
+   return 1;
+ }
+ 

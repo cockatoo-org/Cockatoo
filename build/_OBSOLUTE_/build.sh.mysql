@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+function run {
+    echo '# ' $@
+    "$@"
+    if [ $? != 0 ]; then exit 1; fi
+}
+
+
+ROOT=`dirname $0`
+cd ${ROOT}
+ROOT=`pwd`
+
+NAME='mysql-5.0.45'
+
+rm -rf ${NAME}
+rm -rf usr
+run tar xzvf ${NAME}.tar.gz
+
+function build_mysql_client(){
+    pushd ${NAME}
+    run ./configure  \
+	--prefix=/usr/local/mysql-5.0.45 \
+	--with-charset=utf8 \
+	--with-extra-charsets=all \
+	--with-mysqld-user=mysql \
+	--without-bench \
+	--enable-thread-safe-client \
+	--without-server
+    run make install DESTDIR=${ROOT}
+    run sudo make install
+    popd
+}
+
+build_mysql_client
+

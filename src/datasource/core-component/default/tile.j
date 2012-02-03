@@ -1,0 +1,1 @@
+{"type":"TileWidget","subject":"(tile)","description":"\u6c4e\u7528\u30ec\u30a4\u30a2\u30a6\u30c8\uff08\u30bf\u30a4\u30eb\u914d\u7f6e\uff09<br>\u53f3\u4e0a\u304b\u3089\u6a2a\u65b9\u5411\u3078\u914d\u7f6e","class":"","javascript":"","body":"","action":[],"_u":"tile"}

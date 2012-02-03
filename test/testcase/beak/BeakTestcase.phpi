@@ -1,0 +1,282 @@
+  public function setUp(){
+      global $COCKATOO_ROOT;
+      chdir($COCKATOO_ROOT);
+
+    $uindex = '_u';
+
+    $this->set();
+    $brl = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_CREATE_COL,array(Beak::Q_UNIQUE_INDEX=>$uindex),array(Beak::COMMENT_KIND_RENEW));
+    $ret = BeakController::beakQuery(array($brl));
+    $this->defaultData = array( 'key' => 'value' ,
+                                'list' => array('foo','bar','baz'),
+                                'hash' => array(
+                                  'foo' => 'FOO',
+                                  'bar' => 'BAR',
+                                  'baz' => 'BAZ') );
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_DEL_ARRAY);
+    $data ['_u']= array('','path/','path/to','path/new','file1','file2');
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+
+    $datas = array();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_SET,array());
+    $data = $this->defaultData;
+    $datas[] = array($brl , $data);
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/',Beak::M_SET,array());
+    $data = $this->defaultData;
+    $datas[] = array($brl , $data);
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array());
+    $data = $this->defaultData;
+    $datas[] = array($brl , $data);
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','file1',Beak::M_SET,array());
+    $data = $this->defaultData;
+    $datas[] = array($brl , $data);
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','file2',Beak::M_SET,array());
+    $data = $this->defaultData;
+    $datas[] = array($brl , $data);
+    $datas = BeakController::beakQuery($datas);
+
+    $this->wait();
+  }
+  public function tearDown(){
+    global $COCKATOO_ROOT;
+    system('rm -rf ' . $COCKATOO_ROOT.'/datasource/test-layout');
+  }
+
+    public static function tearDownAfterClass() {
+        global $orgCwd;
+        chdir($orgCwd);
+    }
+
+// @@@ revision ( seta del dela)
+  public function testBeakUpdateRev(){
+    # Update with REV
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV,Beak::COMMENT_KIND_PARTIAL));
+    $data = array('add' => 'ADD');
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+    $this->wait();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+    $expects = 'ADD';
+    $actual  = $datas[$brl]['add'];
+    $this->assertEquals($expects,$actual);
+    $this->assertTrue(isset($datas[$brl][Beak::ATTR_REV]),'Rev column not found !');
+    # Update success by ignoreing REV
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV,Beak::COMMENT_KIND_PARTIAL));
+    $data = array('add2' => 'ADD2');
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+    $this->assertTrue($datas[$brl],'Upload failure !');
+    $this->wait();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+    $expects = 'ADD2';
+    $actual  = $datas[$brl]['add2'];
+    $this->assertEquals($expects,$actual);
+    # Update failure by REV
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV,Beak::COMMENT_KIND_PARTIAL));
+    $data = array('add3' => 'ADD3',Beak::ATTR_REV => 1);
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+    $actual  = $datas[$brl];
+    $this->assertFalse($datas[$brl],'Unexpected success to update');
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+    $this->assertFalse(isset($datas[$brl]['add3']),'Unexpected column');
+  }
+
+  public function testBeakUpdate(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array(),array(Beak::COMMENT_KIND_PARTIAL));
+    $data = array('add' => 'ADD');
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+
+    $this->wait();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+
+    $exp = array_merge($this->defaultData,array('_u' => 'path/to','add' => 'ADD'));
+    ksort($exp);
+    $expects = json_encode($exp);
+    ksort($datas[$brl]);
+    $actual  = json_encode($datas[$brl]);
+    $this->assertEquals($expects,$actual);
+
+  }
+  public function testBeakReplace(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET);
+    $data = array('_u' => 'path/to','replace' => 'REP');
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+
+    $this->wait();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+
+    ksort($data);
+    $expects = json_encode($data);
+    ksort($datas[$brl]);
+    $actual  = json_encode($datas[$brl]);
+    $this->assertEquals($expects,$actual);
+  }
+  public function testBeakSets(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_SET_ARRAY,array(),array(Beak::COMMENT_KIND_PARTIAL));
+    $data = array(
+      array('_u' => 'path/to','add' => 'ADD'),
+      array('_u' => 'path/new','add' => 'NEW'));
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+
+    $this->wait();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+
+    $exp = array_merge($this->defaultData,array('_u' => 'path/to','add' => 'ADD'));
+    ksort($exp);
+    $expects = json_encode($exp);
+    ksort($datas[$brl]);
+    $actual  = json_encode($datas[$brl]);
+
+    $this->assertEquals($expects,$actual);
+
+  }
+  public function testBeakDel(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_DEL);
+    $datas = BeakController::beakQuery(array($brl));
+
+    $this->wait();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_KEY_LIST);
+    $datas = BeakController::beakQuery(array($brl));
+    $exp = array('','file1','file2','path/');
+    sort($exp);
+    $expects  = json_encode($exp);
+    sort($datas[$brl]);
+    $actual   = json_encode($datas[$brl]);
+    $this->assertEquals($expects,$actual);
+  }
+  public function testBeakDels(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_DEL_ARRAY);
+    $data ['_u']= array('path/to','file1');
+    $datas = BeakController::beakQuery(array(array($brl,$data)));
+
+    $this->wait();
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_KEY_LIST);
+    $datas = BeakController::beakQuery(array($brl));
+    $exp = array('','file2','path/');
+    sort($exp);
+    $expects  = json_encode($exp);
+    sort($datas[$brl]);
+    $actual   = json_encode($datas[$brl]);
+    $this->assertEquals($expects,$actual);
+  }
+
+  public function testBeakSimpleGet(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+
+    $exp = array_merge($this->defaultData,array('_u'=>''));
+    ksort($exp);
+    $expects = json_encode($exp);
+    ksort($datas[$brl]);
+    $actual  = json_encode($datas[$brl]);
+    $this->assertEquals($expects,$actual);
+  }
+  public function testBeakSimpleGets() {
+    $brls = array();
+    $brl1  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET);
+    $brl2  = brlgen(Def::BP_LAYOUT,'unittest','device','/path/to',Beak::M_GET);
+    $brls [] = $brl1;
+    $brls [] = $brl2;
+    $datas = BeakController::beakQuery($brls);
+
+    $exp = array_merge($this->defaultData,array('_u'=>''));
+    ksort($exp);
+    $expects = json_encode($exp);
+    ksort($datas[$brl1]);
+    $actual  = json_encode($datas[$brl1]);
+    $this->assertEquals($expects,$actual);
+
+    $exp = array_merge($this->defaultData,array('_u'=>'path/to'));
+    ksort($exp);
+    $expects = json_encode($exp);
+    ksort($datas[$brl2]);
+    $actual  = json_encode($datas[$brl2]);
+    $this->assertEquals($expects,$actual);
+  }
+//   public function testBeakSimpleGetQCL(){
+//     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET,array(Beak::Q_LC_KEY => 'list' , Beak::Q_LC_INDEX => 1 , Beak::Q_LC_NUMBER => 2));
+//     $datas = BeakController::beakQuery(array($brl));
+//     $d = $this->defaultData;
+//     $d['list'] = array('bar','baz');
+//     $expects = json_encode($d);
+//     unset($datas[$brl]['_u']);
+//     $actual  = json_encode($datas[$brl]);
+//     $this->assertEquals($expects,$actual);
+//   }
+  public function testBeakSimpleGetF1(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','/nothing',Beak::M_GET);
+    $datas = BeakController::beakQuery(array($brl));
+    $expects = json_encode($this->defaultData);
+    $actual  = json_encode($datas[$brl]);
+    $this->assertEquals(null,$datas[$brl]);
+  }
+  public function testBeakSimpleGetF2(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','/nothing',Beak::M_GET,array(),array('critical'));
+    try {
+      $datas = BeakController::beakQuery(array($brl));
+    }catch( \Exception $e){
+      return;
+    }
+    $this->assertTrue(FALSE, 'Should not to be successful.');
+  }
+  public function testBeakSimpleGetF3(){
+    try {
+      $brl  = 'invalid://test.device./nothing?get';
+      $datas = BeakController::beakQuery(array($brl));
+    }catch( \Exception $e){
+      return;
+    }
+    $this->assertTrue(FALSE, 'Should not to be successful.');
+  }
+  public function testBeakSimpleGetF4(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','/nothing','foo');
+    try {
+      $datas = BeakController::beakQuery(array($brl));
+    }catch( \Exception $e){
+      return;
+    }
+    $this->assertTrue(FALSE, 'Should not to be successful.');
+  }
+  public function testBeakColList(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','','',Beak::M_COL_LIST);
+    $datas = BeakController::beakQuery(array($brl));
+    $expects  = json_encode(array('device'));
+    ksort($datas[$brl]);
+    $actual   = json_encode($datas[$brl]);
+    $this->assertEquals($expects,$actual);
+  }
+  public function testBeakKeyListAll(){
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_KEY_LIST);
+    $datas = BeakController::beakQuery(array($brl));
+    $exp = array('','file1','file2','path/','path/to');
+    sort($exp);
+    $expects  = json_encode($exp);
+    sort($datas[$brl]);
+    $actual   = json_encode($datas[$brl]);
+    $this->assertEquals($expects,$actual);
+  }
+  public function testBeakGets(){
+    // get key list
+    $kbrl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_KEY_LIST);
+    $keys = BeakController::beakQuery(array($kbrl));
+    // create query
+    $arg = array();
+    foreach ( $keys[$kbrl] as $key ){
+      $arg ['_u'] []= $key;
+    }
+    // get all key
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_ARRAY);
+    $datas = BeakController::beakQuery(array(array($brl,$arg)));
+    foreach ( $keys[$kbrl] as $key ){
+      ksort($datas[$brl]);
+      $this->assertTrue(is_array($datas[$brl][$key]), 'Fail to get.' . $key);
+    }
+  }
+
+  public function wait() {
+      usleep(100000);
+  }

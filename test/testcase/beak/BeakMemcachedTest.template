@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+CUR=`dirname $0`
+cat <<_EOF_
+<?php
+namespace Cockatoo;
+require_once 'PHPUnit/Framework.php';
+// Cockatooがcwdを変更するためbackup
+\$orgCwd = getcwd();
+\$COCKATOO_CONF=getenv('COCKATOO_CONF');
+if ( ! \$COCKATOO_CONF ) {
+  \$COCKATOO_ROOT=getenv('COCKATOO_ROOT');
+  \$COCKATOO_CONF=\$COCKATOO_ROOT.'config.php';
+}
+require_once(\$COCKATOO_CONF);
+// require_once(dirname(__FILE__) . '/config.php');
+// $COCKATOO_ROOT=getenv('COCKATOO_ROOT');
+require_once(\$COCKATOO_ROOT.'utils/beak.php');
+
+// Cockatooがcwdを変更するがPHPUnitと競合するため戻す
+chdir(\$orgCwd);
+
+class BeakMemcachedTest extends \PHPUnit_Framework_TestCase
+{
+  function set(){
+      Config::\$BeakLocation = array (
+        'layout://unittest-layout/' => array('127.0.0.1:11211'),
+        );
+    Config::\$BEAKS = array (
+      Def::BP_LAYOUT   => 'Cockatoo\BeakMemcached'   ,
+      null
+      );
+  }
+  `cat $CUR/BeakTestcase.phpi`
+}
+_EOF_

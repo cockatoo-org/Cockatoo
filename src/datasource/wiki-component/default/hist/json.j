@@ -1,0 +1,1 @@
+{"@R":"1311603718","type":"JsonWidget","subject":"hist\/json","description":"hist\/json","css":"","js":"","id":"","class":"","body":"A.wiki.hist\nS.wiki\nA.foo\nS._s.QUERY_STRING\n","action":["action:\/\/wiki-action\/wiki\/HistAction?get"],"_u":"hist\/json"}

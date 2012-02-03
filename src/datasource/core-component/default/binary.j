@@ -1,0 +1,1 @@
+{"type":"BinaryWidget","subject":"(binary)","description":"","class":"","javascript":"","body":"","action":[],"_u":"binary"}
