@@ -1,1 +1,0 @@
-{"@R":"1321949217","eredirect":"","redirect":"","pre_action":"action:\/\/wiki-action\/wiki\/PreAction","post_action":"","session_exp":"1800","header":null,"pheader":"","layout":{"type":"JsonWidget","extra":"","component":"component:\/\/wiki-component\/default\/i\/upload?get","children":[]},"_u":"i\/upload","expires":-1}

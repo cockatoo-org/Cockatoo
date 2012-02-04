@@ -19,22 +19,29 @@ class ImgAction extends \Cockatoo\Action {
 // Query strings
     $session = $this->getSession();
     
-    $author = $this->args['A'];
+    $user = $session['login']['user'];
     $page   = $this->args['P'];
     $name   = $this->args['N'];
+    $user = $session['login']['user'];
 
     $names = array();
     if ( $this->method === \Cockatoo\Beak::M_SET and isset($session[\Cockatoo\Def::SESSION_KEY_FILES])) {
+      if ( ! $user ) {
+        $s['emessage'] = 'You have to login before update wiki !!';
+        $this->updateSession($s);
+        $this->setRedirect('/error');
+        return;
+      }
       foreach($session[\Cockatoo\Def::SESSION_KEY_FILES] as $file){
         if ( ! $file[\Cockatoo\Def::F_ERROR] ) {
           $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, $file[\Cockatoo\Def::F_NAME], null);
           $type = $file[\Cockatoo\Def::F_TYPE];
           $content = &$file[\Cockatoo\Def::F_CONTENT];
-          \Cockatoo\StaticContent::save($brl,$type,$author,$content);
+          \Cockatoo\StaticContent::save($brl,$type,$user,$content);
           $names []= $file[\Cockatoo\Def::F_NAME];
         }
       }
-      $this->setRedirect('/i/uploaded?page='.$page);
+      $this->setRedirect('/uploaded/'.$page);
     }else if ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
       $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, '', \Cockatoo\Beak::M_KEY_LIST);
       $bret = \Cockatoo\BeakController::beakQuery(array($brl));

@@ -22,30 +22,23 @@ class AccountAction extends \Cockatoo\Action {
       $submit = 'login';
     }
     if ( $submit === 'login' ) {
-      $name = $session[\Cockatoo\Def::SESSION_KEY_POST]['name'];
+      $user = $session[\Cockatoo\Def::SESSION_KEY_POST]['user'];
       $s['login'] = null;
-      if ( ! $name ) {
+      if ( ! $user ) {
         // logout
       } else {
         // login
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','users','/'.$name,\Cockatoo\Beak::M_GET,array(),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','users','/'.$user,\Cockatoo\Beak::M_GET,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-        if ( $ret[$brl] ) {
+        if ( $ret[$brl] and $ret[$brl]['hash'] === md5($session[\Cockatoo\Def::SESSION_KEY_POST]['passwd']) ) {
           $s['login'] = $ret[$brl];
+        }else{
+          $s['emessage'] = 'Login failed ! ';
+          $this->updateSession($s);
+          $this->setRedirect('/error');
+          return;
         }
       }
-      $this->updateSession($s);
-      $this->setRedirect('/view');
-    }elseif ( $submit === 'confirm' ) {
-      // Update session
-      $s = array();
-      $s['data']   = $session[\Cockatoo\Def::SESSION_KEY_POST];
-      $s[\Cockatoo\Def::SESSION_KEY_POST]=null;
-      $this->updateSession($s);
-    }elseif ( $submit === 'signup' ) {
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','users','/'.$session['data']['name'],\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_PARTIAL));
-      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$session['data'])));
-      $s = null;
       $this->updateSession($s);
       $this->setRedirect('/view');
     }
