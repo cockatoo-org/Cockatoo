@@ -1,0 +1,1 @@
+{"@R":"1321258502","type":"BinaryWidget","subject":"draw","description":"draw","css":"","js":"","id":"","class":"","body":"A.wiki.img\n","action":["action:\/\/wiki-action\/wiki\/ImgAction?get"],"_u":"img\/draw"}
