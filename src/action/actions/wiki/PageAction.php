@@ -18,10 +18,11 @@ class PageAction extends \Cockatoo\Action {
     // 
     $this->setNamespace('wiki');
 
-    $author = $this->args['A'];
-    $page   = $this->args['P'];
-    // Query strings
     $session = $this->getSession();
+    $page   = $this->args['P'];
+    $name   = $this->args['N'];
+    $user = $session['login']['user'];
+    // Query strings
     $op = $session[\Cockatoo\Def::SESSION_KEY_POST]['op'];
     if ( ! $op ) {
       $op = 'get';
@@ -41,15 +42,27 @@ class PageAction extends \Cockatoo\Action {
       $lines = explode("\n",$origin);
       $contents = $this->parse($lines,$page);
     }elseif( $op === 'save' ) {
+      if ( ! $user ) {
+        $s['emessage'] = 'You have to login before update wiki !!';
+        $this->updateSession($s);
+        $this->setRedirect('/error');
+        return;
+      }
       $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
       $lines = explode("\n",$origin);
       $contents = $this->parse($lines,$page);
       $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_SET,array(),array());
-      $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $author))));
+      $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $user))));
       // 
-      $this->save_history($page,$author,'EDIT');
-      $this->setRedirect('/view?page='.$page);
+      $this->save_history($page,$user,'EDIT');
+      $this->setRedirect('/view/'.$page);
     }elseif( $op === 'move' ) {
+      if ( ! $user ) {
+        $s['emessage'] = 'You have to login before update wiki !!';
+        $this->updateSession($s);
+        $this->setRedirect('/error');
+        return;
+      }
       $new = $session[\Cockatoo\Def::SESSION_KEY_POST]['new'];
       if ( $new ) {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_GET,array(),array());
@@ -63,17 +76,17 @@ class PageAction extends \Cockatoo\Action {
           $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,$data)));
           $this->move_image($new,$page);
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_DEL,array(),array());
-          $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $author))));
-          $this->save_history($new,$author,'MOVE from ' . $page ) ;
-          $this->setRedirect('/view?page='.$new);
+          $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $user))));
+          $this->save_history($new,$user,'MOVE from ' . $page ) ;
+          $this->setRedirect('/view/'.$new);
           return;
         }
         $this->setRedirect('/view');
       }else{
-        $this->setRedirect('/view?page='.$page);
+        $this->setRedirect('/view/'.$page);
       }
     }
-    return array( 'page' => array( 'title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $author));
+    return array( 'page' => array( 'title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $user));
   }
   private function move_image($new,$page){
     $olds = array();
@@ -104,7 +117,7 @@ class PageAction extends \Cockatoo\Action {
         if ( preg_match('@^https?://@', $matches[2] , $matchdummy ) !== 0 ) {
           $ret []= array('tag' => 'a', 'attr' => array('href' => $matches[2]) , 'children' => array(array('tag' => 'text' , 'text' => (($matches[3])?ltrim($matches[3],'|'):$matches[2]))) );
         }else{
-          $ret []= array('tag' => 'a', 'attr' => array('href' => '/view?page=' . $matches[2]) , 'children' => array(array('tag' => 'text' , 'text' => (($matches[3])?ltrim($matches[3],'|'):$matches[2]))) );
+          $ret []= array('tag' => 'a', 'attr' => array('href' => '/view/' . $matches[2]) , 'children' => array(array('tag' => 'text' , 'text' => (($matches[3])?ltrim($matches[3],'|'):$matches[2]))) );
         }
         $text = $matches[4];
         next;
@@ -114,7 +127,7 @@ class PageAction extends \Cockatoo\Action {
         if ( preg_match('@^https?://@', $matches[2] , $matchdummy ) !== 0 ) {
           $attr = array('src' => $matches[2]);
         }else {
-          $attr = array('src' => '/img/?page='.$page.'&n='.$matches[2]);
+          $attr = array('src' => '/img/'.$page.'?n='.$matches[2]);
         }
         if ( $matches[3] ) {
           $attr['height'] = $matches[3];
@@ -122,7 +135,7 @@ class PageAction extends \Cockatoo\Action {
         if ( $matches[4] ) {
           $attr['width'] = $matches[4];
         }
-        $ret [] = array( 'tag' => 'a', 'attr' => array('href' => '/img/?page='.$page.'&n='.$matches[2]) , 'children' => array( array('tag' => 'img', 'attr' => $attr)));
+        $ret [] = array( 'tag' => 'a', 'attr' => array('href' => '/img/'.$page.'?n='.$matches[2]) , 'children' => array( array('tag' => 'img', 'attr' => $attr)));
         $text = $matches[5];
         next;
       }elseif ( preg_match('@^([^&\[]*)&color\(([^\)]*)\)\{([^\}]*)\};(.*)@', $text , $matches ) !== 0 ) {
@@ -236,7 +249,7 @@ class PageAction extends \Cockatoo\Action {
     return $ret;
   }
 
-  private function save_history($page,$author,$op){
+  private function save_history($page,$user,$op){
     $date = strftime('%Y%m%d',time());
     $now = strftime('%Y/%m/%d %H:%M:%S',time());
     // get
@@ -251,7 +264,7 @@ class PageAction extends \Cockatoo\Action {
       $hist = array();
     }
     // save history
-    $hist ['hist'][$now]= array('title' => $page , 'author' => $author , 'op' => $op);
+    $hist ['hist'][$now]= array('title' => $page , 'author' => $user , 'op' => $op);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','hist','/'.$date,\Cockatoo\Beak::M_SET,array(),array());
     $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,$hist)));
     // save current history

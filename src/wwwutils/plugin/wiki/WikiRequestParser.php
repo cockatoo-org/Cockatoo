@@ -19,6 +19,14 @@ class Wikirequestparser extends \Cockatoo\DefaultRequestParser {
   public function parseImpl(){
     if ( preg_match('@^'.\Cockatoo\Config::APP_OCCUPATION.'/view/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
       return array('wiki','default','/view',array('P'=>$matches[1]));
+    }elseif ( preg_match('@^'.\Cockatoo\Config::APP_OCCUPATION.'/edit/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+      return array('wiki','default','/edit',array('P'=>$matches[1]));
+    }elseif ( preg_match('@^'.\Cockatoo\Config::APP_OCCUPATION.'/img/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+      return array('wiki','default','/img',array('P'=>$matches[1]));
+    }elseif ( preg_match('@^'.\Cockatoo\Config::APP_OCCUPATION.'/upload/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+      return array('wiki','default','/upload',array('P'=>$matches[1]));
+    }elseif ( preg_match('@^'.\Cockatoo\Config::APP_OCCUPATION.'/uploaded/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+      return array('wiki','default','/uploaded',array('P'=>$matches[1]));
     }elseif ( preg_match('@^'.\Cockatoo\Config::APP_OCCUPATION.'(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
       return array('wiki','default',$matches[1]);
     }

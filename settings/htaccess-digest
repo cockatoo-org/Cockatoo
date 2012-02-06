@@ -1,0 +1,16 @@
+<Limit GET POST OPTIONS>
+  Order allow,deny
+  Allow from all
+</Limit>
+<LimitExcept GET POST OPTIONS>
+  Order deny,allow
+  Deny from all
+</LimitExcept>
+
+AuthType Digest
+AuthName "Cockatoo-CMS"
+AuthUserFile conf/conf.d/.htdigest
+Require valid-user
+
+Order allow,deny
+Allow from all

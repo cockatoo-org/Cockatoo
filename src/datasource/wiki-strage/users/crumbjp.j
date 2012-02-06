@@ -1,1 +1,1 @@
-{"name":"crumbjp","email":"hiroaki.kubota@mail.crumb.jp","submit":"confirm","_u":"crumbjp"}
+{"user":"crumbjp","hash":"423bc1fb4398febd73fb4dacf8e0b6cf","email":"hiroaki.kubota@mail.crumb.jp","root":true,"_u":"crumbjp"}

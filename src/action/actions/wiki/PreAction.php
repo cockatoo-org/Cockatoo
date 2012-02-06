@@ -17,18 +17,19 @@ class PreAction extends \Cockatoo\Action {
     $session = $this->getSession();
     $url=\parse_url($session[\Cockatoo\Def::SESSION_KEY_SERVER]['REQUEST_URI']);
     \parse_str($url['query'],$qs);
-    $author = $session['login']['name']?$session['login']['name']:'guest';
+
+//    $user = $session['login']['user']?$session['login']['user']:'guest';
     $page   = $qs['page']?$qs['page']:'top';
     if ( isset($this->args['P'] ) ) {
       $page = $this->args['P'];
     }
     $name   = $qs['n']?$qs['n']:'null';
-    $this->updateSession(array('wiki' => array('current' => $page ) ) );
+//    $this->updateSession(array('wiki' => array('current' => $page ) ) );
     $this->updateArgs(array(
-                        'A' => $author,
                         'P' => $page,
                         'N' => $name));
-    return Array();
+    $this->setNamespace('wiki');
+    return Array('page' => $page);
   }
 
   public function postProc(){
