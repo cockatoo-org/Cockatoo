@@ -1,0 +1,213 @@
+.todo {
+    color: red;
+    font-size: 8px;
+}
+/* head */
+h2 {
+    border-left:0 none;
+    border-right:0 none;
+    border-top:0 none;
+    padding: 2px 1px 1px 2px;
+    position:relative;
+    font-size: 14px;
+    margin: 2px 0px 0px 0px;
+  /* background-color: #E78F08; */
+  /* color: #FFFFFF; */
+}
+h2 > div {
+  text-align: right;
+}
+h2 > div > a {
+  color: #FFFFFF;
+  text-decoration: underline;
+  cursor: pointer; 
+  margin-left: 10px;
+}
+h2 > div > a:hover {
+  background-color: #80FF80;
+  cursor: pointer; 
+}
+a.add {
+}
+a.update {
+}
+a.del {
+}
+
+/* list */
+div.list {
+  border:1px solid #DDDDDD;
+  background-color: #EEEEEE;
+}
+div.list .selected {
+  background-color: #80FF80;
+}
+div.list .common {
+  color: #FF2020;
+}
+div.list .ignore {
+  color: #888888;
+}
+div.list .yet {
+  font-style: italic;
+  font-weight:bold;
+  /* color: #E8C020; */
+}
+div.list > div > a[index] {
+  cursor: pointer; 
+}
+div.list > div > a[index]:hover {
+  cursor: pointer; 
+  background-color: #C0FFC0;
+}
+div.list > div > a[index].selected:hover {
+  background-color: #C0FFC0;
+}
+
+div.list > div {
+  display: none;
+//  visibility: hidden;
+}
+div.list > div.\/ {
+  display: block;
+//  visibility: visible;
+}
+div.list > div.\+,div.list > div.P {
+  background-color: #DDDDDD;
+}
+div.list > div.\+[index="-"] {
+  color: #808080;
+}
+/*
+div.list > div {
+  display: none;
+}
+div.list > div[class=""] {
+  display: block;
+}
+*/
+/* view */
+div.view {
+  border:1px solid #DDDDDD;
+  background: #EEEEEE url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) repeat-x scroll 50% top;
+}
+div.view > table {
+  border-spacing:0;
+}
+div.view > table > tbody > tr > td {
+  vertical-align: top;
+  padding: 0px 0px;
+  left: 5px;
+  border-bottom:1px solid #DDDDDD;
+  border-left:1px solid #DDDDDD;
+}
+div.label {
+  width: 130px;
+  color: #444444;
+  padding: 2px 0px 0px 0px;
+  font-size: 11px;
+}
+/* form */
+div.value > input {
+  font-size: 11px;
+}
+div.value > textarea {
+  font-size: 11px;
+}
+div.value > select {
+  font-size: 11px;
+}
+
+input.error,textarea.error {
+  border:2px solid #FF4020;
+}
+label.error {
+  color: #FF4020;
+}
+b.error {
+  color: #FF4020;
+}
+b.message {
+  color: #FF4020;
+  background-color: #EEEEEE;
+}
+input.valid,textarea.valid {
+  border:1px solid #20DD10;
+}
+
+a.help {
+  color: #4444FF;
+  cursor: pointer; 
+  text-decoration: underline;
+  font-weight:bold;
+}
+a.help:hover {
+  background-color: #80FF80;
+  cursor: pointer; 
+}
+div.helpmsg {
+  color: #2040CC;
+  background-color: #E0E0E0;
+  width: 600px;
+  position: relative;
+  opacity:0.80;
+  float: left;
+}
+
+#header {
+    overflow: hidden;
+    position:relative;
+}
+#header > h1 {
+    color: #404040;
+}
+#header-main {
+    margin: 0 0 0 10px;
+    bottom: 0;
+    left: 0;
+}
+#header-main > ul{
+    margin: 0;
+    padding: 0;
+}
+#header-main > ul > li{
+    float:left;
+    list-style-type:none;
+    margin:0 6px 0 0;
+    padding:0;
+    white-space:nowrap;
+}
+#header-main > ul > li > a {
+    -moz-border-radius-topleft:5px;
+    -moz-border-radius-topright:5px;
+    background: #F6A828 url(images/ui-bg_gloss-wave_35_f6a828_500x100.png) repeat-x scroll 50% 50%;
+    border: 1px solid #E78F08;
+    border-width:1px 1px 0px 1px;
+    color:#FFFFFF;
+    display:block;
+    font-weight:bold;
+    padding:4px 8px 6px;
+    margin: 0;
+}
+#header-main > ul > li > a:hover {
+    background: #80F080; url("") no-repeat 2px center fixed;
+}
+
+#main {
+    margin: 0;
+    padding: 0;
+    /* -moz-border-radius:10px 10px 10px 10px; */
+    background: #FEFBFA url("main.png") no-repeat 2px center fixed;
+    margin:1px 10px 0;
+    overflow: hidden;
+    position:relative;
+    width: 1200px;
+}
+div.main-block {
+    overflow: hidden;
+    position:relative;
+}
+div.main-left {
+    float:left;
+    margin:0 2px 0;
+}

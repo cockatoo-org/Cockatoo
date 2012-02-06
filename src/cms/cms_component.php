@@ -19,8 +19,8 @@ require_once($COCKATOO_CONF);
 <meta http-equiv="content-script-type" content="text/javascript">
 <meta name="description" content="">
 <title>Cockatoo - page editor β - 0.0.1 </title>
-<link rel="stylesheet" href="/_js/jquery-ui/css/ui-lightness/jquery-ui-1.8.9.custom.css" type="text/css" media="all" />
-<link rel="stylesheet" href="/_js/cockatoo-cms.css" type="text/css" media="all" />
+<link rel="stylesheet" href="js/jquery-ui/css/ui-lightness/jquery-ui-1.8.9.custom.css" type="text/css" media="all" />
+<link rel="stylesheet" href="js/cockatoo-cms.css" type="text/css" media="all" />
 <style type="text/css">
 /* main layout */
 body {
@@ -57,12 +57,12 @@ form.Components div.value > textarea {
 
 </style>
 
-<script type="text/javascript" src="/_js/jquery-1.4.4.js"></script>
-<script type="text/javascript" src="/_js/jquery-json/jquery.json-2.2.js"></script>
-<script type="text/javascript" src="/_js/jquery-ui/js/jquery-ui-1.8.9.custom.min.js"></script>
-<script type="text/javascript" src="/_js/jquery-validate/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/_js/cockatoo-cms.js"></script>
-<script type="text/javascript" src="/_js/cockatoo-validator.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.4.js"></script>
+<script type="text/javascript" src="js/jquery-json/jquery.json-2.2.js"></script>
+<script type="text/javascript" src="js/jquery-ui/js/jquery-ui-1.8.9.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/cockatoo-cms.js"></script>
+<script type="text/javascript" src="js/cockatoo-validator.js"></script>
 <script type="text/javascript">
 <!--
 $(function () {
