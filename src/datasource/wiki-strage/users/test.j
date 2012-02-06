@@ -1,1 +1,0 @@
-{"user":"test","hash":"098f6bcd4621d373cade4e832627b4f6","email":"cat.s.panch@gmail.com","root":true,"_u":"test"}
