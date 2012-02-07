@@ -14,79 +14,86 @@ require_once($COCKATOO_ROOT.'action/Action.php');
 
 class PageAction extends \Cockatoo\Action {
   public function proc(){
-    //list($P,$D,$C,$p,$m,$q,$c) = \Cockatoo\parse_brl($this->BRL);
-    // 
-    $this->setNamespace('wiki');
-
-    $session = $this->getSession();
-    $page   = $this->args['P'];
-    $name   = $this->args['N'];
-    $user = $session['login']['user'];
-    // Query strings
-    $op = $session[\Cockatoo\Def::SESSION_KEY_POST]['op'];
-    if ( ! $op ) {
-      $op = 'get';
-    }
-    if ( $op === 'get' ) {
-      $this->updateSession(array('wiki' => $session['wiki'] ) );
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_GET,array(),array());
-      $bret = \Cockatoo\BeakController::beakQuery(array($brl));
-      if ( $bret[$brl] ) {
-        return array( 'page' => $bret[$brl]);
-      }else {
-        $origin = '*New';
-        $contents = array(array('tag' => 'h2','attr'=>array(),'children' => array(array('tag'=>'text' , 'text' => 'New'))));
-      }
-    }elseif( $op === 'preview' ) {
-      $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
-      $lines = explode("\n",$origin);
-      $contents = $this->parse($lines,$page);
-    }elseif( $op === 'save' ) {
-      if ( ! $user ) {
-        $s['emessage'] = 'You have to login before update wiki !!';
-        $this->updateSession($s);
-        $this->setRedirect('/error');
-        return;
-      }
-      $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
-      $lines = explode("\n",$origin);
-      $contents = $this->parse($lines,$page);
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_SET,array(),array());
-      $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $user))));
+    try{
+      //list($P,$D,$C,$p,$m,$q,$c) = \Cockatoo\parse_brl($this->BRL);
       // 
-      $this->save_history($page,$user,'EDIT');
-      $this->setRedirect('/view/'.$page);
-    }elseif( $op === 'move' ) {
-      if ( ! $user ) {
-        $s['emessage'] = 'You have to login before update wiki !!';
-        $this->updateSession($s);
-        $this->setRedirect('/error');
+      $this->setNamespace('wiki');
+
+      $session = $this->getSession();
+      $page   = $this->args['P'];
+      $name   = $this->args['N'];
+      $user = $session['login']['user'];
+      // Query strings
+      $op = $session[\Cockatoo\Def::SESSION_KEY_POST]['op'];
+      if ( ! $op ) {
+        $op = 'get';
+      }
+      if ( $op === 'get' ) {
+        $this->updateSession(array('wiki' => $session['wiki'] ) );
+        $pdata = Lib::get_page($page);
+        if ( $pdata ) {
+          return array( 'page' => $pdata);
+        }else {
+          $origin = '*New';
+          $contents = array(array('tag' => 'h2','attr'=>array(),'children' => array(array('tag'=>'text' , 'text' => 'New'))));
+          return array( 'page' =>
+                        Lib::page($page,
+                                  $origin,
+                                  $contents,
+                                  $user));
+        }
+      }elseif( $op === 'preview' ) {
+        $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
+        $lines = explode("\n",$origin);
+        return array( 'page' => 
+                      Lib::page($page,
+                                $origin,
+                                $this->parse($lines,$page),
+                                $user));
+      }elseif( $op === 'save' ) {
+        if ( ! $user ) {
+          throw new \Exception('You have to login before update wiki !!');
+        }
+        $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
+        $lines = explode("\n",$origin);
+        $pdata = Lib::page($page,
+                         $origin,
+                         $this->parse($lines,$page),
+                         $user);
+        Lib::save_page($page,$pdata);
+        $this->save_history($page,$user,'EDIT');
+        $this->setRedirect('/view/'.$page);
+        return;
+      }elseif( $op === 'move' ) {
+        if ( ! $user ) {
+          throw new \Exception('You have to login before update wiki !!');
+        }
+        $new = $session[\Cockatoo\Def::SESSION_KEY_POST]['new'];
+        if ( $new ) {
+          $pdata = Lib::get_page($page);
+          if ( $pdata ) {
+            $pdata['title'] = $new;
+            $lines = explode("\n",$pdata['origin']);
+            $pdata['contents'] = $this->parse($lines,$new);
+            Lib::save_page($new,$pdata);
+            $this->move_image($new,$page);
+            Lib::remove_page($page);
+            $this->save_history($new,$user,'MOVE from ' . $page ) ;
+            $this->setRedirect('/view/'.$new);
+            return;
+          }
+          $this->setRedirect('/view');
+        }else{
+          $this->setRedirect('/view/'.$page);
+        }
         return;
       }
-      $new = $session[\Cockatoo\Def::SESSION_KEY_POST]['new'];
-      if ( $new ) {
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_GET,array(),array());
-        $bret = \Cockatoo\BeakController::beakQuery(array($brl));
-        if ( $bret[$brl] ) {
-          $data = $bret[$brl];
-          $data['title'] = $new;
-          $lines = explode("\n",$data['origin']);
-          $data['contents'] = $this->parse($lines,$new);
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$new,\Cockatoo\Beak::M_SET,array(),array());
-          $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,$data)));
-          $this->move_image($new,$page);
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_DEL,array(),array());
-          $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $user))));
-          $this->save_history($new,$user,'MOVE from ' . $page ) ;
-          $this->setRedirect('/view/'.$new);
-          return;
-        }
-        $this->setRedirect('/view');
-      }else{
-        $this->setRedirect('/view/'.$page);
-      }
+    }catch ( \Exception $e ) {
+      $s['emessage'] = $e->getMessage();
+      $this->updateSession($s);
+      $this->setRedirect('/error');
+       \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
     }
-    return array( 'page' => array( 'title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $user));
   }
   private function move_image($new,$page){
     $olds = array();
@@ -254,7 +261,7 @@ class PageAction extends \Cockatoo\Action {
     $now = strftime('%Y/%m/%d %H:%M:%S',time());
     // get
     $hist = array();
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_GET,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_GET,array(),array());
     $bret = \Cockatoo\BeakController::beakQuery(array($brl));
     if ( $bret[$brl] and $bret[$brl]['hist']) {
       krsort($bret[$brl]['hist']);
@@ -265,10 +272,10 @@ class PageAction extends \Cockatoo\Action {
     }
     // save history
     $hist ['hist'][$now]= array('title' => $page , 'author' => $user , 'op' => $op);
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','hist','/'.$date,\Cockatoo\Beak::M_SET,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/'.$date,\Cockatoo\Beak::M_SET,array(),array());
     $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,$hist)));
     // save current history
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_SET,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_SET,array(),array());
     $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,$hist)));
   }
 

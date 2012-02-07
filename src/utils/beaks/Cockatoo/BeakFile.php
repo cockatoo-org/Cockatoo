@@ -1,6 +1,6 @@
 <?php
 /**
- * BeakFile.php - Beak driver : File base strage
+ * BeakFile.php - Beak driver : File base storage
  *  
  * @access public
  * @package cockatoo-beaks
@@ -12,7 +12,7 @@ namespace Cockatoo;
 require_once ($COCKATOO_ROOT.'utils/beak.php');
 
 /**
- * File base strage
+ * File base storage
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * BeakMemcached.php - Beak driver : MemcachedDB base strage
+ * BeakMemcached.php - Beak driver : MemcachedDB base storage
  *  
  * @access public
  * @package cockatoo-beaks
@@ -12,7 +12,7 @@ namespace Cockatoo;
 require_once ($COCKATOO_ROOT.'utils/beak.php');
 
 /**
- * MemcachedDB base strage
+ * MemcachedDB base storage
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */

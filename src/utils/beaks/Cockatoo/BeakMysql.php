@@ -1,6 +1,6 @@
 <?php
 /**
- * BeakMysql.php - Beak driver : Mysql base strage
+ * BeakMysql.php - Beak driver : Mysql base storage
  *  
  * @package ????
  * @access public
@@ -328,57 +328,57 @@ try {
 $COCKATOO_CONF=getenv('COCKATOO_CONF');
 require_once($COCKATOO_CONF);
 
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/?ccol#renew'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/?ccol#renew'));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/?cols'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/?cols'));
 dump_result($results);
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/foo?set#rev',array('_u'=>'foo','val1'=>'FOO'))));
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/foo?set#rev',array('_u'=>'foo','val1'=>'FOO'))));
 dump_result($results);
 
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/foo?set#rev',array('_u'=>'foo','val2'=>'BAR','@R'=>1))));
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/foo?set#rev',array('_u'=>'foo','val2'=>'BAR','@R'=>1))));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/foo?get'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/foo?get'));
 dump_result($results);
 sleep(1);
-$d = $results['strage://wiki-strage/test/foo?get'];
+$d = $results['storage://wiki-storage/test/foo?get'];
 $d['val3']='BAZ';
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/foo?set#rev',$d)));
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/foo?set#rev',$d)));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/foo?get'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/foo?get'));
 dump_result($results);
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/bar?set',array('_u'=>'bar','val'=>'FOO'))));
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/bar?set',array('_u'=>'bar','val'=>'FOO'))));
 dump_result($results);
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/bar?set',array('_u'=>'bar','val2'=>'BAR'))));
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/bar?set',array('_u'=>'bar','val2'=>'BAR'))));
 dump_result($results);
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/baz?set',array('_u'=>'baz','val1'=>'BAZ'))));
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/baz?set',array('_u'=>'baz','val1'=>'BAZ'))));
 dump_result($results);
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/?setA',
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/?setA',
                                                  array('foobar' => array('_u'=>'foobar','val1'=>'FOOBAR'),
                                                        'xyzzy' => array('_u'=>'xyzzy','val1'=>'XYZZY'))
                                              )));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/b?keys'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/b?keys'));
 dump_result($results);
-$results = BeakController::beakGetsQuery(array('strage://wiki-strage/test/foo?get','strage://wiki-strage/test/bar?get','strage://wiki-strage/test/baz?get'));
+$results = BeakController::beakGetsQuery(array('storage://wiki-storage/test/foo?get','storage://wiki-storage/test/bar?get','storage://wiki-storage/test/baz?get'));
 foreach ( $results as $result ) {
   dump_result($result);
 }
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/?keys'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/?keys'));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/baz?del'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/baz?del'));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/?keys'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/?keys'));
 dump_result($results);
-$results = BeakController::beakQuery(array(array('strage://wiki-strage/test/?delA',
+$results = BeakController::beakQuery(array(array('storage://wiki-storage/test/?delA',
                                                  array('_u' => array('foobar','xyzzy')))));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/?keys'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/?keys'));
 dump_result($results);
 
 
-$results = BeakController::beakQuery(array('strage://wiki-strage/test/?mcol&_new=test2'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test/?mcol&_new=test2'));
 dump_result($results);
-$results = BeakController::beakQuery(array('strage://wiki-strage/test2/?keys'));
+$results = BeakController::beakQuery(array('storage://wiki-storage/test2/?keys'));
 dump_result($results);
 
 }catch( \Exception $e ) {

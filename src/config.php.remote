@@ -136,7 +136,7 @@ class Config {
         Def::BP_LAYOUT   => 'Cockatoo\BeakMongo'   ,
         Def::BP_COMPONENT=> 'Cockatoo\BeakMongo'   ,
         Def::BP_STATIC   => 'Cockatoo\BeakMongo'   ,
-        Def::BP_STRAGE   => 'Cockatoo\BeakMongo'   ,
+        Def::BP_STORAGE   => 'Cockatoo\BeakMongo'   ,
         Def::BP_ACTION   => 'Cockatoo\BeakProxy' ,
         null
         );
@@ -153,7 +153,7 @@ class Config {
         'layout://wiki-layout/'         => array('127.0.0.1:27017'),
         'component://wiki-component/'   => array('127.0.0.1:27017'),
         'static://wiki-static/'         => array('127.0.0.1:27017'),
-        'strage://wiki-strage/'         => array('127.0.0.1:27017'),
+        'storage://wiki-storage/'         => array('127.0.0.1:27017'),
         'action://wiki-action/'         => array('127.0.0.1:22651'),
         'session://wiki-session/'       => array('127.0.0.1:27017')
         );
@@ -174,7 +174,7 @@ class Config {
         Def::BP_LAYOUT   => 'layout'   ,
         Def::BP_COMPONENT=> 'component',
         Def::BP_STATIC   => 'static'   ,
-        Def::BP_STRAGE   => 'strage'   ,
+        Def::BP_STORAGE   => 'storage'   ,
         Def::BP_ACTION   => 'action'   ,
         Def::BP_SEARCH   => 'search'   ,
         Def::BP_CMS      => 'cms',

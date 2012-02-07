@@ -16,7 +16,7 @@ class HistAction extends \Cockatoo\Action {
   public function proc(){
     $this->setNamespace('wiki');
     // Query strings
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_GET,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_GET,array(),array());
     $bret = \Cockatoo\BeakController::beakQuery(array($brl));
     if ( $bret[$brl] and $bret[$brl]['hist']) {
       krsort($bret[$brl]['hist']);

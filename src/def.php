@@ -70,7 +70,7 @@ class Def {
   const  BP_LAYOUT                = 'layout';
   const  BP_COMPONENT             = 'component';
   const  BP_STATIC                = 'static';
-  const  BP_STRAGE                = 'strage';
+  const  BP_STORAGE               = 'storage';
   const  BP_ACTION                = 'action';
   const  BP_SEARCH                = 'search';
   const  BP_CMS                   = 'cms';

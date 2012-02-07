@@ -64,10 +64,10 @@ class AdminAction extends \Cockatoo\Action {
         }
       }
       // User list
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','users','/',\Cockatoo\Beak::M_KEY_LIST,array(),array());
+      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','users','/',\Cockatoo\Beak::M_KEY_LIST,array(),array());
       $ret = \Cockatoo\BeakController::beakQuery(array($brl));
       $keys = array(\Cockatoo\Beak::Q_UNIQUE_INDEX => $ret[$brl]);
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STRAGE,'wiki','users','/'.$user,\Cockatoo\Beak::M_GET_ARRAY,array(),array());
+      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','users','/'.$user,\Cockatoo\Beak::M_GET_ARRAY,array(),array());
       $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$keys)));
       $users = $ret[$brl];
       return array('users' => $users);

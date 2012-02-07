@@ -58,7 +58,7 @@ Example:
 Setting:
   Edit [Config::BeakLocation] valiable in config.php to set the dest locations. 
     self::$BeakLocation = array (
-      'strage://servicename-strage/'  => array('127.0.0.1:27017')
+      'storage://servicename-storage/'  => array('127.0.0.1:27017')
       );
 
 

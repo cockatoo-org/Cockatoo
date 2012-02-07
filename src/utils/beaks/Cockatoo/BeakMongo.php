@@ -1,6 +1,6 @@
 <?php
 /**
- * BeakMongo.php - Beak driver : MongoDB base strage
+ * BeakMongo.php - Beak driver : MongoDB base storage
  *  
  * @access public
  * @package cockatoo-beaks
@@ -12,7 +12,7 @@ namespace Cockatoo;
 require_once ($COCKATOO_ROOT.'utils/mongodriver.php');
 
 /**
- * MongoDB base strage
+ * MongoDB base storage
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */
