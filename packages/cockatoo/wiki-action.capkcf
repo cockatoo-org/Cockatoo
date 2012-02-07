@@ -9,7 +9,7 @@ DEFAULT_OWNER=daemon:bin
 dir  -     -               -                                                  /usr/local/cockatoo/src/
 file -     -               config.php.action-sample                           /usr/local/cockatoo/src/config.php
 dir  -     -               -                                                  /usr/local/cockatoo/src/daemon/etc                
-file -     -               ../../src/daemon/etc/action.conf                   /usr/local/cockatoo/src/daemon/etc/action.conf    
+file -     -               action.conf                                        /usr/local/cockatoo/src/daemon/etc/action.conf    
 
 =POST_ACTIVATE=
 #!/usr/bin/env sh
