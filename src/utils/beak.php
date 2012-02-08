@@ -137,6 +137,9 @@ function brlgen($scheme, $prefix, $collection, $path, $method, $queries=array(),
 }
 
 
+if ( Config::$UseMemcache ) {
+  require_once($COCKATOO_ROOT.'utils/memcache.php');
+}
 if ( Config::$UseZookeeper ) {
   require_once($COCKATOO_ROOT.'utils/zoo.php');
 }
@@ -594,7 +597,7 @@ class BeakController {
   /**
    *
    */
-  protected $memcached=null;
+  protected $cachectrl=null;
 
   /**
    * Beak operation entry-point
@@ -710,19 +713,7 @@ class BeakController {
    */
   private function __construct(){
     if ( Config::$UseMemcache ) {
-      $token = '';
-      foreach ( Config::$UseMemcache as $server ) {
-        $token .= $server . ',';
-      }
-      $persistant_id = md5($token);
-      $this->memcached = new \Memcached($persistant_id);
-      if ( ! $this->memcached->getServerList() ) {
-        $servers = array();
-        foreach ( Config::$UseMemcache as $server ) {
-          $servers []= explode(':',$server);
-        }
-        $this->memcached->addServers($servers);
-      }
+      $this->cachectrl = new Memcache(Config::$UseMemcache);
     }
   }
 
@@ -762,7 +753,7 @@ class BeakController {
   protected function pre_query_cache(&$beak) {
     if ( Config::$UseMemcache ) {
       $beak->key = $beak->brl .($beak->arg?'#'.md5(beak_encode($beak->arg)):'');
-      $cache = $this->memcached->get($beak->key);
+      $cache = $this->cachectrl->get($beak->key);
       if ( $cache && $cache[1] ) {
         if ( $cache[0] > time() ) {
           $beak->cache_hit = $cache[1];
@@ -791,7 +782,7 @@ class BeakController {
         $cache=array();
         $cache[0] = &$exp;
         $cache[1] = &$ret;
-        $this->memcached->set($beak->key,$cache);
+        $this->cachectrl->set($beak->key,$cache);
       }
     }
   }
