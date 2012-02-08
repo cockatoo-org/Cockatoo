@@ -88,19 +88,19 @@ if [ "${OPT_CLEARSILVER}" = "1" ];then
     run tar xzvf ${NAME}.tar.gz
     run rm -rf clearsilver
     run mv ${NAME} clearsilver
-    build_php_ext3 clearsilver  --with-clearsilver=/usr/local "--require='clearsilver 0.10.5 999.999.999'"
+    build_php_ext3 clearsilver  --with-clearsilver=/usr/local 
 fi
 
 if [ "${OPT_ZMQ}" = "1" ];then
     VERSION='1.0.2'
-    git_download git://github.com/mkoppanen/php-zmq.git $VERSION
+    git_download http://github.com/mkoppanen/php-zmq.git $VERSION
     mv -T php-zmq zmq
     build_php_ext3 zmq  --with-zmq=/usr/local "--require='zeromq 2.1.9 999.999.999'"
 fi    
 
 if [ "${OPT_MONGO}" = "1" ];then
     VERSION='1.2.2'
-    git_download git://github.com/mongodb/mongo-php-driver.git $VERSION
+    git_download http://github.com/mongodb/mongo-php-driver.git $VERSION
     run patch -p 0 <mongo1.2.2.non-wait.patch
     run patch -p 0 <mongo1.2.2.sock-leak.patch
     run mv -T mongo-php-driver mongo
@@ -122,7 +122,7 @@ fi
 
 if [ "${OPT_ZOOKEEPER}" = "1" ];then
     VERSION='v0.2.1'
-    git_download git://github.com/andreiz/php-zookeeper.git $VERSION
+    git_download http://github.com/andreiz/php-zookeeper.git $VERSION
 #   patch -i php_zookeeper.patch
     run mv php-zookeeper zookeeper
     build_php_ext3 zookeeper --with-libzookeeper-dir=/usr/local "--require='libzookeeper 3.3.2 999.999.999'"
