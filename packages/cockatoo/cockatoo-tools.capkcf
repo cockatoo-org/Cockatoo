@@ -8,13 +8,13 @@ require cockatoo-utils 1.0.0 1.0.999
 
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
-dir  -     -               -                                                  /usr/local/cockatoo/src/tools                     
-dir  -     -               -                                                  /usr/local/cockatoo/src/tools/minimize            
-file -     -               ../../src/tools/minimize/minimize.js               /usr/local/cockatoo/src/tools/minimize/minimize.js
-file -     -               ../../src/tools/minimize/jquery-1.4.4.min.js       /usr/local/cockatoo/src/tools/minimize/jquery-1.4.4.min.js
-file -     -               ../../src/tools/minimize/minimize.sh               /usr/local/cockatoo/src/tools/minimize/minimize.sh
-dir  -     -               -                                                  /usr/local/cockatoo/src/tools/beak                
-file -     -               ../../src/tools/beak/jquery-1.4.4.min.js           /usr/local/cockatoo/src/tools/beak/jquery-1.4.4.min.js
-file -     -               ../../src/tools/beak/beak_transfer.php             /usr/local/cockatoo/src/tools/beak/beak_transfer.php
-file -     -               ../../src/tools/beak/beak_mv.php                   /usr/local/cockatoo/src/tools/beak/beak_mv.php    
-file -     -               ../../src/tools/beak/beak_import.php               /usr/local/cockatoo/src/tools/beak/beak_import.php
+dir  -     -               -                                                  /usr/local/cockatoo/tools                     
+dir  -     -               -                                                  /usr/local/cockatoo/tools/minimize            
+file -     -               ../../src/tools/minimize/minimize.js               /usr/local/cockatoo/tools/minimize/minimize.js
+file -     -               ../../src/tools/minimize/jquery-1.4.4.min.js       /usr/local/cockatoo/tools/minimize/jquery-1.4.4.min.js
+file -     -               ../../src/tools/minimize/minimize.sh               /usr/local/cockatoo/tools/minimize/minimize.sh
+dir  -     -               -                                                  /usr/local/cockatoo/tools/beak                
+file -     -               ../../src/tools/beak/jquery-1.4.4.min.js           /usr/local/cockatoo/tools/beak/jquery-1.4.4.min.js
+file -     -               ../../src/tools/beak/beak_transfer.php             /usr/local/cockatoo/tools/beak/beak_transfer.php
+file -     -               ../../src/tools/beak/beak_mv.php                   /usr/local/cockatoo/tools/beak/beak_mv.php    
+file -     -               ../../src/tools/beak/beak_import.php               /usr/local/cockatoo/tools/beak/beak_import.php

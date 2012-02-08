@@ -6,10 +6,10 @@ require cockatoo-action 1.0.0 1.0.999
 
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
-dir  -     -               -                                                  /usr/local/cockatoo/src/
-file -     -               config.php.action-sample                           /usr/local/cockatoo/src/config.php
-dir  -     -               -                                                  /usr/local/cockatoo/src/daemon/etc                
-file -     -               action.conf                                        /usr/local/cockatoo/src/daemon/etc/action.conf    
+dir  -     -               -                                                  /usr/local/cockatoo/
+file -     -               config.php.action-sample                           /usr/local/cockatoo/config.php
+dir  -     -               -                                                  /usr/local/cockatoo/daemon/etc                
+file -     -               action.conf                                        /usr/local/cockatoo/daemon/etc/action.conf    
 
 =POST_ACTIVATE=
 #!/usr/bin/env sh

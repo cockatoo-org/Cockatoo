@@ -6,9 +6,9 @@ require cockatoo-utils 1.0.0 1.0.999
 
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
-dir  -     -               -                                                  /usr/local/cockatoo/src/daemon/etc                
-dir  -     -               -                                                  /usr/local/cockatoo/src/daemon/sbin               
-file -     -               ../../src/daemon/sbin/zookeeper_watch.bash         /usr/local/cockatoo/src/daemon/sbin/zookeeper_watch.bash
-dir  -     -               -                                                  /usr/local/cockatoo/src/zookeeper                 
-file -     -               ../../src/zookeeper/zookeeper_watch.php            /usr/local/cockatoo/src/zookeeper/zookeeper_watch.php
+dir  -     -               -                                                  /usr/local/cockatoo/daemon/etc                
+dir  -     -               -                                                  /usr/local/cockatoo/daemon/sbin               
+file -     -               ../../src/daemon/sbin/zookeeper_watch.bash         /usr/local/cockatoo/daemon/sbin/zookeeper_watch.bash
+dir  -     -               -                                                  /usr/local/cockatoo/zookeeper                 
+file -     -               ../../src/zookeeper/zookeeper_watch.php            /usr/local/cockatoo/zookeeper/zookeeper_watch.php
 

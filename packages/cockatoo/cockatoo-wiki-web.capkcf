@@ -5,5 +5,5 @@ UNAME=NoArch
 require cockatoo-web 1.0.0 1.0.999
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
-dir  -     -               -                                                  /usr/local/cockatoo/src/wwwutils/plugin/wiki      
-file -     -               ../../src/wwwutils/plugin/wiki/WikiRequestParser.php /usr/local/cockatoo/src/wwwutils/plugin/wiki/WikiRequestParser.php
+dir  -     -               -                                                  /usr/local/cockatoo/wwwutils/plugin/wiki      
+file -     -               ../../src/wwwutils/plugin/wiki/WikiRequestParser.php /usr/local/cockatoo/wwwutils/plugin/wiki/WikiRequestParser.php

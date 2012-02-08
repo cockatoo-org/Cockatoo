@@ -7,8 +7,8 @@ require cockatoo-gateway 1.0.0 1.0.999
 
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
-dir  -     -               -                                               /usr/local/cockatoo/src/
-file -     -               config.php.web-sample                           /usr/local/cockatoo/src/config.php
+dir  -     -               -                                               /usr/local/cockatoo/
+file -     -               config.php.web-sample                           /usr/local/cockatoo/config.php
 
 =POST_ACTIVATE=
 #!/usr/bin/env sh

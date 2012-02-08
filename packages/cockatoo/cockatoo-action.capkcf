@@ -6,15 +6,8 @@ require cockatoo-utils 1.0.0 1.0.999
 
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
-dir  -     -               -                                                  /usr/local/cockatoo/src/action                    
-file -     -               ../../src/action/Action.php                        /usr/local/cockatoo/src/action/Action.php         
-file -     -               ../../src/action/action_controller.php             /usr/local/cockatoo/src/action/action_controller.php
-file -     -               ../../src/action/device_daemon.php                 /usr/local/cockatoo/src/action/device_daemon.php  
-file -     -               ../../src/action/child_daemon.php                  /usr/local/cockatoo/src/action/child_daemon.php   
-file -     -               ../../src/action/action_healthcheck.php            /usr/local/cockatoo/src/action/action_healthcheck.php
-dir  -     -               -                                                  /usr/local/cockatoo/src/action/actions            
-dir  -     -               -                                                  /usr/local/cockatoo/src/action/actions/Cockatoo   
-file -     -               ../../src/action/actions/Cockatoo/HealthAction.php /usr/local/cockatoo/src/action/actions/Cockatoo/HealthAction.php
-dir  -     -               -                                                  /usr/local/cockatoo/src/daemon/etc                
-dir  -     -               -                                                  /usr/local/cockatoo/src/daemon/sbin               
-file -     -               ../../src/daemon/sbin/action_controller.bash       /usr/local/cockatoo/src/daemon/sbin/action_controller.bash
+dir  -     -               -                                                  /usr/local/cockatoo/action                    
+file -     -               ../../src/action/Action.php                        /usr/local/cockatoo/action/Action.php         
+dir  -     -               -                                                  /usr/local/cockatoo/action/actions            
+dir  -     -               -                                                  /usr/local/cockatoo/action/actions/Cockatoo   
+file -     -               ../../src/action/actions/Cockatoo/HealthAction.php /usr/local/cockatoo/action/actions/Cockatoo/HealthAction.php
