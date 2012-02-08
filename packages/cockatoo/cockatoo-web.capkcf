@@ -6,7 +6,6 @@ UNAME=NoArch
 require httpd2.2.21-conf     0.0.1 0.0.999
 require php5.3.8-httpd       0.0.1 0.0.999
 require php5.3.8-clearsilver 0.0.1 0.0.999
-require php5.3.8-apc         0.0.1 0.0.999
 
 require cockatoo-utils       1.0.0 1.0.999
 

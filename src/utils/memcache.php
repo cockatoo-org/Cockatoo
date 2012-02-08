@@ -9,7 +9,7 @@
  * @version $Id$
  * @copyright Copyright (C) 2012, rakuten 
  */
-namespace cockatoo;
+namespace Cockatoo;
 /**
  * ??????????
  *
