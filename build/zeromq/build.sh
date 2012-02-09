@@ -23,7 +23,7 @@ function build_zeromq {
     run make install DESTDIR=${ROOT}
     run sudo make install
     run popd
-    run ~/.capkg/config/capkg.sh generate -p zeromq -v ${VERSION}  -i /usr/local -s usr/
+    run ~/.capkg/config/capkg.sh generate -p zeromq -v ${VERSION}  -i /usr -s usr/local
 }
 
 build_zeromq

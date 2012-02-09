@@ -30,7 +30,7 @@ function build_clearsilver(){
     run sudo cp -f   cs/cs.h  /usr/local/include/ClearSilver/cs/
     run sudo cp -f   libs/libneo_cs.a /usr/local/lib/
     run popd
-    run ~/.capkg/config/capkg.sh generate -p clearsilver -v ${VERSION}  -i /usr/local -s usr/
+    run ~/.capkg/config/capkg.sh generate -p clearsilver -v ${VERSION}  -i /usr -s usr/local
 }
 
 build_clearsilver

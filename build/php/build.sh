@@ -78,8 +78,8 @@ function build_php(){
 #    run sudo mkdir -p /usr/local/${NAME}/lib/conf.d/
 #    run sudo ln -sfT ${NAME} /usr/local/php
 
-    run ~/.capkg/config/capkg.sh generate -p php${VERSION}-cli    -i /usr/local -s root_php/usr/local/${NAME}
-    run ~/.capkg/config/capkg.sh generate -p php${VERSION}-httpd  -i /usr/local -s root_httpd/usr/local/${NAME} -s root_httpd/usr/local/apache-${HTTPD_VERSION}
+    run ~/.capkg/config/capkg.sh generate -p php${VERSION}-cli    -i /usr -s root_php/usr/local
+    run ~/.capkg/config/capkg.sh generate -p php${VERSION}-httpd  -i /usr -s root_httpd/usr/local 
 
     run cp -rfT ${ROOT}/root_php/usr ${ROOT}/usr
 }

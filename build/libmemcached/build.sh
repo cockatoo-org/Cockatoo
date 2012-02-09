@@ -22,7 +22,7 @@ function build_libmemcached(){
     run make install DESTDIR=${ROOT}
     run sudo make install
     run popd
-    run ~/.capkg/config/capkg.sh generate -p libmemcached -v ${VERSION}  -i /usr/local -s usr/
+    run ~/.capkg/config/capkg.sh generate -p libmemcached -v ${VERSION}  -i /usr -s usr/local
 }
 
 build_libmemcached

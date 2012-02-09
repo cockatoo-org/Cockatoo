@@ -1,0 +1,17 @@
+I  2012-02-08 11:12:23,606336 12158 /rss/hist from 10.189.17.237 :  
+T  2012-02-08 11:12:23,645947 12158 /rss/hist ::Cockatoo\parseRequest : Request preparsed : wiki , default , rss/hist ,  
+T  2012-02-08 11:12:23,646070 12158 /rss/hist ::Cockatoo\parseRequest : Request parsed    : wiki , default , rss/hist ,  
+P3 2012-02-08 11:12:23,648801 12158 /rss/hist 1.275 (msec) 2308.720 (KB) BeakController::beakGetsQuery : layout://wiki-layout/default/?get  layout://wiki-layout/default/rss/hist?get 
+T  2012-02-08 11:12:23,648992 12158 /rss/hist Cockatoo\ContentDrawer::session : Get session cookie  , 1328668943 
+T  2012-02-08 11:12:23,650713 12158 /rss/hist Cockatoo\ContentDrawer::session : Create new session 4f31da079edad 
+P2 2012-02-08 11:12:23,661338 12158 /rss/hist 10.384 (msec) 2292.800 (KB) BeakController::beakQuery : session://wiki-session/default/4f31da079edad?set 
+T  2012-02-08 11:12:23,661429 12158 /rss/hist Cockatoo\ContentDrawer::session : Issue session cookie 4f31da079edad , 1800 
+P3 2012-02-08 11:12:23,662031 12158 /rss/hist 0.264 (msec) 2297.488 (KB) BeakController::beakGetsQuery : component://wiki-component/default/t/rss?get 
+T  2012-02-08 11:12:23,662174 12158 /rss/hist Cockatoo\WidgetFactory::getWidget : Cockatoo\PlainWidget , component://wiki-component/default/t/rss?get 
+I  2012-02-08 11:12:23,663722 12158 /rss/hist Cockatoo\Action::run : Action : action://wiki-action/wiki/HistAction?get 
+P2 2012-02-08 11:12:23,664369 12158 /rss/hist 0.423 (msec) 2433.112 (KB) BeakController::beakQuery : storage://wiki-storage/hist/CUR?get 
+P1 2012-02-08 11:12:23,664564 12158 /rss/hist 0.740 (msec) 2427.056 (KB) Action::run : action://wiki-action/wiki/HistAction?get 
+P2 2012-02-08 11:12:23,664690 12158 /rss/hist 0.986 (msec) 2426.240 (KB) BeakController::beakQuery : action://wiki-action/wiki/HistAction?get 
+P2 2012-02-08 11:12:23,665588 12158 /rss/hist 0.604 (msec) 2430.440 (KB) BeakController::beakQuery : session://wiki-session/default/4f31da079edad?set 
+P  2012-02-08 11:12:23,667777 12158 /rss/hist 61.471 (msec) 2421.776 (KB) from 10.189.17.237 :  
+P2 2012-02-08 11:12:23,668323 12158 /rss/hist 0.262 (msec) 2345.752 (KB) BeakController::beakQuery : session://wiki-session/default/4f31da079edad?set 
