@@ -151,6 +151,12 @@ class PageAction extends \Cockatoo\Action {
         $ret []= array('tag' => 'span', 'attr' => array('style' => 'color:' . $matches[2]) , 'children' => array(array('tag' => 'text','text' => $matches[3])) );
         $text = $matches[4];
         next;
+      }elseif ( preg_match('@^([^&\[]*)&b\(([^\)]*)\)\{([^\}]*)\};(.*)@', $text , $matches ) !== 0 ) {
+        // BOLD => &b(<level>){<text>};
+        $ret [] = array('tag' => 'text' , 'text' => $matches[1]);
+        $ret []= array('tag' => 'b', 'attr' => array('class' => 'b' . $matches[2]) , 'children' => array(array('tag' => 'text','text' => $matches[3])) );
+        $text = $matches[4];
+        next;
       }elseif ( preg_match('@^([^&\[]*)&anchor\(([^\)]*)\);(.*)@', $text , $matches ) !== 0 ) {
         // ANCHOR => &anchor(<name>);
         $ret [] = array('tag' => 'text' , 'text' => $matches[1]);

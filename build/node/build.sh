@@ -25,7 +25,7 @@ function build_nodejs {
     run sudo make install
     run sudo ln -s nodejs-${VERSION} /usr/local/nodejs
     run popd
-    run ~/.capkg/config/capkg.sh generate -p nodejs${VERSION} -i /usr/local -s usr/
+    run ~/.capkg/config/capkg.sh generate -p nodejs${VERSION} -i /usr -s usr/local
 }
 
 function build_npm_lib {
@@ -38,7 +38,7 @@ function build_npm_lib {
     run pushd root_${EXT}
     run npm install $EXT
     run popd
-    run eval ~/.capkg/config/capkg.sh generate -p ${EXT}_npm${VERSION} -i /usr/local/nodejs-${VERSION}/lib/ -s root_${EXT} "--require='nodejs${VERSION} 0.0.1 0.0.999'"
+    run eval ~/.capkg/config/capkg.sh generate -p ${EXT}_npm${VERSION} -i /usr/local/nodejs-${VERSION}/lib/ -s root_${EXT}/node_modules "--require='nodejs${VERSION} 0.0.1 0.0.999'"
 }
 build_nodejs
 build_npm_lib jsdom

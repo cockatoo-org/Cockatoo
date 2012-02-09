@@ -1,1 +1,1 @@
-config.php.wiki
+../packages/wiki-sample/config.php.local

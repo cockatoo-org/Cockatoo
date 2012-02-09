@@ -41,7 +41,7 @@ function build_memcached {
 #    run sudo cp memcachedctrl  /usr/local/${NAME}/
 #    run sudo cp memcached.conf /usr/local/${NAME}/conf/
     run popd
-    run eval ~/.capkg/config/capkg.sh generate -p memcached -v ${VERSION}  -i /usr/local -s usr/ "--require='libevent 2.0.0 2.0.999'"
+    run eval ~/.capkg/config/capkg.sh generate -p memcached -v ${VERSION}  -i /usr -s usr/local "--require='libevent 2.0.0 2.0.999'"
 }
 
 build_memcached
