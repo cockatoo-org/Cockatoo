@@ -9,10 +9,9 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-\ClassLoader::addClassPath($COCKATOO_ROOT.'action/actions');
-require_once ($COCKATOO_ROOT.'utils/beak.php');
-require_once ($COCKATOO_ROOT.'action/Action.php');
-
+\ClassLoader::addClassPath(Config::$COCKATOO_ROOT.'action/actions');
+require_once (Config::$COCKATOO_ROOT.'utils/beak.php');
+require_once (Config::$COCKATOO_ROOT.'action/Action.php');
 
 /**
  * Do Action

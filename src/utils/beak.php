@@ -9,7 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-\ClassLoader::addClassPath($COCKATOO_ROOT.'utils/beaks');
+\ClassLoader::addClassPath(Config::$COCKATOO_ROOT.'utils/beaks');
 
 /**
  * BRL parser
@@ -138,10 +138,10 @@ function brlgen($scheme, $prefix, $collection, $path, $method, $queries=array(),
 
 
 if ( Config::$UseMemcache ) {
-  require_once($COCKATOO_ROOT.'utils/memcache.php');
+  require_once(Config::$COCKATOO_ROOT.'utils/memcache.php');
 }
 if ( Config::$UseZookeeper ) {
-  require_once($COCKATOO_ROOT.'utils/zoo.php');
+  require_once(Config::$COCKATOO_ROOT.'utils/zoo.php');
 }
 /**
  * Beak Location getter (singleton)

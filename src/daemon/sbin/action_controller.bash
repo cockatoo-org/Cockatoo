@@ -3,6 +3,7 @@ export PATH=/usr/local/bin:/usr/sbin:$PATH
 export PATH=/usr/local/php/bin:$PATH
 
 export COCKATOO_ROOT=/usr/local/cockatoo/
+export COCKATOO_CONF=${COCKATOO_ROOT}config.php
 
 PIDFILE=${COCKATOO_ROOT}daemon/var/action_controller.pid
 EXECUTE=${COCKATOO_ROOT}action/action_controller.php

@@ -186,7 +186,7 @@ $(function () {
    <h1>Cockatoo - page editor β</h1>
    <div id="header-main">
 <?php
-  require_once($COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
+  require_once(Config::$COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
 ?>
    </div>
   </div>

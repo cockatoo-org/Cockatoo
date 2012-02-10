@@ -12,8 +12,8 @@
 namespace Cockatoo;
 $COCKATOO_CONF=getenv('COCKATOO_CONF');
 require_once($COCKATOO_CONF);
-require_once($COCKATOO_ROOT.'utils/beak.php');
-\ClassLoader::addClassPath($COCKATOO_ROOT.'action/actions');
+require_once(Config::$COCKATOO_ROOT.'utils/beak.php');
+\ClassLoader::addClassPath(Config::$COCKATOO_ROOT.'action/actions');
 declare(ticks = 1);
 
 /**

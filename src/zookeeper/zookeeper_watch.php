@@ -13,7 +13,7 @@ namespace Cockatoo;
 $COCKATOO_CONF=getenv('COCKATOO_CONF');
 require_once($COCKATOO_CONF);
 if ( Config::$UseZookeeper ) {
-  require_once($COCKATOO_ROOT.'utils/zoo.php');
+  require_once(Config::$COCKATOO_ROOT.'utils/zoo.php');
 }
 
 class ZookeeperWatch {

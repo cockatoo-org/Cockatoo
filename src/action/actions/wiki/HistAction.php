@@ -1,6 +1,6 @@
 <?php
 namespace wiki;
-require_once($COCKATOO_ROOT.'action/Action.php');
+require_once(\Cockatoo\Config::$COCKATOO_ROOT.'action/Action.php');
 /**
  * HistAction.php - ????
  *  

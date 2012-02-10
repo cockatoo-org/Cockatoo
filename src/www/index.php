@@ -13,13 +13,13 @@ $CONTENT_DRAWER = null;
 try {
   $COCKATOO_CONF=getenv('COCKATOO_CONF');
   require_once($COCKATOO_CONF);
-  require_once($COCKATOO_ROOT.'wwwutils/core/reqparser.php');
-  require_once($COCKATOO_ROOT.'wwwutils/core/webutils.php');
-  require_once($COCKATOO_ROOT.'wwwutils/core/widget.php');
-  require_once($COCKATOO_ROOT.'wwwutils/core/content.php');
-  require_once($COCKATOO_ROOT.'utils/session.php');
-  require_once($COCKATOO_ROOT.'utils/beak.php');
-  require_once($COCKATOO_ROOT.'utils/stcontents.php');
+  require_once(Config::$COCKATOO_ROOT.'wwwutils/core/reqparser.php');
+  require_once(Config::$COCKATOO_ROOT.'wwwutils/core/webutils.php');
+  require_once(Config::$COCKATOO_ROOT.'wwwutils/core/widget.php');
+  require_once(Config::$COCKATOO_ROOT.'wwwutils/core/content.php');
+  require_once(Config::$COCKATOO_ROOT.'utils/session.php');
+  require_once(Config::$COCKATOO_ROOT.'utils/beak.php');
+  require_once(Config::$COCKATOO_ROOT.'utils/stcontents.php');
 
   $HTTP_URI        = $_SERVER['REQUEST_URI'];
   $HTTP_USER_AGENT = $_SERVER['HTTP_USER_AGENT'];

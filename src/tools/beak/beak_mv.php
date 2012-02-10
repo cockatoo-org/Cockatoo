@@ -12,7 +12,7 @@
 namespace Cockatoo;
 $COCKATOO_CONF=getenv('COCKATOO_CONF');
 require_once($COCKATOO_CONF);
-require_once($COCKATOO_ROOT.'tools/beak/beak_transfer.php');
+require_once(Config::$COCKATOO_ROOT.'tools/beak/beak_transfer.php');
 ini_set('display_errors','On');
 
 
@@ -69,8 +69,7 @@ _MSG_;
 }
 
 function kick_minimize(&$d,$type){
-  global $COCKATOO_ROOT;
-  $MINIMIZE=$COCKATOO_ROOT.'tools/minimize/minimize.sh';
+  $MINIMIZE=Config::$COCKATOO_ROOT.'tools/minimize/minimize.sh';
   $descriptorspec = array(
     0 => array("pipe", 'r'),
     1 => array("pipe", 'w'),

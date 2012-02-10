@@ -9,7 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-require_once ($COCKATOO_ROOT.'utils/beak.php');
+require_once (Config::$COCKATOO_ROOT.'utils/beak.php');
 
 /**
  * File base storage
@@ -52,8 +52,7 @@ class BeakFile extends Beak {
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
     parent::__construct($brl,$scheme,$domain,&$collection,$path,$method,$queries,$comments,$arg,$hide);
     $this->uniqueIndex = ($this->queries[Beak::Q_UNIQUE_INDEX])?$this->queries[Beak::Q_UNIQUE_INDEX]:$this->uniqueIndex;
-    global $COCKATOO_ROOT;
-    $base = $COCKATOO_ROOT . self::BeakFileDirectory . '/' . $this->domain . '/' . $this->collection . '/' . $this->path;
+    $base = Config::$COCKATOO_ROOT . self::BeakFileDirectory . '/' . $this->domain . '/' . $this->collection . '/' . $this->path;
     $this->fullPath = $this->path_gen($base);
   }
   private function path_gen($base){
@@ -148,9 +147,8 @@ class BeakFile extends Beak {
    * @see Action.php
    */
   public function getaQuery() {
-    global $COCKATOO_ROOT;
     $this->ret  = array();
-    $base = $COCKATOO_ROOT . self::BeakFileDirectory . '/' . $this->domain . '/' . $this->collection . '/';
+    $base = Config::$COCKATOO_ROOT . self::BeakFileDirectory . '/' . $this->domain . '/' . $this->collection . '/';
     foreach ( $this->arg[$this->uniqueIndex] as $cond ) {
       $path = $cond;
       $this->ret[$path] = $this->getDoc($this->path_gen($base . $path));
