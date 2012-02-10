@@ -13,7 +13,7 @@ require cockatoo-datasource-wiki  1.0.0 1.0.999
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
 dir  -     -               -                                                  /usr/local/cockatoo
-file -     -               src/config.php.local                               /usr/local/cockatoo/config.php
+file -     -               config.php.local                                   /usr/local/cockatoo/config.php
 dir  -     -               -                                                  /usr/local/cockatoo/www
 file -     -               ../../settings/htaccess                            /usr/local/cockatoo/www/.htaccess
 dir  -     -               -                                                  /usr/local/cockatoo/cms

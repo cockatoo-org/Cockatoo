@@ -147,16 +147,16 @@ class Config {
        *    $BeakLocation should be merged with $BEAK but have to consider zookeeper ...
        */
       self::$BeakLocation = array (
-        'cms://services-cms/'           => array('127.0.0.1:27017'),
-        'layout://core-layout/'         => array('127.0.0.1:27017'),
-        'component://core-component/'   => array('127.0.0.1:27017'),
-        'static://core-static/'         => array('127.0.0.1:27017'),
-        'layout://wiki-layout/'         => array('127.0.0.1:27017'),
-        'component://wiki-component/'   => array('127.0.0.1:27017'),
-        'static://wiki-static/'         => array('127.0.0.1:27017'),
-        'storage://wiki-storage/'       => array('127.0.0.1:27017'),
-        'action://wiki-action/'         => array('127.0.0.1:22651'),
-        'session://wiki-session/'       => array('127.0.0.1:27017')
+        'cms://services-cms/'           => array(''),
+        'layout://core-layout/'         => array(''),
+        'component://core-component/'   => array(''),
+        'static://core-static/'         => array(''),
+        'layout://wiki-layout/'         => array(''),
+        'component://wiki-component/'   => array(''),
+        'static://wiki-static/'         => array(''),
+        'storage://wiki-storage/'       => array(''),
+        'action://wiki-action/'         => array(''),
+        'session://wiki-session/'       => array('')
         );
       //--------------------
       // Zookeeper ( dynamic locations )
