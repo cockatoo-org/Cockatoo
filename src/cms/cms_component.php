@@ -8,6 +8,7 @@
  * @version $Id$
  * @copyright Copyright (C) 2011, rakuten 
  */
+namespace Cockatoo;
 $COCKATOO_CONF=getenv('COCKATOO_CONF');
 require_once($COCKATOO_CONF);
 ?>
@@ -186,6 +187,7 @@ $(function () {
    <h1>Cockatoo - page editor β</h1>
    <div id="header-main">
 <?php
+  namespace Cockatoo;
   require_once(Config::$COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
 ?>
    </div>
