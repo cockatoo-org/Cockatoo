@@ -58,7 +58,7 @@ class Config {
    */
   const IPCDirectory   = '/tmp';
 
-  const ActionTimeout  = 10000;  // This means 10 sec.
+  const ActionTimeout  = 1000;  // This means 10 sec.
 
   /**
    * PID
@@ -131,12 +131,12 @@ class Config {
       // Local mode
       self::$BEAKS = array (
         Def::BP_CMS      => 'Cockatoo\BeakFile'   ,
-        Def::BP_SESSION  => 'Cockatoo\BeakFile'   ,
-        Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   ,
-        Def::BP_COMPONENT=> 'Cockatoo\BeakFile'   ,
-        Def::BP_STATIC   => 'Cockatoo\BeakFile'   ,
-        Def::BP_STORAGE  => 'Cockatoo\BeakFile'   ,
-        Def::BP_ACTION   => 'Cockatoo\BeakAction' ,
+        Def::BP_SESSION  => 'Cockatoo\BeakMemcached'   ,
+        Def::BP_LAYOUT   => 'Cockatoo\BeakMongo'   ,
+        Def::BP_COMPONENT=> 'Cockatoo\BeakMongo'   ,
+        Def::BP_STATIC   => 'Cockatoo\BeakMongo'   ,
+        Def::BP_STORAGE  => 'Cockatoo\BeakMongo'   ,
+        Def::BP_ACTION   => 'Cockatoo\BeakProxy' ,
         null
         );
 
@@ -148,20 +148,20 @@ class Config {
        */
       self::$BeakLocation = array (
         'cms://services-cms/'           => array(''),
-        'layout://core-layout/'         => array(''),
-        'component://core-component/'   => array(''),
-        'static://core-static/'         => array(''),
-        'layout://wiki-layout/'         => array(''),
-        'component://wiki-component/'   => array(''),
-        'static://wiki-static/'         => array(''),
-        'storage://wiki-storage/'       => array(''),
-        'action://wiki-action/'         => array(''),
-        'session://wiki-session/'       => array('')
+        'layout://core-layout/'         => array('127.0.0.1:27017'),
+        'component://core-component/'   => array('127.0.0.1:27017'),
+        'static://core-static/'         => array('127.0.0.1:27017'),
+        'layout://wiki-layout/'         => array('127.0.0.1:27017'),
+        'component://wiki-component/'   => array('127.0.0.1:27017'),
+        'static://wiki-static/'         => array('127.0.0.1:27017'),
+        'storage://wiki-storage/'       => array('127.0.0.1:27017'),
+        'action://wiki-action/'         => array('127.0.0.1:22651'),
+        'session://wiki-session/'       => array('127.0.0.1:11211')
         );
       //--------------------
       // Zookeeper ( dynamic locations )
       //--------------------
-      self::$UseZookeeper        = false;
+      self::$UseZookeeper        = array('127.0.0.1:2181');
       self::$ZookeeperCacheFile  = self::$COCKATOO_ROOT.'daemon/etc/zoo.json';
       //--------------------
       // FOR SYSTEM

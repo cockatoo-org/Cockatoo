@@ -5,21 +5,29 @@ UNAME=NoArch
 
 require php5.3.8-apc         0.0.1 0.0.999
 
-require cockatoo-web     1.0.0 1.0.999
-require cockatoo-gateway 1.0.0 1.0.999
+require cockatoo-beaks-proxy     1.0.0        1.0.999
+require cockatoo-beaks-memcached 1.0.0        1.0.999
+require cockatoo-beaks-mongo     1.0.0        1.0.999
+require cockatoo-utils-zoo       1.0.0        1.0.999
+
+require cockatoo-web-wiki        1.0.0        1.0.999
+require cockatoo-gateway         1.0.0        1.0.999
+require cockatoo-zookeeper       1.0.0        1.0.999
 
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
 dir  -     -               -                                               /usr/local/cockatoo/
-file -     -               config.php.web-sample                           /usr/local/cockatoo/config.php
+file -     -               config.php.cluster                              /usr/local/cockatoo/config.php
+dir  -     -               -                                                  /usr/local/cockatoo/www
+file -     -               ../../settings/htaccess                            /usr/local/cockatoo/www/.htaccess
 
 =POST_ACTIVATE=
 #!/usr/bin/env sh
 sudo -u daemon /usr/local/cockatoo/daemon/sbin/zookeeper_watch.bash start || true
-sudo -u daemon /usr/local/cockatoo/daemon/sbin/gateway_watch.bash   start || true
+sudo -u daemon /usr/local/cockatoo/daemon/sbin/gateway_controller.bash   start || true
 /usr/local/apache2/bin/apachectl start
 =PRE_DEACTIVATE=
 #!/usr/bin/env sh
 /usr/local/apache2/bin/apachectl stop
-sudo -u daemon /usr/local/cockatoo/daemon/sbin/gateway_watch.bash   stop || true
+sudo -u daemon /usr/local/cockatoo/daemon/sbin/gateway_controller.bash   stop || true
 sudo -u daemon /usr/local/cockatoo/daemon/sbin/zookeeper_watch.bash stop || true
