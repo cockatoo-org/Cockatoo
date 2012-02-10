@@ -9,20 +9,9 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-chdir(dirname(__FILE__));
-$COCKATOO_ROOT=getenv('COCKATOO_ROOT');
-if ( ! $COCKATOO_ROOT ) {
-  $COCKATOO_ROOT=dirname(__FILE__) .'/';
-  putenv('COCKATOO_ROOT='.$COCKATOO_ROOT);
-}
-# PHP settings
-ini_set('error_reporting',2039); # E_ALL & ^E_NOTICE
-ini_set('log_errors','On');
-ini_set('display_errors','Off');
-ini_set('error_log',$COCKATOO_ROOT . '/logs/php_error.log');
-
-
+$COCKATOO_ROOT='/usr/local/cockatoo/';
 require_once($COCKATOO_ROOT . 'def.php');
+ini_set('error_log',$COCKATOO_ROOT . '/logs/php_error.log');
 
 class Config {
   /**
@@ -107,8 +96,20 @@ class Config {
    */
   static public $Error2Die;
 
+  /**
+   * Cockatoo paths
+   */
+  static public $COCKATOO_ROOT='/usr/local/cockatoo/';
+
   public static function init () {
     if ( self::$init ) {
+      //--------------------
+      // PATH
+      //--------------------
+      global $COCKATOO_ROOT;
+      self::$COCKATOO_ROOT=$COCKATOO_ROOT;
+      putenv('COCKATOO_ROOT='.self::$COCKATOO_ROOT);
+
       //--------------------
       // LOG settings
       //--------------------
@@ -117,8 +118,7 @@ class Config {
       /**
        * Filename , STDOUT or STDIN
        */
-      $COCKATOO_ROOT=getenv('COCKATOO_ROOT');
-      self::$LogFile = $COCKATOO_ROOT . '/logs/cockatoo.log';
+      self::$LogFile = self::$COCKATOO_ROOT . '/logs/cockatoo.log';
 
       //--------------------
       // Beak cache settings
@@ -192,9 +192,17 @@ class Config {
   }
   static private $init = true;
 }
+
 Config::init();
 
-require_once($COCKATOO_ROOT.'utils/ClassLoader.php');
-\ClassLoader::addClassPath($COCKATOO_ROOT.'libs');
+# PHP settings
+ini_set('error_reporting',2039); # E_ALL & ^E_NOTICE
+ini_set('log_errors','On');
+ini_set('display_errors','Off');
 
-require_once($COCKATOO_ROOT.'utils/log.php');
+chdir(Config::$COCKATOO_ROOT);
+
+require_once(Config::$COCKATOO_ROOT.'utils/ClassLoader.php');
+\ClassLoader::addClassPath(Config::$COCKATOO_ROOT.'libs');
+
+require_once(Config::$COCKATOO_ROOT.'utils/log.php');
