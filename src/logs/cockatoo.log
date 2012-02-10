@@ -2447,3 +2447,99 @@ P2 2012-02-10 10:32:46,930932 26863 /view 4.080 (msec) 2528.904 (KB) BeakControl
 P2 2012-02-10 10:32:46,931403 26863 /view 0.293 (msec) 2526.152 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
 P  2012-02-10 10:32:46,939342 26863 /view 25.488 (msec) 2527.696 (KB) from 10.189.17.237 :  
 P2 2012-02-10 10:32:46,939988 26863 /view 0.151 (msec) 2477.896 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+I  2012-02-10 10:41:44,643955 26864 /view from 10.189.17.237 :  
+T  2012-02-10 10:41:44,644578 26864 /view ::Cockatoo\parseRequest : Request preparsed : wiki , default , view ,  
+T  2012-02-10 10:41:44,644702 26864 /view ::Cockatoo\parseRequest : Request parsed    : wiki , default , view ,  
+P3 2012-02-10 10:41:44,646346 26864 /view 0.561 (msec) 2003.928 (KB) BeakController::beakGetsQuery : layout://wiki-layout/default/?get  layout://wiki-layout/default/view?get 
+T  2012-02-10 10:41:44,646552 26864 /view Cockatoo\ContentDrawer::session : Get session cookie 4f346e56b56f3 , 1328924504 
+P2 2012-02-10 10:41:44,646882 26864 /view 0.132 (msec) 2002.504 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P2 2012-02-10 10:41:44,647367 26864 /view 0.324 (msec) 2011.944 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+T  2012-02-10 10:41:44,647436 26864 /view Cockatoo\ContentDrawer::session : Issue session cookie 4f346e56b56f3 , 86400 
+I  2012-02-10 10:41:44,648426 26864 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,648892 26864 /view 0.304 (msec) 2129.744 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P1 2012-02-10 10:41:44,648996 26864 /view 0.489 (msec) 2124.296 (KB) Action::run : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,649084 26864 /view 0.668 (msec) 2110.000 (KB) BeakController::beakQuery : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,649540 26864 /view 0.297 (msec) 2115.560 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+P3 2012-02-10 10:41:44,651000 26864 /view 1.030 (msec) 2150.288 (KB) BeakController::beakGetsQuery : component://core-component/default/horizontal#critical  component://core-component/default/vertical?get  component://wiki-component/default/login?get  component://wiki-component/default/header?get  component://core-component/default/vertical?get  component://core-component/default/horizontal?get  component://wiki-component/default/hist/window?get  component://core-component/default/horizontal?get  component://wiki-component/default/w/page?get  component://wiki-component/default/footer?get 
+T  2012-02-10 10:41:44,651124 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://core-component/default/horizontal#critical 
+T  2012-02-10 10:41:44,651211 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\VerticalWidget , component://core-component/default/vertical?get 
+T  2012-02-10 10:41:44,651287 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/login?get 
+T  2012-02-10 10:41:44,651361 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/header?get 
+T  2012-02-10 10:41:44,651437 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\VerticalWidget , component://core-component/default/vertical?get 
+T  2012-02-10 10:41:44,651509 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://core-component/default/horizontal?get 
+T  2012-02-10 10:41:44,651580 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/hist/window?get 
+T  2012-02-10 10:41:44,651702 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://core-component/default/horizontal?get 
+T  2012-02-10 10:41:44,651787 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/w/page?get 
+T  2012-02-10 10:41:44,651868 26864 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/footer?get 
+I  2012-02-10 10:41:44,652083 26864 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,652482 26864 /view 0.251 (msec) 2182.632 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P1 2012-02-10 10:41:44,652572 26864 /view 0.418 (msec) 2177.104 (KB) Action::run : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,652705 26864 /view 0.622 (msec) 2162.808 (KB) BeakController::beakQuery : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,653166 26864 /view 0.298 (msec) 2167.656 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+I  2012-02-10 10:41:44,654587 26864 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/HistAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,655008 26864 /view 0.214 (msec) 2365.400 (KB) BeakController::beakQuery : storage://wiki-storage/hist/CUR?get 
+P1 2012-02-10 10:41:44,655098 26864 /view 0.387 (msec) 2359.376 (KB) Action::run : action://wiki-action/wiki/HistAction?get#cache#cexp=30 
+I  2012-02-10 10:41:44,655175 26864 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/PageAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,655550 26864 /view 0.231 (msec) 2378.592 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P2 2012-02-10 10:41:44,658681 26864 /view 2.625 (msec) 2646.128 (KB) BeakController::beakQuery : storage://wiki-storage/page/top?get 
+P1 2012-02-10 10:41:44,658779 26864 /view 3.536 (msec) 2640.256 (KB) Action::run : action://wiki-action/wiki/PageAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,658878 26864 /view 4.304 (msec) 2628.072 (KB) BeakController::beakQuery : action://wiki-action/wiki/HistAction?get#cache#cexp=30  action://wiki-action/wiki/PageAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,659342 26864 /view 0.298 (msec) 2625.320 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+P  2012-02-10 10:41:44,668316 26864 /view 24.244 (msec) 2636.184 (KB) from 10.189.17.237 :  
+P2 2012-02-10 10:41:44,669152 26864 /view 0.147 (msec) 2586.112 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+I  2012-02-10 10:41:44,684097 26868 /_s_/wiki/default/js/jquery.upload-1.0.2.js from 10.189.17.237 :  
+T  2012-02-10 10:41:44,684497 26868 /_s_/wiki/default/js/jquery.upload-1.0.2.js ::Cockatoo\parseStaticRequest : Request parsed (debug)  : wiki , default , js/jquery.upload-1.0.2.js ,  
+I  2012-02-10 10:41:44,686173 26865 /_s_/wiki/default/js/jquery-1.4.4.min.js from 10.189.17.237 :  
+P2 2012-02-10 10:41:44,686440 26868 /_s_/wiki/default/js/jquery.upload-1.0.2.js 0.294 (msec) 1352.008 (KB) BeakController::beakQuery : static://wiki-static/default/js/jquery.upload-1.0.2.js?get 
+T  2012-02-10 10:41:44,686507 26865 /_s_/wiki/default/js/jquery-1.4.4.min.js ::Cockatoo\parseStaticRequest : Request parsed (debug)  : wiki , default , js/jquery-1.4.4.min.js ,  
+P  2012-02-10 10:41:44,686544 26868 /_s_/wiki/default/js/jquery.upload-1.0.2.js 2.486 (msec) 1345.992 (KB) from 10.189.17.237 :  
+P2 2012-02-10 10:41:44,691845 26865 /_s_/wiki/default/js/jquery-1.4.4.min.js 4.054 (msec) 1427.512 (KB) BeakController::beakQuery : static://wiki-static/default/js/jquery-1.4.4.min.js?get 
+P  2012-02-10 10:41:44,692028 26865 /_s_/wiki/default/js/jquery-1.4.4.min.js 5.883 (msec) 1421.784 (KB) from 10.189.17.237 :  
+I  2012-02-10 10:41:44,695317 26867 /_s_/wiki/default/js/cockatoo.js from 10.189.17.237 :  
+T  2012-02-10 10:41:44,695725 26867 /_s_/wiki/default/js/cockatoo.js ::Cockatoo\parseStaticRequest : Request parsed (debug)  : wiki , default , js/cockatoo.js ,  
+P2 2012-02-10 10:41:44,697145 26867 /_s_/wiki/default/js/cockatoo.js 0.170 (msec) 1348.704 (KB) BeakController::beakQuery : static://wiki-static/default/js/cockatoo.js?get 
+P  2012-02-10 10:41:44,697269 26867 /_s_/wiki/default/js/cockatoo.js 2.034 (msec) 1343.032 (KB) from 10.189.17.237 :  
+I  2012-02-10 10:41:44,697427 26866 /_s_/wiki/default/css/cockatoo.css from 10.189.17.237 :  
+T  2012-02-10 10:41:44,697773 26866 /_s_/wiki/default/css/cockatoo.css ::Cockatoo\parseStaticRequest : Request parsed (debug)  : wiki , default , css/cockatoo.css ,  
+P2 2012-02-10 10:41:44,699428 26866 /_s_/wiki/default/css/cockatoo.css 0.321 (msec) 1350.056 (KB) BeakController::beakQuery : static://wiki-static/default/css/cockatoo.css?get 
+P  2012-02-10 10:41:44,699550 26866 /_s_/wiki/default/css/cockatoo.css 2.157 (msec) 1344.320 (KB) from 10.189.17.237 :  
+I  2012-02-10 10:41:44,880459 26869 /view from 10.189.17.237 :  
+T  2012-02-10 10:41:44,881316 26869 /view ::Cockatoo\parseRequest : Request preparsed : wiki , default , view ,  
+T  2012-02-10 10:41:44,881396 26869 /view ::Cockatoo\parseRequest : Request parsed    : wiki , default , view ,  
+P3 2012-02-10 10:41:44,883928 26869 /view 0.803 (msec) 2003.048 (KB) BeakController::beakGetsQuery : layout://wiki-layout/default/?get  layout://wiki-layout/default/view?get 
+T  2012-02-10 10:41:44,884186 26869 /view Cockatoo\ContentDrawer::session : Get session cookie 4f346e56b56f3 , 1328924504 
+P2 2012-02-10 10:41:44,884457 26869 /view 0.115 (msec) 2001.624 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P2 2012-02-10 10:41:44,884961 26869 /view 0.347 (msec) 2010.784 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+T  2012-02-10 10:41:44,885031 26869 /view Cockatoo\ContentDrawer::session : Issue session cookie 4f346e56b56f3 , 86400 
+I  2012-02-10 10:41:44,886937 26869 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,887458 26869 /view 0.356 (msec) 2128.024 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P1 2012-02-10 10:41:44,887563 26869 /view 0.544 (msec) 2122.576 (KB) Action::run : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,887682 26869 /view 0.754 (msec) 2108.792 (KB) BeakController::beakQuery : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,888199 26869 /view 0.348 (msec) 2114.352 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+P3 2012-02-10 10:41:44,889828 26869 /view 1.251 (msec) 2149.048 (KB) BeakController::beakGetsQuery : component://core-component/default/horizontal#critical  component://core-component/default/vertical?get  component://wiki-component/default/login?get  component://wiki-component/default/header?get  component://core-component/default/vertical?get  component://core-component/default/horizontal?get  component://wiki-component/default/hist/window?get  component://core-component/default/horizontal?get  component://wiki-component/default/w/page?get  component://wiki-component/default/footer?get 
+T  2012-02-10 10:41:44,889952 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://core-component/default/horizontal#critical 
+T  2012-02-10 10:41:44,890042 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\VerticalWidget , component://core-component/default/vertical?get 
+T  2012-02-10 10:41:44,890120 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/login?get 
+T  2012-02-10 10:41:44,890194 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/header?get 
+T  2012-02-10 10:41:44,890268 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\VerticalWidget , component://core-component/default/vertical?get 
+T  2012-02-10 10:41:44,890341 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://core-component/default/horizontal?get 
+T  2012-02-10 10:41:44,890412 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/hist/window?get 
+T  2012-02-10 10:41:44,890485 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://core-component/default/horizontal?get 
+T  2012-02-10 10:41:44,890556 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/w/page?get 
+T  2012-02-10 10:41:44,890720 26869 /view Cockatoo\WidgetFactory::getWidget : Cockatoo\HorizontalWidget , component://wiki-component/default/footer?get 
+I  2012-02-10 10:41:44,890916 26869 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,891383 26869 /view 0.314 (msec) 2180.896 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P1 2012-02-10 10:41:44,891482 26869 /view 0.492 (msec) 2175.368 (KB) Action::run : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,891569 26869 /view 0.662 (msec) 2161.608 (KB) BeakController::beakQuery : action://wiki-action/wiki/PreAction 
+P2 2012-02-10 10:41:44,892099 26869 /view 0.342 (msec) 2166.456 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+I  2012-02-10 10:41:44,894146 26869 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/HistAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,894497 26869 /view 0.196 (msec) 2364.208 (KB) BeakController::beakQuery : storage://wiki-storage/hist/CUR?get 
+P1 2012-02-10 10:41:44,894586 26869 /view 0.359 (msec) 2358.184 (KB) Action::run : action://wiki-action/wiki/HistAction?get#cache#cexp=30 
+I  2012-02-10 10:41:44,894697 26869 /view Cockatoo\Action::run : Action : action://wiki-action/wiki/PageAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,895175 26869 /view 0.327 (msec) 2376.872 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?get#fresh 
+P2 2012-02-10 10:41:44,899938 26869 /view 4.213 (msec) 2644.408 (KB) BeakController::beakQuery : storage://wiki-storage/page/top?get 
+P1 2012-02-10 10:41:44,900029 26869 /view 5.262 (msec) 2638.536 (KB) Action::run : action://wiki-action/wiki/PageAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,900125 26869 /view 5.992 (msec) 2626.880 (KB) BeakController::beakQuery : action://wiki-action/wiki/HistAction?get#cache#cexp=30  action://wiki-action/wiki/PageAction?get#cache#cexp=30 
+P2 2012-02-10 10:41:44,900666 26869 /view 0.371 (msec) 2624.128 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 
+P  2012-02-10 10:41:44,910997 26869 /view 30.565 (msec) 2634.816 (KB) from 10.189.17.237 :  
+P2 2012-02-10 10:41:44,911862 26869 /view 0.155 (msec) 2585.024 (KB) BeakController::beakQuery : session://wiki-session/default/4f346e56b56f3?set 

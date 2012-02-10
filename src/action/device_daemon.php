@@ -60,7 +60,10 @@ class DeviceDaemon {
   public function main(){
     $this->zmqSockFront->bind($this->serviceDSN);
     $this->zmqSockBack->bind($this->childDSN);
-    new \ZMQDevice(\ZMQ::DEVICE_QUEUE,$this->zmqSockFront,$this->zmqSockBack);
+// Obsolute ...
+//    new \ZMQDevice(\ZMQ::DEVICE_QUEUE,$this->zmqSockFront,$this->zmqSockBack);
+    $dev = new \ZMQDevice($this->zmqSockFront,$this->zmqSockBack);
+    $dev->run();
   }
 }
 

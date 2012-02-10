@@ -47,7 +47,10 @@ class GatewayDaemon {
     foreach($this->backDSNs as $backDSN ) {
       $this->zmqSockBack->connect($backDSN);
     }
-    new \ZMQDevice(\ZMQ::DEVICE_QUEUE,$this->zmqSockFront,$this->zmqSockBack);
+// Obsolute ...
+//    new \ZMQDevice(\ZMQ::DEVICE_QUEUE,$this->zmqSockFront,$this->zmqSockBack);
+    $dev = new \ZMQDevice($this->zmqSockFront,$this->zmqSockBack);
+    $dev->run();
   }
 }
 
