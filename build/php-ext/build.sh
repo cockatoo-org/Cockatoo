@@ -47,7 +47,8 @@ function build_php_ext3 {
     run ./configure \
 	--with-php-config=/usr/local/${PHP_NAME}/bin/php-config \
 	${OPTIONS}
-    run make; make install INSTALL_ROOT=${ROOT}/root_${EXT}
+    run make
+    run make install INSTALL_ROOT=${ROOT}/root_${EXT}
     CONFD=${ROOT}/root_${EXT}/usr/local/${PHP_NAME}/lib/conf.d/
     run mkdir -p ${CONFD}
     if [ -f ${ROOT}/${EXT}.ini ]; then
@@ -94,15 +95,18 @@ fi
 if [ "${OPT_ZMQ}" = "1" ];then
     VERSION='1.0.2'
     git_download http://github.com/mkoppanen/php-zmq.git $VERSION
+    run rm -rf zmq
     mv -T php-zmq zmq
     build_php_ext3 zmq  --with-zmq=/usr/local "--require='zeromq 2.1.9 999.999.999'"
 fi    
 
 if [ "${OPT_MONGO}" = "1" ];then
-    VERSION='1.2.2'
-    git_download http://github.com/mongodb/mongo-php-driver.git $VERSION
-    run patch -p 0 <mongo1.2.2.non-wait.patch
-    run patch -p 0 <mongo1.2.2.sock-leak.patch
+    VERSION='1.2.2a'
+#    git_download http://github.com/mongodb/mongo-php-driver.git $VERSION
+#    run patch -p 0 <mongo1.2.2.non-wait.patch
+#    run patch -p 0 <mongo1.2.2.sock-leak.patch
+    git_download http://github.com/cockatoo-org/mongo-php-driver.git $VERSION
+    run rm -rf mongo
     run mv -T mongo-php-driver mongo
     build_php_ext3 mongo
 fi    
@@ -124,6 +128,7 @@ if [ "${OPT_ZOOKEEPER}" = "1" ];then
     VERSION='v0.2.1'
     git_download http://github.com/andreiz/php-zookeeper.git $VERSION
 #   patch -i php_zookeeper.patch
+    run rm -rf zookeeper
     run mv php-zookeeper zookeeper
     build_php_ext3 zookeeper --with-libzookeeper-dir=/usr/local "--require='libzookeeper 3.3.2 999.999.999'"
 fi
