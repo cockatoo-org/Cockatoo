@@ -113,6 +113,7 @@ class MongoAccess {
       $this->mongo = new \Mongo($this->server,$this->options);
     }
     $this->mongo->connect();
+//    Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : ' . $this->mongo->getSlave());
     if ( $this->slaveOk ) {
       $this->mongo->setSlaveOkay(true);
     }

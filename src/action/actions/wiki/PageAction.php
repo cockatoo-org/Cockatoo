@@ -123,6 +123,8 @@ class PageAction extends \Cockatoo\Action {
         $ret [] = array('tag' => 'text' , 'text' => $matches[1]);
         if ( preg_match('@^https?://@', $matches[2] , $matchdummy ) !== 0 ) {
           $ret []= array('tag' => 'a', 'attr' => array('href' => $matches[2]) , 'children' => array(array('tag' => 'text' , 'text' => (($matches[3])?ltrim($matches[3],'|'):$matches[2]))) );
+        }elseif(preg_match('@^#@', $matches[2] , $matchdummy ) !== 0 ) {
+          $ret []= array('tag' => 'a', 'attr' => array('href' => $matches[2]) , 'children' => array(array('tag' => 'text' , 'text' => (($matches[3])?ltrim($matches[3],'|'):$matches[2]))) );
         }else{
           $ret []= array('tag' => 'a', 'attr' => array('href' => '/view/' . $matches[2]) , 'children' => array(array('tag' => 'text' , 'text' => (($matches[3])?ltrim($matches[3],'|'):$matches[2]))) );
         }
