@@ -21,9 +21,9 @@ function build_nodejs {
     run ./configure \
 	--prefix=/usr/local/nodejs-${VERSION}
     run make install DESTDIR=${ROOT}
-    run ln -s nodejs-${VERSION} ${ROOT}/usr/local/nodejs
+    run ln -sfT nodejs-${VERSION} ${ROOT}/usr/local/nodejs
     run sudo make install
-    run sudo ln -s nodejs-${VERSION} /usr/local/nodejs
+    run sudo ln -sfT nodejs-${VERSION} /usr/local/nodejs
     run popd
     run ~/.capkg/config/capkg.sh generate -p nodejs${VERSION} -i /usr -s usr/local
 }
@@ -42,4 +42,5 @@ function build_npm_lib {
 }
 build_nodejs
 build_npm_lib jsdom
+build_npm_lib getopt
 
