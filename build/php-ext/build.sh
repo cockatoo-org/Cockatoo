@@ -101,7 +101,7 @@ if [ "${OPT_ZMQ}" = "1" ];then
 fi    
 
 if [ "${OPT_MONGO}" = "1" ];then
-    VERSION='1.2.2a'
+    VERSION='1.2.7c'
 #    git_download http://github.com/mongodb/mongo-php-driver.git $VERSION
 #    run patch -p 0 <mongo1.2.2.non-wait.patch
 #    run patch -p 0 <mongo1.2.2.sock-leak.patch
