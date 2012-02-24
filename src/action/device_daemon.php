@@ -10,8 +10,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
+require_once(dirname(__FILE__) . '/../def.php');
 
 /**
  * ZeroMQ-device daemon

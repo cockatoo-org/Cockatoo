@@ -9,7 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-require_once(Config::$COCKATOO_ROOT.'utils/session.php');
+require_once(Config::COCKATOO_ROOT.'utils/session.php');
 
 /**
  * Action base

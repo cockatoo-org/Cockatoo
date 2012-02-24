@@ -12,4 +12,5 @@
 <ul>
   <li><a id="Page"      href="cms_page.php">Page</a></li>
   <li><a id="Component" href="cms_component.php">Component</a></li>
+  <li><a id="Admin"      href="cms_admin.php">Admin</a></li>
 </ul>

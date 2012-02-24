@@ -9,7 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-require_once(Config::$COCKATOO_ROOT.'action/Action.php');
+require_once(Config::COCKATOO_ROOT.'action/Action.php');
 
 class HealthAction extends Action {
   protected function proc(){

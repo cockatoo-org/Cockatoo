@@ -9,8 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
+require_once(dirname(__FILE__) . '/../def.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="ja">
@@ -115,9 +114,36 @@ $(function () {
 /*     del :    { url : 'cms_ajax.php', args : { op : 'delC'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select component !'; } }, */
     update : { url : 'cms_ajax.php', args : { op : 'setC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select component !'; } },
     list :   { url : 'cms_ajax.php', args : { op : 'getC'}, col : 'brl' },
+    custom1 :{ 
+      label : 'check' ,
+      hook: function(t) { 
+	d = getVal(t.data,t.index);
+	if (! d ) {
+	  return 'Please select component !'; 
+	} 
+	$.ajax({
+	  url: 'cms_ajax.php',
+	  type: 'POST',
+	  dataType: 'json',
+          data: { sid: t.settings.args.sid, op: 'checkC', brl:d.brl },
+	  t:t,
+	  d:d,
+	  success: function (data){
+	    if ( 'emsg' in data ) {
+	      var m = t.root.find('b.message');
+	      m.text(data.emsg).slideDown(1000);
+	      setTimeout(function(){ m.slideUp(1000);},3000);
+	    }
+	    d['required'] = data['required'];
+	    t.view();
+	  }
+	});
+      }
+    },
     view : true,
     width: 700,
     dialog : { width: 800 , height: 630 , post_init: function ( root ) { 
+      root.find('textarea[name="required"]').attr("disabled","disabled");
       var $kind = root.attr('kind');
       root.find('input[name="brl"]').attr("readonly","readonly");
       if ( $kind == 'update' || $kind == 'del') {
@@ -132,13 +158,14 @@ $(function () {
       name       : { label: 'Component name' , type : 'text'},
       subject    : { label: 'Subject' , type : 'text'},
       description: { label: 'Description' , type : 'text'},
-          type       : { label: 'Widget type' , type : 'select', options : { horizontal :'HorizontalWidget', vertical :'VerticalWidget', tab :'TabWidget', tabchild :'TabChildWidget', random :'RandomWidget', tile :'TileWidget', time : 'TimeWidget',plain : 'PlainWidget',json : 'JsonWidget',binary : 'BinaryWidget' } , def : 'HorizontalWidget'},
+      type       : { label: 'Widget type' , type : 'select', options : { horizontal :'HorizontalWidget', vertical :'VerticalWidget', tab :'TabWidget', tabchild :'TabChildWidget', random :'RandomWidget', tile :'TileWidget', time : 'TimeWidget',plain : 'PlainWidget',json : 'JsonWidget',binary : 'BinaryWidget' } , def : 'HorizontalWidget'},
       id         : { label: 'HTML id' , type : 'text' },
       clazz      : { label: 'HTML class' , type : 'text' },
       body       : { label: 'body' , type : 'textarea' },
       actions    : { label: 'actions' , type : 'textarea' },
       css        : { label: 'CSS' , type : 'textarea' },
-      js         : { label: 'JS' , type : 'textarea' }
+      js         : { label: 'JS' , type : 'textarea' },
+      required   : { label: 'Required' , type : 'textarea'}
     },
     validator: {
       rules: {
@@ -188,7 +215,7 @@ $(function () {
    <div id="header-main">
 <?php
   namespace Cockatoo;
-  require_once(Config::$COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
+  require_once(Config::COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
 ?>
    </div>
   </div>

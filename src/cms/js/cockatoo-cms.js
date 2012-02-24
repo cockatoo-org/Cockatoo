@@ -94,12 +94,14 @@
 	  if (t.settings.custom1 ) {
 	    t.root.find('h2 > div').append('<a src="#" class="custom1">'+t.settings.custom1.label+'</a>' );
 	    t.root.find('h2 > div > a.custom1').click(function (ev){
-	      var msg = t.settings.custom1.hook(t);
-	      if ( msg ) {
-		var m = t.root.find('.message');
-		m.hide().text(msg).slideDown(1000);
-		setTimeout(function(){ m.slideUp(1000);},3000);
-		return;
+	      if ( t.settings.custom1.hook ) {
+		var msg = t.settings.custom1.hook(t);
+		if ( msg ) {
+		  var m = t.root.find('.message');
+		  m.hide().text(msg).slideDown(1000);
+		  setTimeout(function(){ m.slideUp(1000);},3000);
+		  return;
+		}
 	      }
 	    });
 	  }

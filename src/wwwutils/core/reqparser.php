@@ -10,7 +10,7 @@
  * @copyright Copyright (C) 2012, rakuten 
  */
 namespace Cockatoo;
-\ClassLoader::addClassPath(Config::$COCKATOO_ROOT.'wwwutils/plugin');
+\ClassLoader::addClassPath(Config::COCKATOO_ROOT.'wwwutils/plugin');
 
 
 // DeviceSelector

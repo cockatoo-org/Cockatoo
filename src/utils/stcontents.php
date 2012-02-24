@@ -12,7 +12,7 @@
  * @copyright Copyright (C) 2012, rakuten 
  */
 namespace Cockatoo;
-require_once(Config::$COCKATOO_ROOT.'wwwutils/core/webutils.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/webutils.php');
 
 /**
  * FileContentType

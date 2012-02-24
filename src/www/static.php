@@ -9,12 +9,11 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
-require_once(Config::$COCKATOO_ROOT.'wwwutils/core/reqparser.php');
-require_once(Config::$COCKATOO_ROOT.'wwwutils/core/webutils.php');
-require_once(Config::$COCKATOO_ROOT.'utils/beak.php');
-require_once(Config::$COCKATOO_ROOT.'utils/stcontents.php');
+require_once(dirname(__FILE__).'/../def.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/reqparser.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/webutils.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
+require_once(Config::COCKATOO_ROOT.'utils/stcontents.php');
 
 $REMOTE_ADDR     = $_SERVER['REMOTE_ADDR'];
 $NAME = 'from ' . $REMOTE_ADDR . ' : ';

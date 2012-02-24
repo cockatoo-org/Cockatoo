@@ -10,9 +10,8 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
-require_once(Config::$COCKATOO_ROOT.'utils/beak.php');
+require_once(dirname(__FILE__) . '/../def.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 
 declare(ticks = 1);
 
@@ -172,7 +171,7 @@ class GatewayController {
     $realIPC = $frontIPC . '.' . $pid;
     usleep(self::FORK_WAIT);
     Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : ' . $realIPC . ' => ' . $frontIPC);
-    // Force option not suppoted, so couldn't do atmic.
+    // @@@ Force option not suppoted, so couldn't do atmic.
     // symlink ( $realIPC , $frontIPC );
     system ( "ln -sf $realIPC $frontIPC" );
     $hpid = $this->forkHealthCheck($brl);

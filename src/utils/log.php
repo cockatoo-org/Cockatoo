@@ -10,7 +10,7 @@
  * @copyright Copyright (C) 2012, rakuten 
  */
 namespace Cockatoo;
-require_once(Config::$COCKATOO_ROOT.'utils/utils.php');
+require_once(Config::COCKATOO_ROOT.'utils/utils.php');
 /**
  * Log format. 
  *   <LV> <DATE> <TIME> <PID> <NAME> <MSG>

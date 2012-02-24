@@ -9,8 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
+require_once(dirname(__FILE__) . '/../def.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="ja">
@@ -110,9 +109,9 @@ $(function () {
   }
   var service = $('#services').cockatoo_list({ 
     title:'Services', 
-    add :    { url : 'cms_ajax.php', args : { op : 'addS'}},
-    //del :    { url : 'cms_ajax.php', args : { op : 'delG'}, hook: function (t) { if (!getVal(t.data,t.index)) return 'Please select service !'; } },
-    update : { url : 'cms_ajax.php', args : { op : 'setS'}, hook: function (t) { if (!getVal(t.data,t.index)) return 'Please select service !'; } },
+    // add :    { url : 'cms_ajax.php', args : { op : 'addS'}},
+    // del :    { url : 'cms_ajax.php', args : { op : 'delG'}, hook: function (t) { if (!getVal(t.data,t.index)) return 'Please select service !'; } },
+    // update : { url : 'cms_ajax.php', args : { op : 'setS'}, hook: function (t) { if (!getVal(t.data,t.index)) return 'Please select service !'; } },
     list :   { url : 'cms_ajax.php', args : { op : 'getS'}, col : 'name' },
     view : true,
     width: 150,
@@ -338,7 +337,7 @@ $(function () {
    <div id="header-main">
 <?php
   namespace Cockatoo;
-  require_once(Config::$COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
+  require_once(Config::COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
 ?>
    </div>
   </div>

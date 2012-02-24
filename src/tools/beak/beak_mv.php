@@ -10,9 +10,8 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
-require_once(Config::$COCKATOO_ROOT.'tools/beak/beak_transfer.php');
+require_once(dirname(__FILE__) . '/../../def.php');
+require_once(Config::COCKATOO_ROOT.'tools/beak/beak_transfer.php');
 ini_set('display_errors','On');
 
 
@@ -69,7 +68,7 @@ _MSG_;
 }
 
 function kick_minimize(&$d,$type){
-  $MINIMIZE=Config::$COCKATOO_ROOT.'tools/minimize/minimize.sh';
+  $MINIMIZE=Config::COCKATOO_ROOT.'tools/minimize/minimize.sh';
   $descriptorspec = array(
     0 => array("pipe", 'r'),
     1 => array("pipe", 'w'),

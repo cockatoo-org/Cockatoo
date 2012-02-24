@@ -9,13 +9,13 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
-require_once(Config::$COCKATOO_ROOT.'wwwutils/core/webutils.php');
-require_once(Config::$COCKATOO_ROOT.'wwwutils/core/widget.php');
-require_once(Config::$COCKATOO_ROOT.'wwwutils/core/content.php');
-require_once(Config::$COCKATOO_ROOT.'utils/beak.php');
-require_once(Config::$COCKATOO_ROOT.'utils/stcontents.php');
+require_once(dirname(__FILE__) . '/../def.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/cms_acl.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/webutils.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/widget.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/content.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
+require_once(Config::COCKATOO_ROOT.'utils/stcontents.php');
 
 $_sP = $_POST;
 $_sG = $_GET;
@@ -54,86 +54,70 @@ $id           = $_sP['id'];
 $class        = $_sP['clazz'];
 $body         = $_sP['body'];
 $actions      = explode("\n",$_sP['actions']);
+$check        = $_sP['brl'];
 $r;
 $emsg='';
-
 try {
   if ( $op === 'getS' ) {
-    $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
-    $ret = BeakController::beakQuery(array($brl));
-    foreach ( $ret[$brl] as $sid){
-      $r [] = array('sid' => $sid , 'name' => $sid);
-    }
-  } elseif( $op === 'addS' ) {
-    // addD ('default')
-    $sid = $_sP['name'];
-    $did = 'default';
-    $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array(
-                      array(Def::K_LAYOUT_TYPE => 'PageLayout' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/pagelayout" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array())
-                      ));
-    $header='<meta http-equiv="content-type" content="text/html; charset=utf-8">' . "\n" .
-      '<meta http-equiv="content-style-type" content="text/css">' . "\n" .
-      '<meta http-equiv="content-script-type" content="text/javascript">' . "\n";
-    setD(false,$rev,$sid,$did,''        ,''  ,'' ,$header,'',$layout);
-    $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$sid,Beak::M_SET);
-    $ret = BeakController::beakQuery(array($brl));
-    if ( ! $ret[$brl] ) {
-      throw new \Exception('Fail to set : ' . $brl);
+    $sids = getS();
+    foreach ( $sids as $sid){
+      if ( is_readable($sid) ){
+        $r [] = array('sid' => $sid , 'name' => $sid);
+      }
     }
   } elseif( $op === 'getD' ) {
-    $brl = brlgen(Def::BP_LAYOUT,$sid,'','',Beak::M_COL_LIST);
-    $ret = BeakController::beakQuery(array($brl));
-    $r = array();
-    foreach ( $ret[$brl] as $did){
-      // layout
-      $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
-      $data = BeakController::beakQuery(array($brl));
-      $data = &$data[$brl];
-      $rev = $data[Beak::ATTR_REV];
-      $eredirect = $data[Def::K_LAYOUT_EREDIRECT];
-      $header = $data[Def::K_LAYOUT_HEADER];
-      $pheader = $data[Def::K_LAYOUT_PHEADER];
-      $expires = $data[Def::K_LAYOUT_EXPIRES];
-      // css
-      $cssBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonCSS,Beak::M_GET);
-      $cssRet = BeakController::beakQuery(array($cssBrl));
-      $css = $cssRet[$cssBrl];
-      $css = $css?$css[Def::K_STATIC_DATA]:'';
-      // js
-      $jsBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonJs,Beak::M_GET);
-      $jsRet = BeakController::beakQuery(array($jsBrl));
-      $js = $jsRet[$jsBrl];
-      $js = $js?$js[Def::K_STATIC_DATA]:'';
-      $r []= array('rev' => $rev,
-                   'sid' => $sid ,
-                   'did' => $did ,
-                   'name' => $did ,
-                   'eredirect' => $eredirect,
-                   'css' => $css ,
-                   'js' => $js,
-                   'expires'      => ($expires<=0)?'false':'true',
-                   'expires_time' => $expires,
-                   'header' => $header,
-                   'pheader' => $pheader,
-                   'layout' => '<a target="_blank" href="cms_layout.php?'.Def::REQUEST_SERVICE.'=' . $sid . '&'.Def::REQUEST_DEVICE.'=' . $did . '&'.Def::REQUEST_PATH.'=/' . "" . '">'. "$did" .'</a>'
+    if ( is_readable($sid) ){
+      $dids = getD($sid);
+      foreach ( $dids as $did){
+        // layout
+        $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
+        $data = BeakController::beakQuery(array($brl));
+        $data = &$data[$brl];
+        $rev = $data[Beak::ATTR_REV];
+        $eredirect = $data[Def::K_LAYOUT_EREDIRECT];
+        $header = $data[Def::K_LAYOUT_HEADER];
+        $pheader = $data[Def::K_LAYOUT_PHEADER];
+        $expires = $data[Def::K_LAYOUT_EXPIRES];
+        // css
+        $cssBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonCSS,Beak::M_GET);
+        $cssRet = BeakController::beakQuery(array($cssBrl));
+        $css = $cssRet[$cssBrl];
+        $css = $css?$css[Def::K_STATIC_DATA]:'';
+        // js
+        $jsBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonJs,Beak::M_GET);
+        $jsRet = BeakController::beakQuery(array($jsBrl));
+        $js = $jsRet[$jsBrl];
+        $js = $js?$js[Def::K_STATIC_DATA]:'';
+        $r []= array('rev' => $rev,
+                     'sid' => $sid ,
+                     'did' => $did ,
+                     'name' => $did ,
+                     'eredirect' => $eredirect,
+                     'css' => $css ,
+                     'js' => $js,
+                     'expires'      => ($expires<=0)?'false':'true',
+                     'expires_time' => $expires,
+                     'header' => $header,
+                     'pheader' => $pheader,
+                     'layout' => '<a target="_blank" href="cms_layout.php?'.Def::REQUEST_SERVICE.'=' . $sid . '&'.Def::REQUEST_DEVICE.'=' . $did . '&'.Def::REQUEST_PATH.'=/' . "" . '">'. "$did" .'</a>'
                     
-        );
+          );
+      }
     }
   } elseif( $op === 'addD' ) {
+    check_writable($sid);
     $did = $_sP['device'];
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array(
                       array(Def::K_LAYOUT_TYPE => 'PageLayout' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/pagelayout" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array())
                       ));
     setD(false,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$header,$pheader,$layout);
   } elseif( $op === 'setD' ) {
+    check_writable($sid);
     setD(true,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$header,$pheader,null);
   } elseif( $op === 'getP' ) {
-    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_KEY_LIST);
-    $ret = BeakController::beakQuery(array($brl));
-    $r = array();
-    foreach ( $ret[$brl] as $p){
-      $pid = $p;
-//       if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
+    if ( is_readable($sid) ){
+      $pids = getP($sid,$did);
+      foreach ( $pids as $pid){
         $r [] = array('sid' => $sid , 
                       'did' => $did , 
                       'pid' => $pid ,
@@ -151,91 +135,177 @@ try {
                       'pheader' => '',
                       'contents' => ''
           );
-//       }
-    }
-  } elseif( $op === 'getPP' ) {
-    $CONTENT_DRAWER = new ContentDrawer($sid,$did,$pid,null,null,null,Def::RenderingModeNORMAL);  
-    $CONTENT_DRAWER->layout();
-    $CONTENT_DRAWER->components();
-    $contents = '';
-    $contents .= "$CONTENT_DRAWER->layoutBrl\n";
-    $contents .= " * $CONTENT_DRAWER->preAction\n";
-    foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
-      $contents .= " - $b\n";
-      foreach ( $c[Def::K_COMPONENT_ACTION] as $a ) {
-        if ( $a ) {
-          $contents .= "      $a\n";
-        }
       }
     }
-    $contents .= " * $CONTENT_DRAWER->postAction\n";
-    $r = array('rev'         => $CONTENT_DRAWER->layoutData[Beak::ATTR_REV],
-               'ctype'       => $CONTENT_DRAWER->ctype,
-               'pre_action'  => $CONTENT_DRAWER->preAction,
-               'post_action' => $CONTENT_DRAWER->postAction,
-               'session'     => ($CONTENT_DRAWER->sessionExp<0)?'false':'true',
-               'session_exp' => $CONTENT_DRAWER->sessionExp,
-               'expires'      => ($CONTENT_DRAWER->expires<=0)?'false':'true',
-               'expires_time' => $CONTENT_DRAWER->expires,
-               'eredirect'   => $CONTENT_DRAWER->eredirect,
-               'redirect'    => $CONTENT_DRAWER->redirect,
-               'header'      => $CONTENT_DRAWER->layoutData[Def::K_LAYOUT_HEADER],
-               'pheader'     => $CONTENT_DRAWER->layoutData[Def::K_LAYOUT_PHEADER],
-               'contents'    => $contents
-      );
+  } elseif( $op === 'getPP' ) {
+    if ( is_readable($sid) ){
+      $CONTENT_DRAWER = new ContentDrawer($sid,$did,$pid,null,null,null,Def::RenderingModeNORMAL);  
+      $CONTENT_DRAWER->layout();
+      $CONTENT_DRAWER->components();
+      $contents = '';
+      $contents .= "$CONTENT_DRAWER->layoutBrl\n";
+      $contents .= " * $CONTENT_DRAWER->preAction\n";
+      foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
+        $contents .= " - $b\n";
+        foreach ( $c[Def::K_COMPONENT_ACTION] as $a ) {
+          if ( $a ) {
+            $contents .= "      $a\n";
+          }
+        }
+      }
+      $contents .= " * $CONTENT_DRAWER->postAction\n";
+      $r = array('rev'         => $CONTENT_DRAWER->layoutData[Beak::ATTR_REV],
+                 'ctype'       => $CONTENT_DRAWER->ctype,
+                 'pre_action'  => $CONTENT_DRAWER->preAction,
+                 'post_action' => $CONTENT_DRAWER->postAction,
+                 'session'     => ($CONTENT_DRAWER->sessionExp<0)?'false':'true',
+                 'session_exp' => $CONTENT_DRAWER->sessionExp,
+                 'expires'      => ($CONTENT_DRAWER->expires<=0)?'false':'true',
+                 'expires_time' => $CONTENT_DRAWER->expires,
+                 'eredirect'   => $CONTENT_DRAWER->eredirect,
+                 'redirect'    => $CONTENT_DRAWER->redirect,
+                 'header'      => $CONTENT_DRAWER->layoutData[Def::K_LAYOUT_HEADER],
+                 'pheader'     => $CONTENT_DRAWER->layoutData[Def::K_LAYOUT_PHEADER],
+                 'contents'    => $contents
+        );
+    }
   } elseif( $op === 'addP' ) {
+    check_writable($sid);
     $pid = $_sP['name'];
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array());
     setP(false,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session,$session_exp,$expires,$expires_time,$header,$pheader,$layout);
   } elseif( $op === 'setP' ) {
+    check_writable($sid);
     setP(true,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session,$session_exp,$expires,$expires_time,$header,$pheader,null);
   } elseif( $op === 'getC' ) {
-    $brl = brlgen(Def::BP_COMPONENT,$sid,'default','',Beak::M_KEY_LIST);
-    $ret = BeakController::beakQuery(array($brl));
-    $r = array();
-    foreach ( $ret[$brl] as $c){
-      $cid = $c;
-      if ( preg_match('@[^/]$@',$c,$matches) !== 0 ) {
-        $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
-        $r [] = array('sid' => $sid ,
-                      'cid' => $cid ,
-                      'name' => $cid , 
-                      'brl'  => $brl , 
-                      'description' => '' , 
-                      'type' => '',
-                      'clazz' => '',
-                      'body' => '',
-                      'actions' => '',
-                      'css' => '',
-                      'js' => ''
-          );
+    if ( is_readable($sid) ){
+      $brl = brlgen(Def::BP_COMPONENT,$sid,'default','',Beak::M_KEY_LIST);
+      $ret = BeakController::beakQuery(array($brl));
+      $r = array();
+      foreach ( $ret[$brl] as $c){
+        $cid = $c;
+        if ( preg_match('@[^/]$@',$c,$matches) !== 0 ) {
+          $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
+          $r [] = array('sid' => $sid ,
+                        'cid' => $cid ,
+                        'name' => $cid , 
+                        'brl'  => $brl , 
+                        'description' => '' , 
+                        'type' => '',
+                        'clazz' => '',
+                        'body' => '',
+                        'actions' => '',
+                        'css' => '',
+                        'js' => ''
+            );
+        }
       }
     }
   } elseif( $op === 'getCC' ) {
-    $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
-    $ret = BeakController::beakQuery(array($brl));
-    $cdata = &$ret[$brl];
+    if ( is_readable($sid) ){
+      $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
+      $ret = BeakController::beakQuery(array($brl));
+      $cdata = &$ret[$brl];
 
-    $r = array('rev'         => $cdata[Beak::ATTR_REV],
-               'type'        => $cdata[Def::K_COMPONENT_TYPE],
-               'subject'     => $cdata[Def::K_COMPONENT_SUBJECT],
-               'description' => $cdata[Def::K_COMPONENT_DESCRIPTION],
-               'id'          => $cdata[Def::K_COMPONENT_ID],
-               'clazz'       => $cdata[Def::K_COMPONENT_CLASS],
-               'body'        => $cdata[Def::K_COMPONENT_BODY],
-               'actions'     => $cdata[Def::K_COMPONENT_ACTION]?join("\n",$cdata[Def::K_COMPONENT_ACTION]):'',
-               'js'          => $cdata[Def::K_COMPONENT_JS],
-               'css'         => $cdata[Def::K_COMPONENT_CSS]
-      );
+      $r = array('rev'         => $cdata[Beak::ATTR_REV],
+                 'type'        => $cdata[Def::K_COMPONENT_TYPE],
+                 'subject'     => $cdata[Def::K_COMPONENT_SUBJECT],
+                 'description' => $cdata[Def::K_COMPONENT_DESCRIPTION],
+                 'id'          => $cdata[Def::K_COMPONENT_ID],
+                 'clazz'       => $cdata[Def::K_COMPONENT_CLASS],
+                 'body'        => $cdata[Def::K_COMPONENT_BODY],
+                 'actions'     => $cdata[Def::K_COMPONENT_ACTION]?join("\n",$cdata[Def::K_COMPONENT_ACTION]):'',
+                 'js'          => $cdata[Def::K_COMPONENT_JS],
+                 'css'         => $cdata[Def::K_COMPONENT_CSS]
+        );
+    }
   } elseif( $op === 'addC' ) {
+    check_writable($sid);
     $cid = $_sP['name'];
     setC(false,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
   } elseif( $op === 'setC' ) {
+    check_writable($sid);
     setC(true,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+  } elseif( $op === 'checkC' ) {
+    if ( is_readable($sid) ){
+      if ( preg_match('@^(.+)\?|#@',$check,$matches) ){
+        $check = $matches[1];
+      }
+      $sids = getS();
+      foreach( $sids as $sid ) {
+        $dids = getD($sid);
+        foreach( $dids as $did ) {
+          $pids = getP($sid,$did);
+          foreach( $pids as $pid ) {
+            if ( ! $pid ){
+              continue;
+            }
+            try { 
+              $CONTENT_DRAWER = new ContentDrawer($sid,$did,$pid,null,null,null,Def::RenderingModeNORMAL);  
+              $CONTENT_DRAWER->layout();
+              $CONTENT_DRAWER->components();
+              foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
+                if ( preg_match('@^(.+)\?|#@',$b,$matches) ){
+                  $b = $matches[1];
+                }
+                if ( $b === $check ) {
+                  $r['required'] .= " $CONTENT_DRAWER->layoutBrl\n";
+                }
+              }
+            } catch (\Exception $e) {
+              $emsg .= $sid.'/'.$did.'/'.$pid . ' : ' . $e->getMessage() . "\n";
+            }
+          }
+        }
+      }
+    }
+  } elseif( $op === 'setL' ) {
+    check_writable($sid);
+    $layout = json_decode($_POST['layout'],true);
+    if ( ! $layout ) {
+      throw new \Exception('Fail to json_decode : ' . $_POST['layout']);
+    }
+    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
+    $ret = BeakController::beakQuery(array($brl));
+    $data = $ret[$brl];
+    if ( ! $data ) {
+      throw new \Exception('Fail to get : ' . $brl);
+    }
+    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_SET);
+    $data[Def::K_LAYOUT_LAYOUT] = $layout;
+    $ret = BeakController::beakQuery(array(array($brl,$data)));
+    if ( ! $ret[$brl] ) {
+      throw new \Exception('Fail to set : ' . $brl);
+    }
   } else{
   }
 } catch (\Exception $e) {
-  $emsg = $e->getMessage();
+  $emsg .= $e->getMessage();
+}
+
+function getS(){
+  $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
+  $ret = BeakController::beakQuery(array($brl));
+  if ( ! $ret[$brl] ) {
+    throw new \Exception('Fail to get : ' . $brl);
+  }
+  return $ret[$brl];
+}
+function getD($sid){
+  $brl = brlgen(Def::BP_LAYOUT,$sid,'','',Beak::M_COL_LIST);
+  $ret = BeakController::beakQuery(array($brl));
+  if ( $ret[$brl] === null ) {
+    throw new \Exception('Fail to get : ' . $brl);
+  }
+  return $ret[$brl];
+}
+function getP($sid,$did){
+  $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_KEY_LIST);
+  $ret = BeakController::beakQuery(array($brl));
+  if ( $ret[$brl] === null ) {
+    throw new \Exception('Fail to get : ' . $brl);
+  }
+  return $ret[$brl];
 }
 
 function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$header,$pheader,$layout){

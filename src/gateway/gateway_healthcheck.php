@@ -13,9 +13,8 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
-require_once(Config::$COCKATOO_ROOT.'utils/beak.php');
+require_once(dirname(__FILE__) . '/../def.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 
 class GatewayHealthcheck {
   const CHECK_RETRY   = 5;

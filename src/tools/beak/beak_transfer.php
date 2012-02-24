@@ -9,8 +9,8 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
-require_once(Config::$COCKATOO_ROOT.'utils/beak.php');
-require_once(Config::$COCKATOO_ROOT.'utils/stcontents.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
+require_once(Config::COCKATOO_ROOT.'utils/stcontents.php');
 class BeakImporter {
   public $EXECLUDE = array(
     '@^\.svn$@',

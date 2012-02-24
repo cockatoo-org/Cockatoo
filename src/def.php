@@ -143,3 +143,172 @@ class Def {
   const  LOGLV_FATAL0             = 0x00000001;
 
 }
+
+abstract class DefaultConfig {
+  /**
+   * Cockatoo paths
+   */
+  const COCKATOO_ROOT='/usr/local/cockatoo/';
+  /**
+   * Specify the application path if you want to run only one application on this domain.
+   *   ex> '/wiki/default'
+   */
+  const APP_OCCUPATION = false;
+  /**
+   * Service MODE
+   *   You should set Def::MODE_NORMAL in service environment.
+   */
+  const Mode           = Def::MODE_NORMAL;
+  /**
+   * The redirect path that when unhandled error occured.
+   */
+  const ErrorRedirect  = '/default/error';
+  /**
+   * Path to files
+   */
+  const CommonCSS      = 'css/cockatoo.css';
+  const CommonJs       = 'js/cockatoo.js';
+  /**
+   * Session cookie name
+   */
+  const SESSION_COOKIE = 'ALB_SESID';
+  /**
+   * Request analizer
+   */
+  const RequestParser     = 'Cockatoo\DefaultRequestParser';
+  const DeviceSelector    = 'Cockatoo\DefaultDeviceSelector'; 
+  /**
+   * Beak serializer
+   */
+  const BeakPacker     = 'Cockatoo\DefaultBeakPacker';
+  /**
+   * Gateway socket path
+   */
+  const IPCDirectory   = '/tmp';
+  /**
+   * Timeout
+   */
+  const ActionTimeout  = 1000;  // This means 1 sec.
+  /**
+   * CMS acl
+   */
+  const CMSAuth       = 'Cockatoo\DefaultCmsAuth';
+  /**
+   * PID
+   */
+  static public $PID;
+  /**
+   * BEAK drivers
+   */
+  static public $BEAKS;
+  /**
+   * BEAK scheme-list
+   */
+  static public $SYS_BEAKS;
+  /**
+   * Memcached switch for beak cache
+   */
+  static public $UseMemcache = false;
+  /**
+   * Dynamic locator switch from zookeeper
+   */
+  static public $UseZookeeper       = false;
+  static public $ZookeeperCacheFile = 'daemon/etc/zoo.json';
+  /**
+   * Static locator
+   */
+  static public $BeakLocation;
+  /**
+   * Log
+   */
+  static public $Loglv       = Def::LOGLV_INFO;
+  static public $LogDataDump = false;
+  static public $LogFile     = 'logs/cockatoo.log';
+  /**
+   * Measure of the zmq socket leak
+   */
+  static public $Error2Die;
+
+  static private $init = true;
+
+  public static function __init__ () {
+    if ( self::$init ) {
+      self::$init = false;
+      $conf = get_called_class();
+      //--------------------
+      // Pre init
+      //--------------------
+      self::$PID = posix_getpid();
+      // Domain suffix
+      self::$SYS_BEAKS = array (
+        Def::BP_SESSION  => 'session'  ,
+        Def::BP_LAYOUT   => 'layout'   ,
+        Def::BP_COMPONENT=> 'component',
+        Def::BP_STATIC   => 'static'   ,
+        Def::BP_STORAGE  => 'storage'   ,
+        Def::BP_ACTION   => 'action'   ,
+        Def::BP_SEARCH   => 'search'   ,
+        Def::BP_CMS      => 'cms',
+        null
+        );
+      // @@@ Todo: 
+      //   It sounds like there are some bugs about connection pool in some httpd_modules.
+      //   Then we must kill the httpd process FORCIBLY...
+      self::$Error2Die = 10;
+      /**
+       * BEAK Driver switch
+       */
+      self::$BEAKS = array (
+        Def::BP_CMS      => 'Cockatoo\BeakFile'   ,
+        Def::BP_SESSION  => 'Cockatoo\BeakFile'   ,
+        Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   ,
+        Def::BP_COMPONENT=> 'Cockatoo\BeakFile'   ,
+        Def::BP_STATIC   => 'Cockatoo\BeakFile'   ,
+        Def::BP_STORAGE  => 'Cockatoo\BeakFile'   ,
+        Def::BP_ACTION   => 'Cockatoo\BeakAction' ,
+        );
+      /**
+       * Static locations.
+       *
+       *  @@@ Todo:
+       *    $BeakLocation should be merged with $BEAK but have to consider zookeeper ...
+       */
+      self::$BeakLocation = array (
+        'cms://services-cms/'           => array(''),
+        'layout://core-layout/'         => array(''),
+        'component://core-component/'   => array(''),
+        'static://core-static/'         => array('')
+        );
+      //--------------------
+      // Call init
+      //--------------------
+      $conf::init();
+      //--------------------
+      // Post init
+      //--------------------
+      if ( Config::Mode == Def::MODE_DEBUG ) {
+        ini_set('display_errors','On');
+      }
+    }
+  }
+  abstract public static function init();
+}
+# PHP settings
+ini_set('error_reporting',2039); # E_ALL & ^E_NOTICE
+ini_set('log_errors','On');
+ini_set('display_errors','Off');
+$COCKATOO_CONF = getenv('COCKATOO_CONF');
+if ( ! $COCKATOO_CONF ) {
+  $COCKATOO_CONF = dirname(__FILE__) . '/config.php';
+}
+require_once($COCKATOO_CONF);
+Config::__init__();
+putenv('COCKATOO_ROOT='.Config::COCKATOO_ROOT);
+ini_set('error_log',Config::COCKATOO_ROOT . '/logs/php_error.log');
+
+chdir(Config::COCKATOO_ROOT);
+
+require_once(Config::COCKATOO_ROOT.'utils/ClassLoader.php');
+\ClassLoader::addClassPath(Config::COCKATOO_ROOT.'libs');
+
+require_once(Config::COCKATOO_ROOT.'utils/log.php');

@@ -2,12 +2,11 @@
 export PATH=/usr/local/bin:/usr/sbin:$PATH
 export PATH=/usr/local/php/bin:$PATH
 
-export COCKATOO_ROOT=/usr/local/cockatoo/
-export COCKATOO_CONF=${COCKATOO_ROOT}config.php
+export COCKATOO_CONF=/usr/local/cockatoo/config.php
 
-PIDFILE=${COCKATOO_ROOT}daemon/var/action_controller.pid
-EXECUTE=${COCKATOO_ROOT}action/action_controller.php
-ARGS=" -f ${COCKATOO_ROOT}daemon/etc/action.conf"
+PIDFILE=/usr/local/cockatoo/daemon/var/action_controller.pid
+EXECUTE=/usr/local/cockatoo/action/action_controller.php
+ARGS=" -f /usr/local/cockatoo/daemon/etc/action.conf"
 WAIT=60
 
 . `dirname $0`/proc_ctrl

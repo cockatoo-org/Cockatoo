@@ -11,9 +11,8 @@
  */
 namespace Cockatoo;
 $CUR=getcwd();
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
-require_once(Config::$COCKATOO_ROOT.'tools/beak/beak_transfer.php');
+require_once(dirname(__FILE__) . '/../../def.php');
+require_once(Config::COCKATOO_ROOT.'tools/beak/beak_transfer.php');
 ini_set('display_errors','On');
 
 if ( !$argv or count($argv) > 8 or count($argv) < 3 ) {

@@ -695,6 +695,7 @@ class WidgetFactory {
       $type = 'Cockatoo\\' . $type;
     }else{
       $type = 'Cockatoo\\GhostWidget';
+      Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : Fail to get compoenent => ' . $prop[Def::K_LAYOUT_COMPONENT]);
     }
     Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : ' . $type . ' , ' . $prop[Def::K_LAYOUT_COMPONENT]);
     return new $type($prop,$cprops,$mode);

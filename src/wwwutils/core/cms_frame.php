@@ -348,7 +348,7 @@ $(function () {
     $("#fix").click(function (ev) {
       $("#co-main").children("div.co-Widget").each(function (){
  	var ret = widget_json($(this));
- 	change('fix',ret);
+ 	change('setL',ret);
       });
     });
     $("#co-toolbar > h3").click(function (ev) {
@@ -582,16 +582,29 @@ $(function () {
       }
     });
   }
+<?php
+    print 'SID="'.$SERVICE.'";DID="'.$DEVICE.'";PID="'.$PATH.'";';
+?>
   set_dd($('div.co-Widget'));
   function change(op,data){
     $.ajax({
-      url: location+"&op="+op,
+      url: 'cms_ajax.php',
       type:'POST',
       dataType: 'json',
       data: {
-	data : $.toJSON(data)
+        op     : op,
+        sid    : SID,
+        did    : DID,
+        pid    : PID,
+	layout : $.toJSON(data)
       },
       success: function( data ){
+        if ( 'emsg' in data ) {
+          var m = $('b.message');
+          m.text(data.emsg).slideDown(1000);
+          setTimeout(function(){ m.slideUp(1000);},3000);
+          return;
+        }
 	//location.reload();
 	location = location;
       }
@@ -604,6 +617,7 @@ $(function () {
 </head>
 
 <body id="co-frame">
+<b class="message"></b><br>
 <?php
 print "$SERVICE/$PATH<br>";
 print "$DEVICE<br>";
