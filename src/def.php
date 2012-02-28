@@ -208,7 +208,9 @@ abstract class DefaultConfig {
   /**
    * Memcached switch for beak cache
    */
-  static public $UseMemcache = false;
+  static public $UseMemcache          = false;
+  static public $EXPIRE_BALANCE       = 2.718;
+  static public $EXPIRE_BALANCE_BOOST = 60; // sec
   /**
    * Dynamic locator switch from zookeeper
    */

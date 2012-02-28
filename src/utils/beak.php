@@ -750,15 +750,36 @@ class BeakController {
    *
    * 
    */
+
   protected function pre_query_cache(&$beak) {
     if ( Config::$UseMemcache ) {
       $beak->key = $beak->brl .($beak->arg?'#'.md5(beak_encode($beak->arg)):'');
       $cache = $this->cachectrl->get($beak->key);
-      if ( $cache && $cache[1] ) {
-        if ( $cache[0] > time() ) {
-          $beak->cache_hit = $cache[1];
-          Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Cache hit => ' . $beak->key);
+      if ( $cache && $cache[0] && $cache[1] && $cache[2] ) {
+        $hit    = true;
+        $data   = $cache[0];
+        $remain = $cache[1] - time();
+        if ( $remain < 0 ) {
+          $hit  = false;
+        }
+        $expire = $cache[2];
+        // Flying threashold.
+        if ( $hit and $expire*0.5 > $remain and $remain < 3600 ) {
+          // Balance weight
+          $chance = pow($remain,Config::$EXPIRE_BALANCE);
+          // Short term boost
+          if ( Config::$EXPIRE_BALANCE_BOOST >= $expire ) {
+            $chance *= pow((Config::$EXPIRE_BALANCE_BOOST/$expire),Config::$EXPIRE_BALANCE);
+          }
+          $hit = rand(0,$chance) !== 0;
+        }
+        if ( $hit ) {// Hit
+          $beak->cache_hit = $data;
+          Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Cache HIT    => ' . $beak->key . ' ( ' . $remain . ' / ' . $expire . ' )' );
           return true;
+        }else{
+          Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Cache MISS   => ' . $beak->key . ' ( ' . $remain . ' / ' . $expire . ' )' );
+          return false; // cache miss
         }
       }
     }
@@ -772,16 +793,17 @@ class BeakController {
   protected function post_query_cache(&$beak,&$ret) {
     if ( Config::$UseMemcache ) {
       if ( $ret ) {
-        $exp = time() + Beak::DEFAULT_CACHE_EXPIRE;
+        $expire = Beak::DEFAULT_CACHE_EXPIRE;
         foreach ( $beak->comments as $comment ) {
           if ( preg_match('@^'.Beak::COMMENT_KIND_CACHE_EXP.'=(\d+)$@',$comment,$matches) !== 0 ){
-            $exp = time() + $matches[1];
+            $expire = $matches[1];
             break;
           }
         }          
         $cache=array();
-        $cache[0] = &$exp;
-        $cache[1] = &$ret;
+        $cache[0] = &$ret;
+        $cache[1] = $expire + time();
+        $cache[2] = $expire;
         $this->cachectrl->set($beak->key,$cache);
       }
     }
