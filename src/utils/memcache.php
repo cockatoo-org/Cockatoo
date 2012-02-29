@@ -32,11 +32,11 @@ class Memcache {
     $persistant_id = md5($token);
     $this->memcached = new \Memcached($persistant_id);
     if ( ! $this->memcached->getServerList() ) {
-      $servers = array();
+//      $servers = array();
       foreach ( $servers as $server ) {
-        $servers []= explode(':',$server);
+        $s []= explode(':',$server);
       }
-      $this->memcached->addServers($servers);
+      $this->memcached->addServers($s);
     }
   }
   public function get(&$key){
