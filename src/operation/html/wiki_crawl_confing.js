@@ -5,6 +5,7 @@ var stdtest = require( __dirname + '/lib/stdtest.js');
 // all page
 exports.get = function() { 
   return {
+    TEST_NAME: 'Cockatoo-crawl-wiki',
     URL      : 'http://cockatoo.jp/',
     PROXY    : null, // <host>:<port>
     SSLPROXY : null, // Not supported
@@ -20,14 +21,14 @@ exports.get = function() {
 	[{     // To be cockatoo framework.
 	  METHOD   : 'EXIST',
 	  SELECTOR : 'div.window',
-	},{    // Check logic
+	},{    // Compare URL with contents
           METHOD   : 'HOOK',
 	  SELECTOR : 'body',
           HOOK     : function(test,strurl,html_elem) {
-	    page = strurl.replace(/^http:\/\/cockatoo\.jp\/view(\/.*)?/,"$1");
+	    page = strurl.replace(/^http:\/\/cockatoo\.jp\/view(\/.*)?/,"$1").replace(/^\?page\=(.*)/,"$1");
 	    if ( ! page ) {
 	      page = 'top';
-	    }else{
+	    }else {
 	      page = page.replace(/^\//,'');
 	    }
 	    page_name = html_elem.find('h1').text();
@@ -37,7 +38,7 @@ exports.get = function() {
 	    test.ON_ERROR(test,strurl,page,'Invalid view',page_name);
 	    return 'Invalid view';
 	  }
-	},{	  
+	},{    // Crawl linked wiki page
 	  METHOD   : 'CRAWL',
 	  SELECTORS: ['a'],
 	  FILTER   : {

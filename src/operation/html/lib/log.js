@@ -5,11 +5,12 @@ var path = require('path');
 var common = require(__dirname + '/common.js');
 
 var PRE_LEN =  6;
-var KEY_LEN = 20;
+var KEY_LEN = 12;
 var URL_LEN = 65;
 var SEL_LEN = 20;
 var MSG_LEN = 18;
-var TYPE_LEN= 14;
+var TYPE_LEN= 13;
+var NAME_LEN= 10;
 
 var LV_DEBUG   = 20;
 var LV_TRACE   = 15;
@@ -98,61 +99,55 @@ exports.error = function(url,selector,msg,body) {
   }
 }
 
-function crawl_callback( key , value , path, objid , cyclic ) {
-  if ( value === undefined ) {
-    sys.puts(padding(key,KEY_LEN+(path.length*2),1) + ' : ('+padding('undefined',TYPE_LEN)+') : ');
-  } else if (value === null ) {
-    sys.puts(padding(key,KEY_LEN+(path.length*2),1) + ' : ('+padding('object#' + objid,TYPE_LEN) + ') : ' + value);
-  } else if ( cyclic ) {
-    sys.puts(padding(key,KEY_LEN+(path.length*2),1) + ' : ('+padding('ref#object#' + objid,TYPE_LEN) + ')');
-  } else if ( objid === undefined ) {
-    var type  = typeof(value);
-    if ( value.toString !== undefined ) {
+exports.crawl_callback = function(output){
+  if ( output === undefined ) output = sys.puts;
+  function hasMember(val) {
+    for ( var i in val ) {
+      return true;
+    }
+    return false;
+  }
+  return function ( key , value , path, objid , cyclic ) {
+    if ( value === undefined ) {
+      output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : ('+common.padding('undefined',TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + value);
+    } else if (value === null ) {
+      output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : ('+common.padding('object#' + objid,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + value);
+    } else if ( cyclic ) {
+      output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : ('+common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' );
+    } else if ( typeof(value) === 'object'  ) {
+      if ( ! hasMember(value) ) {
+	output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : (' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') : ' + value );
+      }else{
+	output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : (' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' );
+      }
+    } else {
+      var type  = typeof(value);
       var lines = value.toString().split('\n');
       for ( var i in lines ) {
 	if ( i == 0 ) {
-	  sys.puts(padding(key,KEY_LEN+(path.length*2),1) + ' : (' + padding(type,TYPE_LEN) + ') : ' + lines[i]);
+	  output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : (' + common.padding(type,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + lines[i]);
 	}else{
-	  sys.puts(padding('',KEY_LEN+(path.length*2),1)  + '    ' + padding('',TYPE_LEN) + '    ' + lines[i]);
+	  output(common.padding('',KEY_LEN+(path.length*2),1)  + '    ' + common.padding('',TYPE_LEN) + '  '+common.padding('',NAME_LEN)+  '    ' + lines[i]);
 	}
       }
-    }else{
-      sys.puts(padding(key,KEY_LEN+(path.length*2),1) + ' : (' + padding(type,TYPE_LEN) + ') : ' + value);
     }
-  } else {
-    sys.puts(padding(key,KEY_LEN+(path.length*2),1) + ' : (' + padding('object#' + objid,TYPE_LEN) + ') : ');
-  }
-  return true;
+    return true;
+  };
 }
 
 exports.dump = function(pre,msg,data,igns){
-  sys.puts(padding(pre,PRE_LEN) + ' : ===== ' + (msg?padding(msg,URL_LEN):'') + '=====');
-
+  sys.puts(common.padding(pre,PRE_LEN) + ' : ===== ' + (msg?common.padding(msg,URL_LEN):'') + '=====');
   if ( typeof(data)==='object') {
-    common.crawl_object(data,crawl_callback,igns);
+    common.crawl_object(data,this.crawl_callback(sys.puts),igns);
   }else{
-    sys.puts(padding('',KEY_LEN,1) + ' : ' + data); 
+    sys.puts(common.padding('',KEY_LEN,1) + ' : ' + data); 
   }
 }
 //---------------------------------
 // utilities
 //---------------------------------
-function padding(str,n,r){
-  var strlen = 0;
-  for( var c in str){
-    strlen += (escape(str[c]).length<4)?1:2;
-  }
-  if ( strlen < n ){
-    var p = n-strlen;
-    for ( var i = 0 ; i < p ; i++ ) {
-      if ( r ) 	str  = ' ' + str;
-      else      str += ' ';
-    }
-  }
-  return str;
-}
 function out(pre,url,selector,msg,body,l){
-  var msg = padding(pre,PRE_LEN) + ' : ' + padding(url,URL_LEN) + ' ; ' + padding(msg,MSG_LEN) + '  ; ' + padding(selector,SEL_LEN) + (body?'  ; '+body:'');
+  var msg = common.padding(pre,PRE_LEN) + ' : ' + common.padding(url,URL_LEN) + ' ; ' + common.padding(msg,MSG_LEN) + '  ; ' + common.padding(selector,SEL_LEN) + (body?'  ; '+body:'');
   sys.puts(msg);
   if ( l ) { // log
     var fp = fs.openSync(log_file,'a+');

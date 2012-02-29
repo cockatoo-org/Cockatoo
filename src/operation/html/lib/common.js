@@ -2,6 +2,7 @@ var sys = require('util');
 var fs = require('fs');
 var path = require('path');
 
+
 exports.common = function(){
   return this;
 }
@@ -13,6 +14,20 @@ exports.mkdirp = function(dir){
   if ( ! path.existsSync(dir) ) {
     fs.mkdirSync(dir,'755');
   }
+}
+exports.padding = function (str,n,r){
+  var strlen = 0;
+  for( var c in str){
+    strlen += (escape(str[c]).length<4)?1:2;
+  }
+  if ( strlen < n ){
+    var p = n-strlen;
+    for ( var i = 0 ; i < p ; i++ ) {
+      if ( r ) 	str  = ' ' + str;
+      else      str += ' ';
+    }
+  }
+  return str;
 }
   
 /** Example
@@ -80,7 +95,6 @@ exports.crawl_object = function ( data , callback , igns , path , done ) {
     path.pop(i);
   }
 }
-
 
 // Extend string
 String.prototype.replaceAll = function (org, dest){  
