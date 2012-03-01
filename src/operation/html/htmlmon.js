@@ -441,7 +441,7 @@ function fetch_content(strurl,TEST,remark,callback) {
 		var CHECK = TEST.CHECKS[i];
 		if ( CHECK.METHOD == 'HOOK' ) {
 		  try { 
-		    var msg = CHECK.HOOK(TEST,strurl,$('#ROOT > html'));
+		    var msg = CHECK.HOOK(TEST,strurl,remark,$('#ROOT > html'));
 		    if ( msg  ) {
 		      log.message(strurl,'HOOK','interrupt by hook',msg);
 		      return;
