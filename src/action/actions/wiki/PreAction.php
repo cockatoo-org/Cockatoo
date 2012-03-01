@@ -19,9 +19,12 @@ class PreAction extends \Cockatoo\Action {
     \parse_str($url['query'],$qs);
 
 //    $user = $session['login']['user']?$session['login']['user']:'guest';
-    $page   = $qs['page']?$qs['page']:'top';
+    $page   = $qs['page']?$qs['page']:'';
     if ( isset($this->args['P'] ) ) {
       $page = $this->args['P'];
+    }
+    if ( ! $page ) {
+      $page = WikiConfig::WIKI_NAME;
     }
     $name   = $qs['n']?$qs['n']:'null';
 //    $this->updateSession(array('wiki' => array('current' => $page ) ) );
