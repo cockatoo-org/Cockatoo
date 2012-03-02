@@ -199,7 +199,6 @@ class PageAction extends \Cockatoo\Action {
             }
           }
           $ret []= array('tag' => 'pre', 'attr' => array(), 'children' => array(array('tag' => 'text' , 'text' =>$text ) ));
-
         }elseif ( preg_match('@^(-----)@', $line , $matches ) !== 0 ) {
           //HR
           $ret []= array('tag' => 'hr', 'attr' => array(), 'children' => array() );
@@ -208,9 +207,17 @@ class PageAction extends \Cockatoo\Action {
           $ret []= array('tag' => 'blockquote', 'attr' => array(), 'children' => array_merge($this->parse_inner($matches[1],$page),array(array('tag' => 'br','text' => ''))));
         }elseif ( preg_match('@^:([^:]+):(.*)@', $line , $matches ) !== 0 ) {
           // DL DT DD
-          $ret []= array('tag' => 'dl', 'attr' => array(), 'children' => array(
-                           array( 'tag' => 'dt', 'attr' => array(),'children' => $this->parse_inner($matches[1],$page)),
-                           array( 'tag' => 'dd', 'attr' => array(),'children' => $this->parse_inner($matches[2],$page))));
+          $defs = array(array( 'tag' => 'dt', 'attr' => array(),'children' => $this->parse_inner($matches[1],$page)),
+                        array( 'tag' => 'dd', 'attr' => array(),'children' => $this->parse_inner($matches[2],$page)));
+          while(count($lines)){
+            $line = array_shift($lines);
+            if ( ! chop($line) ) {
+              break;
+            }else{
+              $defs []= array( 'tag' => 'dd', 'attr' => array(),'children' => $this->parse_inner(chop($line),$page));
+            }
+          }
+          $ret []= array('tag' => 'dl', 'attr' => array(), 'children' => $defs);
         }elseif ( preg_match('@^(-+)(.*)@', $line , $matches ) !== 0 ) {
           //UL
           $n = strlen($matches[1]);
