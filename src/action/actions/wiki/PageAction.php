@@ -74,7 +74,7 @@ class PageAction extends \Cockatoo\Action {
           if ( $pdata ) {
             $pdata['title'] = $new;
             $lines = explode("\n",$pdata['origin']);
-            $pdata['contents'] = $this->parse($lines,$new);
+            $pdata['contents'] = array($this->parse($lines,$new));
             Lib::save_page($new,$pdata);
             $this->move_image($new,$page);
             Lib::remove_page($page);
@@ -165,7 +165,7 @@ class PageAction extends \Cockatoo\Action {
         $ret [] = array( 'tag' => 'a', 'attr' => array('href' => '#'.$matches[2], 'name' => $matches[2]), 'children' => array(array('tag' => 'text','text' => '+')));
         $text = $matches[3];
         next;
-      }elseif ( preg_match('@^(.*?)\\\\\\\\(.*)@', $text , $matches ) !== 0 ) {
+      }elseif ( preg_match('@^(.*?) && (.*)@', $text , $matches ) !== 0 ) {
         // BR => \\
         $ret [] = array('tag' => 'text' , 'text' => $matches[1]);
         $ret [] = array('tag' => 'br');
@@ -177,88 +177,93 @@ class PageAction extends \Cockatoo\Action {
     }
     return $ret;
   }
-  private function parse(&$lines,&$page,$hedding=1) {
+
+  private function parseContents(&$lines,&$page,$flg=0){
     $ret = array();
-    $flg = '';
     while ( count($lines) ) {
       $line = array_shift($lines);      
-      if ( preg_match('@^ (.*)@', $line , $matches ) !== 0 ) {
-        //PRE
-        if ( $flg !== 'pre' ) {
+      if ( preg_match('@^(\*+)(.*)@', $line , $matches ) !== 0 ) {
+        array_unshift($lines,$line);
+        break;
+      }else{
+        if ( preg_match('@^ (.*)@', $line , $matches ) !== 0 ) {
+          //PRE
           $flg = 'pre';
-          $ret []= array('tag' => 'pre', 'attr' => array(), 'children' => array() );
-        }
-        $cur = &$ret[count($ret)-1];
-        $cur['children'] []= array('tag' => 'text' , 'text' => chop($matches[1]));
-      }elseif ( preg_match('@^(-----)@', $line , $matches ) !== 0 ) {
-        //HR
-        $flg = '';
-        $ret []= array('tag' => 'hr', 'attr' => array(), 'children' => array() );
-      }elseif ( preg_match('@^(-+)(.*)@', $line , $matches ) !== 0 ) {
-        //UL
-        if ( $flg !== 'ul' ) {
-          $flg = 'ul';
-          $ret []= array('tag' => 'ul', 'attr' => array() , 'children' => array() );
-        }
-        $cur = &$ret[count($ret)-1];
-        $n = strlen($matches[1]);
-        $cur2 = &$cur;
-        for ( $i = 1 ; ; $i++ ) {
-          if ( $n === $i) {
-            $cur2['children'] []= array('tag' => 'li', 'attr' => array() , 'children' => $this->parse_inner($matches[2],$page));
+          $text = $matches[0];
+          while(count($lines)){
+            $line = array_shift($lines);      
+            if ( preg_match('@^ (.*)@', $line , $matches ) !== 0 ) {
+              $text .= $matches[0];
+            }else{
+              array_unshift($lines,$line);
+              break;
+            }
+          }
+          $ret []= array('tag' => 'pre', 'attr' => array(), 'children' => array(array('tag' => 'text' , 'text' =>$text ) ));
+
+        }elseif ( preg_match('@^(-----)@', $line , $matches ) !== 0 ) {
+          //HR
+          $ret []= array('tag' => 'hr', 'attr' => array(), 'children' => array() );
+        }elseif ( preg_match('@^>>(.*)@', $line , $matches ) !== 0 ) {
+          //BLOCKQUOTE
+          $ret []= array('tag' => 'blockquote', 'attr' => array(), 'children' => array_merge($this->parse_inner($matches[1],$page),array(array('tag' => 'br','text' => ''))));
+        }elseif ( preg_match('@^:([^:]+):(.*)@', $line , $matches ) !== 0 ) {
+          // DL DT DD
+          $ret []= array('tag' => 'dl', 'attr' => array(), 'children' => array(
+                           array( 'tag' => 'dt', 'attr' => array(),'children' => $this->parse_inner($matches[1],$page)),
+                           array( 'tag' => 'dd', 'attr' => array(),'children' => $this->parse_inner($matches[2],$page))));
+        }elseif ( preg_match('@^(-+)(.*)@', $line , $matches ) !== 0 ) {
+          //UL
+          $n = strlen($matches[1]);
+          if ( $n > $flg ) {
+            array_unshift($lines,$line);
+            $ret []= array('tag' => 'ul', 'attr' => array('class'=>'ul'.$flg) , 'children' => $this->parseContents($lines,$page,($flg+1)));
+          }elseif ( $n === $flg ){
+            $ret []= array('tag' => 'li', 'attr' => array('class'=>'ul'.$flg) , 'children' => $this->parse_inner($matches[2],$page));
+          }else{
+            array_unshift($lines,$line);
             break;
           }
-          if ( $cur2['children'][count($cur2['children'])-1]['tag'] !== 'ul' ) {
-            $cur2['children'] []= array('tag' => 'ul', 'attr' => array() , 'children' => array() );
-          }
-          $cur2 = &$cur2['children'][count($cur2['children'])-1];
-        }
-      }elseif ( preg_match('@^(\++)(.*)@', $line , $matches ) !== 0 ) {
-        //OL
-        if ( $flg !== 'ol' ) {
-          $flg = 'ol';
-          $ret []= array('tag' => 'ol', 'attr' => array() , 'children' => array() );
-        }
-        $cur = &$ret[count($ret)-1];
-        $n = strlen($matches[1]);
-        $cur2 = &$cur;
-        for ( $i = 1 ; ; $i++ ) {
-          if ( $n === $i) {
-            $cur2['children'] []= array('tag' => 'li', 'attr' => array() , 'children' => $this->parse_inner($matches[2],$page));
+        }elseif ( preg_match('@^(\++)(.*)@', $line , $matches ) !== 0 ) {
+          //OL
+          $n = strlen($matches[1]);
+          if ( $n > $flg ) {
+            array_unshift($lines,$line);
+            $ret []= array('tag' => 'ol', 'attr' => array('class'=>'ol'.$flg) , 'children' => $this->parseContents($lines,$page,($flg+1)));
+          }elseif ( $n === $flg ){
+            $ret []= array('tag' => 'li', 'attr' => array('class'=>'ol'.$flg) , 'children' => $this->parse_inner($matches[2],$page));
+          }else{
+            array_unshift($lines,$line);
             break;
           }
-          if ( $cur2['children'][count($cur2['children'])-1]['tag'] !== 'ol' ) {
-            $cur2['children'] []= array('tag' => 'ol', 'attr' => array() , 'children' => array() );
-          }
-          $cur2 = &$cur2['children'][count($cur2['children'])-1];
+        }else{
+          $ret []= array('tag' => 'text', 'children' => array_merge($this->parse_inner($line,$page),array(array('tag' => 'br','text' => ''))));
         }
-      }elseif ( preg_match('@^(\*+)(.*)@', $line , $matches ) !== 0 ) {
+      }
+    }
+    return $ret;
+  }
+
+  private function parse(&$lines,&$page,$hedding=1) {
+    $ret = array('tag' => 'div','attr' => array('class'=>'h'.($hedding)),'children' => array());
+    while ( count($lines) ) {
+      $line = array_shift($lines);      
+      if ( preg_match('@^(\*+)(.*)@', $line , $matches ) !== 0 ) {
         //H?
-        $flg = '';
         $h=strlen($matches[1]);
         if ( $h > ($hedding) ) {
           array_unshift($lines,$line);
-          $ret []= array('tag' => 'div','attr' => array('class'=>'h'.($hedding+1)),'children' => $this->parse($lines,$page,($hedding+1)));
+          $ret['children'] []= $this->parse($lines,$page,($hedding+1));
         }elseif ( $h === $hedding ){
-          $ret []= array('tag' => 'h'.($hedding+1), 'attr' => array(), 'children' => $this->parse_inner($matches[2],$page));
-          $ret []= array('tag' => 'div','attr' => array('class'=>'h'.($hedding+1)),'children' => $this->parse($lines,$page,($hedding+1)));
+          $ret['children'] []= array('tag' => 'h'.($hedding+1), 'attr' => array(), 'children' => $this->parse_inner($matches[2],$page));
+          $ret['children'] []= $this->parse($lines,$page,($hedding+1));
         }else{
           array_unshift($lines,$line);
-          return $ret;
+          break;
         }
-      }elseif ( preg_match('@^>>(.*)@', $line , $matches ) !== 0 ) {
-        //BLOCKQUOTE
-        $flg = '';
-        $ret []= array('tag' => 'blockquote', 'attr' => array(), 'children' => array_merge($this->parse_inner($matches[1],$page),array(array('tag' => 'br','text' => ''))));
-      }elseif ( preg_match('@^:([^:]+):(.*)@', $line , $matches ) !== 0 ) {
-        // DL DT DD
-        $flg = '';
-        $ret []= array('tag' => 'dl', 'attr' => array(), 'children' => array(
-                         array( 'tag' => 'dt', 'attr' => array(),'children' => $this->parse_inner($matches[1],$page)),
-                         array( 'tag' => 'dd', 'attr' => array(),'children' => $this->parse_inner($matches[2],$page))));
       }else{
-        $flg = '';
-        $ret []= array('tag' => 'text', 'children' => array_merge($this->parse_inner($line,$page),array(array('tag' => 'br','text' => ''))));
+        array_unshift($lines,$line);
+        $ret['children'] = $this->parseContents($lines,$page);
       }
     }
     return $ret;

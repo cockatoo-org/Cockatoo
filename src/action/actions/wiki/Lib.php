@@ -35,7 +35,7 @@ class Lib {
   }
   # Page
   static function page(&$page,&$origin,&$contents,&$user){
-    return array('title' => $page,'origin' => $origin , 'contents' => $contents , 'author' => $user);
+    return array('title' => $page,'origin' => $origin , 'contents' => array($contents) , 'author' => $user);
   }
   static function get_page($page){
     $page = urlencode($page);
