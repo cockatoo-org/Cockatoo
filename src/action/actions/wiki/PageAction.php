@@ -188,7 +188,6 @@ class PageAction extends \Cockatoo\Action {
       }else{
         if ( preg_match('@^ (.*)@', $line , $matches ) !== 0 ) {
           //PRE
-          $flg = 'pre';
           $text = $matches[0];
           while(count($lines)){
             $line = array_shift($lines);      
@@ -236,6 +235,9 @@ class PageAction extends \Cockatoo\Action {
             array_unshift($lines,$line);
             break;
           }
+        }elseif ( $flg and ! chop($line) ) {
+          array_unshift($lines,$line);
+          break;
         }else{
           $ret []= array('tag' => 'text', 'children' => array_merge($this->parse_inner($line,$page),array(array('tag' => 'br','text' => ''))));
         }
