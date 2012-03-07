@@ -124,9 +124,9 @@ class MongoMon {
     }
     $body  = strftime('%F %T') . "\n\n";
     $body .= var_export($this->cur,true);
-    $cmd .= '"'.$subject.'"';
     $this->debug( "$cmd\n** $subject **\n$body" );
     $hp = popen($cmd,'w');
+    fwrite($hp,$subject."\n",strlen($subject."\n"));
     fwrite($hp,$body,strlen($body));
     $read = fread($hp,8192);
     pclose($hp);
@@ -165,7 +165,7 @@ Example:
    60 \
    7 \
    '/usr/local/mongo/mongoctrl status' \
-   '/usr/local/cockatoo/operation/mail/mail.py --to=hiroaki.kubota@mail.rakuten.com --from=daemon@cockatoo.jp --body=- --charset=utf-8 --subject=' \
+   '/usr/local/cockatoo/operation/mongo/mongomon_mail.bash' \
    'mail-to@foobar.com,mail-to@barbaz.com' \
    'mail-from@foobar.com' \
    '[STG]'
@@ -185,4 +185,4 @@ $report = array_shift($argv);
 $report = ($report)?$report:$alert;
 $daemon = new MongoMon($sleep,$hour,$status,$alert,$report);
 $daemon->main();
-// mongomon.php 60 7  '/usr/local/mongo/mongoctrl status' '/usr/local/cockatoo/operation/mail/mail.py --to=hiroaki.kubota@mail.rakuten.com --from=daemon@cockatoo.jp --body=- --charset=utf-8 --subject='
+// mongomon.php 60 7  '/usr/local/mongo/mongoctrl status' '/usr/local/cockatoo/operation/mongo/mongomon_mail.bash'

@@ -139,9 +139,9 @@ class ZooMon {
     }
     $body  = strftime('%F %T') . "\n\n";
     $body .= var_export($this->cur,true);
-    $cmd .= '"'.$subject.'"';
     $this->debug( "$cmd\n** $subject **\n$body" );
     $hp = popen($cmd,'w');
+    fwrite($hp,$subject."\n",strlen($subject."\n"));
     fwrite($hp,$body,strlen($body));
     $read = fread($hp,8192);
     pclose($hp);
@@ -186,7 +186,7 @@ Example:
    60 \
    7 \
    '127.0.0.1:2181,127.0.0.2:2182,127.0.0.3:2182' \
-   '/usr/local/cockatoo/operation/mail/mail.py --to=hiroaki.kubota@mail.rakuten.com --from=daemon@cockatoo.jp --body=- --charset=utf-8 --subject='
+   '/usr/local/cockatoo/operation/zookeeper/zoomon_mail.bash'
     
    - Check zookeeper every minutes.
    - Send report-mail every morning at 7 
@@ -209,4 +209,4 @@ $report = ($report)?$report:$alert;
 $notice = ($notice)?$notice:$alert;
 $daemon = new ZooMon($sleep,$hour,$hosts,$alert,$report,$notice);
 $daemon->main();
-// zoomon.php 10 7  '127.0.0.1:2181' '/usr/local/cockatoo/operation/mail/mail.py --to=hiroaki.kubota@mail.rakuten.com --from=daemon@cockatoo.jp --body=- --charset=utf-8 --subject='
+// zoomon.php 10 7  '127.0.0.1:2181' '/usr/local/cockatoo/operation/zookeeper/zoomon_mail.bash'
