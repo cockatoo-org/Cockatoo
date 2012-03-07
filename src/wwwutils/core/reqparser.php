@@ -55,9 +55,9 @@ abstract class RequestParser {
    * @return Array Parsed array
    */
   public function parse() {
-    if ( Config::APP_OCCUPATION ) {
-      $this->reqpath = Config::APP_OCCUPATION.$this->reqpath;
-    }
+//    if ( Config::APP_OCCUPATION ) {
+//      $this->reqpath = Config::APP_OCCUPATION.$this->reqpath;
+//    }
     return $this->parseImpl();
   }
   /**
