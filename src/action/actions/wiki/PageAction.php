@@ -372,18 +372,20 @@ class WikiParser {
         next;
       }elseif ( preg_match('@^&ref\(([^\),]*)(?:,(\d*)(?:,(\d*))?)?\);(.*)@', $text , $matches ) !== 0 ) {
         // IMG => &ref(<image>,<height>,<width>);
-        if ( preg_match('@^https?://@', $matches[1] , $matchdummy ) !== 0 ) {
-          $attr = array('src' => $matches[1]);
-        }else {
-          $attr = array('src' => '/wiki/img/'.$this->page.'?n='.$matches[1]);
-        }
+        $attr = array();
         if ( $matches[2] ) {
           $attr['height'] = $matches[2];
         }
         if ( $matches[3] ) {
           $attr['width'] = $matches[3];
         }
-        $body [] = self::tag('a',array('href' => '/wiki/img/'.$this->page.'?n='.$matches[1]),array(self::tag('img',$attr)));
+        if ( preg_match('@^https?://@', $matches[1] , $matchdummy ) !== 0 ) {
+          $attr = array('src' => $matches[1]);
+          $body [] = self::tag('a',array('href' => $matches[1]),array(self::tag('img',$attr)));
+        }else {
+          $attr = array('src' => '/wiki/img/'.$this->page.'?n='.$matches[1]);
+          $body [] = self::tag('a',array('href' => '/wiki/img/'.$this->page.'?n='.$matches[1]),array(self::tag('img',$attr)));
+        }
         $text = $matches[4];
         next;
       }elseif ( preg_match('@^&anchor\(([^\)]*)\);(.*)@', $text , $matches ) !== 0 ) {

@@ -33,6 +33,8 @@ class Wikirequestparser extends \Cockatoo\DefaultRequestParser {
       }else{ 
         return array('wiki','default',$reqpath);
       }
+    }elseif ( $this->reqpath === 'favicon.ico' ) {
+      return array('wiki','default','/img',array('P'=>'Cockatoo PHP framework?n=logo.png'));
     }
     throw new \Exception('Unexpect PATH:' . $this->reqpath);
   }
