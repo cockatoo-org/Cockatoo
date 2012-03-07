@@ -14,7 +14,7 @@ class Config extends DefaultConfig {
    * Specify the application path if you want to run only one application on this domain.
    *   ex> '/wiki/default'
    */
-  const APP_OCCUPATION = '/wiki/default';
+//  const APP_OCCUPATION = '/wiki/default';
   
   /**
    * Service MODE
@@ -25,7 +25,7 @@ class Config extends DefaultConfig {
   /**
    * The redirect path that when unhandled error occured.
    */
-  const ErrorRedirect  = '/view';
+  const ErrorRedirect  = '/wiki/view';
 
   /**
    * Request analizer
