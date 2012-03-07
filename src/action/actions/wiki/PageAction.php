@@ -152,7 +152,9 @@ class WikiParser {
   }
   public function parse() {
     $body  = $this->parseHeads(1);
-    $ibody = array('tag' => 'div','attr' => array('class'=>'ih'),'children' => array($this->parseIndexes(1)));
+    $ibody = array('tag' => 'div','attr' => array('class'=>'ih'),'children' => array(
+                     self::tag('a',array('class'=>'visible toggle','href'=>'#'),''),
+                     $this->parseIndexes(1)));
 //print '<pre>';
 //var_dump($ibody);
 //print '</pre>';
@@ -219,8 +221,8 @@ class WikiParser {
           $this->push_line($line);
           $body['children'] []= $this->parseHeads($heading+1);
         }elseif ( $h === $heading ){
-          $this->headers []= array($heading,$matches[2]);
           $name = ltrim(chop($matches[2]));
+          $this->headers []= array($heading,$name);
           $body['children'] []= self::tag('div',array('class'=>'h'.($heading+1)),array(
                                             self::tag('h'.($heading+1),array(),array(
                                                         $name,

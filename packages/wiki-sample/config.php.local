@@ -42,7 +42,8 @@ class Config extends DefaultConfig {
     //--------------------
     // LOG settings
     //--------------------
-    self::$Loglv   = Def::LOGLV_TRACE;
+    // self::$Loglv   = Def::LOGLV_TRACE;
+    self::$Loglv   = Def::LOGLV_INFO;
     self::$LogDataDump = true;
     /**
      * Filename , STDOUT or STDIN
