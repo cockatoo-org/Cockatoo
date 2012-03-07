@@ -153,7 +153,7 @@ abstract class DefaultConfig {
    * Specify the application path if you want to run only one application on this domain.
    *   ex> '/wiki/default'
    */
-  const APP_OCCUPATION = false;
+//  const APP_OCCUPATION = false;
   /**
    * Service MODE
    *   You should set Def::MODE_NORMAL in service environment.
