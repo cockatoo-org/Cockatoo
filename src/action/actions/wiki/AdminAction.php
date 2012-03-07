@@ -75,7 +75,7 @@ class AdminAction extends \Cockatoo\Action {
     }catch ( \Exception $e ) {
       $s['emessage'] = $e->getMessage();
       $this->updateSession($s);
-      $this->setRedirect('/error');
+      $this->setRedirect('/wiki/error');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
     }
   }

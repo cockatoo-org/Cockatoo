@@ -32,11 +32,11 @@ class AccountAction extends \Cockatoo\Action {
           throw new \Exception('Invalid account !');
         }
         $this->updateSession($s);
-        $this->setRedirect('/view');
+        $this->setRedirect('/wiki/view');
       }elseif ( $submit === 'logout' ) {
         $s['login'] = null;
         $this->updateSession($s);
-        $this->setRedirect('/view');
+        $this->setRedirect('/wiki/view');
       }elseif ( $submit === 'profile' ) {
         $user  = $session['login']['user'];
         if ( ! $user ) {
@@ -55,7 +55,7 @@ class AccountAction extends \Cockatoo\Action {
                       'email' => ($session[\Cockatoo\Def::SESSION_KEY_POST]['email'])?$session[\Cockatoo\Def::SESSION_KEY_POST]['email']:$session['login']['email'],
                       'root'  => $session['login']['root']);
         Lib::save_account($data);
-        $this->setRedirect('/view');
+        $this->setRedirect('/wiki/view');
       }elseif ( $submit === 'password reset' ) {
         $up_user = $session[\Cockatoo\Def::SESSION_KEY_POST]['user'];
         $up_passwd = Lib::mkpasswd();
@@ -65,7 +65,7 @@ class AccountAction extends \Cockatoo\Action {
         $up_email = $data['email'];
         $up_root = $data['root'];
         Lib::save_account($data);
-        $this->setRedirect('/view');
+        $this->setRedirect('/wiki/view');
         mail($up_email,
              'Your profile changed',
              'Your new profile'."\n".
@@ -80,7 +80,7 @@ class AccountAction extends \Cockatoo\Action {
     }catch ( \Exception $e ) {
       $s['emessage'] = $e->getMessage();
       $this->updateSession($s);
-      $this->setRedirect('/error');
+      $this->setRedirect('/wiki/error');
       \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
     }
     return array();

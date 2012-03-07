@@ -64,8 +64,8 @@ class PageAction extends \Cockatoo\Action {
                            $user);
         Lib::save_page($page,$pdata);
         $this->save_history($page,$user,'EDIT');
-        $this->setRedirect('/view/'.$page);
-        return;
+        $this->setRedirect('/wiki/view/'.$page);
+        return array();
       }elseif( $op === 'move' ) {
         if ( ! $user ) {
           throw new \Exception('You have to login before update wiki !!');
@@ -82,20 +82,21 @@ class PageAction extends \Cockatoo\Action {
             $this->move_image($new,$page);
             Lib::remove_page($page);
             $this->save_history($new,$user,'MOVE from ' . $page ) ;
-            $this->setRedirect('/view/'.$new);
-            return;
+            $this->setRedirect('/wiki/view/'.$new);
+            return array();
           }
-          $this->setRedirect('/view');
+          $this->setRedirect('/wiki/view');
         }else{
-          $this->setRedirect('/view/'.$page);
+          $this->setRedirect('/wiki/view/'.$page);
         }
-        return;
+        return array();
       }
     }catch ( \Exception $e ) {
       $s['emessage'] = $e->getMessage();
       $this->updateSession($s);
       $this->setRedirect('/error');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
+      return null;
     }
   }
   private function move_image($new,$page){
@@ -361,7 +362,7 @@ class WikiParser {
         }elseif(preg_match('@^#@', $matches[2] , $matchdummy ) !== 0 ) {
           $body [] = self::tag('a',array('href' => $matches[2]),$children);
         }else{
-          $body [] = self::tag('a',array('href' => '/view/' . $matches[2]),$children);
+          $body [] = self::tag('a',array('href' => '/wiki/view/' . $matches[2]),$children);
         }
         $text = $matches[4];
         next;
@@ -374,7 +375,7 @@ class WikiParser {
         if ( preg_match('@^https?://@', $matches[1] , $matchdummy ) !== 0 ) {
           $attr = array('src' => $matches[1]);
         }else {
-          $attr = array('src' => '/img/'.$this->page.'?n='.$matches[1]);
+          $attr = array('src' => '/wiki/img/'.$this->page.'?n='.$matches[1]);
         }
         if ( $matches[2] ) {
           $attr['height'] = $matches[2];
@@ -382,7 +383,7 @@ class WikiParser {
         if ( $matches[3] ) {
           $attr['width'] = $matches[3];
         }
-        $body [] = self::tag('a',array('href' => '/img/'.$this->page.'?n='.$matches[1]),array(self::tag('img',$attr)));
+        $body [] = self::tag('a',array('href' => '/wiki/img/'.$this->page.'?n='.$matches[1]),array(self::tag('img',$attr)));
         $text = $matches[4];
         next;
       }elseif ( preg_match('@^&anchor\(([^\)]*)\);(.*)@', $text , $matches ) !== 0 ) {

@@ -29,7 +29,7 @@ class ImgAction extends \Cockatoo\Action {
       if ( ! $user ) {
         $s['emessage'] = 'You have to login before update wiki !!';
         $this->updateSession($s);
-        $this->setRedirect('/error');
+        $this->setRedirect('/wiki/error');
         return;
       }
       foreach($session[\Cockatoo\Def::SESSION_KEY_FILES] as $file){
@@ -41,7 +41,7 @@ class ImgAction extends \Cockatoo\Action {
           $names []= $file[\Cockatoo\Def::F_NAME];
         }
       }
-      $this->setRedirect('/uploaded/'.$page);
+      $this->setRedirect('/wiki/uploaded/'.$page);
     }else if ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
       $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, '', \Cockatoo\Beak::M_KEY_LIST);
       $bret = \Cockatoo\BeakController::beakQuery(array($brl));
