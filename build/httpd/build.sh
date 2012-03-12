@@ -5,8 +5,9 @@ ROOT=`pwd`
 source ${ROOT}/../build.env
 
 VERSION='2.2.21'
-ARCHIVE=http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-%s.tar.gz
-FILE_MD5=http://www.apache.org/dist/httpd/httpd-%s.tar.gz.md5
+
+ARCHIVE=http://archive.apache.org/dist/httpd/httpd-%s.tar.gz
+FILE_MD5=http://archive.apache.org/dist/httpd/httpd-%s.tar.gz.md5
 
 # GET BINARIES
 ARCHIVE=`printf ${ARCHIVE} ${VERSION}`
