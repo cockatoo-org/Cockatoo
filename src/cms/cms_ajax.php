@@ -17,7 +17,7 @@ require_once(Config::COCKATOO_ROOT.'wwwutils/core/content.php');
 require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 require_once(Config::COCKATOO_ROOT.'utils/stcontents.php');
 
-$_sP = $_POST;
+$_sP = getPost($_SERVER['REQUEST_METHOD']);
 $_sG = $_GET;
 
 $op   = $_sP['op'];
@@ -261,9 +261,9 @@ try {
     }
   } elseif( $op === 'setL' ) {
     check_writable($sid);
-    $layout = json_decode($_POST['layout'],true);
+    $layout = json_decode($_sP['layout'],true);
     if ( ! $layout ) {
-      throw new \Exception('Fail to json_decode : ' . $_POST['layout']);
+      throw new \Exception('Fail to json_decode : ' . $_sP['layout']);
     }
     $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
     $ret = BeakController::beakQuery(array($brl));

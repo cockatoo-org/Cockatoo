@@ -17,7 +17,7 @@ require_once(Config::COCKATOO_ROOT.'wwwutils/core/content.php');
 require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 require_once(Config::COCKATOO_ROOT.'utils/stcontents.php');
 
-$_sP = $_POST;
+$_sP = getPost($_SERVER['REQUEST_METHOD']);
 $_sG = $_GET;
 
 $op   = $_sP['op'];
