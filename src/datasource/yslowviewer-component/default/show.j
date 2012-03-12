@@ -1,0 +1,1 @@
+{"@R":"1331548877","type":"HorizontalWidget","subject":"show","description":"show","css":"","js":"","id":"show","class":"","body":"<h1>Measurements<\/h1>\n<ul>\n<?cs each:item = A.yslowviewer.times ?>\n<li><a href=\"#\"><?cs var:item ?><\/a><\/li>\n<?cs \/each ?>\n<\/ul>","action":["action:\/\/yslowviewer-action\/yslowviewer\/BeaconAction?keys"],"_u":"show"}
