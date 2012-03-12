@@ -42,6 +42,8 @@ class WikiRequestParser extends \Cockatoo\DefaultRequestParser {
           return array('wiki','default',$reqpath);
         }
       }
+    }elseif ( preg_match('@^/([^/]+)/([^/]+)/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+      return array($matches[1],$matches[2],$matches[3]);
     }elseif ( $this->reqpath === '/favicon.ico' ) {
         return array('wiki','default','/img',array('P'=>'/Cockatoo PHP framework','N'=>'logo.png'));
     }

@@ -13,6 +13,22 @@ namespace Cockatoo;
 /*
  *
  */
+function getPost(&$method){
+  if ( $method === 'POST' ) {
+    $STR = file_get_contents('php://input');
+    if ( preg_match('@^(?:[^=&]*=[^=&]*(?:&[^=&]*=[^=&]*)*)?$@',$STR,$matches) !== 0 ) {
+      Log::trace($NAME,'Query format');
+      parse_str($STR,$POST);
+      return $POST;
+    }else{
+      Log::trace($NAME,'Not Query format');
+      return $STR;
+    }
+  }
+}
+/*
+ *
+ */
 function expires_header(&$expire){
   if ( $expire and $expire > 0 ){
     header("Cache-Control: public, maxage=".$expire);
