@@ -54,6 +54,7 @@ function parse_brl($brl) {
  * @return Array queries hash ([key] => value)
  */
 function parse_brl_query($query) {
+  // @@@ Todo : should use parse_str();
   $ret = array();
   if ( preg_match_all('@&([^=]+)=((?:\'[^\']*\')|(?:"[^\']*")|(?:[^&]*))@', $query , $matches ) !== 0 ) {
     foreach(array_keys($matches[1]) as $i ) {
