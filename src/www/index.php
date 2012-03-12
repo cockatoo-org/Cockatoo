@@ -27,16 +27,7 @@ try {
   $REMOTE_ADDR     = $_SERVER['REMOTE_ADDR'];
   $NAME = 'from ' . $REMOTE_ADDR . ' : ';
 
-  if ( $_SERVER[REQUEST_METHOD] === 'POST' ) {
-    $STR = file_get_contents('php://input');
-    if ( preg_match('@^(?:[^=&]*=[^=&]*(?:&[^=&]*=[^=&]*)*)?$@',$STR,$matches) !== 0 ) {
-      Log::trace($NAME,'Query format');
-      parse_str($STR,$POST);
-    }else{
-      Log::trace($NAME,'Not Query format');
-      $POST=$STR;
-    }
-  }
+  $POST = getPost($_SERVER[REQUEST_METHOD]);
 
   try {
     $per = Log::pre_performance();
