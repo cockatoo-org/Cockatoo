@@ -31,7 +31,8 @@ class Config extends DefaultConfig {
    * Request analizer
    */
   const RequestParser     = 'wiki\WikiRequestParser';
-  const DeviceSelector    = 'Cockatoo\DefaultDeviceSelector'; 
+  const DeviceSelector    = 'wiki\WikiDeviceSelector'; 
+  //const DeviceSelector    = 'Cockatoo\DefaultDeviceSelector'; 
 
   /**
    * Timeout
