@@ -32,7 +32,7 @@ try {
     $sids = getS();
     foreach ( $sids as $sid){
       if ( is_readable($sid) ){
-        if ( ! $sid ) {
+        if ( $sid === '' ) {
           $r [] = array('sid' => $sid , 'name' => 'ADMIN');
         }else{
           $r [] = array('sid' => $sid , 'name' => $sid);
@@ -40,12 +40,12 @@ try {
       }
     }
   } elseif( $op === 'addS' ) {
-    check_admin();
+    check_admin('');
     $sid = $_sP['name'];
     $account = get_account();
     set_auth($sid,$account,CmsAuth::ADMIN);
   } elseif( $op === 'delS' ) {
-    check_admin();
+    check_admin('');
     $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$sid,Beak::M_DEL);
     $ret = BeakController::beakQuery(array($brl));
     if ( ! $ret[$brl] ) {
