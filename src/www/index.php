@@ -43,7 +43,6 @@ try {
 
     if ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_HTML) === 0 ) {
       $CONTENT_DRAWER->session($HEADER,$_SERVER,$_POST,$_GET,$_COOKIE,$_FILES);
-      $CONTENT_DRAWER->preAction();
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
@@ -53,7 +52,6 @@ try {
       Include 'wwwutils/core/frame.php';
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_PLAIN) === 0 ) {
       $CONTENT_DRAWER->session($HEADER,$_SERVER,$_POST,$_GET,$_COOKIE,$_FILES);
-      $CONTENT_DRAWER->preAction();
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
@@ -63,7 +61,6 @@ try {
       $CONTENT_DRAWER->drawMain();
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_JSON) === 0 ) {
       $CONTENT_DRAWER->session($HEADER,$_SERVER,$_POST,$_GET,$_COOKIE,$_FILES);
-      $CONTENT_DRAWER->preAction();
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
@@ -76,7 +73,6 @@ try {
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_BIN) === 0 ) {
 
       $CONTENT_DRAWER->tmpSession($HEADER,$_SERVER,$_POST,$_GET,$_COOKIE,$_FILES);
-      $CONTENT_DRAWER->preAction();
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  

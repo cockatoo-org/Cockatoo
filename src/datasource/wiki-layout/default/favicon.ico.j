@@ -1,1 +1,0 @@
-{"@R":"1331100012","eredirect":"","redirect":"http:\/\/cockatoo.jp\/_s_\/wiki\/p\/logo.png","pre_action":"","post_action":"","session_exp":"","expires":-1,"header":"<meta name=\"description\" content=\"\">\n","pheader":"","layout":{"type":"BinaryWidget","extra":"","component":"component:\/\/wiki-component\/default\/img\/draw?get","children":[]},"_u":"favicon.ico"}

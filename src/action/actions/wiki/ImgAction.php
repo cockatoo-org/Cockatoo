@@ -22,8 +22,6 @@ class ImgAction extends \Cockatoo\Action {
     $user = $session['login']['user'];
     $page   = $this->args['P'];
     $name   = $this->args['N'];
-    $user = $session['login']['user'];
-
     $names = array();
     if ( $this->method === \Cockatoo\Beak::M_SET and isset($session[\Cockatoo\Def::SESSION_KEY_FILES])) {
       if ( ! $user ) {
