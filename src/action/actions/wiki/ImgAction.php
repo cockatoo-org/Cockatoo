@@ -47,12 +47,13 @@ class ImgAction extends \Cockatoo\Action {
         $names []= $name;
       }
     }else if ( $this->method === \Cockatoo\Beak::M_GET ) {
-      $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, $name, \Cockatoo\Beak::M_GET);
-      $bret = \Cockatoo\BeakController::beakQuery(array($brl));
-      if ( $bret[$brl] ) {
-        $this->setHeader('Content-Type',$bret[$brl][\Cockatoo\Def::K_STATIC_TYPE]);
-        return array('img' => $bret[$brl]);
-      }
+      $this->setRedirect('/_s_/wiki/'.$page.'/'.$name);
+//       $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, $name, \Cockatoo\Beak::M_GET);
+//       $bret = \Cockatoo\BeakController::beakQuery(array($brl));
+//       if ( $bret[$brl] ) {
+//         $this->setHeader('Content-Type',$bret[$brl][\Cockatoo\Def::K_STATIC_TYPE]);
+//         return array('img' => $bret[$brl]);
+//       }
     }
     return array('names'=>$names);
   }
