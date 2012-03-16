@@ -55,7 +55,7 @@ class FileContentType {
  */
 class StaticContent {
   static public function save($brl,$type,$description,&$content,$TO_BEAKS=null,$uindex=Beak::Q_UNIQUE_INDEX,$exp=null){
-    $token = preg_replace('/^(.{7})(.{3})(.{8}).*/','${1}-${2}-${3}', md5($content));
+    $token = preg_replace('/^(.{8})(.{4})(.{4})(.*)/','"${1}-${2}-${3}-${4}"', md5($content));
     if ( FileContentType::is_bin($type) ){
       $data = array(
         Def::K_STATIC_ETAG => $token,
