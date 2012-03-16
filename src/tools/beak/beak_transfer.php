@@ -24,8 +24,10 @@ class BeakImporter {
     );
   private $TO_BEAKS;
   private $charset;
+  private $type;
   private $expire;
-  public function __construct($to='file',$charset='AUTO',$type='AUTO',$location = null,$expire=null){
+  private $to_location;
+  public function __construct($to,$brl,$charset='AUTO',$type='AUTO',$to_location = null,$expire=null){
     $this->charset = $charset;
     $this->type    = $type;
     $this->expire  = $expire;
@@ -37,14 +39,19 @@ class BeakImporter {
     foreach ( Config::$SYS_BEAKS as $k => $v ) {
       $this->TO_BEAKS[$k]   = $to_driver;
     }
-    Log::info('import to [' . $to_driver . '] => ');
-    print('import to [' . $to_driver . '] => ' . "\n");
+    list($S,$D,$C,$p,$m,$q,$c) = parse_brl($brl);
+    $base_brl = $S . '://' . $D . '/';
+    $this->to_location  =$to_location?array($to_location):Config::$BeakLocation[$base_brl];
+
+    Log::info('import to [' . $to_driver . '(' . $this->to_location[0] . ')] => ' . $brl);
+    print('import to [' . $to_driver . '(' . $this->to_location[0] . ')] => ' . $brl . "\n");
   }
   function __destruct(){
     finfo_close($this->fi);
   }
   function import_all($path,$brl){
-    //print 'importing : ' . $path . ' => ' . $brl . "\n";
+    // print 'importing : ' . $path . ' => ' . $brl . "\n";
+
     if ( is_dir($path) ) {
       if ($dh = opendir($path)) {
         while (($file = readdir($dh)) !== false) {
@@ -232,4 +239,11 @@ class BeakTransfer {
       $ret = BeakController::beakQuery(array($brl),$this->TO_BEAKS);
     }
   }
+}
+
+function parse_in($in){
+  if ( $in and  preg_match('@^([^,]+)(?:,(\S+))?@',$in,$matches) != 0 ) {
+    return array($matches[1],$matches[2]);
+  }
+  return null;
 }

@@ -15,12 +15,32 @@ require_once(dirname(__FILE__) . '/../../def.php');
 require_once(Config::COCKATOO_ROOT.'tools/beak/beak_transfer.php');
 ini_set('display_errors','On');
 
-if ( !$argv or count($argv) > 8 or count($argv) < 3 ) {
+$options = getopt('',array('src:','to:','brl:','type:','charset:','exp:'));
+$src                   = $options['src'];
+list($to,$tol)         = parse_in($options['to']);
+$brl                   = $options['brl'];
+$type                  = isset($options['type'])?$options['type']:'AUTO';
+$charset               = isset($options['charset'])?$options['charset']:'AUTO';
+$expire                = $options['exp'];
+
+if ( preg_match('@^/@',$src,$matches) === 0 ) { 
+  $src = $CUR .'/'.$src;
+}
+
+if ( ! ( $src and $to and $brl ) ) {
   $msg = <<<_MSG_
 Invalid arguments !
 
 Usage:
-  beak_import.php  <FILE/DIR> <BRL> [<TYPE>] [CHARSET] [TO] [<IP:PORT>] [EXPIRE]
+  beak_import.php --src <FILE/DIR> --to <LOCATE> --brl <BASE BRL> [--exp <EXPIRE>] [--charset <CHARSET>]
+
+LOCATE:
+  <DRIVER>,<IP>:<PORT>
+
+DRIVER:
+  file       Cockatoo\BeakFile
+  mongo      Cockatoo\BeakMongo
+  null       Cockatoo\BeakNull
 
 TYPE:
   AUTO       Use default definition by the extention.
@@ -51,20 +71,10 @@ _MSG_;
    die ();
 }
 
-$path    = $argv[1];
-$brl     = $argv[2];
-$type    = $argv[3]?$argv[3]:'AUTO';
-$charset = $argv[4]?$argv[4]:'AUTO';
-$to      = $argv[5]?$argv[5]:'file';
-$location= $argv[6];
-$expire  = $argv[7];
 
-if ( preg_match('@^/@',$path,$matches) === 0 ) { 
-  $path = $CUR .'/'.$path;
-}
 try {
-  $importer = new BeakImporter($to,$charset,$type,$location,$expire);
-  $importer->import_all($path,$brl);
+  $importer = new BeakImporter($to,$brl,$charset,$type,$tol,$expire);
+  $importer->import_all($src,$brl);
 
 }catch(\Exception $e){
   Log::error($e);

@@ -15,12 +15,6 @@ require_once(Config::COCKATOO_ROOT.'tools/beak/beak_transfer.php');
 ini_set('display_errors','On');
 
 
-function parse_in($in){
-  if ( $in and  preg_match('@^([^,]+)(?:,(\S+))?@',$in,$matches) != 0 ) {
-    return array($matches[1],$matches[2]);
-  }
-  return null;
-}
 $options = getopt('',array('from:','to:','db:','col:','add','callback:'));
 
 list($from,$froml)     =  parse_in($options['from']);
