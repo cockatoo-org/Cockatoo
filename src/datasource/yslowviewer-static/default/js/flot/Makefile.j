@@ -1,0 +1,1 @@
+{"etag":"ac8973e-39d-3ea5cc12","type":"text\/plain","exp":"86400","desc":null,"data":"# Makefile for generating minified files\n\n.PHONY: all\n\n# we cheat and process all .js files instead of an exhaustive list\nall: $(patsubst %.js,%.min.js,$(filter-out %.min.js,$(wildcard *.js)))\n\n%.min.js: %.js\n\tyui-compressor $< -o $@\n","_u":"js\/flot\/Makefile"}

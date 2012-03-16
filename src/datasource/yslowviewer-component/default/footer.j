@@ -1,0 +1,1 @@
+{"@R":"1331869527","type":"HorizontalWidget","subject":"footer","description":"footer","css":"","js":"","id":"","class":"","body":"<hr>\n<div class=\"copyright\">\nPowred by hiroaki.kubota@mail.rakuten.com<br>\n\nYSlow is powered by Yahoo! Inc.\n<\/div>\n","action":[""],"_u":"footer"}
