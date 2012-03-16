@@ -181,12 +181,13 @@ $(function () {
       expires_time : { label: 'expires seconds' , type : 'text' , def : 0},
       css        : { label: 'CSS' , type : 'textarea' },
       js         : { label: 'JS' , type : 'textarea' },
-      header   : { label: 'Header' , type : 'textarea' , def : "\n" + 
+      header     : { label: 'Header' , type : 'textarea' , def : "\n" + 
             '<meta http-equiv="content-type" content="text/html; charset=utf-8">' + "\n" + 
             '<meta http-equiv="content-style-type" content="text/css">' + "\n" + 
             '<meta http-equiv="content-script-type" content="text/javascript">' + "\n"
             },
-      pheader   : { label: 'Protocol header' , type : 'textarea' , def : ""}
+      pheader   : { label: 'Protocol header' , type : 'textarea' , def : ""},
+      bottom    : { label: 'Body bottom' , type : 'textarea' , def : ""}
     },
     validator: {
       rules: {
@@ -275,6 +276,7 @@ $(function () {
             '<meta name="description" content="">' + "\n" 
             },
       pheader   : { label: 'Protocol header' , type : 'textarea' , def : ""},
+      bottom    : { label: 'Body bottom' , type : 'textarea' , def : ""},
       contents   : { label: 'Containing' , type : 'textarea'}
     },
     validator: {
