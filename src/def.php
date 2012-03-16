@@ -143,6 +143,10 @@ class Def {
   const  LOGLV_ERROR0             = 0x00000010;
   const  LOGLV_FATAL0             = 0x00000001;
 
+  const SESSION_NO_SESSION        = -1;
+  const SESSION_TMP_SESSION       = 0;
+  const SESSION_DEFAULT           = 0x7FFFFFFF;
+
 }
 
 abstract class DefaultConfig {
