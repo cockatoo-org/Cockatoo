@@ -388,6 +388,18 @@ class WikiParser {
         }
         $text = $matches[4];
         next;
+      }elseif ( preg_match('@^&frame\(([^\),]*)(?:,(\d*)(?:,(\d*))?)?\);(.*)@', $text , $matches ) !== 0 ) {
+        // IFRAME => &frame(<url>,<height>,<width>);
+        $attr = array();
+        if ( $matches[2] ) {
+          $attr['height'] = $matches[2];
+        }
+        if ( $matches[3] ) {
+          $attr['width'] = $matches[3];
+        }
+        $body [] = self::tag('iframe',array('src' => $matches[1]),'FRAME : ' . $matches[1]);
+        $text = $matches[4];
+        next;
       }elseif ( preg_match('@^&anchor\(([^\)]*)\);(.*)@', $text , $matches ) !== 0 ) {
         // ANCHOR => &anchor(<name>);
         $body [] = self::tag('a',array('href' => '#'.$matches[1], 'name' => $matches[1]),'+');
