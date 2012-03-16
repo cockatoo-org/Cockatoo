@@ -42,6 +42,7 @@ class Def {
   const  K_LAYOUT_REDIRECT        = 'redirect';
   const  K_LAYOUT_PHEADER         = 'pheader';
   const  K_LAYOUT_HEADER          = 'header';
+  const  K_LAYOUT_BOTTOM          = 'bottom';
 
   const  K_LAYOUT_CTYPE_HTML      = 'html';
   const  K_LAYOUT_CTYPE_PLAIN     = 'plain';
