@@ -28,6 +28,7 @@ try {
   $NAME = 'from ' . $REMOTE_ADDR . ' : ';
 
   $POST = getPost($_SERVER[REQUEST_METHOD]);
+  $FILES= getFiles($POST);
 
   try {
     $per = Log::pre_performance();
@@ -44,7 +45,7 @@ try {
     }
 
     if ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_HTML) === 0 ) {
-      $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$_FILES);
+      $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
@@ -53,7 +54,7 @@ try {
       $CONTENT_DRAWER->drawPHeader('text/html');
       Include 'wwwutils/core/frame.php';
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_PLAIN) === 0 ) {
-      $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$_FILES);
+      $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
@@ -62,7 +63,7 @@ try {
       $CONTENT_DRAWER->drawPHeader('text/plain');
       $CONTENT_DRAWER->drawMain();
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_JSON) === 0 ) {
-      $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$_FILES);
+      $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
@@ -74,7 +75,7 @@ try {
       $CONTENT_DRAWER->drawJson();
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_BIN) === 0 ) {
 
-      $CONTENT_DRAWER->tmpSession($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$_FILES);
+      $CONTENT_DRAWER->tmpSession($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
