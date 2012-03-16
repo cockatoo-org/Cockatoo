@@ -72,7 +72,16 @@ class BeaconAction extends \Cockatoo\Action {
         foreach( $beacon['comps'] as $k => $v ) {
           $beacon['comps'][$k]['url'] = urldecode($beacon['comps'][$k]['url']);
         }
+//        ksort($beacon['stats']);
+//        ksort($beacon['stats_c']);
+        uasort($beacon['stats'],function($a,$b){
+                 return $a['w'] < $b['w'];
+               });
+        uasort($beacon['stats_c'],function($a,$b){
+                 return $a['w'] < $b['w'];
+               });
         $beacon['url'] = $url;
+        
         // @@@ Todo 
 
         return $beacon;
