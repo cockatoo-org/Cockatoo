@@ -160,13 +160,25 @@ $(function () {
       if ( $kind == 'update' || $kind == 'del') {
 	  $select.attr("disabled","disabled");
       }
+      var $session = root.find('select[name="session"]');
+	$session.change( function (){
+          var $session_exp = $(this).parents('form').find('input[name="session_exp"]');
+	    $session_exp.removeAttr('readonly');
+	    $session_exp.val($(this).val());
+          if ( $(this).val() == -1 ) {
+	      $session_exp.attr('readonly','readonly');
+          }else if ( $(this).val() == 0 ) {
+	      $session_exp.attr('readonly','readonly');
+	  }
+        });
       var $expires = root.find('select[name="expires"]');
 	$expires.change( function (){
-            if ( $(this).val() === 'true' ) {
-		$(this).parents('form').find('input[name="expires_time"]').removeAttr('disabled');
-	    }else{
-		$(this).parents('form').find('input[name="expires_time"]').attr('disabled','disabled');
-	    }
+	  var $expires_time = $(this).parents('form').find('input[name="expires_time"]');
+	    $expires_time.removeAttr('readonly');
+	    $expires_time.val($(this).val());
+          if ( $(this).val() == 0 ) {
+	      $expires_time.attr('readonly','readonly');
+	  }
         });
     }},
     form : {
@@ -177,7 +189,9 @@ $(function () {
       device     : { label: 'device type' , type : 'text', def : 'default'},
       eredirect  : { label: 'error redirect' , type : 'text'},
       layout     : { label: 'Layout editor' , type : 'html'},
-      expires      : { label: 'expires header' , type : 'select', options : { enable :true, disable :false} , def : false},
+      session     : { label: 'default session object' , type : 'select', options : { use :1 , temporary: 0 , disable :-1} , def : 0},
+      session_exp : { label: 'default session expire' , type : 'text' , def : 0},
+      expires      : { label: 'expires header' , type : 'select', options : { enable :1, disable :0} , def : 0},
       expires_time : { label: 'expires seconds' , type : 'text' , def : 0},
       css        : { label: 'CSS' , type : 'textarea' },
       js         : { label: 'JS' , type : 'textarea' },
@@ -194,6 +208,9 @@ $(function () {
 	name: {
           required: true
         },
+	session_exp: {
+	  number: true
+	},
 	expires_time: {
 	  number: true
 	}
@@ -223,19 +240,25 @@ $(function () {
       }
       var $session = root.find('select[name="session"]');
 	$session.change( function (){
-            if ( $(this).val() === 'true' ) {
-		$(this).parents('form').find('input[name="session_exp"]').removeAttr('disabled');
-	    }else{
-		$(this).parents('form').find('input[name="session_exp"]').attr('disabled','disabled');
-	    }
+          var $session_exp = $(this).parents('form').find('input[name="session_exp"]');
+	    $session_exp.removeAttr('readonly');
+	    $session_exp.val($(this).val());
+          if ( $(this).val() == -1 ) {
+	      $session_exp.attr('readonly','readonly');
+          }else if ( $(this).val() == 0 ) {
+	      $session_exp.attr('readonly','readonly');
+          } else if ( $(this).val() == 0x7fffffff ) {
+	      $session_exp.attr('readonly','readonly');
+	  }
         });
       var $expires = root.find('select[name="expires"]');
 	$expires.change( function (){
-            if ( $(this).val() === 'true' ) {
-		$(this).parents('form').find('input[name="expires_time"]').removeAttr('disabled');
-	    }else{
-		$(this).parents('form').find('input[name="expires_time"]').attr('disabled','disabled');
-	    }
+	  var $expires_time = $(this).parents('form').find('input[name="expires_time"]');
+	    $expires_time.removeAttr('readonly');
+	    $expires_time.val($(this).val());
+          if ( $(this).val() == 0 ) {
+	      $expires_time.attr('readonly','readonly');
+	  }
         });
       var $ctype = root.find('select[name="_ctype"]');
 	$ctype.change( function(){
@@ -268,9 +291,9 @@ $(function () {
       layout   : { label: 'Layout editor' , type : 'html'},
       pre_action  : { label: 'first action', type : 'text'},
       post_action : { label: 'last action' , type : 'text'},
-      session     : { label: 'session object' , type : 'select', options : { enable :true, disable :false} , def : true},
-      session_exp : { label: 'session cookie expire' , type : 'text' , def : 0},
-      expires      : { label: 'expires header' , type : 'select', options : { enable :true, disable :false} , def : false},
+      session     : { label: 'session object' , type : 'select', options : { use :1 , default:0x7fffffff , temporary: 0 , disable :-1} , def : 0x7fffffff},
+      session_exp : { label: 'session expire' , type : 'text' , def : 0x7fffffff},
+      expires      : { label: 'expires header' , type : 'select', options : { enable :1, disable :0} , def : 0},
       expires_time : { label: 'expires seconds' , type : 'text' , def : 0},
       header   : { label: 'Header' , type : 'textarea' , def : "\n" + 
             '<meta name="description" content="">' + "\n" 

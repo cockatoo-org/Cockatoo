@@ -43,7 +43,6 @@ foreach ( explode("\n",$_sP['pheader']) as $p ) {
     $pheader .= $p . "\n";
   }
 }
-$session      = $_sP['session'];
 $session_exp  = $_sP['session_exp'];
 $expires      = $_sP['expires'];
 $expires_time = $_sP['expires_time'];
@@ -79,6 +78,7 @@ try {
         $header = $data[Def::K_LAYOUT_HEADER];
         $pheader = $data[Def::K_LAYOUT_PHEADER];
         $bottom = $data[Def::K_LAYOUT_BOTTOM];
+        $session_exp = $data[Def::K_LAYOUT_SESSION_EXP];
         $expires = $data[Def::K_LAYOUT_EXPIRES];
         // css
         $cssBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonCSS,Beak::M_GET);
@@ -97,7 +97,9 @@ try {
                      'eredirect' => $eredirect,
                      'css' => $css ,
                      'js' => $js,
-                     'expires'      => ($expires<=0)?'false':'true',
+                     'session' => $session_exp,
+                     'session_exp' => $session_exp,
+                     'expires'      => $expires,
                      'expires_time' => $expires,
                      'header' => $header,
                      'pheader' => $pheader,
@@ -113,10 +115,10 @@ try {
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array(
                       array(Def::K_LAYOUT_TYPE => 'PageLayout' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/pagelayout" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array())
                       ));
-    setD(false,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$header,$pheader,$bottom,$layout);
+    setD(false,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'setD' ) {
     check_writable($sid);
-    setD(true,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$header,$pheader,$bottom,null);
+    setD(true,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,null);
   } elseif( $op === 'getP' ) {
     if ( is_readable($sid) ){
       $pids = getP($sid,$did);
@@ -162,10 +164,10 @@ try {
                  'ctype'       => $CONTENT_DRAWER->ctype,
                  'pre_action'  => $CONTENT_DRAWER->preAction,
                  'post_action' => $CONTENT_DRAWER->postAction,
-                 'session'     => ($CONTENT_DRAWER->sessionExp<0)?'false':'true',
-                 'session_exp' => $CONTENT_DRAWER->sessionExp,
-                 'expires'      => ($CONTENT_DRAWER->expires<=0)?'false':'true',
-                 'expires_time' => $CONTENT_DRAWER->expires,
+                 'session'     => $CONTENT_DRAWER->layoutData[Def::K_LAYOUT_SESSION_EXP],
+                 'session_exp' => $CONTENT_DRAWER->layoutData[Def::K_LAYOUT_SESSION_EXP],
+                 'expires'     => $CONTENT_DRAWER->expires,
+                 'expires_time'=> $CONTENT_DRAWER->expires,
                  'eredirect'   => $CONTENT_DRAWER->eredirect,
                  'redirect'    => $CONTENT_DRAWER->redirect,
                  'header'      => $CONTENT_DRAWER->layoutData[Def::K_LAYOUT_HEADER],
@@ -178,10 +180,10 @@ try {
     check_writable($sid);
     $pid = $_sP['name'];
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array());
-    setP(false,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session,$session_exp,$expires,$expires_time,$header,$pheader,$bottom,$layout);
+    setP(false,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'setP' ) {
     check_writable($sid);
-    setP(true,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session,$session_exp,$expires,$expires_time,$header,$pheader,$bottom,null);
+    setP(true,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,null);
   } elseif( $op === 'getC' ) {
     if ( is_readable($sid) ){
       $brl = brlgen(Def::BP_COMPONENT,$sid,'default','',Beak::M_KEY_LIST);
@@ -313,12 +315,9 @@ function getP($sid,$did){
   return $ret[$brl];
 }
 
-function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$header,$pheader,$bottom,$layout){
+function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
   if ( preg_match('@\s@',$did,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as DEVICE : ' . $pid);
-  }
-  if ( $expires === 'false' ) {
-    $expires_time = -1;
   }
   if ( ! $flg ){
     $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
@@ -353,6 +352,7 @@ function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$he
   $data[Def::K_LAYOUT_HEADER]      = $header;
   $data[Def::K_LAYOUT_PHEADER]      = $pheader;
   $data[Def::K_LAYOUT_BOTTOM]      = $bottom;
+  $data[Def::K_LAYOUT_SESSION_EXP] = $session_exp;
   $data[Def::K_LAYOUT_EXPIRES]     = $expires_time;
   $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
   $ret = BeakController::beakQuery(array(array($brl,$data)));
@@ -366,17 +366,11 @@ function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$expires,$expires_time,$he
   $jsBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonJs,'');
   StaticContent::save($jsBrl,'text/javascript','',$js,null,Beak::Q_UNIQUE_INDEX,$expires_time);
 }
-function setP($flg,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session,$session_exp,$expires,$expires_time,$header,$pheader,$bottom,$layout){
+function setP($flg,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
   if ( preg_match('@\s@',$pid,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as PAGE : ' . $pid);
   }
   $data = array();
-  if ( $session === 'false' ) {
-    $session_exp = -1;
-  }
-  if ( $expires === 'false' ) {
-    $expires_time = -1;
-  }
   $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
   $data = BeakController::beakQuery(array($brl));
   if ( ! $flg and $data[$brl]) {
