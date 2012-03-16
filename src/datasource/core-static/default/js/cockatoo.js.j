@@ -1,1 +1,1 @@
-{"etag":"\"d41d8cd9-8f00-b204-e9800998ecf8427e\"","type":"text\/javascript","exp":"3600","desc":"","data":"","_u":"js\/cockatoo.js"}
+{"etag":"\"d41d8cd9-8f00-b204-e9800998ecf8427e\"","type":"text\/javascript","exp":"86400","desc":"","data":"","_u":"js\/cockatoo.js"}
