@@ -74,8 +74,8 @@ try {
       $CONTENT_DRAWER->drawPHeader('text/javascript');
       $CONTENT_DRAWER->drawJson();
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_BIN) === 0 ) {
-
-      $CONTENT_DRAWER->tmpSession($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
+      $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
+//      $CONTENT_DRAWER->tmpSession($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  

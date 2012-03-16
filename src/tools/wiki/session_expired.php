@@ -25,6 +25,7 @@ function SessionCallback(&$brl,&$data){
   if ( preg_match('@^session://wiki-session/default/(.*)@',$brl,$matches) !== 0 ) {
     if ( $now > $data['_e'] ) {
       // expired session
+      echo $data['_e'] . '  Expired (' .  strftime('%Y-%m-%d %H:%M:%S',$data['_e']) .') => '  . $brl . "\n";
       \Cockatoo\delSession($data['_u'],'wiki');
     }
   }

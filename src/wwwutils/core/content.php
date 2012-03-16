@@ -121,6 +121,7 @@ class ContentDrawer {
       $this->baseHeader    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_HEADER];
       $this->basePHeader   = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_PHEADER];
       $this->baseBottom    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_BOTTOM];
+      $this->baseSessionExp= $datas[$this->baseLayoutBrl][Def::K_LAYOUT_SESSION_EXP];
 
       // Page layout
       if ( ! $datas[$this->layoutBrl] ) {
@@ -164,16 +165,59 @@ class ContentDrawer {
     $this->bottom       = $this->baseBottom  . $this->layoutData[Def::K_LAYOUT_BOTTOM];
     $this->preAction    = $this->layoutData[Def::K_LAYOUT_PRE_ACTION];
     $this->postAction   = $this->layoutData[Def::K_LAYOUT_POST_ACTION];
-    $this->sessionExp   = $this->layoutData[Def::K_LAYOUT_SESSION_EXP];
+    $this->sessionExp   = (int)(((int)$this->layoutData[Def::K_LAYOUT_SESSION_EXP]===Def::SESSION_DEFAULT)?($this->baseSessionExp):($this->layoutData[Def::K_LAYOUT_SESSION_EXP]));
     $this->expires      = $this->layoutData[Def::K_LAYOUT_EXPIRES];
     $this->collectComponentBrls($this->layout);
   }
 
 
-  public function tmpSession(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
-    $this->sessionID = uniqid();
-    $this->session   = array();
-    $this->sessionExp= 0;
+//   public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
+//     $this->sessionID = uniqid();
+//     $this->session   = array();
+//     foreach($FILES as $FILE){
+//       $files []= array(Def::F_ERROR=>$FILE['error'],Def::F_NAME=>$FILE['name'],Def::F_TYPE=>FileContentType::get($FILE['name']),Def::F_SIZE=>$FILE['size'],Def::F_CONTENT=>file_get_contents($FILE['tmp_name']));
+//       $data = array(file_get_contents($FILE['tmp_name']));
+//     }
+//     // Set current session
+//     $this->session[Def::SESSION_KEY_REQ]    = $HEADER;
+//     $this->session[Def::SESSION_KEY_SERVER] = $SERVER;
+//     $this->session[Def::SESSION_KEY_POST]   = $POST;
+//     $this->session[Def::SESSION_KEY_GET]    = $GET;
+//     $this->session[Def::SESSION_KEY_COOKIE] = $COOKIE;
+//     $this->session[Def::SESSION_KEY_FILES]  = $files;
+//     $this->session[Def::SESSION_KEY_DEVICE] = $this->device;
+//     $this->session[Def::SESSION_KEY_EXP]    = 0;
+//     setSession($this->sessionID,$this->service,$this->session);
+//     Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Use temporary session ' . $this->sessionID . ' , ' . $this->sessionExp);
+//   }
+  public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
+    $this->now = time();
+    if ( $this->sessionExp === Def::SESSION_NO_SESSION ) {
+      // Nothing to do
+    }elseif ( $this->sessionExp === Def::SESSION_TMP_SESSION ) {
+      $this->sessionID = uniqid();
+      $this->session   = array();
+      $exp = 0;
+      Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Create tmp session ' . $this->sessionID);
+    }elseif ( $this->sessionExp !== Def::SESSION_NO_SESSION ) {
+      $this->sessionID = isset($_COOKIE[Config::SESSION_COOKIE])?$_COOKIE[Config::SESSION_COOKIE]:null;
+      $this->session = null;
+      // Try session
+      Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Get session cookie ' . $this->sessionID );
+      $this->session = getSession($this->sessionID,$this->service);
+      if ( ! $this->sessionID or ! $this->session ) {
+        $this->sessionID = uniqid();
+        $this->session = array();
+        Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Create new session ' . $this->sessionID);
+      }
+      $exp = $this->now+$this->sessionExp;
+      // cookie
+      // name , value , exp(sec) , path , domain , secure , httponly 
+      // setcookie(Config::SESSION_COOKIE,$this->sessionID,time()+3600,'/','',true,false);
+      Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Issue session cookie ' . $this->sessionID . ' , ' . $this->sessionExp);
+      setcookie(Config::SESSION_COOKIE,$this->sessionID,$exp,'/');
+    }
+
     foreach($FILES as $FILE){
       $files []= array(Def::F_ERROR=>$FILE['error'],Def::F_NAME=>$FILE['name'],Def::F_TYPE=>FileContentType::get($FILE['name']),Def::F_SIZE=>$FILE['size'],Def::F_CONTENT=>file_get_contents($FILE['tmp_name']));
       $data = array(file_get_contents($FILE['tmp_name']));
@@ -186,46 +230,9 @@ class ContentDrawer {
     $this->session[Def::SESSION_KEY_COOKIE] = $COOKIE;
     $this->session[Def::SESSION_KEY_FILES]  = $files;
     $this->session[Def::SESSION_KEY_DEVICE] = $this->device;
-    $this->session[Def::SESSION_KEY_EXP]    = 0;
+    $this->session[Def::SESSION_KEY_EXP]    = $exp;
+    // Save
     setSession($this->sessionID,$this->service,$this->session);
-    Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Use temporary session ' . $this->sessionID . ' , ' . $this->sessionExp);
-  }
-  public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
-    $this->sessionID = isset($_COOKIE[Config::SESSION_COOKIE])?$_COOKIE[Config::SESSION_COOKIE]:null;
-    $this->session = null;
-
-    if ( $this->sessionExp >= 0 ) {
-      $this->now = time();
-      $exp = $this->now+$this->sessionExp;
-      // Try session
-      Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Get session cookie ' . $this->sessionID . ' , ' . $exp);
-      $this->session = getSession($this->sessionID,$this->service);
-      if ( ! $this->sessionID or ! $this->session ) {
-        $this->sessionID = uniqid();
-        $this->session = array();
-        Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Create new session ' . $this->sessionID);
-      }
-      foreach($FILES as $FILE){
-        $files []= array(Def::F_ERROR=>$FILE['error'],Def::F_NAME=>$FILE['name'],Def::F_TYPE=>FileContentType::get($FILE['name']),Def::F_SIZE=>$FILE['size'],Def::F_CONTENT=>file_get_contents($FILE['tmp_name']));
-        $data = array(file_get_contents($FILE['tmp_name']));
-      }
-      // Set current session
-      $this->session[Def::SESSION_KEY_REQ]    = $HEADER;
-      $this->session[Def::SESSION_KEY_SERVER] = $SERVER;
-      $this->session[Def::SESSION_KEY_POST]   = $POST;
-      $this->session[Def::SESSION_KEY_GET]    = $GET;
-      $this->session[Def::SESSION_KEY_COOKIE] = $COOKIE;
-      $this->session[Def::SESSION_KEY_FILES]  = $files;
-      $this->session[Def::SESSION_KEY_DEVICE] = $this->device;
-      $this->session[Def::SESSION_KEY_EXP]    = $exp;
-      // Save
-      setSession($this->sessionID,$this->service,$this->session);
-      // cookie
-      // name , value , exp(sec) , path , domain , secure , httponly 
-      // setcookie(Config::SESSION_COOKIE,$this->sessionID,time()+3600,'/','',true,false);
-      Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Issue session cookie ' . $this->sessionID . ' , ' . $this->sessionExp);
-      setcookie(Config::SESSION_COOKIE,$this->sessionID,$exp,'/');
-    }
   }
   
   public function components() {
@@ -535,7 +542,7 @@ class ContentDrawer {
         $this->session[Def::SESSION_KEY_COOKIE] = null;
         $this->session[Def::SESSION_KEY_FILES]  = null;
         setSession($this->sessionID,$this->service,&$this->session);
-      }
+     }
     }
     if ( $COCKATOO_GLFLG ) {
       // @@@ It's not exact work because flushed stdbuffer is possibly buffered by the other modules, for instance mod_zip and so on...

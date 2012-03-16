@@ -23,7 +23,7 @@ class BeaconAction extends \Cockatoo\Action {
       if ( $this->method === \Cockatoo\Beak::M_SET ) {
         $session = $this->getSession();
         $beacon = json_decode($session[\Cockatoo\Def::SESSION_KEY_POST],1);
-//        $beacon['_u'] = strftime('%Y-%m-%d %H:%m:%S');
+//        $beacon['_u'] = strftime('%Y-%m-%d %H:%M:%S');
         $beacon['_u'] = time();
         $beacon['u'] = self::urlencode(urldecode($beacon['u']));
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],'',\Cockatoo\Beak::M_CREATE_COL,array(\Cockatoo\Beak::Q_UNIQUE_INDEX=>'_u'),array());
@@ -49,7 +49,7 @@ class BeaconAction extends \Cockatoo\Action {
         $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
         $times;
         foreach($ret[$brl] as $t ) {
-          $times [$t]= strftime('%Y-%m-%d %H:%m:%S',$t);
+          $times [$t]= strftime('%Y-%m-%d %H:%M:%S',$t);
         }
         return array('times' => $times,'u' => $url);
       }elseif ( $this->method === \Cockatoo\Beak::M_GET ) {
