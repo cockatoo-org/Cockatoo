@@ -120,6 +120,7 @@ class ContentDrawer {
       $this->baseEredirect = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_EREDIRECT];
       $this->baseHeader    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_HEADER];
       $this->basePHeader   = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_PHEADER];
+      $this->baseBottom    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_BOTTOM];
 
       // Page layout
       if ( ! $datas[$this->layoutBrl] ) {
@@ -160,6 +161,7 @@ class ContentDrawer {
     $this->pheader      = $this->basePHeader . $this->layoutData[Def::K_LAYOUT_PHEADER];
     $this->layout       = $this->layoutData[Def::K_LAYOUT_LAYOUT];
     $this->header       = $this->baseHeader  . $this->layoutData[Def::K_LAYOUT_HEADER];
+    $this->bottom       = $this->baseBottom  . $this->layoutData[Def::K_LAYOUT_BOTTOM];
     $this->preAction    = $this->layoutData[Def::K_LAYOUT_PRE_ACTION];
     $this->postAction   = $this->layoutData[Def::K_LAYOUT_POST_ACTION];
     $this->sessionExp   = $this->layoutData[Def::K_LAYOUT_SESSION_EXP];
@@ -424,6 +426,20 @@ class ContentDrawer {
     cs_parse_string($this->cs, $template);
     print cs_render($this->cs);
     cs_destroy($this->cs);
+  }
+  public function drawBottom() {
+    if ( $this->bottom ) {
+      if ( strstr($this->header,'<?cs ') ) {
+        // @@@ Todo: The number of runnign cs too match !!!
+        // template engine (cs)
+        $this->cs = \cs_init($this->hdf);
+        cs_parse_string($this->cs, $this->bottom);
+        print cs_render($this->cs);
+        cs_destroy($this->cs);
+      }else{
+        print $this->bottom;
+      }
+    }
   }
 
   protected function findKey($key,$len,$data,$cur){

@@ -27,6 +27,16 @@ $CONTENT_DRAWER->drawCss();
 
 -->
 </style>
+</head>
+<body id="co-frame">
+ <div id="co-main">
+<?php
+$CONTENT_DRAWER->drawMain();
+?>
+ </div>
+<?php
+$CONTENT_DRAWER->drawBottom();
+?>
 <?php
 $CONTENT_DRAWER->drawCommonJs();
 ?>
@@ -39,12 +49,5 @@ $CONTENT_DRAWER->drawJs();
 
 -->
 </script>
-</head>
-<body id="co-frame">
- <div id="co-main">
-<?php
-$CONTENT_DRAWER->drawMain();
-?>
- </div>
 </body>
 </html>
