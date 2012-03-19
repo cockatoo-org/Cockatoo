@@ -21,14 +21,23 @@ class BeaconAction extends \Cockatoo\Action {
     try{
       $this->setNamespace('yslowviewer');
       if ( $this->method === \Cockatoo\Beak::M_SET ) {
+        $now = time();
         $session = $this->getSession();
         $beacon = json_decode($session[\Cockatoo\Def::SESSION_KEY_POST],1);
-//        $beacon['_u'] = strftime('%Y-%m-%d %H:%M:%S');
-        $beacon['_u'] = time();
+        $beacon['t'] = strftime('%Y-%m-%d %H:%M:%S',$now);
+        $beacon['_t'] = $now;
         $beacon['u'] = self::urlencode(urldecode($beacon['u']));
+        // Create collection
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],'',\Cockatoo\Beak::M_CREATE_COL,array(\Cockatoo\Beak::Q_UNIQUE_INDEX=>'_u'),array());
         $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],$beacon['_u'],\Cockatoo\Beak::M_SET,array(),array());
+        // Save latest
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],'',\Cockatoo\Beak::M_SET,array(),array());
+        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
+        if ( ! $ret[$brl] ) {
+          throw new \Exception('Cannot save it ! Probably storage error...');
+        }
+        // Save 
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],$now,\Cockatoo\Beak::M_SET,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
         if ( ! $ret[$brl] ) {
           throw new \Exception('Cannot save it ! Probably storage error...');
@@ -46,45 +55,78 @@ class BeaconAction extends \Cockatoo\Action {
         $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
         $url = self::urlencode($url);
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
+        $ret = \Cockatoo\BeakController::beakQuery(array($brl));
+        rsort($ret[$brl]);
+        // times
         $times;
         foreach($ret[$brl] as $t ) {
-          $times [$t]= strftime('%Y-%m-%d %H:%M:%S',$t);
+          if ( $t ) {
+            $times [$t]= strftime('%Y-%m-%d %H:%M:%S',$t);
+          }
         }
         return array('times' => $times,'u' => $url);
       }elseif ( $this->method === \Cockatoo\Beak::M_GET ) {
-        $session = $this->getSession();
-        $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
-        $url = self::urlencode($url);
-        $t = $session[\Cockatoo\Def::SESSION_KEY_GET]['t'];
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,$t,\Cockatoo\Beak::M_GET,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-        if ( ! $ret[$brl] ) {
-          throw new \Exception('Cannot save it ! Probably storage error...');
-        }
-        $beacon = $ret[$brl];
-        $beacon['u'] = urldecode($beacon['u']);
-        foreach( $beacon['g'] as $k => $e) {
-          foreach ( $beacon['g'][$k]['components'] as $n => $v ) {
-            $beacon['g'][$k]['components'][$n] = urldecode($v);
+        if ( ! $this->queries ) {
+          $session = $this->getSession();
+          $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
+          $url = self::urlencode($url);
+          $t = $session[\Cockatoo\Def::SESSION_KEY_GET]['t'];
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,$t,\Cockatoo\Beak::M_GET,array(),array());
+          $ret = \Cockatoo\BeakController::beakQuery(array($brl));
+          if ( ! $ret[$brl] ) {
+            throw new \Exception('Cannot save it ! Probably storage error...');
           }
-        }
-        foreach( $beacon['comps'] as $k => $v ) {
-          $beacon['comps'][$k]['url'] = urldecode($beacon['comps'][$k]['url']);
-        }
-//        ksort($beacon['stats']);
-//        ksort($beacon['stats_c']);
-        uasort($beacon['stats'],function($a,$b){
-                 return $a['w'] < $b['w'];
-               });
-        uasort($beacon['stats_c'],function($a,$b){
-                 return $a['w'] < $b['w'];
-               });
-        $beacon['url'] = $url;
+          $beacon = $ret[$brl];
+          $beacon['u'] = urldecode($beacon['u']);
+          foreach( $beacon['g'] as $k => $e) {
+            foreach ( $beacon['g'][$k]['components'] as $n => $v ) {
+              $beacon['g'][$k]['components'][$n] = urldecode($v);
+            }
+          }
+          foreach( $beacon['comps'] as $k => $v ) {
+            $beacon['comps'][$k]['url'] = urldecode($beacon['comps'][$k]['url']);
+          }
         
-        // @@@ Todo 
+          uasort($beacon['stats'],function($a,$b){
+                   return $a['w'] < $b['w'];
+                 });
+          uasort($beacon['stats_c'],function($a,$b){
+                   return $a['w'] < $b['w'];
+                 });
+          $beacon['url'] = $url;
+          return $beacon;
+        }else{ // &graph
+          $session = $this->getSession();
+          $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
+          $url = self::urlencode($url);
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
+          $ret = \Cockatoo\BeakController::beakQuery(array($brl));
+          $times = &$ret[$brl];
+          rsort($times);
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(),array());
+          $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $times))));
+          $graph_summary;
+          $graph_summary[0]['label'] = 'Resp time';
+          $graph_summary[0]['dim']   = 'sec';
+          $graph_summary[1]['label'] = 'Score';
+          $graph_summary[1]['dim']   = '';
 
-        return $beacon;
+//          $graph_summary[1]['label'] = 'Resp bytes';
+//          $graph_summary[1]['dim']   = 'KB';
+//          $graph_summary[2]['label'] = 'Num req';
+//          $graph_summary[2]['dim'] = '';
+          foreach($ret[$brl] as $url => $data ){
+            if ( $url ) {
+              $graph_summary[0]['data'] []= array($data['_t']*1000, $data['lt']);
+           $graph_summary[0]['label'] = 'Resp time';
+          $graph_summary[0]['dim']   = 'sec';
+             $graph_summary[1]['data'] []= array($data['_t']*1000, $data['o']);
+//              $graph_summary[1]['data'] []= array($data['_t'], $data['w']/1000);
+//              $graph_summary[2]['data'] []= array($data['_t'], $data['r']);
+            }
+          }
+          return array('@json' => json_encode($graph_summary));
+        }
       }
       return array();
     }catch ( \Exception $e ) {

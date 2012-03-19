@@ -19,6 +19,7 @@ require_once(Config::COCKATOO_ROOT.'utils/session.php');
 abstract class Action {
   public $BRL;
   public $method;
+  public $queries;
   public $sessionID;
   public $service;
   public $args;
@@ -43,6 +44,7 @@ abstract class Action {
     $this->namespace = str_replace('\\','.',get_class($this));
     list($P,$D,$C,$p,$m,$q,$c) = parse_brl($this->BRL);
     $this->method = $m;
+    $this->queries = $q;
   }
   /**
    * Prepare process
