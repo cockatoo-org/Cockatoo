@@ -1,0 +1,1 @@
+{"@R":"1332141014","type":"HorizontalWidget","subject":"header","description":"header","css":"","js":"","id":"","class":"","body":"<a href=\"main\">[Back to the Main]<\/a> &nbsp;&nbsp;&nbsp; <?cs if:?A.yslowviewer.url?><a href=\"show?u=<?cs var:A.yslowviewer.url ?>\">[Show graph]<\/a><?cs \/if?>\n\n\n","action":[""],"_u":"header"}
