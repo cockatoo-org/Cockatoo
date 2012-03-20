@@ -1,1 +1,1 @@
-{"etag":"\"72546b07-a5f8-3473-7ed8e9909a3924a5\"","type":"text\/css","exp":"0","desc":"","data":"body {\n  width: 1000px;\n}","_u":"css\/cockatoo.css"}
+{"etag":"\"ae1f01b9-20c0-8774-eec9bcccac71781b\"","type":"text\/css","exp":"0","desc":"","data":"body {\n  width: 1000px;\n  font-family: Lucida Grande,Tahoma,sans-serif;\n}\n","_u":"css\/cockatoo.css"}

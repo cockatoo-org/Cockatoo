@@ -108,8 +108,7 @@ class BeaconAction extends \Cockatoo\Action {
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $times))));
           $graph_summary;
-          $graph_summary[0]['label']  = 'Score';
-          $graph_summary[0]['dim']    = 'score';
+          $graph_summary[0]['label']  = 'Total score';
           $graph_summary[0]['min']    = 0;
           $graph_summary[0]['max']    = 100;
           $graph_summary[1]['label']  = 'Resp time';
