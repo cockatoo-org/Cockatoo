@@ -380,10 +380,10 @@ class WikiParser {
           $attr['width'] = $matches[3];
         }
         if ( preg_match('@^https?://@', $matches[1] , $matchdummy ) !== 0 ) {
-          $attr = array('src' => $matches[1]);
+          $attr['src'] = $matches[1];
           $body [] = self::tag('a',array('href' => $matches[1]),array(self::tag('img',$attr)));
         }else {
-          $attr = array('src' => '/wiki/img/'.$this->page.'?n='.$matches[1]);
+          $attr['src'] = '/wiki/img/'.$this->page.'?n='.$matches[1];
           $body [] = self::tag('a',array('href' => '/wiki/img/'.$this->page.'?n='.$matches[1]),array(self::tag('img',$attr)));
         }
         $text = $matches[4];
