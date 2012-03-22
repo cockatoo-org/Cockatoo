@@ -49,7 +49,7 @@ class BeaconAction extends \Cockatoo\Action {
         foreach($ret[$brl] as $url ) {
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_GET,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-          $urls [$url]= array('url' => urldecode($url),'t' => $ret[$brl]['t'],'o' => $ret[$brl]['o']);
+          $urls [$url]= array('url' => urldecode($url),'t' => $ret[$brl]['t'],'o' => $ret[$brl]['o'],'lt' => $ret[$brl]['lt']);
         }
         return array('urls' => $urls);
       }elseif ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
