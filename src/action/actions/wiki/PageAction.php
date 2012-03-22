@@ -178,7 +178,6 @@ class WikiParser {
     }
   }
 
-
   private function parseIndexes($heading){
     if ( $heading < 3 ) {
       $ibody = self::tag('ol',array('class'=>'ih'.($heading+1)));
@@ -187,9 +186,11 @@ class WikiParser {
     }
     while ( ($header = array_shift($this->headers)) !== null ) {
 //      print '<pre>'.$header[0] . ' : ' . $heading . ' : ' . $index . ' : ' . $header[1] .'</pre>';
-      if ( $header[0]  > $heading) {
-        array_unshift($this->headers,$header);
-        $ibody['children'] []= $this->parseIndexes($heading+1);
+      if ( $header[0]  > $heading ) {
+        if ( $heading < 4 ) {
+          array_unshift($this->headers,$header);
+          $ibody['children'] []= $this->parseIndexes($heading+1);
+        }
       }elseif ( $header[0] === $heading ){
         $ibody['children'] []= self::tag('li',array('class'=>'ih'),array(
                                            self::tag('a',array('href'=>'#'.$header[1]),$header[1])));

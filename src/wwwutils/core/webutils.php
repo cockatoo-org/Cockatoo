@@ -49,8 +49,8 @@ function etag_header(&$etag){
  * 
  */
 function http_200(&$type=null,&$etag=null,&$expire=null){
-  header('HTTP/1.1 200 OK');
   if ( $type ) {
+    header('HTTP/1.1 200 OK');
     header('Content-type: ' . $type);
   }
   if ( $etag ) {

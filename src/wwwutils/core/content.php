@@ -517,7 +517,7 @@ class ContentDrawer {
         break;
       }
     }
-    StaticContent::http($content,$this->header);
+    StaticContent::http($content,$this->session[Def::SESSION_KEY_REQ]);
   }
 
   public function drawTemplate() {
