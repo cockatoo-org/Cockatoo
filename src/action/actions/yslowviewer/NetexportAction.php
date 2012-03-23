@@ -12,11 +12,6 @@ require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
  * @copyright Copyright (C) 2012, rakuten 
  */
 
-/**
- * ??????????
- *
- * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
- */
 class Netexportaction extends \Cockatoo\Action {
   const STORAGE='netexport';
   private static function urlencode($url){
