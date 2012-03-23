@@ -12,6 +12,7 @@ require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
  * @copyright Copyright (C) 2012, rakuten 
  */
 class BeaconAction extends \Cockatoo\Action {
+  const STORAGE='yslow';
   private static function urlencode($url){
     $url = urlencode($url);
     $url = str_replace('-','%2D',$url);
@@ -28,26 +29,26 @@ class BeaconAction extends \Cockatoo\Action {
         $beacon['_t'] = $now;
         $beacon['u'] = self::urlencode(urldecode($beacon['u']));
         // Create collection
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],'',\Cockatoo\Beak::M_CREATE_COL,array(\Cockatoo\Beak::Q_UNIQUE_INDEX=>'_u'),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$beacon['u'],'',\Cockatoo\Beak::M_CREATE_COL,array(\Cockatoo\Beak::Q_UNIQUE_INDEX=>'_u'),array());
         $ret = \Cockatoo\BeakController::beakQuery(array($brl));
         // Save latest
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],'',\Cockatoo\Beak::M_SET,array(),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$beacon['u'],'',\Cockatoo\Beak::M_SET,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
         if ( ! $ret[$brl] ) {
           throw new \Exception('Cannot save it ! Probably storage error...');
         }
         // Save 
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$beacon['u'],$now,\Cockatoo\Beak::M_SET,array(),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$beacon['u'],$now,\Cockatoo\Beak::M_SET,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
         if ( ! $ret[$brl] ) {
           throw new \Exception('Cannot save it ! Probably storage error...');
         }
       }elseif ( $this->method === \Cockatoo\Beak::M_COL_LIST ) {
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer','','',\Cockatoo\Beak::M_COL_LIST,array(),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,'','',\Cockatoo\Beak::M_COL_LIST,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array($brl));
         $urls;
         foreach($ret[$brl] as $url ) {
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_GET,array(),array());
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$url,'',\Cockatoo\Beak::M_GET,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
           $urls [$url]= array('url' => urldecode($url),'t' => $ret[$brl]['t'],'o' => $ret[$brl]['o'],'lt' => $ret[$brl]['lt']);
         }
@@ -56,7 +57,7 @@ class BeaconAction extends \Cockatoo\Action {
         $session = $this->getSession();
         $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
         $url = self::urlencode($url);
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array($brl));
         rsort($ret[$brl]);
         // times
@@ -73,7 +74,7 @@ class BeaconAction extends \Cockatoo\Action {
           $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
           $url = self::urlencode($url);
           $t = $session[\Cockatoo\Def::SESSION_KEY_GET]['t'];
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,$t,\Cockatoo\Beak::M_GET,array(),array());
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$url,$t,\Cockatoo\Beak::M_GET,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
           if ( ! $ret[$brl] ) {
             throw new \Exception('Cannot save it ! Probably storage error...');
@@ -101,11 +102,11 @@ class BeaconAction extends \Cockatoo\Action {
           $session = $this->getSession();
           $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
           $url = self::urlencode($url);
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
           $times = &$ret[$brl];
           rsort($times);
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'yslowviewer',$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(),array());
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $times))));
           $graph_summary;
           $graph_summary[0]['label']  = 'Total score';
