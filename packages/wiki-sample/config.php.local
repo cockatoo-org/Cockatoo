@@ -84,9 +84,10 @@ class Config extends DefaultConfig {
       'layout://yslowviewer-layout/'         => array(''),
       'component://yslowviewer-component/'   => array(''),
       'static://yslowviewer-static/'         => array(''),
-      'storage://yslowviewer-storage/'       => array(''),
       'action://yslowviewer-action/'         => array(''),
       'session://yslowviewer-session/'       => array(''),
+      'storage://yslow-storage/'       => array(''),
+      'storage://netexport-storage/'   => array(''),
       );
       //--------------------
       // Zookeeper ( dynamic locations )
