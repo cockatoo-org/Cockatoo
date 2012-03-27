@@ -1,0 +1,317 @@
+body {
+  color: #000000;
+  text-align: left;
+  font-family: Lucida Grande,Tahoma,sans-serif;
+}
+div {
+  white-space:nowrap;
+}
+
+div.alert {
+  color: #FF0000;
+  font-weight:bold;
+  font-size:1.5em;
+}
+div.har {
+ font-size: 10px;
+ background-color: white;
+ width:1350px;
+}
+
+div.har .twisty {
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 18px;
+  background-repeat: no-repeat;
+  background-image: url("img/twisty-sprites.png");
+  background-position: 3px -17px;
+  width:1px;
+}
+div.har .plus {
+  background-image: url("img/twisty-sprites.png");
+  background-position: 3px 2px;
+}
+
+div.har div.pageName {
+  padding-right: 11px;
+  width:auto;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+div.har > table {
+ border-collapse: separate;
+ border-spacing: 0px;
+ width:auto;
+}
+
+div.har div.last {
+  background-color:#999999;
+  font-weight: bold;
+  font-size:1.2em;
+}
+div.har div.last > span {
+  margin-left:50px;
+}
+
+div.har > table > tbody > tr.row:hover {
+  background-color: #EFEFEF;
+  cursor: pointer;
+}
+
+div.har > table > tbody > tr.row > td {
+  border-top: solid 1px #D7D7D7;
+  overflow:hidden;
+  height: 16px; 
+}
+div.har > table > tbody > tr.row > td.col > div {
+  height: 16px; 
+}
+div.har > table > tbody > tr.row > td.col > div > span {
+  display:block;
+}
+
+div.har > table > tbody > tr.row > td.padding {
+  padding-left: 18px;
+  width:1px;
+  background-color: #E8E8E8;
+}
+
+div.har > table > tbody > tr.row > td.url >  div.url {
+  font-weight: bold;
+  cursor: pointer;
+  width:150px;
+}
+
+div.har > table > tbody > tr.row > td.col >  div:hover > span {
+  background-color: #EFEFEF;
+  text-align:left;
+}
+div.har > table > tbody > tr.row > td.col >  div:hover {
+  margin-top: -8px;
+  position: absolute;
+  z-index:100000;
+  color: blue;
+  font-size:1.2em;
+  font-weight:bold;
+  width:150px;
+}
+
+div.har > table > tbody > tr.row > td.url >  div.url > span.href {
+  width:5000px;
+}
+div.har > table > tbody > tr.row > td.url >  div.url:hover > span.href {
+  display:none;
+}
+
+div.har > table > tbody > tr.row > td.url >  div.url > span.full {
+  width:5000px;
+  text-decoration: underline;
+  display:none;
+}
+div.har > table > tbody > tr.row > td.url >  div.url:hover > span.full {
+  display:block;
+}
+
+div.har > table > tbody > tr.row div.status {
+  margin:0 2px;
+  width:20px;
+}
+div.har > table > tbody > tr.row div.cached {
+  color: #808080;
+}
+
+div.har > table > tbody > tr.row div.type {
+  margin:0 2px;
+  width:40px;
+}
+
+div.har > table > tbody > tr.row div.domain {
+  margin:0 2px;
+  width:60px;
+}
+
+div.har > table > tbody > tr.row div.size {
+  width:30px;
+  text-align:right;
+  margin-left:10px;
+  margin:0 2px;
+}
+
+div.har > table > tbody > tr.row > td.timeline > div.timeline > span {
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline:hover > div.box {
+  display:block;
+}  
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.box {
+  display:none;
+  position: fixed;
+  margin-top:-50px;
+  z-index:10000;
+  opacity: 0.9;
+  border-radius: 8px;
+  border-right: 4px solid #222266;
+  border-bottom:4px solid #222266;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.box > div {
+  border-radius: 4px;
+  background-color:#FFE0D0;
+  border:1px solid #222288;
+  padding: 5px 10px;
+}
+
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.box > div div {
+  font-weight:bold;
+  padding-left:5px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.box > div div.base {
+  text-align:right;
+  width:70px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.box > div div.elaps {
+  text-align:right;
+  width:70px;
+}
+
+div.har > table > tbody > tr.row > td.timeline > div.timeline:hover > div.box  div.bar {
+  background-origin: padding-box;
+  background-image: url("img/timeline-sprites.png");
+  height:16px;
+  width: 1px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline:hover > div.box  div.dom {
+  border-left: 1px solid #0000FF;
+  padding:4px 0;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline:hover > div.box  div.loaded {
+  border-left: 1px solid #FF0000;
+  padding:4px 0;
+}
+
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.bar {
+  // line-height: 0.8em;
+  // border: 1px solid #C0C8C2;
+  border-width: 0px 0px;
+  background-attachment: scroll;
+  background-clip: border-box;
+  background-color: #FFFFFF;
+  background-origin: padding-box;
+  background-repeat: repeat-x;
+  background-size: auto auto;
+  background-image: url("img/timeline-sprites.png");
+  position: absolute;
+  height:16px;
+}
+
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.dom {
+  border-left: 1px solid #0000FF;
+  z-index: 5000;
+  padding:4px 0;
+  position: absolute;
+  height:16px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline > div.loaded {
+  border-left: 1px solid #FF0000;
+  z-index: 5000;
+  padding:4px 0;
+  position: absolute;
+  height:16px;
+}
+
+div.har > table > tbody > tr.row > td.timeline > div.timeline  div.b {
+  background-position: 0 -0px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline  div.d {
+  background-position: 0 -16px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline  div.c {
+  background-position: 0 -32px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline  div.s {
+  background-position: 0 -48px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline  div.w {
+  background-position: 0 -64px;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline  div.r {
+  background-position: 0 -80px;
+  border-right: solid 1px #C0C8C2;
+}
+div.har > table > tbody > tr.row > td.timeline > div.timeline  div.t {
+  padding-left:10px;
+}
+
+div.har > table > tbody > tr.detail {
+  display:none; 
+}
+
+div.har > table tr.detail  > td >  ul.tab {
+  background-attachment: scroll;
+  background-clip: border-box;
+  background-color: #FFFFFF;
+  background-image: url("img/timeline-sprites.png");
+  background-origin: padding-box;
+  background-position: 0 -112px;
+  background-repeat: repeat-x;
+  background-size: auto auto;
+  list-style-type:none;
+  padding:0 0 0 15px;
+  margin:0;
+  vertical-align: top;
+}
+
+div.har > table tr.detail  > td > ul.tab > li {
+  font-weight: bold;
+  padding:4px 5px;
+  margin: 2px 0;
+  height:10px;
+  float: left;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+}
+
+div.har > table tr.detail  > td >  ul.tab > li[selected] {
+  background-color:#FFFFFF;
+  border-top: solid 1px #D7D7D7;
+  border-left: solid 1px #D7D7D7;
+  border-right: solid 1px #D7D7D7;
+}
+
+div.har > table tr.detail  > td >  ul.tab > li.last {
+  float:none;
+  height:16px;
+  margin:0;
+}
+
+div.har > table ul.tab > li:hover {
+  border-top: solid 1px #D7D7D7;
+  border-left: solid 1px #D7D7D7;
+  border-right: solid 1px #D7D7D7;
+}
+
+div.har > table tr.detail  > td > div {
+  display:none;
+  border: solid 1px #D7D7D7;
+  clear:both;
+}
+div.har > table tr.detail  > td > div > h6 {
+  margin:5px 10px; 2px;
+  padding:0;
+  text-align: left;
+  font-size: 1.2em;
+  border-bottom: solid 1px #D7D7D7;
+}
+
+div.har > table tr.detail > td > div > table {
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+div.har > table tr.detail > td > div > table > tbody > tr > th {
+  text-align: right;
+  vertical-align: top;
+  padding-right: 10px;
+  width:100px;
+}
+div.har > table tr.detail > td > div[selected] {
+  display:block;
+}

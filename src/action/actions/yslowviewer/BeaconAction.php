@@ -77,7 +77,7 @@ class BeaconAction extends \Cockatoo\Action {
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,self::STORAGE,$url,$t,\Cockatoo\Beak::M_GET,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
           if ( ! $ret[$brl] ) {
-            throw new \Exception('Cannot save it ! Probably storage error...');
+            throw new \Exception('Cannot get it ! Probably data not found...');
           }
           $beacon = $ret[$brl];
           $beacon['u'] = urldecode($beacon['u']);
@@ -205,7 +205,7 @@ class BeaconAction extends \Cockatoo\Action {
     }catch ( \Exception $e ) {
       $s['emessage'] = $e->getMessage();
       $this->updateSession($s);
-      $this->setRedirect('/error');
+      $this->setRedirect('/yslowviewer/default/main');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }
