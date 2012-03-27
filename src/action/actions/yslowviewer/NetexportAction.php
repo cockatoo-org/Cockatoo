@@ -27,7 +27,7 @@ class Netexportaction extends \Cockatoo\Action {
         $session = $this->getSession();
         $har = json_decode($session[\Cockatoo\Def::SESSION_KEY_POST],1);
 //        $beacon['har'] = $session[\Cockatoo\Def::SESSION_KEY_POST];
-        $beacon['har'] = $har;
+        $beacon['har'] = &$har;
         $beacon['t'] = strftime('%Y-%m-%d %H:%M:%S',$now);
         $beacon['_t'] = $now;
         $beacon['u']=self::urlencode($har['log']['entries'][0]['request']['url']);
