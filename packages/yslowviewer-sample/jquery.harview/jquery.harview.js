@@ -57,10 +57,9 @@
     if ( t ) {
       return t;
     }
-    var ts = time.match(/^(.+)[+\-](.+)/);
-    var t = new Date(ts[1]).getTime();
+    var ts = time.match(/^(\d+)-(\d+)-(\d+)[^\d](\d+):(\d+):(\d+).(\d+)[+\-](.+)/);
+    var t = new Date(ts[1],ts[2],ts[3],ts[4],ts[5],ts[6],ts[7]).getTime();
     return t;
-//console.log(t);
   }
 
     $.extend($.HarViewer, {
@@ -88,6 +87,7 @@
 	  this.hvbody = this.root.find('tbody.hvbody');
 	  this.barRatio = 0.95 / this.HAR.log.pages[0].pageTimings.onLoad;
 	  this.startDate=getTime(this.HAR.log.pages[0].startedDateTime);
+//this.alert(this.startDate);
 	  var size  = 0;
 	  var csize = 0;
 	  for ( var i in this.HAR.log.entries ) {
@@ -102,7 +102,7 @@
 	  $('<div class="last">'+
 	    '<span class="summary">'+this.HAR.log.entries.length+' Requests</span>'+
 	    '<span class="size">'+b2k(size)+' KB</span>'+
-	    '<span class="cache">('+b2k(csize)+'  From Cache)</span>'+
+	    '<span class="cache">('+b2k(csize)+' KB from Cache)</span>'+
 	    '<span class="resp">'+m2s(this.HAR.log.pages[0].pageTimings.onContentLoad)+'s (onload:'+m2s(this.HAR.log.pages[0].pageTimings.onLoad)+'s)</span>'+
 	    '</div>').appendTo(this.root.find('div.har'));
 
@@ -120,7 +120,7 @@
 	    $(this).parent().prev().click();
 	  });
 	  this.hvbody.find('tr.detail  > td >  ul.tab > li').click(function(ev){
-	    console.log($(this).parent());
+//	    console.log($(this).parent());
 	      $(this).parent().find('> li').removeAttr('selected');
 	      $(this).attr('selected','selected');
 	    var idx = $(this).attr('idx');
@@ -129,6 +129,7 @@
 	  });
 	},
 	calcStart: function(time){
+//this.alert(getTime(time));
 	  return (getTime(time) - this.startDate);
 	},
 	calcMargin: function(time){
