@@ -52,6 +52,17 @@
     }
     return 'unknown';
   }
+  function getTime(time){
+    var t = new Date(time).getTime();
+    if ( t ) {
+      return t;
+    }
+    var ts = time.match(/^(.+)[+\-](.+)/);
+    var t = new Date(ts[1]).getTime();
+    return t;
+//console.log(t);
+  }
+
     $.extend($.HarViewer, {
       defaults: {
 	barWidth:650
@@ -76,7 +87,7 @@
 	      '</div>').appendTo(this.root);
 	  this.hvbody = this.root.find('tbody.hvbody');
 	  this.barRatio = 0.95 / this.HAR.log.pages[0].pageTimings.onLoad;
-	  this.startDate=new Date(this.HAR.log.pages[0].startedDateTime).getTime();
+	  this.startDate=getTime(this.HAR.log.pages[0].startedDateTime);
 	  var size  = 0;
 	  var csize = 0;
 	  for ( var i in this.HAR.log.entries ) {
@@ -118,7 +129,7 @@
 	  });
 	},
 	calcStart: function(time){
-	  return (new Date(time).getTime() - this.startDate);
+	  return (getTime(time) - this.startDate);
 	},
 	calcMargin: function(time){
 	  return Math.floor(time*this.barRatio*this.settings.barWidth);
