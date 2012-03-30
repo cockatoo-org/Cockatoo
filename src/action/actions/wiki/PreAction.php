@@ -17,7 +17,6 @@ class PreAction extends \Cockatoo\Action {
     $session = $this->getSession();
     $url=\parse_url($session[\Cockatoo\Def::SESSION_KEY_SERVER]['REQUEST_URI']);
     \parse_str($url['query'],$qs);
-//    $user = $session['login']['user']?$session['login']['user']:'guest';
     $page   = $qs['page']?$qs['page']:'';
     if ( isset($this->args['P'] ) ) {
       $page = $this->args['P'];
@@ -29,7 +28,6 @@ class PreAction extends \Cockatoo\Action {
     if ( isset($this->args['N'] ) ) {
       $name = $this->args['N'];
     }
-//    $this->updateSession(array('wiki' => array('current' => $page ) ) );
     $this->updateArgs(array(
                         'P' => $page,
                         'N' => $name));

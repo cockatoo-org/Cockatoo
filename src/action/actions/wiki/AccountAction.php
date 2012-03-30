@@ -1,6 +1,6 @@
 <?php
 namespace wiki;
-require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
+//require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
 /**
  * AccountAction.php - ????
  *  
@@ -12,80 +12,38 @@ require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
  * @copyright Copyright (C) 2011, rakuten 
  */
 
-class AccountAction extends \Cockatoo\Action {
-  public function proc(){
-    try{
-      $this->setNamespace('wiki');
+class AccountAction extends \Cockatoo\AccountAction {
+  const REDIRECT_PATH='/wiki/view';
 
-      $session = $this->getSession();
-      $submit = $session[\Cockatoo\Def::SESSION_KEY_POST]['submit'];
-      if ( $submit === 'login' ) {
-        $s['login'] = null;
-        $user = $session[\Cockatoo\Def::SESSION_KEY_POST]['user'];
-        if ( ! $user ) {
-          throw new \Exception('Invalid account !');
-        } 
-        $data = Lib::get_account($user);
-        if ( $data['hash'] === md5($session[\Cockatoo\Def::SESSION_KEY_POST]['passwd']) ) {
-          $s['login'] = $data;
-        }else{
-          throw new \Exception('Invalid account !');
-        }
-        $this->updateSession($s);
-        $this->setRedirect('/wiki/view');
-      }elseif ( $submit === 'logout' ) {
-        $s['login'] = null;
-        $this->updateSession($s);
-        $this->setRedirect('/wiki/view');
-      }elseif ( $submit === 'profile' ) {
-        $user  = $session['login']['user'];
-        if ( ! $user ) {
-          throw new \Exception('Who are you !');
-        }
-      }elseif ( $submit === 'update profile' ) {
-        $up_hash = $session['login']['hash'];
-        if ( $session[\Cockatoo\Def::SESSION_KEY_POST]['passwd'] ){
-          if ( $session[\Cockatoo\Def::SESSION_KEY_POST]['passwd'] !== $session[\Cockatoo\Def::SESSION_KEY_POST]['confirm'] ){
-            throw new \Exception('Unmatch password !');
-          }
-          $up_hash = md5($session[\Cockatoo\Def::SESSION_KEY_POST]['passwd']);
-        }
-        $data = array('user'  => $session['login']['user'],
-                      'hash'  => $up_hash,
-                      'email' => ($session[\Cockatoo\Def::SESSION_KEY_POST]['email'])?$session[\Cockatoo\Def::SESSION_KEY_POST]['email']:$session['login']['email'],
-                      'root'  => $session['login']['root']);
-        Lib::save_account($data);
-        $this->setRedirect('/wiki/view');
-      }elseif ( $submit === 'password reset' ) {
-        $up_user = $session[\Cockatoo\Def::SESSION_KEY_POST]['user'];
-        $up_passwd = Lib::mkpasswd();
-        $up_hash = md5($up_passwd);
-        $data = Lib::get_account($up_user);
-        $data['hash'] = $up_hash;
-        $up_email = $data['email'];
-        $up_root = $data['root'];
-        Lib::save_account($data);
-        $this->setRedirect('/wiki/view');
-        mail($up_email,
-             'Your profile changed',
-             'Your new profile'."\n".
-             '  User     : ' . $up_user ."\n".
-             '  Password : ' . (($up_passwd)?$up_passwd:'(no change)')."\n".
-             '  Email    : ' . $up_email."\n".
-             '  Root     : ' . ($up_root?'YES':'NO'),
-             'From: '.WikiConfig::MAIL_FROM ."\r\n" .
-             'Reply-To: '.WikiConfig::MAIL_FROM ."\r\n"
-          );
-      }
-    }catch ( \Exception $e ) {
-      $s['emessage'] = $e->getMessage();
-      $this->updateSession($s);
-      $this->setRedirect('/wiki/error');
-      \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
-    }
-    return array();
+  protected function preAction(){
+    $this->setNamespace('wiki');
+    $this->BASE_BRL=WikiConfig::USER_COLLECTION;
   }
-
-  public function postProc(){
+  protected function genUserData(&$post_data,&$session_login,&$user_data){
+    $user_data['root']  = $session_login['root'];
+    return $user_data;
+  }
+  protected function success(&$submit,&$user_data){
+    if ( $submit === 'password reset' ) {
+      mail($user_data[\Cockatoo\AccountUtil::KEY_EMAIL],
+           'Your profile changed',
+           'Your new profile'."\n".
+           '  User     : ' . $user_data[\Cockatoo\AccountUtil::KEY_USER] ."\n".
+           '  Password : ' . (isset($user_data[\Cockatoo\AccountUtil::KEY_PASSWD])?$user_data[\Cockatoo\AccountUtil::KEY_PASSWD]:'(no change)')."\n".
+           '  Email    : ' . $user_data[\Cockatoo\AccountUtil::KEY_EMAIL]."\n".
+           '  Root     : ' . ($user_data['root']?'YES':'NO'),
+           'From: '.WikiConfig::MAIL_FROM ."\r\n" .
+           'Reply-To: '.WikiConfig::MAIL_FROM ."\r\n"
+        );
+    }elseif($submit === 'profile' ){
+      return;
+    }
+    $this->setRedirect(self::REDIRECT_PATH);
+  }
+  protected function error(&$e){
+    $s['emessage'] = $e->getMessage();
+    $this->updateSession($s);
+    $this->setRedirect('/wiki/error');
+    \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
   }
 }

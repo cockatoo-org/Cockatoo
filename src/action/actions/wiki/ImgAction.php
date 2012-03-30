@@ -19,7 +19,7 @@ class ImgAction extends \Cockatoo\Action {
 // Query strings
     $session = $this->getSession();
     
-    $user = $session['login']['user'];
+    $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
     $page   = $this->args['P'];
     $name   = $this->args['N'];
     $names = array();

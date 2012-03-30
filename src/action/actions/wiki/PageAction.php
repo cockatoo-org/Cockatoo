@@ -18,11 +18,11 @@ class PageAction extends \Cockatoo\Action {
       //list($P,$D,$C,$p,$m,$q,$c) = \Cockatoo\parse_brl($this->BRL);
       // 
       $this->setNamespace('wiki');
-
       $session = $this->getSession();
+
+      $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
       $page   = $this->args['P'];
       $name   = $this->args['N'];
-      $user = $session['login']['user'];
       // Query strings
       $op = $session[\Cockatoo\Def::SESSION_KEY_POST]['op'];
       if ( ! $op ) {
