@@ -26,6 +26,12 @@ abstract class RequestParser {
   protected $get;
   protected $cookie;
   protected $reqpath;
+
+  public    $service;
+  public    $device;
+  public    $path;
+  public    $args         = array();
+  public    $session_path = '/';
   /**
    * Constructor
    *
@@ -45,12 +51,12 @@ abstract class RequestParser {
    * Parse
    *
    *  Result :
-   *    Array ( 
-   *     [0] => String, // service
-   *     [1] => String, // device
-   *     [2] => String, // path
-   *     [3] => String  // args
-   *    )
+   *    Set members
+   *     - $service
+   *     - $device
+   *     - $path        
+   *     - $args        
+   *     - $session_path 
    *
    * @return Array Parsed array
    */
@@ -58,18 +64,18 @@ abstract class RequestParser {
 //    if ( Config::APP_OCCUPATION ) {
 //      $this->reqpath = Config::APP_OCCUPATION.$this->reqpath;
 //    }
-    return $this->parseImpl();
+    $this->parseImpl();
   }
   /**
    * ParseImpl
    *
    *  Result :
-   *    Array ( 
-   *     [0] => String, // service
-   *     [1] => String, // device
-   *     [2] => String, // path
-   *     [3] => String  // args
-   *    )
+   *    Set members
+   *     - $service
+   *     - $device
+   *     - $path        
+   *     - $args        
+   *     - $session_path 
    *
    * @return Array Parsed array
    */
@@ -78,19 +84,20 @@ abstract class RequestParser {
    * Parse
    *
    *  Result :
-   *    Array ( 
-   *     [0] => String, // service
-   *     [1] => String, // device
-   *     [2] => String, // path
-   *     [3] => String  // args
+   *    Set members
+   *     - $service
+   *     - $device
+   *     - $path        
    *    )
    *
    * @return Array Parsed array
    */
   public function parseStatic(){
     if ( preg_match('@^'.Def::PATH_STATIC_PREFIX.'/?([^/]+)/([^/]+)(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
-      array_shift($matches);
-      return $matches;
+      $this->service      = $matches[1];
+      $this->device       = $matches[2];
+      $this->path         = $matches[3];
+      return;
     }
     throw new \Exception('Unexpect PATH:' . $this->reqpath);
   }
@@ -104,8 +111,11 @@ abstract class RequestParser {
 class DefaultRequestParser extends RequestParser {
   public function parseImpl(){
     if ( preg_match('@^/?([^/]+)/([^/]+)(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
-      array_shift($matches);
-      return $matches;
+      $this->service      = $matches[1];
+      $this->device       = $matches[2];
+      $this->path         = $matches[3];
+      $this->session_path = '/' . $matches[1];
+      return;
     }
     throw new \Exception('Unexpect PATH:' . $this->reqpath);
   }
@@ -182,8 +192,7 @@ class DefaultDeviceSelector extends DeviceSelector {
  *     [1] => String, // device
  *     [2] => String, // path
  *     [3] => String  // args
- *     [4] => mixed,  // RequestParser object
- *     [5] => mixed   // DeviceSelector object
+ *     [4] => String  // session_path
  *   )
  *
  * @param Array $header $_HEADER
@@ -217,10 +226,16 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
     $path   = isset($get[Def::REQUEST_PATH])?$get[Def::REQUEST_PATH]:$path;
     $args   = isset($get[Def::REQUEST_ARGS])?$get[Def::REQUEST_ARGS]:$args;
     Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-    return array($service,$device,$path,$args,RequestParser::$instance,DeviceSelector::$instance);
+    return array($service,$device,$path,$args);
   }
 
-  list($service,$device,$path,$args) = RequestParser::$instance->parse();
+//  list($service,$device,$path,$args) = RequestParser::$instance->parse();
+  RequestParser::$instance->parse();
+  $service      = RequestParser::$instance->service;
+  $device       = RequestParser::$instance->device;
+  $path         = RequestParser::$instance->path;
+  $args         = RequestParser::$instance->args;
+  $session_path = RequestParser::$instance->session_path;
   Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request preparsed : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
   
   if ( strcmp($service,Def::RESERVED_SERVICE_CORE) === 0 ) {
@@ -230,7 +245,7 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
   }
 
   Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed    : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-  return array($service,$device,$path,$args,RequestParser::$instance,DeviceSelector::$instance);
+  return array($service,$device,$path,$args,$session_path);
 }
 
 function parseStaticRequest(&$header,&$server,&$get,&$cookie){
@@ -249,12 +264,15 @@ function parseStaticRequest(&$header,&$server,&$get,&$cookie){
     $path   = isset($get[Def::REQUEST_PATH])?$get[Def::REQUEST_PATH]:$path;
     $args   = isset($get[Def::REQUEST_ARGS])?$get[Def::REQUEST_ARGS]:$args;
     Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-    return array($service,$device,$path,$args,RequestParser::$instance,DeviceSelector::$instance);
+    return array($service,$device,$path,$args,'/');
   }
 
   RequestParser::$instance = new DefaultRequestParser($header,$server,$get,$cookie);
-  list($service,$device,$path,$args) = RequestParser::$instance->parseStatic();
-
+  RequestParser::$instance->parseStatic();
+  $service = RequestParser::$instance->service;
+  $device  = RequestParser::$instance->device;
+  $path    = RequestParser::$instance->path;
+ 
   Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-  return array($service,$device,$path,$args);
+  return array($service,$device,$path);
 }

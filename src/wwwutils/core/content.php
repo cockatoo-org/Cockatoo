@@ -18,9 +18,10 @@ namespace Cockatoo;
 class ContentDrawer {
   protected $mode;
   protected $service;
+  protected $device;
   protected $path;
   protected $args;
-  protected $device;
+  protected $session_path;
   protected $widget;
   public    $baseLayoutBrl;
   public    $layoutBrl;
@@ -43,19 +44,16 @@ class ContentDrawer {
   protected $sessionID;
   protected $session;
   public    $expires;
-  protected $rparser;
-  protected $dselector;
   protected $hdf;
   protected $cs;
 
-  public function __construct ($service,$device,$path,$args,$rparser,$dselector,$mode) {
+  public function __construct ($service,$device,$path,$args,$session_path,$mode) {
     $this->service      = $service;
     $this->device       = $device;
     $this->path         = $path;
     $this->args         = $args;
+    $this->session_path = $session_path;
     $this->mode         = $mode;
-    $this->dselector    = $dselector;
-    $this->rparser      = $rparser;
   }
 
   private function debug($msg,$data,$mode=Def::RenderingModeDEBUG1){
@@ -102,13 +100,12 @@ class ContentDrawer {
       }
       
       $this->debug('== LAYOUT(BRL) ==',array($this->layoutBrl,$this->baseLayoutBrl),Def::RenderingModeDEBUG2);
-      // $datas = BeakController::beakQuery(array($this->baseLayoutBrl,$this->layoutBrl));
       $datas = BeakController::beakGetsQuery(array($this->baseLayoutBrl,$this->layoutBrl));
       // Base layout
       if ( ! $datas[$this->baseLayoutBrl] ) {
         // Device not defined.
         Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback from : ' . $this->device);
-        $this->device = $this->dselector->fallback($this->device);
+        $this->device = DeviceSelector::$instance->fallback($this->device);
         if ( $this->device ) {
           Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback to   : ' . $this->device);
           $this->debug('== BASE LAYOUT NOT FOUND ! (fallback to '.$this->device.') ==','',Def::RenderingModeDEBUG2);
@@ -126,7 +123,7 @@ class ContentDrawer {
       // Page layout
       if ( ! $datas[$this->layoutBrl] ) {
         Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback from : ' . $this->device);
-        $this->device = $this->dselector->fallback($this->device);
+        $this->device = DeviceSelector::$instance->fallback($this->device);
         if ( $this->device ) {
           Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback to   : ' . $this->device);
           $this->debug('== LAYOUT NOT FOUND ! (fallback to '.$this->device.') ==','',Def::RenderingModeDEBUG2);
@@ -171,25 +168,6 @@ class ContentDrawer {
   }
 
 
-//   public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
-//     $this->sessionID = uniqid();
-//     $this->session   = array();
-//     foreach($FILES as $FILE){
-//       $files []= array(Def::F_ERROR=>$FILE['error'],Def::F_NAME=>$FILE['name'],Def::F_TYPE=>FileContentType::get($FILE['name']),Def::F_SIZE=>$FILE['size'],Def::F_CONTENT=>file_get_contents($FILE['tmp_name']));
-//       $data = array(file_get_contents($FILE['tmp_name']));
-//     }
-//     // Set current session
-//     $this->session[Def::SESSION_KEY_REQ]    = $HEADER;
-//     $this->session[Def::SESSION_KEY_SERVER] = $SERVER;
-//     $this->session[Def::SESSION_KEY_POST]   = $POST;
-//     $this->session[Def::SESSION_KEY_GET]    = $GET;
-//     $this->session[Def::SESSION_KEY_COOKIE] = $COOKIE;
-//     $this->session[Def::SESSION_KEY_FILES]  = $files;
-//     $this->session[Def::SESSION_KEY_DEVICE] = $this->device;
-//     $this->session[Def::SESSION_KEY_EXP]    = 0;
-//     setSession($this->sessionID,$this->service,$this->session);
-//     Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Use temporary session ' . $this->sessionID . ' , ' . $this->sessionExp);
-//   }
   public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
     $this->now = time();
     if ( $this->sessionExp === Def::SESSION_NO_SESSION ) {
@@ -213,9 +191,8 @@ class ContentDrawer {
       $exp = $this->now+$this->sessionExp;
       // cookie
       // name , value , exp(sec) , path , domain , secure , httponly 
-      // setcookie(Config::SESSION_COOKIE,$this->sessionID,time()+3600,'/','',true,false);
       Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Issue session cookie ' . $this->sessionID . ' , ' . $this->sessionExp);
-      setcookie(Config::SESSION_COOKIE,$this->sessionID,$exp,'/');
+      setcookie(Config::SESSION_COOKIE,$this->sessionID,$exp,$this->session_path);
     }
 
     foreach($FILES as $FILE){
@@ -255,7 +232,6 @@ class ContentDrawer {
     $queries = array();
     foreach($brls as $brl){
       if ( $brl ) {
-#        $args[Def::AC_BRL]  = $brl; # @@@ Do you need really ??
         $queries []= array($brl, $this->args,$hide);
       }
     }
