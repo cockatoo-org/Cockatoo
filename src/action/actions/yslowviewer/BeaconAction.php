@@ -93,23 +93,6 @@ abstract class BeaconAction extends \Cockatoo\Action {
         $beacon['u'] = urldecode($beacon['u']);
         $beacon['url'] = $url;
         return $this->form_detail($beacon);
-
-        foreach( $beacon['g'] as $k => $e) {
-          foreach ( $beacon['g'][$k]['components'] as $n => $v ) {
-            $beacon['g'][$k]['components'][$n] = urldecode($v);
-          }
-        }
-        foreach( $beacon['comps'] as $k => $v ) {
-          $beacon['comps'][$k]['url'] = urldecode($beacon['comps'][$k]['url']);
-        }
-        
-        uasort($beacon['stats'],function($a,$b){
-                 return $a['w'] < $b['w'];
-               });
-        uasort($beacon['stats_c'],function($a,$b){
-                 return $a['w'] < $b['w'];
-               });
-        return $beacon;
       }else{
         return $this->other_methods();
       }

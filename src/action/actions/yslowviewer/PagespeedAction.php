@@ -39,9 +39,6 @@ class PagespeedAction extends BeaconAction {
              return $a['score'] > $b['score'];
            });
     return $beacon;
-//    $beacon['@HAR'] = json_encode($beacon['har']);
-//    unset($beacon['har']);
-//    return $beacon;
   }
   function other_methods(){
     if ( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {

@@ -51,9 +51,9 @@ class YslowAction extends BeaconAction {
       $ret = \Cockatoo\BeakController::beakQuery(array($brl));
       $times = &$ret[$brl];
       rsort($times);
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(),array());
+      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(\Cockatoo\Beak::Q_EXCEPTS => 'stats,stats_c,comps'),array());
       $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $times))));
-      
+
       $graph_summary;
       $graph_summary[0]['label']  = 'Total score';
       $graph_summary[0]['min']    = 0;
