@@ -1,5 +1,5 @@
 {
-"@R":"1331918619",
+"@R":"1333424458",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
@@ -8,15 +8,11 @@
 "expires":"0",
 "header":"<meta name=\"description\" content=\"\">\n",
 "pheader":"",
+"bottom":"",
 "layout":{
 "type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/horizontal#critical",
+"component":"component:\/\/core-component\/default\/horizontal?get",
 "children":[
 {
 "type":"HorizontalWidget",
@@ -34,13 +30,12 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/yslowviewer-component\/default\/ne_ulist?get",
+"component":"component:\/\/yslowviewer-component\/default\/ps_ulist?get",
 "children":[
 
 ]
 }
 ]
 },
-"_u":"ne_main",
-"bottom":""
+"_u":"ps_main"
 }
