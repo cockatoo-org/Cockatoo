@@ -33,10 +33,14 @@ class BeakMongo extends Beak {
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
     parent::__construct($brl,$scheme,$domain,&$collection,$path,$method,$queries,$comments,$arg,$hide);
     $this->uniqueIndex = isset($this->queries[Beak::Q_UNIQUE_INDEX])?$this->queries[Beak::Q_UNIQUE_INDEX]:Beak::Q_UNIQUE_INDEX;
-    $indexes           = isset($this->queries[Beak::Q_INDEXES])?$this->queries[Beak::Q_INDEXES]:'';
-    if ( $indexes ) {
-      $this->indexes     = explode(',',$indexes);
+    
+    $this->columns = array('_id' => 0);
+    if ( isset($this->queries[Beak::Q_FILTERS]) ) {
+      $this->columns = array_merge($this->columns,array_fill_keys(explode(',',$this->queries[Beak::Q_FILTERS]),1));
+    }else if ( isset($this->queries[Beak::Q_EXCEPTS]) ) {
+      $this->columns = array_merge($this->columns,array_fill_keys(explode(',',$this->queries[Beak::Q_EXCEPTS]),0));
     }
+
     
     $this->beakLocation = BeakLocationGetter::singleton();
     $base_brl = $scheme . '://' . $domain . '/';
@@ -66,8 +70,10 @@ class BeakMongo extends Beak {
       if ( isset($this->uniqueIndex) ) {
         $ret = $mongocollection->ensureIndex(array($this->uniqueIndex => 1),array('unique' => true,'safe' => true));
       }
-      if (isset($this->indexes)) {
-        $ret = $mongocollection->ensureIndex(array_fill_keys($this->indexes, 1),array('unique' => false,'safe' => true));
+      if ( isset($this->queries[Beak::Q_INDEXES]) ){
+        foreach(explode(',',$this->queries[Beak::Q_INDEXES]) as $index){
+          $ret = $mongocollection->ensureIndex(array($index=>1),array('unique' => false,'safe' => true));
+        }
       }
       return true;
     }
@@ -96,10 +102,11 @@ class BeakMongo extends Beak {
   public function getaQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
       $ret = array();
-      foreach ( $this->arg[$this->uniqueIndex] as $cond ) {
-        $query[$this->uniqueIndex]['$in'] []= $cond;
+      foreach ( $this->arg as $key => $cond ) {
+        $query[$key]['$in'] = $cond;
       }
-      $this->mongocursor = $mongocollection->find($query,array('_id' => 0));
+
+      $this->mongocursor = $mongocollection->find($query,$this->columns);
       if ( $this->mongocursor ) {
         $this->ret = array();
         while ( $this->mongocursor->hasNext() ) {
@@ -117,7 +124,7 @@ class BeakMongo extends Beak {
 
   public function getQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
-      $data = $mongocollection->findOne(array($this->uniqueIndex => $this->path ),array('_id' => 0));
+      $data = $mongocollection->findOne(array($this->uniqueIndex => $this->path ),$this->columns);
       if ( isset($data[Beak::ATTR_BIN]) ) {
         self::decode($data);
       }
@@ -225,60 +232,70 @@ class BeakMongo extends Beak {
   public function createColQuery(){
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'createColQueryImpl');
   }
   public function listColQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'listColQueryImpl');
   }
   public function listKeyQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'listKeyQueryImpl');
   }
   public function getaQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'getaQueryImpl');
   }
   public function getQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'getQueryImpl');
   }
   public function setQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'setQueryImpl');
   }
   public function setaQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'setaQueryImpl');
   }
   public function delQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'delQueryImpl');
   }
   public function delaQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'delaQueryImpl');
   }
   public function mvColQuery() {
     if ( ! $this->mongoAcc ) {
       Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'mvColQueryImpl');
   }

@@ -395,9 +395,17 @@ abstract class Beak {
    */
   const Q_UNIQUE_INDEX  = '_u';
   /**
-   * Beak object's index column
+   * Beak index columns
    */
   const Q_INDEXES       = '_is';
+  /**
+   * Beak query filter columns
+   */
+  const Q_FILTERS       = '_flts';
+  /**
+   * Beak query except columns
+   */
+  const Q_EXCEPTS       = '_exts';
   /**
    * Beak MV_COL target
    */
