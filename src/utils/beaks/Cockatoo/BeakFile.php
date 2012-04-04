@@ -217,7 +217,11 @@ class BeakFile extends Beak {
         }
       }
     }
-    $data = self::encode($arg);
+    if ( Config::Mode === Def::MODE_DEBUG ) {
+      $data = self::encodeD($arg);
+    }else{
+      $data = self::encode($arg);
+    }
     return file_put_contents($file,$data)?true:false;
   }
   /**
@@ -340,6 +344,37 @@ class BeakFile extends Beak {
           $flg = true;
         }
         $ret .= ']';
+      }
+    } elseif( is_string($data)) {
+      $s = json_encode($data);
+      if ( $data and $s === 'null' ) {
+        $s = '"@BIN@'.join(unpack('H*',$data)).'"';
+      }
+      $ret = $s;
+    } else{
+      $ret = json_encode($data);
+    }
+    return $ret;
+  }
+  static private function encodeD(&$data){
+    $ret;
+    if ( is_array($data) ) {
+      if ( self::is_hash($data) ) {
+        $ret = "{\n";
+        $flg = false;
+        foreach( $data as $k => $v ) {
+          $ret .= ($flg?",\n":'').'"'.$k.'":'.self::encodeD($v);
+          $flg = true;
+        }
+        $ret .= "\n}";
+      }else {
+        $ret = "[\n";
+        $flg = false;
+        foreach( $data as $k => $v ) {
+          $ret .= ($flg?",\n":'').self::encodeD($v);
+          $flg = true;
+        }
+        $ret .= "\n]";
       }
     } elseif( is_string($data)) {
       $s = json_encode($data);
