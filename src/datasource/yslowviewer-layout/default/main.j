@@ -1,12 +1,12 @@
 {
-"@R":"1331918619",
+"@R":"1333589283",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
-"header":"<meta name=\"description\" content=\"\">\n",
+"header":"",
 "pheader":"",
 "layout":{
 "type":"HorizontalWidget",

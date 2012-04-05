@@ -1,6 +1,6 @@
 {
 "title":"Todo",
-"origin":"*\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8\r\n- \u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u691c\u7d22\u306f\u3069\u3046\u3057\u3088\u3046\u30fb\u30fb\u30fbRangeGET\u3092\u4f5c\u308d\u3046\u304b\r\n- \u65b0\u30b5\u30fc\u30d3\u30b9\u8ffd\u52a0\u624b\u9806\uff08\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\uff09\r\n- \u30ad\u30e3\u30c3\u30b7\u30e5\u30fb\u30d5\u30e9\u30a4\u30f3\u30b0\u306e\u8a71\r\n- \u30c4\u30fc\u30eb\u985e\u306e\u8aac\u660e\r\n-- &del{HtmlMon};\r\n-- MongoMon\r\n-- ZooMon\r\n-- Mail\r\n- Debian\u7cfb\u306e\u30af\u30a4\u30c3\u30af\u30b9\u30bf\u30fc\u30c8\r\n- Beak index\u5bfe\u5fdc\u306e\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8\u5316\u3068phpUnit\u5316\r\n #!\/usr\/bin\/env php\r\n <?php\r\n namespace Cockatoo;\r\n require_once(dirname(__FILE__) . '\/..\/src\/def.php');\r\n require_once(Config::COCKATOO_ROOT.'utils\/beak.php');\r\n \r\n function assert($res,$expt){\r\n }\r\n   if ( $res === $expt ) {\r\n   }else{\r\n     print \"Assert \\n RES:\".$res .\"\\n EXP:\".$expt .\"\\n\";\r\n   }\r\n }\r\n \r\n \/\/Config::$BEAKS['storage'] = 'Cockatoo\\BeakMongo';\r\n \/\/Config::$BeakLocation['storage:\/\/test-storage\/'] = array('127.0.0.1:27017');\r\n Config::$BEAKS['storage'] = 'Cockatoo\\BeakFile';\r\n \r\n $brl = 'storage:\/\/test-storage\/test?ccol&_u=_u&_is=i,d#renew';\r\n \\Cockatoo\\BeakController::beakQuery(array($brl));\r\n \/\/ Save latest\r\n $brl = 'storage:\/\/test-storage\/test\/foo?set';\r\n $data = array('_u' => 'foo' , 'i' => 1 , 'd' => 'A');\r\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\r\n \r\n $brl = 'storage:\/\/test-storage\/test?keys';\r\n $ret = \\Cockatoo\\BeakController::beakQuery(array($brl));\r\n ksort($ret[$brl]);\r\n $ret = json_encode($ret[$brl]);\r\n $exp = '[\"foo\"]';\r\n assert($ret,$exp);\r\n \r\n $brl = 'storage:\/\/test-storage\/test\/bar?set';\r\n $data = array('_u' => 'bar' , 'i' => 2 , 'd' => 'A');\r\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\r\n \r\n $brl = 'storage:\/\/test-storage\/test\/baz?set';\r\n $data = array('_u' => 'baz' , 'i' => 2 , 'd' => 'B');\r\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\r\n \r\n $brl = 'storage:\/\/test-storage\/test\/foo\/bar?set';\r\n $data = array('_u' => 'foo\/bar' , 'i' => 3 , 'd' => 'C');\r\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\r\n \r\n $brl = 'storage:\/\/test-storage\/test\/bar?get&_flts=i';\r\n $ret = \\Cockatoo\\BeakController::beakQuery(array($brl));\r\n ksort($ret[$brl]);\r\n $ret = json_encode($ret[$brl]);\r\n $exp = '{\"i\":2}';\r\n assert($ret,$exp);\r\n \r\n $brl = 'storage:\/\/test-storage\/test\/bar?get&_exts=i';\r\n $ret = \\Cockatoo\\BeakController::beakQuery(array($brl));\r\n ksort($ret[$brl]);\r\n $ret = json_encode($ret[$brl]);\r\n $exp = '{\"_u\":\"bar\",\"d\":\"A\"}';\r\n assert($ret,$exp);\r\n \r\n $brl = 'storage:\/\/test-storage\/test\/?getA';\r\n $data = array('_u' => array('baz','bar'));\r\n $ret = \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\r\n ksort($ret[$brl]);\r\n $ret = json_encode($ret[$brl]);\r\n $exp = '{\"bar\":{\"_u\":\"bar\",\"i\":2,\"d\":\"A\"},\"baz\":{\"_u\":\"baz\",\"i\":2,\"d\":\"B\"}}';\r\n assert($ret,$exp);\r\n \r\n $brl = 'storage:\/\/test-storage\/test\/?getA&_flts=_u';\r\n $data = array('d' => array('A','C'));\r\n $ret = \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\r\n ksort($ret[$brl]);\r\n $ret = json_encode($ret[$brl]);\r\n $exp = '{\"bar\":{\"_u\":\"bar\"},\"foo\":{\"_u\":\"foo\"},\"foo\\\/bar\":{\"_u\":\"foo\\\/bar\"}}';\r\n assert($ret,$exp);\r\n",
+"origin":"*\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8\r\n- \u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u691c\u7d22\u306f\u3069\u3046\u3057\u3088\u3046\u30fb\u30fb\u30fbRangeGET\u3092\u4f5c\u308d\u3046\u304b\r\n- \u65b0\u30b5\u30fc\u30d3\u30b9\u8ffd\u52a0\u624b\u9806\uff08\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\uff09\r\n- \u30ad\u30e3\u30c3\u30b7\u30e5\u30fb\u30d5\u30e9\u30a4\u30f3\u30b0\u306e\u8a71\r\n- \u30c4\u30fc\u30eb\u985e\u306e\u8aac\u660e\r\n-- &del{HtmlMon};\r\n-- MongoMon\r\n-- ZooMon\r\n-- Mail\r\n- Debian\u7cfb\u306e\u30af\u30a4\u30c3\u30af\u30b9\u30bf\u30fc\u30c8\r\n",
 "contents":[
 {
 "tag":"div",
@@ -319,38 +319,6 @@
 "text":" Debian\u7cfb\u306e\u30af\u30a4\u30c3\u30af\u30b9\u30bf\u30fc\u30c8"
 }
 ]
-}
-]
-},
-{
-"tag":"li",
-"attr":{
-"class":"ul1"
-},
-"children":[
-{
-"tag":"text",
-"attr":[
-
-],
-"children":[
-{
-"tag":"text",
-"text":" Beak index\u5bfe\u5fdc\u306e\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8\u5316\u3068phpUnit\u5316"
-}
-]
-}
-]
-},
-{
-"tag":"pre",
-"attr":[
-
-],
-"children":[
-{
-"tag":"text",
-"text":" #!\/usr\/bin\/env php\n <?php\n namespace Cockatoo;\n require_once(dirname(__FILE__) . '\/..\/src\/def.php');\n require_once(Config::COCKATOO_ROOT.'utils\/beak.php');\n \n function assert($res,$expt){\n }\n   if ( $res === $expt ) {\n   }else{\n     print \"Assert \\n RES:\".$res .\"\\n EXP:\".$expt .\"\\n\";\n   }\n }\n \n \/\/Config::$BEAKS['storage'] = 'Cockatoo\\BeakMongo';\n \/\/Config::$BeakLocation['storage:\/\/test-storage\/'] = array('127.0.0.1:27017');\n Config::$BEAKS['storage'] = 'Cockatoo\\BeakFile';\n \n $brl = 'storage:\/\/test-storage\/test?ccol&_u=_u&_is=i,d#renew';\n \\Cockatoo\\BeakController::beakQuery(array($brl));\n \/\/ Save latest\n $brl = 'storage:\/\/test-storage\/test\/foo?set';\n $data = array('_u' => 'foo' , 'i' => 1 , 'd' => 'A');\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\n \n $brl = 'storage:\/\/test-storage\/test?keys';\n $ret = \\Cockatoo\\BeakController::beakQuery(array($brl));\n ksort($ret[$brl]);\n $ret = json_encode($ret[$brl]);\n $exp = '[\"foo\"]';\n assert($ret,$exp);\n \n $brl = 'storage:\/\/test-storage\/test\/bar?set';\n $data = array('_u' => 'bar' , 'i' => 2 , 'd' => 'A');\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\n \n $brl = 'storage:\/\/test-storage\/test\/baz?set';\n $data = array('_u' => 'baz' , 'i' => 2 , 'd' => 'B');\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\n \n $brl = 'storage:\/\/test-storage\/test\/foo\/bar?set';\n $data = array('_u' => 'foo\/bar' , 'i' => 3 , 'd' => 'C');\n \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\n \n $brl = 'storage:\/\/test-storage\/test\/bar?get&_flts=i';\n $ret = \\Cockatoo\\BeakController::beakQuery(array($brl));\n ksort($ret[$brl]);\n $ret = json_encode($ret[$brl]);\n $exp = '{\"i\":2}';\n assert($ret,$exp);\n \n $brl = 'storage:\/\/test-storage\/test\/bar?get&_exts=i';\n $ret = \\Cockatoo\\BeakController::beakQuery(array($brl));\n ksort($ret[$brl]);\n $ret = json_encode($ret[$brl]);\n $exp = '{\"_u\":\"bar\",\"d\":\"A\"}';\n assert($ret,$exp);\n \n $brl = 'storage:\/\/test-storage\/test\/?getA';\n $data = array('_u' => array('baz','bar'));\n $ret = \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\n ksort($ret[$brl]);\n $ret = json_encode($ret[$brl]);\n $exp = '{\"bar\":{\"_u\":\"bar\",\"i\":2,\"d\":\"A\"},\"baz\":{\"_u\":\"baz\",\"i\":2,\"d\":\"B\"}}';\n assert($ret,$exp);\n \n $brl = 'storage:\/\/test-storage\/test\/?getA&_flts=_u';\n $data = array('d' => array('A','C'));\n $ret = \\Cockatoo\\BeakController::beakQuery(array(array($brl,$data)));\n ksort($ret[$brl]);\n $ret = json_encode($ret[$brl]);\n $exp = '{\"bar\":{\"_u\":\"bar\"},\"foo\":{\"_u\":\"foo\"},\"foo\\\/bar\":{\"_u\":\"foo\\\/bar\"}}';\n assert($ret,$exp);\n"
 }
 ]
 }
