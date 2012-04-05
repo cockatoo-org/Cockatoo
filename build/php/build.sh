@@ -30,7 +30,7 @@ function build_php(){
     run export EXTRA_LIBS=-lresolv
     run export PHP_MYSQLND_ENABLED=yes
     run ./configure --prefix=/usr/local/${NAME} \
-	--without-pear \
+	--with-pear \
 	--with-apxs2=/usr/local/apache-${HTTPD_VERSION}/bin/apxs \
 	--with-config-file-path=/usr/local/${NAME}/lib \
 	--with-config-file-scan-dir=/usr/local/${NAME}/lib/conf.d \
@@ -112,6 +112,7 @@ function build_php_ext {
     run eval  ~/.capkg/config/capkg.sh generate -p php${VERSION}-${EXT}  -i /usr/local -s root_${EXT}/usr/local/${NAME} ${CAPKCF_OPTIONS}
 }
 build_php
+exit 1
 build_php_ext bcmath
 build_php_ext calendar
 build_php_ext intl
