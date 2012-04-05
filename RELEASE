@@ -3,3 +3,15 @@
 
 0.0.2
   Change the request parser I/F. From the returns to the members.
+
+0.0.3
+  Change the PHP settings
+   - php          (configure --with pear)
+   - php.ini      (include_path)
+   - cockatoo.ini (include_path)
+
+  Major change in Beak
+   - Obsolete BeakMysql
+   - Obsolute Selectable unique-key
+   - Select by index
+   - Selectable column

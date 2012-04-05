@@ -128,6 +128,13 @@ class BeakAction extends Beak {
     $this->runAction();
   }
   /**
+   * System use only
+   *
+   */
+  public function sysQuery() {
+    $this->runAction();
+  }
+  /**
    * runAction
    * 
    * @see Action.php

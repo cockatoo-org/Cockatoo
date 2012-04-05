@@ -39,7 +39,7 @@ abstract class BeaconAction extends \Cockatoo\Action {
         $beacon['_t'] = $now;
         $beacon = $this->form_beacon($beacon);
         // Create collection
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$beacon['u'],'',\Cockatoo\Beak::M_CREATE_COL,array(\Cockatoo\Beak::Q_UNIQUE_INDEX=>'_u'),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$beacon['u'],'',\Cockatoo\Beak::M_CREATE_COL,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array($brl));
         // Save latest
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$beacon['u'],'',\Cockatoo\Beak::M_SET,array(),array());

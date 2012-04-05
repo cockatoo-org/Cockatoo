@@ -20,7 +20,6 @@ class BeakMongo extends Beak {
   /**
    * Index name
    */
-  protected $uniqueIndex;
   protected $mongoAcc;
   protected $timeout;
   protected $fsync;
@@ -32,7 +31,6 @@ class BeakMongo extends Beak {
    */
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
     parent::__construct($brl,$scheme,$domain,&$collection,$path,$method,$queries,$comments,$arg,$hide);
-    $this->uniqueIndex = isset($this->queries[Beak::Q_UNIQUE_INDEX])?$this->queries[Beak::Q_UNIQUE_INDEX]:Beak::Q_UNIQUE_INDEX;
     
     $this->columns = array('_id' => 0);
     if ( isset($this->queries[Beak::Q_FILTERS]) ) {
@@ -67,9 +65,7 @@ class BeakMongo extends Beak {
       $mongocollection = $mongodb->createCollection($this->collection);
     }
     if ( isset($mongocollection) ) {
-      if ( isset($this->uniqueIndex) ) {
-        $ret = $mongocollection->ensureIndex(array($this->uniqueIndex => 1),array('unique' => true,'safe' => true));
-      }
+      $ret = $mongocollection->ensureIndex(array(Beak::Q_UNIQUE_INDEX => 1),array('unique' => true,'safe' => true));
       if ( isset($this->queries[Beak::Q_INDEXES]) ){
         foreach(explode(',',$this->queries[Beak::Q_INDEXES]) as $index){
           $ret = $mongocollection->ensureIndex(array($index=>1),array('unique' => false,'safe' => true));
@@ -86,12 +82,12 @@ class BeakMongo extends Beak {
   public function listKeyQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
       $ret = array();
-      $this->mongocursor = $mongocollection->find(array($this->uniqueIndex => new \MongoRegex('/^'.$this->path.'.*/') ),array('_id' => 0, $this->uniqueIndex => 1));
+      $this->mongocursor = $mongocollection->find(array(Beak::Q_UNIQUE_INDEX => new \MongoRegex('/^'.$this->path.'.*/') ),array('_id' => 0, Beak::Q_UNIQUE_INDEX => 1));
       if ( $this->mongocursor ) {
         $this->ret = array();
         while ( $this->mongocursor->hasNext() ) {
           $doc = $this->mongocursor->getNext();
-          $ret []= $doc[$this->uniqueIndex];
+          $ret []= $doc[Beak::Q_UNIQUE_INDEX];
         }
       }
       return $ret;
@@ -114,7 +110,7 @@ class BeakMongo extends Beak {
           if ( $data[Beak::ATTR_BIN] ) {
             self::decode($data);
           }
-          $ret [$data[$this->uniqueIndex]]= $data;
+          $ret [$data[Beak::Q_UNIQUE_INDEX]]= $data;
         }
       }
       return $ret;
@@ -124,7 +120,7 @@ class BeakMongo extends Beak {
 
   public function getQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
-      $data = $mongocollection->findOne(array($this->uniqueIndex => $this->path ),$this->columns);
+      $data = $mongocollection->findOne(array(Beak::Q_UNIQUE_INDEX => $this->path ),$this->columns);
       if ( isset($data[Beak::ATTR_BIN]) ) {
         self::decode($data);
       }
@@ -155,9 +151,9 @@ class BeakMongo extends Beak {
   }
 
   private function setDoc(&$mongocollection,&$path,&$arg){
-    $arg[$this->uniqueIndex] = &$path;
+    $arg[Beak::Q_UNIQUE_INDEX] = &$path;
     $cond = array(
-      $this->uniqueIndex => $path
+      Beak::Q_UNIQUE_INDEX => $path
       );
     if ( $this->rev ) {
       if ( $arg[Beak::ATTR_REV] ) {
@@ -169,7 +165,7 @@ class BeakMongo extends Beak {
       self::encode($arg);
     }
     if ( $this->partial) {
-      unset($arg[$this->uniqueIndex]);
+      unset($arg[Beak::Q_UNIQUE_INDEX]);
       return $mongocollection->update($cond,array('$set' => $arg),array('upsert' => true , 'safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'multiple' => false));
     }else {
       return $mongocollection->update($cond,$arg,array('upsert' => true , 'safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'multiple' => false));
@@ -186,7 +182,7 @@ class BeakMongo extends Beak {
     if ( $mongocollection ) {
       $ret = array();
       foreach ( $this->arg as $arg ) {
-        $path = &$arg[$this->uniqueIndex];
+        $path = &$arg[Beak::Q_UNIQUE_INDEX];
         $ret = $this->setDoc($mongocollection,$path,$arg);
         $ret[$path] = $ret['ok']==1.0?true:false;
       }
@@ -197,7 +193,7 @@ class BeakMongo extends Beak {
   public function delQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
       $cond = array(
-        $this->uniqueIndex => $this->path
+        Beak::Q_UNIQUE_INDEX => $this->path
         );
       if ( $this->rev ) {
         if ( $arg[Beak::ATTR_REV] ) {
@@ -211,8 +207,8 @@ class BeakMongo extends Beak {
   }
   public function delaQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
-      foreach ( $this->arg[$this->uniqueIndex] as $cond ) {
-        $query[$this->uniqueIndex]['$in'] []= $cond;
+      foreach ( $this->arg[Beak::Q_UNIQUE_INDEX] as $cond ) {
+        $query[Beak::Q_UNIQUE_INDEX]['$in'] []= $cond;
       }
       $ret = $mongocollection->remove($query,array('safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'justOne' => false));
       return $ret['ok']==1.0?true:false;
@@ -225,6 +221,22 @@ class BeakMongo extends Beak {
       $ret = $mongodb->execute('db.'.$this->collection.'.renameCollection("'.
                                      $this->queries[Beak::Q_NEWNAME] .'",1)');
       return $ret['ok']==1.0?true:false;
+    }
+    return null;
+  }
+
+  public function sysQueryImpl($mongo,$mongodb,$mongocollection) {
+    if ( $mongocollection ) {
+      if ( $this->queries[Beak::Q_SYS] = 'idxs' ) {
+        $idxs = $mongocollection->getIndexInfo();
+        foreach($idxs as $idx){
+          $iname = implode('_',array_keys($idx['key']));
+          if ( $iname !== '_id' and $iname !== Beak::Q_UNIQUE_INDEX){
+            $ret[]=$iname;
+          }
+        }
+      }
+      return $ret;
     }
     return null;
   }
@@ -298,6 +310,17 @@ class BeakMongo extends Beak {
       return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'mvColQueryImpl');
+  }
+  /**
+   * System use only
+   *
+   */
+  public function sysQuery() {
+    if ( ! $this->mongoAcc ) {
+      Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
+    }
+    $this->ret = $this->mongoAcc->mongoProc($this,'sysQueryImpl');
   }
 
   /**

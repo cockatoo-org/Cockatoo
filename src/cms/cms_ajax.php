@@ -326,17 +326,16 @@ function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time
       throw new \Exception('Device already exist ! : ' . $did);
     } else {
       // layout
-      $uindex = '_u';
-      $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_CREATE_COL,array(Beak::Q_UNIQUE_INDEX=>$uindex),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakQuery(array($brl));
       // component
-      $brl = brlgen(Def::BP_COMPONENT,$sid,$did,'',Beak::M_CREATE_COL,array(Beak::Q_UNIQUE_INDEX=>$uindex),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_COMPONENT,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakQuery(array($brl));
       // STATIC
-      $brl = brlgen(Def::BP_STATIC,$sid,$did,'',Beak::M_CREATE_COL,array(Beak::Q_UNIQUE_INDEX=>$uindex),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_STATIC,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakQuery(array($brl));
       // session
-      $brl = brlgen(Def::BP_SESSION,$sid,$did,'',Beak::M_CREATE_COL,array(Beak::Q_UNIQUE_INDEX=>$uindex),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_SESSION,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakQuery(array($brl));
     }
   }else{
@@ -361,10 +360,10 @@ function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time
   }
   // css
   $cssBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonCSS,'');
-  StaticContent::save($cssBrl,'text/css','',$css,null,Beak::Q_UNIQUE_INDEX,$expires_time);
+  StaticContent::save($cssBrl,'text/css','',$css,null,$expires_time);
   // js
   $jsBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonJs,'');
-  StaticContent::save($jsBrl,'text/javascript','',$js,null,Beak::Q_UNIQUE_INDEX,$expires_time);
+  StaticContent::save($jsBrl,'text/javascript','',$js,null,$expires_time);
 }
 function setP($flg,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
   if ( preg_match('@\s@',$pid,$matches) !== 0 ) { 

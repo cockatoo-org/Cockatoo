@@ -261,7 +261,7 @@ class WikiParser {
             }
           }
           $body []= self::tag('pre',array(), $text);
-        }elseif ( preg_match('@^(-----)@', $line , $matches ) !== 0 ) {
+        }elseif ( preg_match('@^---+$@', $line , $matches ) !== 0 ) {
           //HR
           $body []= self::tag('hr');
         }elseif ( preg_match('@^>>(.*)@', $line , $matches ) !== 0 ) {

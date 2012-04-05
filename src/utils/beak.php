@@ -371,6 +371,10 @@ abstract class Beak {
    * Beak method definition
    */
   const M_MV_COL     = 'mcol';
+  /**
+   * Beak method definition
+   */
+  const M_SYSTEM     = 'sys'; // for System
 
   /**
    * T.B.D
@@ -410,6 +414,10 @@ abstract class Beak {
    * Beak MV_COL target
    */
   const Q_NEWNAME       = '_new';
+  /**
+   * Beak SYSTEM 
+   */
+  const Q_SYS           = '_s';
   /**
    * Beak comment definition
    *
@@ -584,6 +592,11 @@ abstract class Beak {
    *
    */
   abstract public function mvColQuery();
+  /**
+   * System use only
+   *
+   */
+  abstract public function sysQuery();
   /**
    * Get operation results
    * 
@@ -847,6 +860,8 @@ class BeakController {
       $beak->delaQuery();
     }elseif( strcmp($beak->method,Beak::M_MV_COL) === 0 ) {
       $beak->mvColQuery();
+    }elseif( strcmp($beak->method,Beak::M_SYSTEM) === 0 ) {
+      $beak->sysQuery();
     }else {
       throw new \Exception('Unsupported BRL Method ! :' . $beak->method);
     }

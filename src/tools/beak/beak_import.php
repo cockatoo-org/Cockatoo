@@ -32,7 +32,7 @@ if ( ! ( $src and $to and $brl ) ) {
 Invalid arguments !
 
 Usage:
-  beak_import.php --src <FILE/DIR> --to <LOCATE> --brl <BASE BRL> [--exp <EXPIRE>] [--charset <CHARSET>]
+  beak_import.php --src <FILE/DIR> --to <LOCATE> --brl <BASE BRL> [--type <TYPE>] [--charset <CHARSET>] [--exp <EXPIRE>] 
 
 LOCATE:
   <DRIVER>,<IP>:<PORT>
@@ -44,6 +44,7 @@ DRIVER:
 
 TYPE:
   AUTO       Use default definition by the extention.
+  mime-type
   
 CHARSET:
   AUTO       Convert from auto to utf8

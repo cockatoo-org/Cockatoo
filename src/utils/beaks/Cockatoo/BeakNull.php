@@ -98,6 +98,12 @@ class BeakNull extends Beak {
    */
   public function mvColQuery() {
   }
+  /**
+   * System use only
+   *
+   */
+  public function sysQuery() {
+  }
 
 
   /**

@@ -33,12 +33,12 @@ try {
     $children = array();
     foreach ( $ret[$brl] as $p){
       if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
-        if ( strcmp($p,'pagelayout')){
+//        if ( strcmp($p,'pagelayout')){
           $pid = $p;
           $children []= array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,Def::RESERVED_SERVICE_CORE,Def::RESERVED_DEVICE_DEFAULT,$pid,Beak::M_GET),
                               Def::K_LAYOUT_EXTRA    => '' ,
                               Def::K_LAYOUT_CHILDREN => array());
-        }
+//        }
       }
     }
     $layoutData = array( 

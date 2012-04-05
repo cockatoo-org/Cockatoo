@@ -140,6 +140,13 @@ class BeakProxy extends Beak {
     $this->send();
   }
   /**
+   * System use only
+   *
+   */
+  public function sysQuery() {
+    $this->send();
+  }
+  /**
    * Send
    *
    */

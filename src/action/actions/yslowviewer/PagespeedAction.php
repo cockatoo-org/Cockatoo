@@ -50,7 +50,7 @@ class PagespeedAction extends BeaconAction {
       $times = &$ret[$brl];
       rsort($times);
       $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(),array());
-      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $times))));
+      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array(\Cockatoo\Beak::Q_UNIQUE_INDEX => $times))));
 
       $graph_summary;
       $graph_summary[0]['label']  = 'Total score';

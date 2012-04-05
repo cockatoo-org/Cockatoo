@@ -22,7 +22,6 @@ list($to,$tol)         =  parse_in($options['to']);
 list($service,$scheme) =  parse_in($options['db']);
 $new = isset($options['add'])?false:true;
 $callback = isset($options['callback'])?$options['callback']:null;
-$uindex=Beak::Q_UNIQUE_INDEX;
 $collection            =  $options['col']?$options['col']:'ALL';
 
 if ( ! ( $from and $to and $scheme and $service and $collection) ) {
@@ -108,9 +107,9 @@ function component_compaction($d){
 try {
   $transfer = new BeakTransfer($from,$to,$service,$scheme,$froml,$tol);
   if ( strcmp($collection,'ALL')!==0 ) {
-    $transfer->transfer_collection($collection,$new,$uindex,$callback);
+    $transfer->transfer_collection($collection,$new,$callback);
   }else {
-    $transfer->transfer_all($new,$uindex,$callback);
+    $transfer->transfer_all($new,$callback);
   }
 }catch(\Exception $e){
   Log::error($e);

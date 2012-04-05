@@ -54,7 +54,7 @@ class FileContentType {
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */
 class StaticContent {
-  static public function save($brl,$type,$description,&$content,$TO_BEAKS=null,$uindex=Beak::Q_UNIQUE_INDEX,$exp=null){
+  static public function save($brl,$type,$description,&$content,$TO_BEAKS=null,$exp=null){
     $token = preg_replace('/^(.{8})(.{4})(.{4})(.*)/','"${1}-${2}-${3}-${4}"', md5($content));
     if ( FileContentType::is_bin($type) ){
       $data = array(
@@ -76,7 +76,7 @@ class StaticContent {
     }
 
     Log::info($brl . '   (' . $type . ')');
-    $brl .= '?'.Beak::M_SET.'&' . Beak::Q_UNIQUE_INDEX . '=' . $uindex;
+    $brl .= '?'.Beak::M_SET;
     $ret = BeakController::beakQuery(array(array($brl,$data)),$TO_BEAKS);
     $r = $ret[$brl];
     if ( $r ) {

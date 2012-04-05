@@ -93,7 +93,7 @@ class BeakImporter {
     return mb_convert_encoding($content, 'UTF-8',$charset);
   }
 
-  function import($file,$brl,$type,$uindex=Beak::Q_UNIQUE_INDEX){
+  function import($file,$brl,$type){
     if ( is_file($file) ) {
       $content = file_get_contents($file);
       $mime = finfo_file ($this->fi, $file);
@@ -110,7 +110,7 @@ class BeakImporter {
       }
 
       print($brl . '   (' . $type . ')' . "\n");
-      if ( StaticContent::save($brl,$type,$description,$content,$this->TO_BEAKS,$uindex,$this->expire) ) {
+      if ( StaticContent::save($brl,$type,$description,$content,$this->TO_BEAKS,$this->expire) ) {
         print('success'.' => '.$brl.' ('.$type.')' . ' ( exp : '.$this->expire.')' ."\n");
       }else {
         print('failure'.' => '.$brl.' ('.$type.')' . '(exp:'.$this->expire.')' ."\n");
@@ -155,7 +155,7 @@ class BeakTransfer {
    * Transfer all collections
    *  
    */
-  function transfer_all($renew = true,$uindex=Beak::Q_UNIQUE_INDEX,$callback=null){
+  function transfer_all($renew = true,$callback=null){
     Log::info('transfer_all : ' . $this->scheme . '://' . $this->prefix . '-' . $this->scheme);
     print('transfer_all : ' . $this->scheme . '://' . $this->prefix . '-' . $this->scheme . "\n");
     $brl = brlgen($this->scheme,$this->prefix,'','',Beak::M_COL_LIST);
@@ -163,7 +163,7 @@ class BeakTransfer {
     $collections = BeakController::beakQuery(array($brl),$this->FROM_BEAKS);
     foreach ( $collections[$brl] as $collection ) {
       $collection = chop($collection,'/');
-      $this->transfer_collection($collection,$renew,$uindex,$callback);
+      $this->transfer_collection($collection,$renew,$callback);
     }
   }
   /**
@@ -171,20 +171,25 @@ class BeakTransfer {
    *  
    * @param String $collection BRL collection
    * @param String $renew Drop and create collection if specified true
-   * @param String $uindex Unique index name
    * @param String $callback Data editor
    */
-  function transfer_collection($collection,$renew = true,$uindex=Beak::Q_UNIQUE_INDEX,$callback=null){
+  function transfer_collection($collection,$renew = true,$callback=null){
     Log::info('transfer_collection : ' . $this->scheme . ' : ' . $this->prefix . ' : ' . $collection);
     print('transfer_collection : ' . $this->scheme . ' : ' . $this->prefix . ' : ' . $collection . "\n");
     $original = $collection;
+    // Get collection info
+    $brl   = brlgen($this->scheme,$this->prefix,$original,'',Beak::M_SYSTEM,array(Beak::Q_SYS=>'idxs'));
+    Config::$BeakLocation[$this->base_brl] = $this->from_location;
+    $ret = BeakController::beakQuery(array($brl),$this->FROM_BEAKS);
+    $idxs = implode(',',$ret[$brl]);
+
     if ( $renew ) {
       $collection=$collection.'.tmp';
-      $brl = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_CREATE_COL,array(Beak::Q_UNIQUE_INDEX=>$uindex),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_CREATE_COL,array(Beak::Q_INDEXES=>$idxs),array(Beak::COMMENT_KIND_RENEW));
       Config::$BeakLocation[$this->base_brl] = $this->to_location;
       $ret = BeakController::beakQuery(array($brl),$this->TO_BEAKS);
     } else {
-      $brl = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_CREATE_COL,array(Beak::Q_UNIQUE_INDEX=>$uindex),array());
+      $brl = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_CREATE_COL,array(Beak::Q_INDEXES=>$idxs),array());
       Config::$BeakLocation[$this->base_brl] = $this->to_location;
       $ret = BeakController::beakQuery(array($brl),$this->TO_BEAKS);
     }
@@ -200,7 +205,7 @@ class BeakTransfer {
         Config::$BeakLocation[$this->base_brl] = $this->from_location;
         $ret = BeakController::beakQuery(array($brl),$this->FROM_BEAKS);
         $data = &$ret[$brl];
-        $brl = brlgen($this->scheme,$this->prefix,$collection,$path,Beak::M_SET,array(Beak::Q_UNIQUE_INDEX=>$uindex));
+        $brl = brlgen($this->scheme,$this->prefix,$collection,$path,Beak::M_SET,array());
         if ( $callback ) {
           $data = $callback($data);
         }

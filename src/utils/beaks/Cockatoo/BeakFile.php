@@ -40,10 +40,6 @@ class BeakFile extends Beak {
    * Database directory
    */
   const BeakFileDirectory = 'datasource';
-  /**
-   * Index name
-   */
-  protected $uniqueIndex = Beak::Q_UNIQUE_INDEX;
 
   /**
    * Constructor
@@ -52,7 +48,6 @@ class BeakFile extends Beak {
    */
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
     parent::__construct($brl,$scheme,$domain,&$collection,$path,$method,$queries,$comments,$arg,$hide);
-    $this->uniqueIndex = ($this->queries[Beak::Q_UNIQUE_INDEX])?$this->queries[Beak::Q_UNIQUE_INDEX]:$this->uniqueIndex;
 
     if ( isset($this->queries[Beak::Q_FILTERS]) ) {
       $this->filters = explode(',',$this->queries[Beak::Q_FILTERS]);
@@ -78,25 +73,25 @@ class BeakFile extends Beak {
    */
   private function listDir($path,$rel,$isKey) {
     $ret = array();
-    if ( is_dir(self::BeakFileDirectory."/$this->domain/$path")){
-      if ($dh = opendir(self::BeakFileDirectory."/$this->domain/$path")) {
+    if ( is_dir($path)){
+      if ($dh = opendir($path)) {
         while (($file = readdir($dh)) !== false) {
           if ( preg_match('@^\.\.?(svn)?$@',$file,$matches) != 0 ) { // @@@ svn
             continue;
           }
           if ( $isKey ) {
-            if ( is_dir(self::BeakFileDirectory."/$this->domain/$path/$file") ) {
-              $ret = array_merge($ret,$this->listDir("$path$file/","$rel$file/",$isKey));
+            if ( is_dir($path.'/'.$file) ) {
+              $ret = array_merge($ret,$this->listDir($path.'/'.$file,$rel.$file.'/',$isKey));
             }else {
               if ( preg_match('@\.j$@',$file,$matches) != 0 ) {
-                $ret [] = substr("$rel$file",0,-2);
+                $ret [] = substr($rel.$file,0,-2);
               }elseif ( preg_match('@\.meta$@',$file,$matches) != 0 ) {
-                $ret [] = substr("$rel$file",0,-5);
+                $ret [] = substr($rel.$file,0,-5);
               }
             }
           } else {
-            if ( is_dir(self::BeakFileDirectory."/$this->domain/$path/$file") ) {
-              $ret [] = "$rel$file";
+            if ( is_dir($path.'/'.$file) ) {
+              $ret [] = $rel.$file;
             }
           }
         }
@@ -109,26 +104,31 @@ class BeakFile extends Beak {
   private function getIndex($column = ''){
     $dir = $this->collection_path . self::DIR_INDEX;
     if ( ! $column ) {
-      $ret = array();
       if( is_dir($dir) and $dh = opendir($dir) ) {
+        $ret = array();
         while (($index = readdir($dh)) !== false) {
           if ( preg_match('@^\.+$@',$index,$matches) != 0 ) {
             continue;
           }
           $ret []= $index;
         }
+        return $ret;
       }
-      return $ret;
+      return array();
     }else{
-      $json = file_get_contents($dir . $column);
-      return self::decode($json);
+      $ifile = $dir . $column;
+      if ( is_file($ifile)) {
+        $json = file_get_contents($ifile);
+        return self::decode($json);
+      }
+      return array();
     }
   }
   private function setIndex($index,$data){
     $idata = $this->getIndex($index);
     if ( isset($data[$index])){
-      $idata["$data[$index]"] []= $data[$this->uniqueIndex];
-      array_unique($idata["$data[$index]"]);
+      $idata[$data[$index]] []= $data[Beak::Q_UNIQUE_INDEX];
+      $idata[$data[$index]] = array_unique($idata[$data[$index]]);
       $json = self::encode($idata);
       $ifile = $this->collection_path . self::DIR_INDEX.$index;
       file_put_contents($ifile,$json);
@@ -149,7 +149,13 @@ class BeakFile extends Beak {
     if ( isset($this->queries[Beak::Q_INDEXES]) ){
       foreach(explode(',',$this->queries[Beak::Q_INDEXES]) as $index){
         $ifile = $this->collection_path . self::DIR_INDEX.$index;
-        file_put_contents($ifile,'{"":[]}');
+        if ( $this->renew ) {
+          file_put_contents($ifile,'{"":[]}');
+        }
+        foreach($this->listDir($this->collection_path,'',true) as $path){
+          $data = $this->getDoc($this->path_gen($path));
+          $this->setIndex($index,$data);
+        }
       }
     }
   }
@@ -159,7 +165,7 @@ class BeakFile extends Beak {
    * @see Action.php
    */
   public function listKeyQuery() {
-    $this->ret =  $this->listDir("/$this->collection/$this->path",'',true);
+    $this->ret =  $this->listDir($this->collection_path,'',true);
   }
 
   /**
@@ -168,7 +174,7 @@ class BeakFile extends Beak {
    * @see Action.php
    */
   public function listColQuery() {
-    $this->ret =  $this->listDir("/$this->collection/$this->path",'',false);
+    $this->ret =  $this->listDir($this->collection_path,'',false);
   }
 
   /**
@@ -203,23 +209,31 @@ class BeakFile extends Beak {
    * @see Action.php
    */
   public function getaQuery() {
-    $this->ret  = array();
+    $this->ret  = null;
     $queries = array();
     foreach ( $this->arg as $key => $cond ) {
-      if ( $key === $this->uniqueIndex ) {
+      if ( $key === Beak::Q_UNIQUE_INDEX ) {
         $queries = $cond;
         break;
       }
       $idata = $this->getIndex($key);
       if ( $idata ) {
         foreach($cond as $v){
-          $queries = array_merge($queries,$idata[$v]);
+          if ( isset($idata[$v]) ){
+            $queries = array_merge($queries,$idata[$v]);
+          }
         }
         break;
       }
     }
-    foreach($queries as $path){
-      $this->ret[$path] = $this->getDoc($this->path_gen($path));
+    if ( $queries ) {
+      $this->ret = array();
+      foreach($queries as $path){
+        $data = $this->getDoc($this->path_gen($path));
+        if ( $data !== null ) {
+          $this->ret[$path] = $data;
+        }
+      }
     }
   }
   /**
@@ -261,7 +275,9 @@ class BeakFile extends Beak {
         rmdir($path);
       }
     }else{
-      unlink($path);
+      if ( is_file($path) ){
+        unlink($path);
+      }
     }
   }
 
@@ -296,7 +312,7 @@ class BeakFile extends Beak {
       return false;
     }
     self::mkDir(dirname($file));
-    $arg[$this->uniqueIndex] = $path;
+    $arg[Beak::Q_UNIQUE_INDEX] = $path;
     if ( $this->partial) {
       if ( is_file($file)) {
         $json=file_get_contents($file);
@@ -329,7 +345,7 @@ class BeakFile extends Beak {
   public function setaQuery() {
     $this->ret  = array();
     foreach ( $this->arg as $arg ) {
-      $path = $arg[$this->uniqueIndex];
+      $path = $arg[Beak::Q_UNIQUE_INDEX];
       $this->ret[$path] = $this->setDoc($this->path_gen($path),$path,$arg);
     }
   }
@@ -361,7 +377,7 @@ class BeakFile extends Beak {
    */
   public function delaQuery() {
     $this->ret  = array();
-    foreach ( $this->arg[$this->uniqueIndex] as $cond ) {
+    foreach ( $this->arg[Beak::Q_UNIQUE_INDEX] as $cond ) {
       $path = &$cond;
       $this->ret[$path] = $this->delDoc($this->path_gen($path),null);
     }
@@ -375,6 +391,15 @@ class BeakFile extends Beak {
       $new = dirname($dir) . '/' . $this->queries[Beak::Q_NEWNAME];
       self::rmdir($new);
       rename($dir,$new);
+    }
+  }
+  /**
+   * System use only
+   *
+   */
+  public function sysQuery() {
+    if ( $this->queries[Beak::Q_SYS] = 'idxs' ) {
+      $this->ret = $this->getIndex();
     }
   }
   /**
