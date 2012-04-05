@@ -1,4 +1,17 @@
-public function setUp(){
+<?php
+namespace Cockatoo;
+require_once('/usr/local/cockatoo/def.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
+
+class BeakFileTest extends \PHPUnit_Framework_TestCase
+{
+  function set(){
+    Config::$BEAKS = array (
+      Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   ,
+      null
+      );
+  }
+  public function setUp(){
   $this->set();
   $brl = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
   $ret = BeakController::beakQuery(array($brl));
@@ -269,4 +282,63 @@ public function testBeakGets(){
 
 public function wait() {
   usleep(100000);
+}
+  public function testBeakKeyListAll(){
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_KEY_LIST);
+  $datas = BeakController::beakQuery(array($brl));
+  $exp = array('','file1','file2','path/','path/to');
+  sort($exp);
+  $expects  = json_encode($exp);
+  sort($datas[$brl]);
+  $actual   = json_encode($datas[$brl]);
+  $this->assertEquals($expects,$actual);
+}
+
+public function testBeakColList(){
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','','',Beak::M_COL_LIST);
+  $datas = BeakController::beakQuery(array($brl));
+  $expects  = json_encode(array('device'));
+  ksort($datas[$brl]);
+  $actual   = json_encode($datas[$brl]);
+  $this->assertEquals($expects,$actual);
+}
+
+public function testBeakIndex(){
+  // Create index and Input data
+  $brl = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_CREATE_COL,array(Beak::Q_INDEXES=>'key,int'),array());
+  $ret = BeakController::beakQuery(array($brl));
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','A',Beak::M_SET,array());
+  $data = array('key'=>'value1','int' => 2);
+  $datas[] = array($brl , $data);
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','B',Beak::M_SET,array());
+  $data = array('key'=>'value2','int' => 2);
+  $datas[] = array($brl , $data);
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','C/D',Beak::M_SET,array());
+  $data = array('key'=>'value3','int' => 3);
+  $datas[] = array($brl , $data);
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','C/D/F',Beak::M_SET,array());
+  $data = array('key'=>'value2','int' => 4);
+  $datas[] = array($brl , $data);
+  $datas = BeakController::beakQuery($datas);
+
+  // Fetch by int
+  $arg = array('int' => array(2,3));
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_ARRAY);
+  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  ksort($datas[$brl]);
+  foreach ( $datas[$brl] as $key => $data ){
+    ksort($datas[$brl][$key]);
+  }
+  $actual = json_encode(array_keys($datas[$brl]));
+  $expects= '["A","B","C\/D"]';
+  $this->assertEquals($expects,$actual);
+  // Fetch by key
+  $arg = array('key' => array('value1','value2'));
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_ARRAY);
+  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  ksort($datas[$brl]);
+  $actual = json_encode(array_keys($datas[$brl]));
+  $expects= '["A","B","C\/D\/F"]';
+  $this->assertEquals($expects,$actual);
+}
 }

@@ -1,35 +1,18 @@
 <?php
 namespace Cockatoo;
-
-require_once 'PHPUnit/Framework.php';
-
-// Cockatooがcwdを変更するためbackup
-$orgCwd = getcwd();
-
-$COCKATOO_ROOT=getenv('COCKATOO_ROOT');
-require_once($COCKATOO_ROOT.'config.php');
-// require_once(dirname(__FILE__) . '/config.php');
-// require_once('config.php');
-// $COCKATOO_ROOT=getenv('COCKATOO_ROOT');
-require_once($COCKATOO_ROOT.'utils/beak.php');
-
-// Cockatooがcwdを変更するがPHPUnitと競合するため戻す
-chdir($orgCwd);
+require_once('/usr/local/cockatoo/def.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 
 class BeakTest extends \PHPUnit_Framework_TestCase
 {
     public function __construct(){
     }
     public function setUp(){
-        global $COCKATOO_ROOT;
-        chdir($COCKATOO_ROOT);
     }
     //   public function tearDown(){
     //     print "tearDown\n";
     //   }
     public static function tearDownAfterClass() {
-        global $orgCwd;
-        chdir($orgCwd);
     }
 
     public function testParseBrlDomain(){

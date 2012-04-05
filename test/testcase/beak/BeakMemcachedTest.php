@@ -1,4 +1,19 @@
-public function setUp(){
+<?php
+namespace Cockatoo;
+require_once('/usr/local/cockatoo/def.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
+class BeakMemcachedTest extends \PHPUnit_Framework_TestCase
+{
+  function set(){
+      Config::$BeakLocation = array (
+        'layout://unittest-layout/' => array('127.0.0.1:11211'),
+        );
+    Config::$BEAKS = array (
+      Def::BP_LAYOUT   => 'Cockatoo\BeakMemcached'   ,
+      null
+      );
+  }
+  public function setUp(){
   $this->set();
   $brl = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
   $ret = BeakController::beakQuery(array($brl));
@@ -269,4 +284,5 @@ public function testBeakGets(){
 
 public function wait() {
   usleep(100000);
+}
 }
