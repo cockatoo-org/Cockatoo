@@ -25,10 +25,10 @@ class WikiRequestParser extends \Cockatoo\DefaultRequestParser {
         $this->device = 'android';
         $reqpath = $matches[1];
         if ( preg_match('@^view/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-          $this->path = '/view';
+          $this->path = 'view';
           $this->args['P'] = $matches[1];
         }elseif ( preg_match('@^img/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-          $this->path = '/img';
+          $this->path = 'img';
           $this->args['P'] = $matches[1];
         }else{ 
           $this->path = $reqpath;
@@ -37,19 +37,19 @@ class WikiRequestParser extends \Cockatoo\DefaultRequestParser {
       }else{
         $this->device = 'default';
         if ( preg_match('@^view/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-          $this->path = '/view';
+          $this->path = 'view';
           $this->args['P'] = $matches[1];
         }elseif ( preg_match('@^edit/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-          $this->path = '/edit';
+          $this->path = 'edit';
           $this->args['P'] = $matches[1];
         }elseif ( preg_match('@^img/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-          $this->path = '/img';
+          $this->path = 'img';
           $this->args['P'] = $matches[1];
         }elseif ( preg_match('@^upload/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-          $this->path = '/upload';
+          $this->path = 'upload';
           $this->args['P'] = $matches[1];
         }elseif ( preg_match('@^uploaded/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-          $this->path = '/uploaded';
+          $this->path = 'uploaded';
           $this->args['P'] = $matches[1];
         }else{ 
           $this->path = $reqpath;
@@ -65,7 +65,7 @@ class WikiRequestParser extends \Cockatoo\DefaultRequestParser {
     }elseif ( $this->reqpath === '/favicon.ico' ) {
       $this->service = 'wiki';
       $this->device = 'default';
-      $this->path = '/img';
+      $this->path = 'img';
       $this->args['P'] = 'Cockatoo PHP framework';
       $this->args['N'] = 'logo.png';
       return; // favicon

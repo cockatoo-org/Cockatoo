@@ -28,7 +28,7 @@ abstract class Action {
   public $redirect = null;
   public $namespace = null;
   public $updateCookie = array();
-  public $header = array();
+  public $header = '';
   public $updateArgs = null;
 //   public $deviceName;
 //   public $requestURL;
