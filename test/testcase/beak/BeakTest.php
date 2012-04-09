@@ -5,13 +5,10 @@ require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 
 class BeakTest extends \PHPUnit_Framework_TestCase
 {
-    public function __construct(){
-    }
     public function setUp(){
     }
-    //   public function tearDown(){
-    //     print "tearDown\n";
-    //   }
+    public function tearDown(){
+    }
     public static function tearDownAfterClass() {
     }
 

@@ -1,7 +1,7 @@
 <?php
 namespace Cockatoo;
-$COCKATOO_CONF=getenv('COCKATOO_CONF');
-require_once($COCKATOO_CONF);
+require_once('/usr/local/cockatoo/def.php');
+require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 
 $_SERVER;
 $HEADER;
@@ -61,19 +61,23 @@ function header($output){
   print $output."\n";
 }
 
-$OUTPUT;
-function run_www ($file,$uri,$get=array(),$post=array(),$server=array(),$header=array()){
-  global $_GET,$_POST,$_SERVER,$HEADER,$OUTPUT,$COCKATOO_ROOT;
+function pre_www ($file,$uri,$get=array(),$post=array(),$server=array(),$header=array(),$cookie=array()){
+  global $_GET,$_POST,$_SERVER,$HEADER;
   default_args();
 
-  $PATH=$COCKATOO_ROOT.'www/';
+  $PATH=Config::COCKATOO_ROOT.'www/';
   $_SERVER['SCRIPT_FILENAME'] = $PATH . $file;
   $_SERVER['SCRIPT_NAME'] = $file;
   $_SERVER['PHP_SELF'] = $file;
   $_SERVER['REDIRECT_URL'] = $uri;
   $ruri = $uri;
+  $token = '?';
+  if ( preg_match('@\?@',$ruri,$matches) !== 0 ) {
+    $token = '&';
+  }
   foreach($get as $k => $v ) {
-    $ruri.= '&' . $k . '=' . $v;
+    $ruri.= $token . $k . '=' . $v;
+    $token = '&';
   }
   $_SERVER['REQUEST_URI']=$ruri;
   $_SERVER['QUERY_STRING'] = 'r='.$ruri;
@@ -85,7 +89,15 @@ function run_www ($file,$uri,$get=array(),$post=array(),$server=array(),$header=
   $_POST   = $post;
   $_GET = $get;
   $_GET['r'] = $uri;
+  $_COOKIE = $cookie;
+}
 
+$OUTPUT;
+function run_www ($file,$uri,$get=array(),$post=array(),$server=array(),$header=array(),$cookie=array()){
+  global $OUTPUT;
+  pre_www($file,$uri,$get,$post,$server,$header);
+
+  $PATH=Config::COCKATOO_ROOT.'www/';
   $OUTPUT='';
   ob_start("Cockatoo\www_output");
   include($PATH . $file);
