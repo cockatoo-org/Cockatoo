@@ -31,9 +31,16 @@ abstract class BeaconAction extends \Cockatoo\Action {
     try{
       $this->setNamespace('yslowviewer');
       if ( $this->method === \Cockatoo\Beak::M_SET ) {
+        $session = $this->getSession();
+        $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
+        if ( ! $user and YslowviewerConfig::ACL ) {
+          \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ ,'Guest users are not allowed to POST');
+          return null; // Guest users are not allowed to POST
+        }
         $now = time();
         $beacon = json_decode($session[\Cockatoo\Def::SESSION_KEY_POST],1);
         $beacon = $this->get_json();
+
 
         $beacon['t'] = strftime('%Y-%m-%d %H:%M:%S',$now);
         $beacon['_t'] = $now;

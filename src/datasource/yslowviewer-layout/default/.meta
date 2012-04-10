@@ -1,5 +1,5 @@
 {
-"@R":"1332249185",
+"@R":"1334040109",
 "eredirect":"\/yslowviewer\/default\/main",
 "layout":{
 "type":"HorizontalWidget",
@@ -12,6 +12,31 @@
 "component":"component:\/\/core-component\/default\/horizontal?get",
 "children":[
 {
+"type":"VerticalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"vpos":"right",
+"swidth":"200px",
+"extra":"",
+"component":"component:\/\/core-component\/default\/vertical?get",
+"children":[
+{
+"type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"200px",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component:\/\/yslowviewer-component\/default\/login?get",
+"children":[
+
+]
+},
+{
 "type":"HorizontalWidget",
 "class":"",
 "height":"",
@@ -22,6 +47,8 @@
 "component":"component:\/\/yslowviewer-component\/default\/header?get",
 "children":[
 
+]
+}
 ]
 },
 {
@@ -57,5 +84,5 @@
 "expires":"0",
 "_u":"",
 "bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/jquery-1.4.4.min.js\"><\/script>\n",
-"session_exp":"0"
+"session_exp":"86400"
 }
