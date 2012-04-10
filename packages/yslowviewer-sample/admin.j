@@ -1,6 +1,6 @@
 {
 "user":"admin",
-"hash":"c510b84a45ecb27f512536845e11c2bb",
+"hash":"f6fdffe48c908deb0f4c3bd36c032e72",
 "email":"admin@mail.cockatoo.jp",
 "root":"1",
 "_u":"admin"
