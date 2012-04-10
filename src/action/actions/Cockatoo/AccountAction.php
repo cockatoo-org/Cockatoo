@@ -28,7 +28,7 @@ abstract class AccountAction extends Action {
           throw new \Exception('Invalid account !');
         } 
         $user_data = AccountUtil::get_account($this->BASE_BRL,$user);
-        if ( $user_data[AccountUtil::KEY_HASH] === md5($session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]) ) {
+        if ( $user_data[AccountUtil::KEY_HASH] === md5($user . $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]) ) {
           $s[AccountUtil::SESSION_LOGIN] = $user_data;
         }else{
           throw new \Exception('Invalid account !');
@@ -51,11 +51,12 @@ abstract class AccountAction extends Action {
           if ( $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD] !== $session[Def::SESSION_KEY_POST][AccountUtil::KEY_CONFIRM] ){
             throw new \Exception('Unmatch password !');
           }
-          $up_hash = md5($session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]);
+          $up_hash = md5($session[AccountUtil::SESSION_LOGIN][AccountUtil::KEY_USER] . $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]);
         }
         $user_data = array(AccountUtil::KEY_USER  => $session[AccountUtil::SESSION_LOGIN][AccountUtil::KEY_USER],
-                      AccountUtil::KEY_HASH  => $up_hash,
-                      AccountUtil::KEY_EMAIL => ($session[Def::SESSION_KEY_POST][AccountUtil::KEY_EMAIL])?$session[Def::SESSION_KEY_POST][AccountUtil::KEY_EMAIL]:$session[AccountUtil::SESSION_LOGIN][AccountUtil::KEY_EMAIL]);
+                           AccountUtil::KEY_HASH  => $up_hash,
+                           AccountUtil::KEY_EMAIL => ($session[Def::SESSION_KEY_POST][AccountUtil::KEY_EMAIL])?$session[Def::SESSION_KEY_POST][AccountUtil::KEY_EMAIL]:$session[AccountUtil::SESSION_LOGIN][AccountUtil::KEY_EMAIL],
+                           AccountUtil::KEY_ROOT  => $session[Def::SESSION_KEY_POST][AccountUtil::KEY_ROOT]);
         $user_data = $this->genUserData($session[Def::SESSION_KEY_POST],$session[AccountUtil::SESSION_LOGIN],$user_data);
         AccountUtil::save_account($this->BASE_BRL,$user_data);
         $s[AccountUtil::SESSION_LOGIN] = $user_data;
@@ -64,7 +65,7 @@ abstract class AccountAction extends Action {
       }elseif ( $submit === 'password reset' ) {
         $up_user = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_USER];
         $up_passwd = AccountUtil::mkpasswd();
-        $up_hash = md5($up_passwd);
+        $up_hash = md5($up_user.$up_passwd);
         $user_data = AccountUtil::get_account($this->BASE_BRL,$up_user);
         $user_data[AccountUtil::KEY_HASH] = $up_hash;
         $user_data[AccountUtil::KEY_USER] = $up_user;

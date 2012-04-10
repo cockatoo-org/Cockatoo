@@ -6,6 +6,7 @@ class AccountUtil {
   const KEY_CONFIRM ='confirm';
   const KEY_HASH    ='hash';
   const KEY_EMAIL   ='email';
+  const KEY_ROOT    ='root';
 
   const SESSION_LOGIN='login';
 

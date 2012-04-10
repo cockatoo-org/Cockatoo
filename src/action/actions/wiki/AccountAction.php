@@ -20,7 +20,6 @@ class AccountAction extends \Cockatoo\AccountAction {
     $this->BASE_BRL=WikiConfig::USER_COLLECTION;
   }
   protected function genUserData(&$post_data,&$session_login,&$user_data){
-    $user_data['root']  = $session_login['root'];
     return $user_data;
   }
   protected function success(&$submit,&$user_data){
@@ -31,7 +30,7 @@ class AccountAction extends \Cockatoo\AccountAction {
            '  User     : ' . $user_data[\Cockatoo\AccountUtil::KEY_USER] ."\n".
            '  Password : ' . (isset($user_data[\Cockatoo\AccountUtil::KEY_PASSWD])?$user_data[\Cockatoo\AccountUtil::KEY_PASSWD]:'(no change)')."\n".
            '  Email    : ' . $user_data[\Cockatoo\AccountUtil::KEY_EMAIL]."\n".
-           '  Root     : ' . ($user_data['root']?'YES':'NO'),
+           '  Root     : ' . ($user_data[\Cockatoo\AccountUtil::KEY_ROOT]?'YES':'NO'),
            'From: '.WikiConfig::MAIL_FROM ."\r\n" .
            'Reply-To: '.WikiConfig::MAIL_FROM ."\r\n"
         );
