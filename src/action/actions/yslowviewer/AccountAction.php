@@ -29,7 +29,7 @@ class AccountAction extends \Cockatoo\AccountAction {
            'Your profile changed',
            'Your new profile'."\n".
            '  User     : ' . $user_data[\Cockatoo\AccountUtil::KEY_USER] ."\n".
-           '  Password : ' . (isset($user_data[\Cockatoo\AccountUtil::KEY_PASSWD])?$user_data[\Cockatoo\AccountUtil::KEY_PASSWD]:'(no change)')."\n".
+           '  Password : ' . (isset($user_data[\Cockatoo\AccountUtil::KEY_PASSWD])?'change !':'(no change)')."\n".
            '  Email    : ' . $user_data[\Cockatoo\AccountUtil::KEY_EMAIL]."\n".
            '  Root     : ' . ($user_data[\Cockatoo\AccountUtil::KEY_ROOT]?'YES':'NO'),
            'From: '.YslowviewerConfig::MAIL_FROM ."\r\n" .
