@@ -223,8 +223,9 @@ $(function () {
   var path = $('#paths').cockatoo_list({ 
     title:'Paths', 
     add :    { url : 'cms_ajax.php', args : { op : 'addP'}, hook: function (t) { if ('sid' in t.settings.args) return false; return 'Please select service !'; } },
-    /* del :    { url : 'cms_ajax.php', args : { op : 'delP'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select path !'; } }, */
+    del :    { url : 'cms_ajax.php', args : { op : 'delP'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select path !'; } },
     update : { url : 'cms_ajax.php', args : { op : 'setP'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select path !'; } },
+    copy   : { url : 'cms_ajax.php', args : { op : 'cpP'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select path !'; } },
     list :   { url : 'cms_ajax.php', args : { op : 'getP'}, col : 'name' },
     view : true,
     width: 700,

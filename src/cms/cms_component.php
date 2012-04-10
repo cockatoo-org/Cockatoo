@@ -111,8 +111,9 @@ $(function () {
   var component = $('#components').cockatoo_list({ 
     title:'Components', 
     add :    { url : 'cms_ajax.php', args : { op : 'addC'}, hook: function (t) { if ('sid' in t.settings.args) return false; return 'Please select service !'; } },
-/*     del :    { url : 'cms_ajax.php', args : { op : 'delC'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select component !'; } }, */
+    del :    { url : 'cms_ajax.php', args : { op : 'delC'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select component !'; } },
     update : { url : 'cms_ajax.php', args : { op : 'setC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select component !'; } },
+    copy   : { url : 'cms_ajax.php', args : { op : 'cpC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select component !'; } },
     list :   { url : 'cms_ajax.php', args : { op : 'getC'}, col : 'brl' },
     custom1 :{ 
       label : 'check' ,

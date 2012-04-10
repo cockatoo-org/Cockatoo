@@ -184,6 +184,16 @@ try {
   } elseif( $op === 'setP' ) {
     check_writable($sid);
     setP(true,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,null);
+  } elseif( $op === 'cpP' ) {
+    check_writable($sid);
+    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
+    $data = BeakController::beakQuery(array($brl));
+    $layout = $data[$brl][Def::K_LAYOUT_LAYOUT];
+    $pid = $_sP['name'];
+    setP(false,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
+  } elseif( $op === 'delP' ) {
+    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_DEL);
+    BeakController::beakQuery(array($brl));
   } elseif( $op === 'getC' ) {
     if ( is_readable($sid) ){
       $brl = brlgen(Def::BP_COMPONENT,$sid,'default','',Beak::M_KEY_LIST);
@@ -233,39 +243,23 @@ try {
   } elseif( $op === 'setC' ) {
     check_writable($sid);
     setC(true,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+  } elseif( $op === 'cpC' ) {
+    check_writable($sid);
+    $cid = $_sP['name'];
+    setC(true,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
   } elseif( $op === 'checkC' ) {
     if ( is_readable($sid) ){
-      if ( preg_match('@^(.+)\?|#@',$check,$matches) ){
-        $check = $matches[1];
-      }
-      $sids = getS();
-      foreach( $sids as $sid ) {
-        $dids = getD($sid);
-        foreach( $dids as $did ) {
-          $pids = getP($sid,$did);
-          foreach( $pids as $pid ) {
-            if ( ! $pid ){
-              continue;
-            }
-            try { 
-              $CONTENT_DRAWER = new ContentDrawer($sid,$did,$pid,null,null,null,Def::RenderingModeNORMAL);  
-              $CONTENT_DRAWER->layout();
-              $CONTENT_DRAWER->components();
-              foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
-                if ( preg_match('@^(.+)\?|#@',$b,$matches) ){
-                  $b = $matches[1];
-                }
-                if ( $b === $check ) {
-                  $r['required'] .= " $CONTENT_DRAWER->layoutBrl\n";
-                }
-              }
-            } catch (\Exception $e) {
-              $emsg .= $sid.'/'.$did.'/'.$pid . ' : ' . $e->getMessage() . "\n";
-            }
-          }
-        }
-      }
+      $r['required'] = implode(getRequired($check),"\n");
     }
+  } elseif( $op === 'delC' ) {
+    check_writable($sid);
+    $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
+    $required = getRequired($brl);
+    if ( $required ) {
+      throw new \Exception('Still required by ' . implode($required,'<br>'));
+    }
+    $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_DEL);
+    BeakController::beakQuery(array($brl));
   } elseif( $op === 'setL' ) {
     check_writable($sid);
     $layout = json_decode($_sP['layout'],true);
@@ -424,6 +418,40 @@ function setC($flg,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$clas
   if ( ! $ret[$brl] ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
+}
+function getRequired($check){
+  $requires=array();
+  if ( preg_match('@^(.+)\?|#@',$check,$matches) ){
+    $check = $matches[1];
+  }
+  $sids = getS();
+  foreach( $sids as $sid ) {
+    $dids = getD($sid);
+    foreach( $dids as $did ) {
+      $pids = getP($sid,$did);
+      foreach( $pids as $pid ) {
+        if ( ! $pid ){
+          continue;
+        }
+        try { 
+          $CONTENT_DRAWER = new ContentDrawer($sid,$did,$pid,null,null,null,Def::RenderingModeNORMAL);  
+          $CONTENT_DRAWER->layout();
+          $CONTENT_DRAWER->components();
+          foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
+            if ( preg_match('@^(.+)\?|#@',$b,$matches) ){
+              $b = $matches[1];
+            }
+            if ( $b === $check ) {
+              $requires []= " $CONTENT_DRAWER->layoutBrl";
+            }
+          }
+        } catch (\Exception $e) {
+          $emsg .= $sid.'/'.$did.'/'.$pid . ' : ' . $e->getMessage() . "\n";
+        }
+      }
+    }
+  }
+  return $requires;
 }
 
 if ( $emsg !== '' ) {
