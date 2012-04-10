@@ -26,7 +26,7 @@ function SessionCallback(&$brl,&$data){
     if ( $now > $data['_e'] ) {
       // expired session
       echo $data['_e'] . '  Expired (' .  strftime('%Y-%m-%d %H:%M:%S',$data['_e']) .') => '  . $brl . "\n";
-      \Cockatoo\delSession($data[Beak::Q_UNIQUE_INDEX],'wiki');
+      \Cockatoo\delSession($data[\Cockatoo\Beak::Q_UNIQUE_INDEX],'wiki');
     }
   }
 }
