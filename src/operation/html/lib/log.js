@@ -5,7 +5,7 @@ var path = require('path');
 var common = require(__dirname + '/common.js');
 
 var PRE_LEN =  6;
-var KEY_LEN = 12;
+var KEY_LEN = 30;
 var URL_LEN = 65;
 var SEL_LEN = 20;
 var MSG_LEN = 18;
@@ -108,6 +108,8 @@ crawl_callback_object.prototype = {
     var key = path[path.length-1];
     if ( ! key ){
       key = '(ROOT)';
+    }else{
+      key = key[0];
     }
     return common.padding(key,KEY_LEN+(path.length*2),1) + ' : '
   },
@@ -146,17 +148,31 @@ crawl_callback_object.prototype = {
     return this.cb_object(path,value,cyclic,in_array,objid);
   },
   cb_array  : function (path,value,cyclic,in_array,objid){
-    return this.cb_hash(path,value,cyclic,in_array,objid);
+    var prefix = this.prefix(path,value,cyclic,in_array,objid);
+    if ( cyclic ) {
+      this.buffer += prefix + '(' + common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') : ' + value.length + this.suffix;
+    }else{
+      this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') : ' + value.length + this.suffix;
+    }
+    return !cyclic;
   },
   cb_hash   : function (path,value,cyclic,in_array,objid){
     var prefix = this.prefix(path,value,cyclic,in_array,objid);
-    this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
-    return true;
+    if ( cyclic ) {
+      this.buffer += prefix + '(' + common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
+    }else{
+      this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
+    }
+    return !cyclic;
   },
   cb_object  : function (path,value,cyclic,in_array,objid){
     var prefix = this.prefix(path,value,cyclic,in_array,objid);
-    this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
-    return false;
+    if ( cyclic ) {
+      this.buffer += prefix + '(' + common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
+    }else{
+      this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
+    }
+    return !cyclic;
   },
   cb_leave_array  : function (path,value,cyclic,in_array,objid){
   },
@@ -165,11 +181,12 @@ crawl_callback_object.prototype = {
 }
 exports.crawl_callback = crawl_callback_object;
 
-exports.dump = function(pre,msg,data,igns){
+exports.dump = function(pre,msg,data){
   sys.puts(common.padding(pre,PRE_LEN) + ' : ===== ' + (msg?common.padding(msg,URL_LEN):'') + '=====');
   if ( typeof(data)==='object') {
     callback = new crawl_callback_object;
-    common.crawl_object(data,callback,igns);
+    callback.cb_function = undefined;
+    common.crawl_object(data,callback);
     sys.puts(callback.buffer);
   }else{
     sys.puts(common.padding('',KEY_LEN,1) + ' : ' + data); 
@@ -187,5 +204,3 @@ function out(pre,url,selector,msg,body,l){
     fs.closeSync(fp);
   }
 }
-
-

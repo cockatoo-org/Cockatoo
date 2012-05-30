@@ -1,32 +1,7 @@
 //var sys = require('sys');
 var sys = require('util');
 var fs  = require('fs');
-var common  = require( __dirname + '/lib/common.js');
 var stdtest = require( __dirname + '/lib/stdtest.js');
-var log     = require( __dirname + '/lib/log.js');
-
-var errlog = 'Cockatoo-wiki.err';
-try{
-  fs.unlinkSync(errlog);
-}catch(e){
-}
-function on_error(pref,strurl,selector,msg,data){
-  var fp = fs.openSync(errlog,'a+');
-  var rec = common.padding(pref,10)+':'+common.padding(strurl,60)+': '+msg;
-  if ( typeof(data) === 'object' ) {
-    common.crawl_object(data,log.crawl_callback(function(line){
-      rec += line+'\n';
-    }));
-  }else{
-    rec += ' : ' + data;
-  }
-  rec +='\n';
-  sys.puts(rec);
-//  log.dump('','',data);
-  fs.writeSync(fp,rec,null);
-  fs.closeSync(fp);
-  return '';
-}
 
 // top page view check
 exports.get = function() { 
@@ -38,8 +13,6 @@ exports.get = function() {
     TIMEOUT  : 5000, // msec
     WAIT     : 100,  // msec
     TEST : { 
-      // ON_ERROR : stdtest.NULL_ON_ERROR,
-      ON_ERROR : on_error,
       STATUS   : stdtest.DEFAULT_CHECK_STATUS,
       REDIRECT : {
 	FILTER : stdtest.DEFAULT_FILTER
@@ -53,19 +26,23 @@ exports.get = function() {
 	  SELECTOR : 'div.user', 
 	},{ // H1 is the page title
 	  METHOD   : 'TEXT',
-	  SELECTOR : 'div.wiki > h1',
-	  EXPECTS  : /top/
+	  SELECTOR : 'div.wiki > div.h1 > h1',
+	  EXPECTS  : 'Cockatoo PHP framework'
 	},{ // <title>
 	  METHOD   : 'TEXT',
 	  SELECTOR : 'title',
-	  EXPECTS  : /top/
+	  EXPECTS  : 'Cockatoo PHP framework'
+	},{ // <title>
+	  METHOD   : 'TEXT',
+	  SELECTOR : 'title',
+	  EXPECTS  : 'UNMATCH TEST'
 	},{ // Status check  <a href=> contains external site.
 	  METHOD   : 'LINK',
 	  SELECTOR : 'a',
 	  FILTER   : {
 	    ERROR  : [],
 	    IGNORE : [],
-	    FOLLOW : [/http:\/\//],
+	    FOLLOW : ['http://'],
 	    INNER_DOMAIN   : true
 	  },
 	  TEST     : stdtest.STATUS_TEST

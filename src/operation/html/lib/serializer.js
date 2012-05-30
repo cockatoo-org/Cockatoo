@@ -12,10 +12,13 @@ callback_object.prototype = {
   suffix    : '\n',
   buffer    : '',
   prefix      : function (path,value,cyclic,in_array,objid){
+    if ( cyclic ) {
+      throw 'Cannot serialize (cyclic object) ! ';
+    }
     var key = path[path.length-1];
     var prefix = this.indent;
     if ( key && ! in_array ){
-      prefix += key + ' : ';
+      prefix += '\'' + key[0] + '\' : ';
     }
     return prefix;
   },
@@ -62,8 +65,10 @@ callback_object.prototype = {
     var prefix = this.prefix(path,value,cyclic,in_array,objid);
     if ( value.length ) {
       this.buffer += prefix + '['  + this.suffix;
+      return true;
     }else{
-      this.buffer += prefix + '[';
+      this.buffer += prefix + '[],' + this.suffix;
+      return false;
     }
   },
   cb_hash   : function (path,value,cyclic,in_array,objid){
@@ -76,11 +81,8 @@ callback_object.prototype = {
     throw "Unknown type : " + typeof(value);
   },
   cb_leave_array  : function (path,value,cyclic,in_array,objid){
-    if ( this.buffer.match(/\n$/) ) {
-      this.buffer += this.indent + '],' + this.suffix;
-    }else{
-      this.buffer += '],' + this.suffix;
-    }
+    this.buffer = this.buffer.replace(/,\n$/,'\n'); 
+    this.buffer += this.indent + '],' + this.suffix;
   },
   cb_leave_hash  : function (path,value,cyclic,in_array,objid){
     this.indent = this.indent.replace(/  $/,''); 

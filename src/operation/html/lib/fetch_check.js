@@ -3,6 +3,7 @@ var sys    = require('util');
 var fs     = require('fs');
 var path   = require('path');
 var common = require(__dirname + '/common.js');
+var serializer = require(__dirname + '/serializer.js');
 
 var fetch_check_file;
 var fetch_check_c;
@@ -36,7 +37,8 @@ exports.init = function() {
 // operator
 //---------------------------------
 exports.load = function () {
-  fetch_check_c = JSON.parse(fs.readFileSync(fetch_check_file));
+//  fetch_check_c = JSON.parse(fs.readFileSync(fetch_check_file));
+  fetch_check_c = serializer.deserialize(fs.readFileSync(fetch_check_file));
 }
 
 exports.check = function (url,status) {
@@ -49,7 +51,8 @@ exports.check = function (url,status) {
 
 exports.change = function (url,status) {
   fetch_check_c[url] = status;
-  fs.writeFileSync(fetch_check_file,JSON.stringify(fetch_check_c,null,1));
+//  fs.writeFileSync(fetch_check_file,JSON.stringify(fetch_check_c,null,1));
+  fs.writeFileSync(fetch_check_file,serializer.serialize(fetch_check_c));
 }
 
 exports.timeout = function (url) {
