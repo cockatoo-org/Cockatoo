@@ -43,8 +43,86 @@ var z = {
   N : null
 };
 */
-exports.crawl_object = function ( data , callback , igns , path , done ) {
-  function is_callback( type ){
+exports.crawl_object = function ( data , cbobj , path , done , parent ) {
+  if ( path === undefined )  path = [];
+  if ( done === undefined )  done = [];
+  function cb_nop(path,value,cyclic,in_array,objid){
+    return ! cyclic;
+  }
+  if ( cbobj.cb_undefined === undefined )  cbobj.cb_undefined  = cb_nop;
+  if ( cbobj.cb_null      === undefined )  cbobj.cb_null       = cb_nop;
+  if ( cbobj.cb_string    === undefined )  cbobj.cb_string     = cb_nop;
+  if ( cbobj.cb_function  === undefined )  cbobj.cb_function   = cb_nop;
+  if ( cbobj.cb_other     === undefined )  cbobj.cb_other      = cb_nop;
+  if ( cbobj.cb_date      === undefined )  cbobj.cb_date       = cb_nop;
+  if ( cbobj.cb_regexp    === undefined )  cbobj.cb_regexp     = cb_nop;
+  if ( cbobj.cb_array     === undefined )  cbobj.cb_array      = cb_nop;
+  if ( cbobj.cb_hash      === undefined )  cbobj.cb_hash       = cb_nop;
+  if ( cbobj.cb_object    === undefined )  cbobj.cb_object     = cb_nop;
+  if ( cbobj.cb_leave_array === undefined )  cbobj.cb_leave_array = cb_nop;
+  if ( cbobj.cb_leave_hash  === undefined )  cbobj.cb_leave_hash  = cb_nop;
+
+
+  var in_array = false;
+  if ( parent && parent.constructor === Array ){
+    in_array = true;
+  }
+
+  if ( data === undefined ) {
+    cbobj.cb_undefined(path,undefined,false,in_array,undefined)
+  } else if (data === null ) {
+    cbobj.cb_null(path,null,false,in_array,undefined)
+  } else if ( typeof(data) === 'object') {
+    var cyclic = false;
+    // Check circulation
+    var objid = undefined;
+    for ( var no in done ) {
+      if ( done[no] === data ) { 
+	objid = no;
+	break;
+      }
+    }
+    if ( ! cyclic ) {
+      done.push(data);
+      objid = done.length;
+    }
+    if ( data.constructor === RegExp ) {
+      cbobj.cb_regexp(path,data,cyclic,in_array,objid);
+    }else if ( data.constructor === Date ) {
+      cbobj.cb_date(path,data,cyclic,in_array,objid);
+    }else if ( data.constructor === Array ) {
+      cbobj.cb_array(path,data,cyclic,in_array,objid);
+      for ( var i in data ){
+	path.push(i);
+	this.crawl_object ( data[i],cbobj,path ,done , data );
+	path.pop(i);
+      }
+      cbobj.cb_leave_array(path,data,cyclic,in_array,objid);
+    }else if ( data.constructor === Object ) {
+      cbobj.cb_hash(path,data,cyclic,in_array,objid);
+      for ( var i in data ){
+	path.push(i);
+	this.crawl_object ( data[i],cbobj,path ,done , data );
+	path.pop(i);
+      }
+      cbobj.cb_leave_hash(path,data,cyclic,in_array,objid);
+    }else{
+      cbobj.cb_object(path,data,cyclic,in_array,objid);
+    }
+  }else{
+    if ( typeof(data) === 'string' ) {
+      cbobj.cb_string(path,data,false,in_array,undefined)
+    }else if( typeof(data) === 'function' ) {
+      cbobj.cb_function(path,data,false,in_array,undefined)
+    }else{
+      cbobj.cb_other(path,data,false,in_array,undefined)
+    }
+  }
+}
+
+/*
+exports.crawl_object = function ( data , enter_callback , igns , path , done , leave_callback ) {
+  function type_check( type ){
     for ( var i in igns ){
       if ( igns[i] === type ) {
         return false;
@@ -56,45 +134,46 @@ exports.crawl_object = function ( data , callback , igns , path , done ) {
   if ( done === undefined )  done = [];
   if ( path === undefined )  path = [];
   if ( done.length === 0 ){
-    callback('',data,path,0); // root object
+    enter_callback('',data,path,0,false,null); // root object
     done.push(data);
   }
+  if ( leave_callback === undefined ) {
+    leave_callback = function ( data , path ) {};
+  }
   for ( var i in data ){
+    var circulation_flg = false;
     path.push(i);
     var type = typeof(data[i]);
     if ( type === 'object') {
-      function check_done(){
-	for ( var no in done ) {
-	  if ( done[no] === data[i] ) { 
-	    if ( is_callback(type)){
-	      callback(i,data[i],path,no,true);
-	    }
-	    return false;
-	  }
+      // Check circulation
+      for ( var no in done ) {
+	if ( done[no] === data[i] ) { 
+	  circulation_flg = true;
+	  break;
 	}
-	return true;
       }
-      if ( ! check_done() ) {
-	path.pop(i);
-	continue;
+      if ( ! circulation_flg ) {
+	done.push(data[i]);
       }
-      done.push(data[i]);
+      // Callback
       var objid = done.length;
-      if ( is_callback(type)){
-	if ( callback(i,data[i],path,objid) ) {
-	  this.crawl_object ( data[i],callback,igns,path ,done );
+      if ( type_check(type)){
+	if ( enter_callback(i,data[i],path,objid,circulation_flg,data) ) {
+	  this.crawl_object ( data[i],enter_callback,igns,path ,done , leave_callback );
 	}
       }else{
-	this.crawl_object ( data[i],callback,igns,path ,done );
+	this.crawl_object ( data[i],enter_callback,igns,path ,done , leave_callback);
       }
     }else{
-      if ( is_callback(type)){
-	callback(i,data[i],path,undefined);
+      if ( type_check(type)){
+	enter_callback(i,data[i],path,undefined,circulation_flg,data);
       }
     }
     path.pop(i);
   }
+  leave_callback(data,path);
 }
+*/
 
 // Extend string
 String.prototype.replaceAll = function (org, dest){  

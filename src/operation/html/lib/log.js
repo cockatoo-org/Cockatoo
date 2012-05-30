@@ -99,46 +99,78 @@ exports.error = function(url,selector,msg,body) {
   }
 }
 
-exports.crawl_callback = function(output){
-  if ( output === undefined ) output = sys.puts;
-  function hasMember(val) {
-    for ( var i in val ) {
-      return true;
+function crawl_callback_object(){
+}
+crawl_callback_object.prototype = {
+  suffix    : '\n',
+  buffer    : '',
+  prefix      : function (path,value,cyclic,in_array,objid){
+    var key = path[path.length-1];
+    if ( ! key ){
+      key = '(ROOT)';
     }
-    return false;
-  }
-  return function ( key , value , path, objid , cyclic ) {
-    if ( value === undefined ) {
-      output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : ('+common.padding('undefined',TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + value);
-    } else if (value === null ) {
-      output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : ('+common.padding('object#' + objid,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + value);
-    } else if ( cyclic ) {
-      output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : ('+common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' );
-    } else if ( typeof(value) === 'object'  ) {
-      if ( ! hasMember(value) ) {
-	output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : (' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') : ' + value );
-      }else{
-	output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : (' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' );
-      }
-    } else {
-      var type  = typeof(value);
+    return common.padding(key,KEY_LEN+(path.length*2),1) + ' : '
+  },
+  cb_undefined  : function (path,value,cyclic,in_array,objid){
+    this.cb_string(path,value,cyclic,in_array,objid);
+  },
+  cb_null       : function (path,value,cyclic,in_array,objid){
+    this.cb_string(path,value,cyclic,in_array,objid);
+  },
+  cb_string    : function (path,value,cyclic,in_array,objid){
+    var prefix = this.prefix(path,value,cyclic,in_array,objid);
+    var type  = typeof(value);
+    if ( value && value.toString) {
       var lines = value.toString().split('\n');
       for ( var i in lines ) {
 	if ( i == 0 ) {
-	  output(common.padding(key,KEY_LEN+(path.length*2),1) + ' : (' + common.padding(type,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + lines[i]);
+	  this.buffer += prefix + '(' + common.padding(type,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + lines[i] + this.suffix;
 	}else{
-	  output(common.padding('',KEY_LEN+(path.length*2),1)  + '    ' + common.padding('',TYPE_LEN) + '  '+common.padding('',NAME_LEN)+  '    ' + lines[i]);
+	  this.buffer += common.padding('',KEY_LEN+(path.length*2),1)  + '    ' + common.padding('',TYPE_LEN) + '  '+common.padding('',NAME_LEN)+  '    ' + lines[i] + this.suffix;
 	}
       }
+    }else{
+      this.buffer += prefix + '(' + common.padding(type,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + value + this.suffix;
     }
+  },
+  cb_function  : function (path,value,cyclic,in_array,objid){
+    this.cb_string(path,value,cyclic,in_array,objid);
+  },
+  cb_other  : function (path,value,cyclic,in_array,objid){
+    this.cb_string(path,value,cyclic,in_array,objid);
+  },
+  cb_date    : function (path,value,cyclic,in_array,objid){
+    return this.cb_object(path,value,cyclic,in_array,objid);
+  },
+  cb_regexp  : function (path,value,cyclic,in_array,objid){
+    return this.cb_object(path,value,cyclic,in_array,objid);
+  },
+  cb_array  : function (path,value,cyclic,in_array,objid){
+    return this.cb_hash(path,value,cyclic,in_array,objid);
+  },
+  cb_hash   : function (path,value,cyclic,in_array,objid){
+    var prefix = this.prefix(path,value,cyclic,in_array,objid);
+    this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
     return true;
-  };
+  },
+  cb_object  : function (path,value,cyclic,in_array,objid){
+    var prefix = this.prefix(path,value,cyclic,in_array,objid);
+    this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
+    return false;
+  },
+  cb_leave_array  : function (path,value,cyclic,in_array,objid){
+  },
+  cb_leave_hash  : function (path,value,cyclic,in_array,objid){
+  },
 }
+exports.crawl_callback = crawl_callback_object;
 
 exports.dump = function(pre,msg,data,igns){
   sys.puts(common.padding(pre,PRE_LEN) + ' : ===== ' + (msg?common.padding(msg,URL_LEN):'') + '=====');
   if ( typeof(data)==='object') {
-    common.crawl_object(data,this.crawl_callback(sys.puts),igns);
+    callback = new crawl_callback_object;
+    common.crawl_object(data,callback,igns);
+    sys.puts(callback.buffer);
   }else{
     sys.puts(common.padding('',KEY_LEN,1) + ' : ' + data); 
   }
