@@ -44,8 +44,8 @@ exports.load = function () {
   }
 }
 
-exports.push = function ( url , test , remark ) {
-  fetch_queue_q.push({URL:url,TEST:test,REMARK:remark});
+exports.push = function ( url , headers , test , referer ) {
+  fetch_queue_q.push({URL:url,TEST:test,REFERER:referer});
   save();
 }
 

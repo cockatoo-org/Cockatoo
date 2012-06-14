@@ -15,20 +15,6 @@ exports.mkdirp = function(dir){
     fs.mkdirSync(dir,'755');
   }
 }
-exports.padding = function (str,n,r){
-  var strlen = 0;
-  for( var c in str){
-    strlen += (escape(str[c]).length<4)?1:2;
-  }
-  if ( strlen < n ){
-    var p = n-strlen;
-    for ( var i = 0 ; i < p ; i++ ) {
-      if ( r ) 	str  = ' ' + str;
-      else      str += ' ';
-    }
-  }
-  return str;
-}
   
 /** Example
 var z = {
@@ -123,16 +109,16 @@ exports.crawl_object = function ( data , cbobj ) {
   function cb_nop(path,value,cyclic,in_array,objid){
     return ! cyclic;
   }
-  if ( cbobj.cb_undefined === undefined )  cbobj.cb_undefined  = cb_nop;
-  if ( cbobj.cb_null      === undefined )  cbobj.cb_null       = cb_nop;
-  if ( cbobj.cb_string    === undefined )  cbobj.cb_string     = cb_nop;
-  if ( cbobj.cb_function  === undefined )  cbobj.cb_function   = cb_nop;
-  if ( cbobj.cb_other     === undefined )  cbobj.cb_other      = cb_nop;
-  if ( cbobj.cb_date      === undefined )  cbobj.cb_date       = cb_nop;
-  if ( cbobj.cb_regexp    === undefined )  cbobj.cb_regexp     = cb_nop;
-  if ( cbobj.cb_array     === undefined )  cbobj.cb_array      = cb_nop;
-  if ( cbobj.cb_hash      === undefined )  cbobj.cb_hash       = cb_nop;
-  if ( cbobj.cb_object    === undefined )  cbobj.cb_object     = cb_nop;
+  if ( cbobj.cb_undefined   === undefined )  cbobj.cb_undefined   = cb_nop;
+  if ( cbobj.cb_null        === undefined )  cbobj.cb_null        = cb_nop;
+  if ( cbobj.cb_string      === undefined )  cbobj.cb_string      = cb_nop;
+  if ( cbobj.cb_function    === undefined )  cbobj.cb_function    = cb_nop;
+  if ( cbobj.cb_other       === undefined )  cbobj.cb_other       = cb_nop;
+  if ( cbobj.cb_date        === undefined )  cbobj.cb_date        = cb_nop;
+  if ( cbobj.cb_regexp      === undefined )  cbobj.cb_regexp      = cb_nop;
+  if ( cbobj.cb_array       === undefined )  cbobj.cb_array       = cb_nop;
+  if ( cbobj.cb_hash        === undefined )  cbobj.cb_hash        = cb_nop;
+  if ( cbobj.cb_object      === undefined )  cbobj.cb_object      = cb_nop;
   if ( cbobj.cb_leave_array === undefined )  cbobj.cb_leave_array = cb_nop;
   if ( cbobj.cb_leave_hash  === undefined )  cbobj.cb_leave_hash  = cb_nop;
   if ( cbobj.cb_leave_object=== undefined )  cbobj.cb_leave_object= cb_nop;
@@ -144,3 +130,9 @@ exports.crawl_object = function ( data , cbobj ) {
 String.prototype.replaceAll = function (org, dest){  
   return this.split(org).join(dest);  
 }  
+
+String.prototype.reverse = function (){
+  return this.split('').reverse().join('')
+}
+
+

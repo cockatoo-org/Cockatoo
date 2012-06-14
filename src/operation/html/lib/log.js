@@ -24,6 +24,7 @@ var LV_ERROR   =  0;
 var log_file;
 var log_lv     = LV_INFO;
 
+
 //---------------------------------
 // constructor 
 //---------------------------------
@@ -111,7 +112,7 @@ crawl_callback_object.prototype = {
     }else{
       key = key[0];
     }
-    return common.padding(key,KEY_LEN+(path.length*2),1) + ' : '
+    return padding(key,KEY_LEN+(path.length*2),1) + ' : '
   },
   cb_undefined  : function (path,value,cyclic,in_array,objid){
     this.cb_string(path,value,cyclic,in_array,objid);
@@ -126,13 +127,13 @@ crawl_callback_object.prototype = {
       var lines = value.toString().split('\n');
       for ( var i in lines ) {
 	if ( i == 0 ) {
-	  this.buffer += prefix + '(' + common.padding(type,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + lines[i] + this.suffix;
+	  this.buffer += prefix + '(' + padding(type,TYPE_LEN) + '  '+padding('',NAME_LEN)+') : ' + lines[i] + this.suffix;
 	}else{
-	  this.buffer += common.padding('',KEY_LEN+(path.length*2),1)  + '    ' + common.padding('',TYPE_LEN) + '  '+common.padding('',NAME_LEN)+  '    ' + lines[i] + this.suffix;
+	  this.buffer += padding('',KEY_LEN+(path.length*2),1)  + '    ' + padding('',TYPE_LEN) + '  '+padding('',NAME_LEN)+  '    ' + lines[i] + this.suffix;
 	}
       }
     }else{
-      this.buffer += prefix + '(' + common.padding(type,TYPE_LEN) + '  '+common.padding('',NAME_LEN)+') : ' + value + this.suffix;
+      this.buffer += prefix + '(' + padding(type,TYPE_LEN) + '  '+padding('',NAME_LEN)+') : ' + value + this.suffix;
     }
   },
   cb_function  : function (path,value,cyclic,in_array,objid){
@@ -150,27 +151,27 @@ crawl_callback_object.prototype = {
   cb_array  : function (path,value,cyclic,in_array,objid){
     var prefix = this.prefix(path,value,cyclic,in_array,objid);
     if ( cyclic ) {
-      this.buffer += prefix + '(' + common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') : ' + value.length + this.suffix;
+      this.buffer += prefix + '(' + padding('ref#object#' + objid,TYPE_LEN) + '> ' + padding(value.constructor.name,NAME_LEN) + ') : ' + value.length + this.suffix;
     }else{
-      this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') : ' + value.length + this.suffix;
+      this.buffer += prefix + '(' + padding('object#' + objid,TYPE_LEN) + '> ' + padding(value.constructor.name,NAME_LEN) + ') : ' + value.length + this.suffix;
     }
     return !cyclic;
   },
   cb_hash   : function (path,value,cyclic,in_array,objid){
     var prefix = this.prefix(path,value,cyclic,in_array,objid);
     if ( cyclic ) {
-      this.buffer += prefix + '(' + common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
+      this.buffer += prefix + '(' + padding('ref#object#' + objid,TYPE_LEN) + '> ' + padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
     }else{
-      this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
+      this.buffer += prefix + '(' + padding('object#' + objid,TYPE_LEN) + '> ' + padding(value.constructor.name,NAME_LEN) + ')' + this.suffix;
     }
     return !cyclic;
   },
   cb_object  : function (path,value,cyclic,in_array,objid){
     var prefix = this.prefix(path,value,cyclic,in_array,objid);
     if ( cyclic ) {
-      this.buffer += prefix + '(' + common.padding('ref#object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
+      this.buffer += prefix + '(' + padding('ref#object#' + objid,TYPE_LEN) + '> ' + padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
     }else{
-      this.buffer += prefix + '(' + common.padding('object#' + objid,TYPE_LEN) + '> ' + common.padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
+      this.buffer += prefix + '(' + padding('object#' + objid,TYPE_LEN) + '> ' + padding(value.constructor.name,NAME_LEN) + ') = ' + value + this.suffix;
     }
     return !cyclic;
   },
@@ -182,25 +183,39 @@ crawl_callback_object.prototype = {
 exports.crawl_callback = crawl_callback_object;
 
 exports.dump = function(pre,msg,data){
-  sys.puts(common.padding(pre,PRE_LEN) + ' : ===== ' + (msg?common.padding(msg,URL_LEN):'') + '=====');
+  sys.puts(padding(pre,PRE_LEN) + ' : ===== ' + (msg?padding(msg,URL_LEN):'') + '=====');
   if ( typeof(data)==='object') {
     callback = new crawl_callback_object;
     callback.cb_function = undefined;
     common.crawl_object(data,callback);
     sys.puts(callback.buffer);
   }else{
-    sys.puts(common.padding('',KEY_LEN,1) + ' : ' + data); 
+    sys.puts(padding('',KEY_LEN,1) + ' : ' + data); 
   }
 }
 //---------------------------------
 // utilities
 //---------------------------------
 function out(pre,url,selector,msg,body,l){
-  var msg = common.padding(pre,PRE_LEN) + ' : ' + common.padding(url,URL_LEN) + ' ; ' + common.padding(msg,MSG_LEN) + '  ; ' + common.padding(selector,SEL_LEN) + (body?'  ; '+body:'');
+  var msg = padding(pre,PRE_LEN) + ' : ' + padding(url,URL_LEN) + ' ; ' + padding(msg,MSG_LEN) + '  ; ' + padding(selector,SEL_LEN) + (body?'  ; '+body:'');
   sys.puts(msg);
   if ( l ) { // log
     var fp = fs.openSync(log_file,'a+');
     fs.writeSync(fp,msg+'\n',null);
     fs.closeSync(fp);
   }
+}
+function padding(str,n,r){
+  var strlen = 0;
+  for( var c in str){
+    strlen += (escape(str[c]).length<4)?1:2;
+  }
+  if ( strlen < n ){
+    var p = n-strlen;
+    for ( var i = 0 ; i < p ; i++ ) {
+      if ( r ) 	str  = ' ' + str;
+      else      str += ' ';
+    }
+  }
+  return str;
 }
