@@ -76,7 +76,7 @@ class BeakFile extends Beak {
     if ( is_dir($path)){
       if ($dh = opendir($path)) {
         while (($file = readdir($dh)) !== false) {
-          if ( preg_match('@^\.\.?(svn)?$@',$file,$matches) != 0 ) { // @@@ svn
+          if ( preg_match('@^\.\.?@',$file,$matches) != 0 ) { // @@@ svn
             continue;
           }
           if ( $isKey ) {

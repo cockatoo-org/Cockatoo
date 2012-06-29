@@ -53,7 +53,7 @@ exports.STATUS_TEST = {
 // Html checks
 //   ( standerd tags & dead link )
 exports.STD_TEST = {
-  ON_ERROR : this.NULL_ON_ERROR,
+//  ON_ERROR : 'this.NULL_ON_ERROR',
   STATUS   : this.DEFAULT_CHECK_STATUS,
   REDIRECT : {
     FILTER : this.DEFAULT_FILTER
@@ -67,7 +67,7 @@ exports.STD_TEST = {
   },{          // refulsing empty <title>
     METHOD   : 'TEXT',
     SELECTOR : 'title',
-    EXPECTS  : /./
+    EXPECTS  : '.'
   },{          // status check with <a href="??">
     METHOD   : 'LINK',
     SELECTOR : 'a',
@@ -95,7 +95,7 @@ exports.STD_TEST = {
 // Crawl page of the site. and simple status check
 //   ( standerd tags & dead link )
 exports.STD_CRAWL_TEST = {
-  ON_ERROR : this.NULL_ON_ERROR,
+//  ON_ERROR : this.NULL_ON_ERROR,
   STATUS   : this.DEFAULT_CHECK_STATUS,
   REDIRECT : {
     FILTER : this.DEFAULT_FILTER

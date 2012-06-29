@@ -3,6 +3,7 @@ var sys    = require('util');
 var fs     = require('fs');
 var path   = require('path');
 var common = require(__dirname + '/common.js');
+var serializer = require(__dirname + '/serializer.js');
 
 var fetch_queue_file;
 var fetch_queue_q;
@@ -35,11 +36,16 @@ exports.init = function() {
 // operator
 //---------------------------------
 exports.load = function () {
-  fetch_queue_q = JSON.parse(fs.readFileSync(fetch_queue_file));
+  try { 
+//    fetch_queue_q = JSON.parse(fs.readFileSync(fetch_queue_file));
+    fetch_queue_q = serializer.deserialize(fs.readFileSync(fetch_queue_file));
+  }catch(e){
+    // nothing to do
+  }
 }
 
-exports.push = function ( url , test , remark ) {
-  fetch_queue_q.push({URL:url,TEST:test,REMARK:remark});
+exports.push = function ( url , headers , test , referer ) {
+  fetch_queue_q.push({URL:url,TEST:test,REFERER:referer});
   save();
 }
 
@@ -59,7 +65,8 @@ exports.length = function () {
 
 function save () {
   if ( fetch_queue_q.length ) {
-    fs.writeFileSync(fetch_queue_file,JSON.stringify(fetch_queue_q));
+//    fs.writeFileSync(fetch_queue_file,JSON.stringify(fetch_queue_q,null,1));
+    fs.writeFileSync(fetch_queue_file,serializer.serialize(fetch_queue_q));
   }else{
     fs.unlinkSync(fetch_queue_file);
   }

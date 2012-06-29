@@ -52,7 +52,7 @@ try {
       $CONTENT_DRAWER->postAction();
       $CONTENT_DRAWER->prepareDraw();
       $CONTENT_DRAWER->drawPHeader('text/html');
-      Include 'wwwutils/core/frame.php';
+      Include Config::COCKATOO_ROOT.'wwwutils/core/frame.php';
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_PLAIN) === 0 ) {
       $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE,$FILES);
       $CONTENT_DRAWER->components();  

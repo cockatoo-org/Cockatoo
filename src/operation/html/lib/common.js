@@ -15,20 +15,6 @@ exports.mkdirp = function(dir){
     fs.mkdirSync(dir,'755');
   }
 }
-exports.padding = function (str,n,r){
-  var strlen = 0;
-  for( var c in str){
-    strlen += (escape(str[c]).length<4)?1:2;
-  }
-  if ( strlen < n ){
-    var p = n-strlen;
-    for ( var i = 0 ; i < p ; i++ ) {
-      if ( r ) 	str  = ' ' + str;
-      else      str += ' ';
-    }
-  }
-  return str;
-}
   
 /** Example
 var z = {
@@ -43,60 +29,110 @@ var z = {
   N : null
 };
 */
-exports.crawl_object = function ( data , callback , igns , path , done ) {
-  function is_callback( type ){
-    for ( var i in igns ){
-      if ( igns[i] === type ) {
-        return false;
+
+function crawl_object_impl( data , cbobj , path , done , parent ) {
+
+  var in_array = false;
+  if ( parent && parent.constructor === Array ){
+    in_array = true;
+  }
+
+  if ( data === undefined ) {
+    cbobj.cb_undefined(path,undefined,false,in_array,undefined)
+  } else if (data === null ) {
+    cbobj.cb_null(path,null,false,in_array,undefined)
+  } else if ( typeof(data) === 'object') {
+    var ref    = false;
+    var cyclic = false;
+    // Check reference objects
+    var objid = undefined;
+    for ( var no in done ) {
+      if ( done[no] === data ) { 
+	ref   = true;
+	objid = no;
+	break;
       }
     }
-    return true;
-  }
-  if ( igns === undefined )  igns = [];
-  if ( done === undefined )  done = [];
-  if ( path === undefined )  path = [];
-  if ( done.length === 0 ){
-    callback('',data,path,0); // root object
-    done.push(data);
-  }
-  for ( var i in data ){
-    path.push(i);
-    var type = typeof(data[i]);
-    if ( type === 'object') {
-      function check_done(){
-	for ( var no in done ) {
-	  if ( done[no] === data[i] ) { 
-	    if ( is_callback(type)){
-	      callback(i,data[i],path,no,true);
-	    }
-	    return false;
-	  }
-	}
-	return true;
+    if ( ! ref ) {
+      done.push(data);
+      objid = done.length;
+    }
+    // Check cyclic objects
+    for ( var no in path ) {
+      if ( objid === path[no][1] ){
+	cyclic = true;
       }
-      if ( ! check_done() ) {
-	path.pop(i);
-	continue;
-      }
-      done.push(data[i]);
-      var objid = done.length;
-      if ( is_callback(type)){
-	if ( callback(i,data[i],path,objid) ) {
-	  this.crawl_object ( data[i],callback,igns,path ,done );
+    }
+    if ( data.constructor === RegExp ) {
+      cbobj.cb_regexp(path,data,cyclic,in_array,objid);
+    }else if ( data.constructor === Date ) {
+      cbobj.cb_date(path,data,cyclic,in_array,objid);
+    }else if ( data.constructor === Array ) {
+      if ( cbobj.cb_array(path,data,cyclic,in_array,objid) ) {
+	for ( var i in data ){
+	  path.push([i,objid]);
+	  crawl_object_impl ( data[i],cbobj,path , done , data );
+	  path.pop();
 	}
-      }else{
-	this.crawl_object ( data[i],callback,igns,path ,done );
+	cbobj.cb_leave_array(path,data,cyclic,in_array,objid);
+      }
+    }else if ( data.constructor === Object ) {
+      if ( cbobj.cb_hash(path,data,cyclic,in_array,objid) ) {
+	for ( var i in data ){
+	  path.push([i,objid]);
+	  crawl_object_impl( data[i],cbobj,path , done , data );
+	  path.pop();
+	}
+	cbobj.cb_leave_hash(path,data,cyclic,in_array,objid);
       }
     }else{
-      if ( is_callback(type)){
-	callback(i,data[i],path,undefined);
+      if ( cbobj.cb_object(path,data,cyclic,in_array,objid) ) {
+	for ( var i in data ){
+	  path.push([i,objid]);
+	  crawl_object_impl ( data[i],cbobj,path , done , data );
+	  path.pop();
+	}
+	cbobj.cb_leave_object(path,data,cyclic,in_array,objid);
       }
     }
-    path.pop(i);
+  }else{
+    if ( typeof(data) === 'string' ) {
+      cbobj.cb_string(path,data,false,in_array,undefined)
+    }else if( typeof(data) === 'function' ) {
+      cbobj.cb_function(path,data,false,in_array,undefined)
+    }else{
+      cbobj.cb_other(path,data,false,in_array,undefined)
+    }
   }
+}
+exports.crawl_object = function ( data , cbobj ) {
+  function cb_nop(path,value,cyclic,in_array,objid){
+    return ! cyclic;
+  }
+  if ( cbobj.cb_undefined   === undefined )  cbobj.cb_undefined   = cb_nop;
+  if ( cbobj.cb_null        === undefined )  cbobj.cb_null        = cb_nop;
+  if ( cbobj.cb_string      === undefined )  cbobj.cb_string      = cb_nop;
+  if ( cbobj.cb_function    === undefined )  cbobj.cb_function    = cb_nop;
+  if ( cbobj.cb_other       === undefined )  cbobj.cb_other       = cb_nop;
+  if ( cbobj.cb_date        === undefined )  cbobj.cb_date        = cb_nop;
+  if ( cbobj.cb_regexp      === undefined )  cbobj.cb_regexp      = cb_nop;
+  if ( cbobj.cb_array       === undefined )  cbobj.cb_array       = cb_nop;
+  if ( cbobj.cb_hash        === undefined )  cbobj.cb_hash        = cb_nop;
+  if ( cbobj.cb_object      === undefined )  cbobj.cb_object      = cb_nop;
+  if ( cbobj.cb_leave_array === undefined )  cbobj.cb_leave_array = cb_nop;
+  if ( cbobj.cb_leave_hash  === undefined )  cbobj.cb_leave_hash  = cb_nop;
+  if ( cbobj.cb_leave_object=== undefined )  cbobj.cb_leave_object= cb_nop;
+
+  crawl_object_impl(data,cbobj,[],[],[],undefined);
 }
 
 // Extend string
 String.prototype.replaceAll = function (org, dest){  
   return this.split(org).join(dest);  
 }  
+
+String.prototype.reverse = function (){
+  return this.split('').reverse().join('')
+}
+
+

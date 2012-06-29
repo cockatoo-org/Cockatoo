@@ -21,7 +21,8 @@ var jsdom   = require('jsdom').jsdom;
 //----------------------------------------------
 // Definitions
 //----------------------------------------------
-var MEM_THRESHOLD = 100*1024*1024; // byte
+//var MEM_THRESHOLD = 100*1024*1024; // byte
+var MEM_THRESHOLD = 10*1024*1024; // byte
 var DATA_DIR = __dirname + '/data';
 
 
@@ -119,6 +120,7 @@ try {
 
 var stdtest = require( __dirname + '/lib/stdtest.js');
 
+
 var SETTING = {
   URL      : null,
   PROXY    : null,
@@ -142,6 +144,7 @@ SETTING.WAIT    =(WAIT===null)?    SETTING.WAIT    :WAIT;
 SETTING.TEST    =(STD===null)?     SETTING.TEST    :stdtest.STD_TEST;
 SETTING.TEST    =(CRAWL===null)?   SETTING.TEST    :stdtest.STD_CRAWL_TEST;
 SETTING.VERBOSE =(VERBOSE===null)? SETTING.VERBOSE :1;
+
 
 //---------------
 // Validate 
@@ -172,13 +175,17 @@ var C   = require( __dirname + '/lib/fetch_check.js').fetch_check(CFILE).init();
 var L   = require( __dirname + '/lib/fetch_logger.js').fetch_logger(LDIR).init(VERBOSE);
 var TERM_FLG = false; // signal flag
 
+
 //----------------------------------------------
 // Control process ( parent )
 //----------------------------------------------
 if ( ! WORKER ) { 
   var child_process  = require('child_process');
   var cmd = process.argv.shift();
-  process.argv.push('-W');
+
+  var child_argv = process.argv.concat();
+  child_argv.push('-W');
+
 
   process.on('SIGINT', function () {
     sys.puts('SIGINT Received !');
@@ -186,7 +193,7 @@ if ( ! WORKER ) {
   });
 
   function fork_worker(){
-    var worker = child_process.spawn(cmd,process.argv);
+    var worker = child_process.spawn(cmd,child_argv);
     worker.stdout.on('data',function(data){
       process.stdout.write(data);
     });
@@ -201,6 +208,7 @@ if ( ! WORKER ) {
     });
   }
   fork_worker();
+  child_argv.push('-R');
   return;
 }
 
@@ -282,6 +290,9 @@ return;
 // 
 //-----------------------------------
 function fetch_content(strurl,TEST,remark,callback) {
+  if ( TEST.ON_ERROR === undefined ) {
+    TEST.ON_ERROR = stdtest.NULL_ON_ERROR;
+  }
   C.change(strurl,'Fetching');
   log.trace(strurl,'TRY');
   var parsed = url.parse(strurl);
@@ -307,11 +318,11 @@ function fetch_content(strurl,TEST,remark,callback) {
     }
   }
 
-  log.debug('REQUEST : '+strurl,request,['function']);
+  log.debug('REQUEST : '+strurl,request);
 
   function do_filter ( pre, target , FILTER ) {
     for ( var i in FILTER.ERROR ) {
-      if ( FILTER.ERROR[i].test(target) ) {
+      if ( RegExp(FILTER.ERROR[i]).test(target) ) {
 	log.error(strurl,FILTER.ERROR[i],pre+' >BAD JUMP',target);
 	TEST.ON_ERROR(pre,strurl,FILTER.ERROR[i],pre+' >BAD JUMP',target);
 	return false;
@@ -319,14 +330,14 @@ function fetch_content(strurl,TEST,remark,callback) {
     }
     
     for ( var i in FILTER.IGNORE ) {
-      if ( FILTER.IGNORE[i].test(target) ) {
+      if ( RegExp(FILTER.IGNORE[i]).test(target) ) {
 	log.message(strurl,FILTER.IGNORE[i],pre+' >(ignore)',target);
 	return false;
       }
     }
     
     for ( var i in FILTER.FOLLOW ) {
-      if ( FILTER.FOLLOW[i].test(target) ) {
+      if ( RegExp(FILTER.FOLLOW[i]).test(target) ) {
 	return true;
       }
     }
@@ -346,171 +357,179 @@ function fetch_content(strurl,TEST,remark,callback) {
   });
   
   request.on('response',function(res){
-    log.status(strurl,res.statusCode,'STATUS');
-    C.change(strurl,res.statusCode);
-    L.status(strurl,res.statusCode);
-    L.header(strurl,res.headers);
-
-    if ( ! (res.statusCode in  TEST.STATUS) ){
-      log.error(strurl,res.statusCode,'BAD STATUS 1');
-      TEST.ON_ERROR('RESPONSE : ',strurl,res.statusCode,'BAD STATUS 1');
-      return;
-    }
-    if ( res.statusCode === 302 || res.statusCode === 301 ) {
-      var location = url.resolve(strurl,res.headers['location']);
-      log.trace(location,'LOCATION');
-      if ( strurl === location ) {
-	log.error(strurl,location,'CIRCULAR LOCATION');
-	TEST.ON_ERROR('REDIRECT',strurl,location,'CIRCULAR LOCATION');
+    try {
+      log.status(strurl,res.statusCode,'STATUS');
+      C.change(strurl,res.statusCode);
+      L.status(strurl,res.statusCode);
+      L.header(strurl,res.headers);
+      
+      if ( ! (res.statusCode in  TEST.STATUS) ){
+	log.error(strurl,res.statusCode,'BAD STATUS 1');
+	TEST.ON_ERROR('RESPONSE : ',strurl,res.statusCode,'BAD STATUS 1');
 	return;
       }
-      if ( do_filter('REDIRECT',location,TEST.REDIRECT.FILTER) ){
-	callback(location,TEST,strurl);
+      if ( res.statusCode === 302 || res.statusCode === 301 ) {
+	var location = url.resolve(strurl,res.headers['location']);
+	log.trace(location,'LOCATION');
+	if ( strurl === location ) {
+	  log.error(strurl,location,'CIRCULAR LOCATION');
+	  TEST.ON_ERROR('REDIRECT',strurl,location,'CIRCULAR LOCATION');
+	  return;
+	}
+	if ( do_filter('REDIRECT',location,TEST.REDIRECT.FILTER) ){
+	  callback(location,TEST,strurl);
+	  return;
+	}
 	return;
       }
-      return;
-    }
-    if ( TEST.CHECKS.length === 0 ){
-      log.ok(strurl,res.statusCode,'status ok');
-      return;
-    }
-    res.setEncoding('utf8');
-    var body = '';
-    res.on('data',function(chunk){
-      body = body + chunk;
-    });
-    res.on('end',function(){
-      L.body(strurl,body);
-      log.debug('RESPONSE:'+strurl,res,['function']);
+      if ( TEST.CHECKS.length === 0 ){
+	log.ok(strurl,res.statusCode,'status ok');
+	return;
+      }
+      res.setEncoding('utf8');
+      var body = '';
+      res.on('data',function(chunk){
+	body = body + chunk;
+      });
+      res.on('end',function(){
+	L.body(strurl,body);
+	log.debug('RESPONSE:'+strurl,res);
       // res.destroy(); // @@@ 
-      var content_type = res.headers['content-type'];
-      if ( ! /html/.test(content_type)  ) {
-	log.ok(strurl,content_type,'fetch ok');
-	return;
-      }
-      if ( ! body ) {
-	log.error(strurl,content_type,'NO BODY',res.statusCode);
-	TEST.ON_ERROR('BODY',strurl,content_type,'NO BODY',res.statusCode);
-	return;
-      }
+	var content_type = res.headers['content-type'];
+	if ( ! /html/.test(content_type)  ) {
+	  log.ok(strurl,content_type,'fetch ok');
+	  return;
+	}
+	if ( ! body ) {
+	  log.error(strurl,content_type,'NO BODY',res.statusCode);
+	  TEST.ON_ERROR('BODY',strurl,content_type,'NO BODY',res.statusCode);
+	  return;
+	}
       // The error that "TypeError: Cannot call method 'call' of undefined" often occurs. It's jsdom has some bug ? (conflecting body's script ?)
-      try {
-	body = '<html><body id="ROOT">'+body+'</body></html>';
-	var document = jsdom(body,null,{
-	  features:{
-	    FetchExternalResources : false,
-	    ProcessExternalResources : false,
-	      "MutationEvents"           : '2.0',
-	      "QuerySelector"            : false
-	  }
-	});
-	var window = document.createWindow();
+	try {
+	  body = '<html><body id="ROOT">'+body+'</body></html>';
+	  var document = jsdom(body,null,{
+	    features:{
+	      FetchExternalResources : false,
+	      ProcessExternalResources : false,
+		"MutationEvents"           : '2.0',
+		"QuerySelector"            : false
+	    }
+	  });
+	  var window = document.createWindow();
 //	document.cookie=res.headers['set-cookie'].toString();
-	jsdom.jQueryify(window, JQUERY, function (window, $) {
-	  try{
-	    function uniq( arr ) {
-	      var buf = {};
-	      return arr.filter(function (e){
-		if ( buf[e] ) {
-		  return false;
-		}
-		buf[e] = true;
-		return true;
-	      });
-	    }
-	    
-	    function uniq_links( elements, links ) {
-	      if ( ! links ){
-		links = [];
+	  jsdom.jQueryify(window, JQUERY, function (window, $) {
+	    try{
+	      function uniq( arr ) {
+		var buf = {};
+		return arr.filter(function (e){
+		  if ( buf[e] ) {
+		    return false;
+		  }
+		  buf[e] = true;
+		  return true;
+		});
 	      }
-	      var re = /(^[^#]+)#.*$/;
-	      elements.each( function(){
-		var href = $(this).attr('href');
-		if ( href ) {
-		  links.push(url.resolve(strurl,href).replace(re,"$1"));
+	      
+	      function uniq_links( elements, links ) {
+		if ( ! links ){
+		  links = [];
 		}
-		var src = $(this).attr('src');
-		if ( src ) {
-		  links.push(url.resolve(strurl,src).replace(re,"$1"));
-		}
-	      });
-	      return uniq(links).sort().reverse();
-	    }
-	    for( var i in TEST.CHECKS ) {
-	      try {
-		var CHECK = TEST.CHECKS[i];
-		if ( CHECK.METHOD == 'HOOK' ) {
-		  try { 
-		    var msg = CHECK.HOOK(TEST,strurl,remark,$('#ROOT > html'));
-		    if ( msg  ) {
-		      log.message(strurl,'HOOK','interrupt by hook',msg);
-		      return;
-		    }
-		  }catch(e){
-		    log.error(strurl,'','HOOK error',e.stack);
+		var re = /#.*$/;
+		elements.each( function(){
+		  var href = $(this).attr('href');
+		  if ( href ) {
+		    var link = href.replace(re,'');
+		    links.push(url.resolve(strurl,encodeURI(link)));
 		  }
-		  log.ok(strurl,remark,'callback');
-		}else if ( CHECK.METHOD == 'CRAWL' ) {
-		  log.ok(strurl,remark,'crawl ok');
-		  var links = [];
-		  for ( var s in CHECK.SELECTORS ) {
-		    links = uniq_links($('#ROOT > html').find(CHECK.SELECTORS[s]),links);
+		  var src = $(this).attr('src');
+		  if ( src ) {
+		    var link = src.replace(re,'');
+		    links.push(url.resolve(strurl,encodeURI(link)));
 		  }
-		  for ( var l in links ) {
-		    if ( do_filter('CRAWL',links[l],CHECK.FILTER )){
-		      callback(links[l],TEST,strurl);
+		});
+		return uniq(links).sort().reverse();
+	      }
+	      for( var i in TEST.CHECKS ) {
+		try {
+		  var CHECK = TEST.CHECKS[i];
+		  if ( CHECK.METHOD == 'HOOK' ) {
+		    try { 
+		      var msg = CHECK.HOOK(TEST,strurl,remark,$('#ROOT > html'));
+		      if ( msg  ) {
+			log.message(strurl,'HOOK','interrupt by hook',msg);
+			return;
+		      }
+		    }catch(e){
+		      log.error(strurl,'','HOOK error',e.stack);
 		    }
-		  }
-		} else {
-		  var elements = $('#ROOT > html').find(CHECK.SELECTOR);
- 		  log.debug('CHECK('+CHECK.METHOD+')',CHECK.SELECTOR); 
-		  if ( CHECK.METHOD == 'EXIST' ) {
-		    var size = elements.size();
-		    if ( size === 0 ) {
-		      throw [CHECK.METHOD,strurl,CHECK.SELECTOR,'ELEMENT NOT FOUND','(not found)'];
-		    }else {
-		      log.ok(strurl,CHECK.SELECTOR,'exist ok','');
+		    log.ok(strurl,remark,'callback');
+		  }else if ( CHECK.METHOD == 'CRAWL' ) {
+		    log.ok(strurl,remark,'crawl ok');
+		    var links = [];
+		    for ( var s in CHECK.SELECTORS ) {
+		      links = uniq_links($('#ROOT > html').find(CHECK.SELECTORS[s]),links);
 		    }
-		  }else if ( CHECK.METHOD == 'NOT_EXIST' ) {
-		    var size = elements.size();
-		    if ( size !== 0 ) {
-		      throw [CHECK.METHOD,strurl,CHECK.SELECTOR,'UNEXPECTED ELEMENT FOUND',{Actual:elements.html()}];
-		    }else {
-		      log.ok(strurl,CHECK.SELECTOR,'not exist ok','');
-		    }
-		  }else if ( CHECK.METHOD == 'TEXT' ) {
-		    var text = elements.text();
-		    if ( ! CHECK.EXPECTS.test(text) ) {
-		      throw [CHECK.METHOD,strurl,CHECK.SELECTOR,'TEXT UNMATCH',{Expects:CHECK.EXPECTS,Actual:text}];
-		    }else {
-		      log.ok(strurl,CHECK.SELECTOR,'text ok');
-		    }
-		  }else if ( CHECK.METHOD == 'LINK' ) {
-		    var links = uniq_links(elements);
 		    for ( var l in links ) {
-		      if ( do_filter('LINK',links[l],CHECK.FILTER )){
-			callback(links[l],CHECK.TEST,strurl);
+		      if ( do_filter('CRAWL',links[l],CHECK.FILTER )){
+			callback(links[l],TEST,strurl);
 		      }
 		    }
-		  }else{
-		    throw [CHECK.METHOD,strurl,CHECK.METHOD,'UNKNOWN CHECK',''];
+		  } else {
+		    var elements = $('#ROOT > html').find(CHECK.SELECTOR);
+ 		    log.debug('CHECK('+CHECK.METHOD+')',CHECK.SELECTOR); 
+		    if ( CHECK.METHOD == 'EXIST' ) {
+		      var size = elements.size();
+		      if ( size === 0 ) {
+			throw [CHECK.METHOD,strurl,CHECK.SELECTOR,'ELEMENT NOT FOUND','(not found)'];
+		      }else {
+			log.ok(strurl,CHECK.SELECTOR,'exist ok','');
+		      }
+		    }else if ( CHECK.METHOD == 'NOT_EXIST' ) {
+		      var size = elements.size();
+		      if ( size !== 0 ) {
+			throw [CHECK.METHOD,strurl,CHECK.SELECTOR,'UNEXPECTED ELEMENT FOUND',{Actual:elements.html()}];
+		      }else {
+			log.ok(strurl,CHECK.SELECTOR,'not exist ok','');
+		      }
+		    }else if ( CHECK.METHOD == 'TEXT' ) {
+		      var text = elements.text();
+		      if ( ! RegExp(CHECK.EXPECTS).test(text) ) {
+			throw [CHECK.METHOD,strurl,CHECK.SELECTOR,'TEXT UNMATCH',{Expects:CHECK.EXPECTS,Actual:text}];
+		      }else {
+			log.ok(strurl,CHECK.SELECTOR,'text ok');
+		      }
+		    }else if ( CHECK.METHOD == 'LINK' ) {
+		      var links = uniq_links(elements);
+		      for ( var l in links ) {
+			if ( do_filter('LINK',links[l],CHECK.FILTER )){
+			  callback(links[l],CHECK.TEST,strurl);
+			}
+		      }
+		    }else{
+		      throw [CHECK.METHOD,strurl,CHECK.METHOD,'UNKNOWN CHECK',''];
+		    }
 		  }
+		}catch(e){
+		  log.error(e[1],e[2],e[3],e[4]);
+		  TEST.ON_ERROR(e[0],e[1],e[2],e[3],e[4]);
 		}
-	      }catch(e){
-		log.error(e[1],e[2],e[3],e[4]);
-		TEST.ON_ERROR(e[0],e[1],e[2],e[3],e[4]);
 	      }
+	    }catch(e){
+	      log.error(strurl,'jQueryify','Fatal error',e.stack);
 	    }
-	  }catch(e){
-	    log.error(strurl,'jQueryify','Fatal error',e.stack);
-	  }
-	}); // jquery-1.4.4.js
-      }catch(e){
-	log.error(strurl,content_type,'INVALID HTML',e.stack);
-	TEST.ON_ERROR(CHECK.METHOD,strurl,content_type,'INVALID HTML',e);
-	return;
-      }
-    });
+	  }); // jquery-1.4.4.js
+	}catch(e){
+	  log.error(strurl,content_type,'INVALID HTML',e.stack);
+	  TEST.ON_ERROR(CHECK.METHOD,strurl,content_type,'INVALID HTML',e);
+	  return;
+	}
+      });
+    }catch(e){
+      log.error(strurl,res.statusCode,'INVALID HTTP',e.stack);
+      TEST.ON_ERROR("HTTP_ERROR",strurl,res.statusCode,'INVALID HTTP',e);
+      return;
+    }
   });
   
   setTimeout(function () {
@@ -530,10 +549,11 @@ export NODE_PATH=/usr/local/nodejs/lib/node_modules
 node htmlmon.js -u http://cockatoo.jp     -l 20
 node htmlmon.js -u http://cockatoo.jp -S  -l 15
 node htmlmon.js -u http://cockatoo.jp -C  -l 8
-node htmlmon.js -c ./conf_sample.js       -l 10
-node htmlmon.js -c ./conf_crawl_sample.js -l 10
+node htmlmon.js -c ./wiki_config.js       -l 10
+node htmlmon.js -c ./wiki_crawl_config.js -l 10
 */
 
 // Todo: @@@
+//  function
 //  set-cockiee
 //  post
