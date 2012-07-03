@@ -342,6 +342,10 @@ abstract class Beak {
   /**
    * Beak method definition
    */
+  const M_GET_RANGE  = 'getR';
+  /**
+   * Beak method definition
+   */
   const M_SET        = 'set';
   /**
    * Beak method definition
@@ -537,19 +541,25 @@ abstract class Beak {
    * craete collection
    *
    */
-  abstract public function createColQuery();
+  public function createColQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Get all collections name
    *
    *    Return Array(String) as collection-name ( call result() to get this)
    */
-  abstract public function listColQuery();
+  public function listColQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Get all keys containing the collection.
    *
    *    Return Array(String) as key-name ( call result() to get this)
    */
-  abstract public function listKeyQuery();
+  public function listKeyQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Set document data
    *
@@ -560,12 +570,16 @@ abstract class Beak {
    *  
    *    return Array keys ( call result() to get this)
    */
-  abstract public function setQuery();
+  public function setQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Set multi document datas
    *
    */
-  abstract public function setaQuery();
+  public function setaQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Get document data
    *
@@ -575,28 +589,43 @@ abstract class Beak {
    * Get multi document datas
    *
    */
-  abstract public function getaQuery();
+  public function getaQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
+  /**
+   * Range-get document datas
+   *
+   */
+  public function getrQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Remove document
    *
    */
-  abstract public function delQuery();
+  public function delQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Remove multi documents
    *
    *  Revision is not supported !!!
    */
-  abstract public function delaQuery();
+  public function delaQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * Move collection
    *
    */
-  abstract public function mvColQuery();
+  public function mvColQuery(){
+    throw new \Exception('Unsupported method ! :' . $this->method);
+  }
   /**
    * System use only
    *
    */
-  abstract public function sysQuery();
+  abstract function sysQuery();
   /**
    * Get operation results
    * 
@@ -843,6 +872,10 @@ class BeakController {
     }elseif( strcmp($beak->method,Beak::M_GET_ARRAY) === 0 ) {
       if ( ! $beak->cacheable or ! $this->pre_query_cache($beak) ) {
         $beak->getaQuery();
+      }
+    }elseif( strcmp($beak->method,Beak::M_GET_RANGE) === 0 ) {
+      if ( ! $beak->cacheable or ! $this->pre_query_cache($beak) ) {
+        $beak->getrQuery();
       }
     }elseif( strcmp($beak->method,Beak::M_SET) === 0 ) {
       $beak->setQuery();

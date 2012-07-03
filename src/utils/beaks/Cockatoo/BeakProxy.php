@@ -109,6 +109,14 @@ class BeakProxy extends Beak {
     $this->send();
   }
   /**
+   * T.B.D @@@
+   * 
+   * @see Action.php
+   */
+  public function getrQuery(){
+    $this->send();
+  }
+  /**
    * Get all collections name
    *  Async query
    *

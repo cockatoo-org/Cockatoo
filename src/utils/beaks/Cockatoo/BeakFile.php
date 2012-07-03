@@ -9,6 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
+require_once ('/usr/local/cockatoo/def.php');
 require_once (Config::COCKATOO_ROOT.'utils/beak.php');
 
 /**
@@ -76,7 +77,8 @@ class BeakFile extends Beak {
     if ( is_dir($path)){
       if ($dh = opendir($path)) {
         while (($file = readdir($dh)) !== false) {
-          if ( preg_match('@^\.\.?@',$file,$matches) != 0 ) { // @@@ svn
+          if ( preg_match('@^\.meta$@',$file,$matches) != 0 ) {
+          }elseif ( preg_match('@^\.\.?@',$file,$matches) != 0 ) {
             continue;
           }
           if ( $isKey ) {
@@ -202,6 +204,71 @@ class BeakFile extends Beak {
       return $data;
     }
     return null;
+  }
+  /**
+   * Range-get document datas
+   * 
+   * @see Action.php
+   */
+  public function getrQuery() {
+    $this->ret  = null;
+    $queries = array();
+    foreach ( $this->arg as $key => $conds ) {
+      if ( $key === Beak::Q_UNIQUE_INDEX ) {
+        $idata = $this->listDir($this->collection_path,'',true);
+        $idata = array_combine($idata,array_map(function($n){return array($n);},$idata));
+      }else{
+        $idata = $this->getIndex($key);
+      }
+      if ( $idata ) {
+        foreach ( $idata as $v => $us ){
+          if ( ! count($us) ){
+            continue;
+          }
+
+          $hit = true;
+          foreach($conds as $op => $opr){
+            if      ( $op === '$gt' ) {
+              if ( $opr < $v ) {
+                continue;
+              }
+              $hit = false;
+              break;
+            }elseif ( $op === '$lt' ) {
+              if ( $opr > $v ) {
+                continue;
+              }
+              $hit = false;
+              break;
+            }elseif ( $op === '$gte' ) {
+              if ( $opr <= $v ) {
+                continue;
+              }
+              $hit = false;
+              break;
+            }elseif ( $op === '$lte' ) {
+              if ( $opr >= $v ) {
+                continue;
+              }
+              $hit = false;
+              break;
+            }
+          }
+          if ( $hit ) {
+            $queries = array_merge($queries,$us);
+          }
+        }
+      }
+    }
+    if ( $queries ) {
+      $this->ret = array();
+      foreach($queries as $path){
+        $data = $this->getDoc($this->path_gen($path));
+        if ( $data !== null ) {
+          $this->ret[$path] = $data;
+        }
+      }
+    }
   }
   /**
    * Get multi document datas

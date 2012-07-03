@@ -18,7 +18,7 @@ class PagespeedAction extends BeaconAction {
     return json_decode($session[\Cockatoo\Def::SESSION_KEY_POST]['content'],1);
   }
   function form_beacon($beacon){
-    $beacon['u']=self::urlencode($beacon['pageStats']['initialUrl']);
+    $beacon['u']=self::urlencode($beacon['pageStats']['url']);
     foreach($beacon['rules'] as $i => $k){
       $beacon['rules'][$i]['@warnings'] = $beacon['rules'][$i]['warnings'];
       unset($beacon['rules'][$i]['warnings']);

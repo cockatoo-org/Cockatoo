@@ -95,6 +95,27 @@ class BeakMongo extends Beak {
     return null;
   }
 
+  public function getrQueryImpl($mongo,$mongodb,$mongocollection) {
+    if ( $mongocollection ) {
+      $ret = array();
+      foreach ( $this->arg as $key => $cond ) {
+        $query[$key] = $cond;
+      }
+      $this->mongocursor = $mongocollection->find($query,$this->columns);
+      if ( $this->mongocursor ) {
+        $this->ret = array();
+        while ( $this->mongocursor->hasNext() ) {
+          $data = $this->mongocursor->getNext();
+          if ( $data[Beak::ATTR_BIN] ) {
+            self::decode($data);
+          }
+          $ret [$data[Beak::Q_UNIQUE_INDEX]]= $data;
+        }
+      }
+      return $ret;
+    }
+    return null;
+  }
   public function getaQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
       $ret = array();
@@ -268,6 +289,13 @@ class BeakMongo extends Beak {
       return;
     }
     $this->ret = $this->mongoAcc->mongoProc($this,'getaQueryImpl');
+  }
+  public function getrQuery() {
+    if ( ! $this->mongoAcc ) {
+      Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unable to get $this->mongoAcc ( no connection )');
+      return;
+    }
+    $this->ret = $this->mongoAcc->mongoProc($this,'getrQueryImpl');
   }
   public function getQuery() {
     if ( ! $this->mongoAcc ) {

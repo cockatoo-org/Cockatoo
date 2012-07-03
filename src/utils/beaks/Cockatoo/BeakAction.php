@@ -98,6 +98,14 @@ class BeakAction extends Beak {
     $this->runAction();
   }
   /**
+   * Not necessary to implement
+   * 
+   * @see Action.php
+   */
+  public function getrQuery(){
+    $this->runAction();
+  }
+  /**
    * Do action
    * 
    * @see Action.php
