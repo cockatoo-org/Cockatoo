@@ -112,7 +112,6 @@ function build_php_ext {
     run eval  ~/.capkg/config/capkg.sh generate -p php${VERSION}-${EXT}  -i /usr/local -s root_${EXT}/usr/local/${NAME} ${CAPKCF_OPTIONS}
 }
 build_php
-exit 1
 build_php_ext bcmath
 build_php_ext calendar
 build_php_ext intl
@@ -120,6 +119,7 @@ build_php_ext sysvmsg
 build_php_ext sysvsem
 build_php_ext sysvshm --enable-sysvshm
 build_php_ext zip
+build_php_ext zlib
 # You can chose.
 # --with-qdbm 
 # --with-gdbm 
