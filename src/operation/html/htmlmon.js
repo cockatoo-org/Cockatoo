@@ -66,7 +66,7 @@ function help(a){
 }
 
 try {
-  opt.setopt('hl:p:s:u:w:t:c:j:SCRWV',process.argv);
+  opt.setopt('hl:p:s:u:w:t:c:j:p:SCRWV',process.argv);
   opt.getopt(function ( o , p ){
     switch (o) {
       case 'h':
