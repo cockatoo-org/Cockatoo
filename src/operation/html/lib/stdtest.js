@@ -25,11 +25,18 @@ exports.DEFAULT_CHECK_STATUS =  {
     200:true,201:true,202:true,203:true,204:true,205:true,206:true,207:true,208:true,226:true
 };
 
-exports.DEFAULT_FILTER = {
+exports.DEFAULT_FILTER_INNER = {
   ERROR  : [],
   IGNORE : [],
   FOLLOW : [],
   INNER_DOMAIN : true
+}
+
+exports.DEFAULT_FILTER = {
+  ERROR  : [],
+  IGNORE : [],
+  FOLLOW : ['https?://'],
+  INNER_DOMAIN : false
 }
 
 
@@ -43,7 +50,7 @@ exports.STATUS_TEST = {
   ON_ERROR : this.NULL_ON_ERROR,
   STATUS   : this.DEFAULT_CHECK_STATUS,
   REDIRECT : {
-    FILTER : this.DEFAULT_FILTER
+    FILTER : this.DEFAULT_FILTER_INNER
   },
   CHECKS   : []
 };
@@ -56,7 +63,7 @@ exports.STD_TEST = {
 //  ON_ERROR : 'this.NULL_ON_ERROR',
   STATUS   : this.DEFAULT_CHECK_STATUS,
   REDIRECT : {
-    FILTER : this.DEFAULT_FILTER
+    FILTER : this.DEFAULT_FILTER_INNER
   },
   CHECKS   :[{ // requiring <title>
     METHOD   : 'EXIST',
@@ -68,11 +75,11 @@ exports.STD_TEST = {
     METHOD   : 'TEXT',
     SELECTOR : 'title',
     EXPECTS  : '.'
-  },{          // status check with <a href="??">
-    METHOD   : 'LINK',
-    SELECTOR : 'a',
-    FILTER   : this.DEFAULT_FILTER,
-    TEST     : this.STATUS_TEST
+//  },{          // status check with <a href="??">
+//    METHOD   : 'LINK',
+//    SELECTOR : 'a',
+//    FILTER   : this.DEFAULT_FILTER_INNER,
+//    TEST     : this.STATUS_TEST
   },{          // status check with <link href="??">
     METHOD   : 'LINK',
     SELECTOR : 'link',
@@ -98,11 +105,11 @@ exports.STD_CRAWL_TEST = {
 //  ON_ERROR : this.NULL_ON_ERROR,
   STATUS   : this.DEFAULT_CHECK_STATUS,
   REDIRECT : {
-    FILTER : this.DEFAULT_FILTER
+    FILTER : this.DEFAULT_FILTER_INNER
   },
   CHECKS   :[{
     METHOD   : 'CRAWL',
-    SELECTORS: ['script','link','img','a'],
-    FILTER   : this.DEFAULT_FILTER
+    SELECTORS: ['a'],
+    FILTER   : this.DEFAULT_FILTER_INNER
   }]
 }

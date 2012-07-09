@@ -29,7 +29,7 @@ exports.init = function() {
     sys.puts(e.stack);
     process.exit(1); // fatal
   }
-  fetch_list_c = {};
+  fetch_list_c = {'_FETCHING_':0};
   return this;
 }
 
@@ -37,7 +37,6 @@ exports.init = function() {
 // operator
 //---------------------------------
 exports.load = function () {
-//  fetch_list_c = JSON.parse(fs.readFileSync(fetch_list_file));
   fetch_list_c = serializer.deserialize(fs.readFileSync(fetch_list_file));
 }
 
@@ -51,12 +50,24 @@ exports.check = function (url,status) {
 
 exports.change = function (url,status) {
   fetch_list_c[url] = status;
-//  fs.writeFileSync(fetch_list_file,JSON.stringify(fetch_list_c,null,1));
   fs.writeFileSync(fetch_list_file,serializer.serialize(fetch_list_c));
 }
 
+exports.status_code = function (url,status) {
+  fetch_list_c['_FETCHING_']--;
+  this.change(url,status);
+}
+
+exports.start_fetching = function (url) {
+  fetch_list_c['_FETCHING_']++;
+  this.change(url,'Fetching');
+}
+exports.fetching_count = function () {
+  return fetch_list_c['_FETCHING_'];
+}
 exports.timeout = function (url) {
   if ( typeof(fetch_list_c[url]) != 'number' ){
+    fetch_list_c['_FETCHING_']--;
     this.change(url,'TIMEOUT');
     return true;
   }

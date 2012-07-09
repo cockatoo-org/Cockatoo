@@ -21,8 +21,8 @@ var jsdom   = require('jsdom').jsdom;
 //----------------------------------------------
 // Definitions
 //----------------------------------------------
-//var MEM_THRESHOLD = 100*1024*1024; // byte
-var MEM_THRESHOLD = 10*1024*1024; // byte
+var MEM_THRESHOLD = 100*1024*1024; // byte
+//var MEM_THRESHOLD = 10*1024*1024; // byte
 var DATA_DIR = __dirname + '/data';
 
 
@@ -42,11 +42,12 @@ var JQUERY  = 'jquery-1.4.4.js'
 var RESUME  = null;
 var WORKER  = null;
 var VERBOSE = null;
+var PARALLEL= 1;
 
 function help(a){
   sys.puts('Usage:');
-  sys.puts('   node htmlcheck.js -u <url>       [-p <proxy>] [-l loglv] [-j <jquery>]');
-  sys.puts('   node htmlcheck.js -c <conf-file> [-p <proxy>] [-l loglv] [-j <jquery>]');
+  sys.puts('   node htmlmon.js -u <url>       [-p <proxy>] [-l loglv] [-q <jquery>]');
+  sys.puts('   node htmlmon.js -c <conf-file> [-p <proxy>] [-l loglv] [-q <jquery>]');
   sys.puts('Options:');
   sys.puts('   -l <loglv>     : Specify the loglv from 0 to 20 ( 6 is defalut )');
   sys.puts('   -p <proxy>     : Specify the http-proxy-url ( for example -p http://proxy.example.com:8080 )');
@@ -57,7 +58,8 @@ function help(a){
   sys.puts('   -C             : Crawl test mode');
   sys.puts('   -u <url>       : Specify the target-url ');
   sys.puts('   -c <conf-file> : Specify the config file path');
-  sys.puts('   -j <jquery>    : Specify the jquery file ( jquery-1.4.4.js is default )');
+  sys.puts('   -q <jquery>    : Specify the jquery file ( jquery-1.4.4.js is default )');
+  sys.puts('   -j <number>    : Specify the number of the parallel download ( 1 is default )');
   sys.puts('   -R             : Resume mode. if you want to resume prior WATCH is interrupted by anything.');
   sys.puts('   -V             : Verbose log if you want to preserve all contents .');
   process.exit(a);
@@ -97,8 +99,11 @@ try {
       case 'c':
       CONF = ''+p;
       break;
-      case 'j':
+      case 'q':
       JQUERY = ''+p;
+      break;
+      case 'j':
+      PARALLEL = p;
       break;
       case 'R':
       RESUME = 1;
@@ -128,7 +133,8 @@ var SETTING = {
   TIMEOUT  : 5000,
   WAIT     : 1000,
   TEST     : stdtest.STATUS_TEST,
-  VERBOSE  : null
+  VERBOSE  : null,
+  PARALLEL : 1,
 }
 
 if ( CONF ) {
@@ -144,6 +150,7 @@ SETTING.WAIT    =(WAIT===null)?    SETTING.WAIT    :WAIT;
 SETTING.TEST    =(STD===null)?     SETTING.TEST    :stdtest.STD_TEST;
 SETTING.TEST    =(CRAWL===null)?   SETTING.TEST    :stdtest.STD_CRAWL_TEST;
 SETTING.VERBOSE =(VERBOSE===null)? SETTING.VERBOSE :1;
+SETTING.PARALLEL=(PARALLEL===null)? SETTING.PARALLEL :PARALLEL;
 
 
 //---------------
@@ -165,13 +172,15 @@ common.mkdirp(DATA_DIR);
 var md5sum = crypto.createHash('md5');
 SETTING.TEST_NAME = (SETTING.TEST_NAME)? SETTING.TEST_NAME :md5sum.update(JSON.stringify(SETTING)).digest('hex');
 var QFILE = DATA_DIR + '/' + SETTING.TEST_NAME + '.q';
+var FFILE = DATA_DIR + '/' + SETTING.TEST_NAME + '.f';
 var CFILE = DATA_DIR + '/' + SETTING.TEST_NAME + '.c';
 var LOG   = DATA_DIR + '/' + SETTING.TEST_NAME + '.log';
 var LDIR  = DATA_DIR + '/' + SETTING.TEST_NAME;
 
 var log = require( __dirname + '/lib/log.js').log(LOG,LOGLV).init();
 var Q   = require( __dirname + '/lib/fetch_queue.js').fetch_queue(QFILE).init();
-var C   = require( __dirname + '/lib/fetch_check.js').fetch_check(CFILE).init();
+var F   = require( __dirname + '/lib/fetch_list.js').fetch_list(FFILE).init();
+var C   = require( __dirname + '/lib/fetch_cookie.js').fetch_cookie(CFILE).init();
 var L   = require( __dirname + '/lib/fetch_logger.js').fetch_logger(LDIR).init(VERBOSE);
 var TERM_FLG = false; // signal flag
 
@@ -223,6 +232,7 @@ process.on('SIGINT', function () {
 // Resume mode
 if ( RESUME ) {
   Q.load();
+  F.load();
   C.load();
   log.echo(SETTING.URL,'=== CONTINUE ===',SETTING.TEST_NAME);
 }else{
@@ -231,48 +241,62 @@ if ( RESUME ) {
   }catch(e){
   }
   try { 
+    fs.unlinkSync(FFILE);
+  }catch(e){
+  }
+  try { 
     fs.unlinkSync(CFILE);
   }catch(e){
   }
-  Q.push(SETTING.URL,SETTING.TEST,'-ROOT-');
+  Q.push(SETTING.URL,undefined,SETTING.TEST,undefined);
   log.echo(SETTING.URL,'=== START ===',SETTING.TEST_NAME);
 }
 
 //---------------
 // Fetch loop
 try {
-  log.echo('<URL>','<VAL>','<MSG>','<REMARK>');
-  function add_queue ( url , test , remark ) {
+  log.echo('<URL>','<VAL>','<MSG>','<REFERER>');
+  function add_queue ( url , resh , test , referer ) {
     try{
-      c = C.check(url,'Queuing');
+      c = F.check(url,'Queuing');
       if ( c ) {
 	log.message(url,c,'skip queuing');
 	return;
       }
-      Q.push(url,test,remark);
+      Q.push(url,undefined,test,referer); // @@@
+      setTimeout(loop,SETTING.WAIT); // Wait for fetching
     }catch(e){
       log.error('=======================','LOOP','catch',e.stack);
     }
   }
   function loop (){
     try {
-      if ( Q.length() ) {
-	q = Q.pop();
-	fetch_content(q.URL,q.TEST,q.REMARK,add_queue);
-	var m = process.memoryUsage();
-	log.echo(q.URL,Math.floor(m.heapUsed/(1024*1024)*100)/100 + ' / ' + Math.floor(m.heapTotal/(1024*1024)*100)/100 + ' (MB)','Q:' + Q.length());
-	if (  TERM_FLG  || m.heapUsed >  MEM_THRESHOLD ) {
-	  setTimeout(function(){
-	    log.echo('=== Interrupt ===',m.heapUsed + ' > ' + MEM_THRESHOLD,SETTING.TEST_NAME);
-	    process.exit(2);
-	  },SETTING.TIMEOUT);
-	} else {
-	  if ( Q.length() ) {
-	    setTimeout(loop,SETTING.WAIT);
-	  }else {
-	    setTimeout(loop,SETTING.TIMEOUT);
-	  }
+      // memory check
+      var m = process.memoryUsage();
+      if (  TERM_FLG  || m.heapUsed >  MEM_THRESHOLD ) {
+	setTimeout(function(){
+	  log.echo('=== Interrupt ===',m.heapUsed + ' > ' + MEM_THRESHOLD,SETTING.TEST_NAME);
+	  process.exit(2);
+	},SETTING.TIMEOUT);
+	return;
+      }
+      if ( F.fetching_count() < SETTING.PARALLEL ){
+	if ( Q.length() ) {
+//log.error('=== @@@ POP ===', F.fetching_count());
+	  q = Q.pop();
+	  log.echo(q.URL,Math.floor(m.heapUsed/(1024*1024)*100)/100 + ' / ' + Math.floor(m.heapTotal/(1024*1024)*100)/100 + ' (MB)','Q:' + Q.length() + '  F:' + F.fetching_count());
+	  fetch_content(q.URL,q.HEADERS,q.TEST,q.REFERER,add_queue);
+	  loop();
+//	}else if ( F.fetching_count() ){
+//log.error('=== @@@ WAIT ===', F.fetching_count());
+//	  setTimeout(loop,SETTING.WAIT); // Wait for fetching
+//	}else{
+	  // Last ! Nothing to do.
+//log.error('=== @@@ LAST ===', F.fetching_count());
 	}
+      }else{
+//log.error('=== @@@ BUSY ===', F.fetching_count());
+	setTimeout(loop,SETTING.WAIT); // Busy ! See you next.. 
       }
 //    log.echo(SETTING.URL,'Normal finished ',' ===== ',' ===== ');
     }catch(e){
@@ -289,14 +313,48 @@ return;
 //-----------------------------------
 // 
 //-----------------------------------
-function fetch_content(strurl,TEST,remark,callback) {
+function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
+  var request = null;
+
+  var TO = setTimeout(function () {
+    if ( request ) {
+      request.abort();
+    }
+    if ( F.timeout(strurl) ) {
+      log.error(strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
+      TEST.ON_ERROR('TIMEOUT',strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
+    }
+  },SETTING.TIMEOUT);
+
+  var parsed = url.parse(strurl);
   if ( TEST.ON_ERROR === undefined ) {
     TEST.ON_ERROR = stdtest.NULL_ON_ERROR;
   }
-  C.change(strurl,'Fetching');
+  if ( reqHeaders === undefined ) {
+    reqHeaders = {};
+  }
+  reqHeaders['Pragma']        = 'no-cache';
+  reqHeaders['Cache-Control'] = 'no-cache';
+  if ( ! reqHeaders['Accept'] ) {
+    reqHeaders['Accept']        = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
+  }
+  if ( ! reqHeaders['User-Agent'] ) {
+    reqHeaders['User-Agent']    = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+  }
+  if ( ! reqHeaders['Accept-Language'] ) {
+    reqHeaders['Accept-Language'] = 'ja,en-us;q=0.7,en;q=0.3';
+  }
+  // @@@ (use cookie flg ... )
+  var cookie = C.get(parsed.protocol,parsed.hostname,parsed.path);
+  if ( cookie ) {
+    reqHeaders['Cookie'] = (reqHeaders['Cookie']?reqHeaders['Cookie']:'') + cookie;
+  }
+  if ( referer ){
+    reqHeaders['Referer'] = referer;
+  }
+  F.start_fetching(strurl);
   log.trace(strurl,'TRY');
-  var parsed = url.parse(strurl);
-  var request = null;
+
   if ( parsed.protocol === 'https:' ) {
     if ( SETTING.SSLPROXY ) {
       var px = /([^:]+):(\d+)/. exec(SETTING.SSLPROXY);
@@ -304,21 +362,23 @@ function fetch_content(strurl,TEST,remark,callback) {
 //      request = https.request({'host':parsed.host,'path':path,'method':'GET'});
 //      request.connection = proxy.connection;
     }else{
-      request = https.request({'host':parsed.host,'path':path,'method':'GET'});
+      var path = parsed.pathname+((parsed.search)?parsed.search:'')
+      log.trace('REQUEST GET: (' + parsed.hostname+(parsed.port?':'+parsed.port:'')+')  : ' + path,reqHeaders);
+      request = https.request({'host':parsed.hostname,'port':parsed.port,'path':path,'method':'GET','headers':reqHeaders});
     }
   }else {
     if ( SETTING.PROXY ) {
       var px = /([^:]+):(\d+)/. exec(SETTING.PROXY);
-      log.debug('PROXY','GET: (' + px[1]+ ':'+px[2]+')  : ' + strurl);
+      log.trace('PROXY GET: (' + px[1]+ ':'+px[2]+')  : ' + strurl , reqHeaders);
       request = http.request({'host':px[1],'port':px[2],'path':strurl,'method':'GET'});
     } else {
       var path = parsed.pathname+((parsed.search)?parsed.search:'')
-      log.debug('REQUEST','GET: (' + parsed.host+ ')  : ' + path);
-      request = http.request({'host':parsed.host,'path':path,'method':'GET'});
+      log.trace('REQUEST GET: (' + parsed.hostname+(parsed.port?':'+parsed.port:'')+')  : ' + path,reqHeaders);
+      request = http.request({'host':parsed.hostname,'port':parsed.port,'path':path,'method':'GET','headers':reqHeaders});
     }
   }
 
-  log.debug('REQUEST : '+strurl,request);
+//  log.debug('REQUEST : '+strurl,request);
 
   function do_filter ( pre, target , FILTER ) {
     for ( var i in FILTER.ERROR ) {
@@ -359,31 +419,38 @@ function fetch_content(strurl,TEST,remark,callback) {
   request.on('response',function(res){
     try {
       log.status(strurl,res.statusCode,'STATUS');
-      C.change(strurl,res.statusCode);
+      F.status_code(strurl,res.statusCode);
       L.status(strurl,res.statusCode);
       L.header(strurl,res.headers);
       
       if ( ! (res.statusCode in  TEST.STATUS) ){
 	log.error(strurl,res.statusCode,'BAD STATUS 1');
 	TEST.ON_ERROR('RESPONSE : ',strurl,res.statusCode,'BAD STATUS 1');
+	clearTimeout(TO);
 	return;
       }
+      C.store(parsed.hostname,res.headers['set-cookie']);
+
       if ( res.statusCode === 302 || res.statusCode === 301 ) {
 	var location = url.resolve(strurl,res.headers['location']);
 	log.trace(location,'LOCATION');
 	if ( strurl === location ) {
 	  log.error(strurl,location,'CIRCULAR LOCATION');
 	  TEST.ON_ERROR('REDIRECT',strurl,location,'CIRCULAR LOCATION');
+	  clearTimeout(TO);
 	  return;
 	}
 	if ( do_filter('REDIRECT',location,TEST.REDIRECT.FILTER) ){
-	  callback(location,TEST,strurl);
+	  callback(location,res.headers,TEST,strurl);
+	  clearTimeout(TO);
 	  return;
 	}
+	clearTimeout(TO);
 	return;
       }
       if ( TEST.CHECKS.length === 0 ){
 	log.ok(strurl,res.statusCode,'status ok');
+	clearTimeout(TO);
 	return;
       }
       res.setEncoding('utf8');
@@ -398,14 +465,16 @@ function fetch_content(strurl,TEST,remark,callback) {
 	var content_type = res.headers['content-type'];
 	if ( ! /html/.test(content_type)  ) {
 	  log.ok(strurl,content_type,'fetch ok');
+	  clearTimeout(TO);
 	  return;
 	}
 	if ( ! body ) {
 	  log.error(strurl,content_type,'NO BODY',res.statusCode);
 	  TEST.ON_ERROR('BODY',strurl,content_type,'NO BODY',res.statusCode);
+	  clearTimeout(TO);
 	  return;
 	}
-      // The error that "TypeError: Cannot call method 'call' of undefined" often occurs. It's jsdom has some bug ? (conflecting body's script ?)
+      // The error that "TypeError: Cannot call method 'call' of undefined" often occurs. It's jsdom has some bug ? ( conflecting body's script ? 
 	try {
 	  body = '<html><body id="ROOT">'+body+'</body></html>';
 	  var document = jsdom(body,null,{
@@ -455,24 +524,25 @@ function fetch_content(strurl,TEST,remark,callback) {
 		  var CHECK = TEST.CHECKS[i];
 		  if ( CHECK.METHOD == 'HOOK' ) {
 		    try { 
-		      var msg = CHECK.HOOK(TEST,strurl,remark,$('#ROOT > html'));
+		      var msg = CHECK.HOOK(TEST,strurl,referer,$('#ROOT > html'));
 		      if ( msg  ) {
 			log.message(strurl,'HOOK','interrupt by hook',msg);
+			clearTimeout(TO);
 			return;
 		      }
 		    }catch(e){
 		      log.error(strurl,'','HOOK error',e.stack);
 		    }
-		    log.ok(strurl,remark,'callback');
+		    log.ok(strurl,referer,'callback');
 		  }else if ( CHECK.METHOD == 'CRAWL' ) {
-		    log.ok(strurl,remark,'crawl ok');
+		    log.ok(strurl,referer,'crawl ok');
 		    var links = [];
 		    for ( var s in CHECK.SELECTORS ) {
 		      links = uniq_links($('#ROOT > html').find(CHECK.SELECTORS[s]),links);
 		    }
 		    for ( var l in links ) {
 		      if ( do_filter('CRAWL',links[l],CHECK.FILTER )){
-			callback(links[l],TEST,strurl);
+			callback(links[l],res.headers,TEST,strurl);
 		      }
 		    }
 		  } else {
@@ -503,7 +573,7 @@ function fetch_content(strurl,TEST,remark,callback) {
 		      var links = uniq_links(elements);
 		      for ( var l in links ) {
 			if ( do_filter('LINK',links[l],CHECK.FILTER )){
-			  callback(links[l],CHECK.TEST,strurl);
+			  callback(links[l],res.headers,CHECK.TEST,strurl);
 			}
 		      }
 		    }else{
@@ -522,25 +592,17 @@ function fetch_content(strurl,TEST,remark,callback) {
 	}catch(e){
 	  log.error(strurl,content_type,'INVALID HTML',e.stack);
 	  TEST.ON_ERROR(CHECK.METHOD,strurl,content_type,'INVALID HTML',e);
+	  clearTimeout(TO);
 	  return;
 	}
       });
     }catch(e){
       log.error(strurl,res.statusCode,'INVALID HTTP',e.stack);
       TEST.ON_ERROR("HTTP_ERROR",strurl,res.statusCode,'INVALID HTTP',e);
+      clearTimeout(TO);
       return;
     }
   });
-  
-  setTimeout(function () {
-    if ( request ) {
-      request.abort();
-    }
-    if ( C.timeout(strurl) ) {
-      log.error(strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
-      TEST.ON_ERROR('TIMEOUT',strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
-    }
-  },SETTING.TIMEOUT);
   request.end();
 }
 
