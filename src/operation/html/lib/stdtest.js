@@ -47,12 +47,24 @@ exports.DEFAULT_FILTER = {
 //---------------
 // Simple status check
 exports.STATUS_TEST = {
-  ON_ERROR : this.NULL_ON_ERROR,
-  STATUS   : this.DEFAULT_CHECK_STATUS,
-  REDIRECT : {
-    FILTER : this.DEFAULT_FILTER_INNER
+  ON_ERROR   : this.NULL_ON_ERROR,
+  STATUS     : this.DEFAULT_CHECK_STATUS,
+  FETCH_BODY : false,
+  REDIRECT   : {
+    FILTER   : this.DEFAULT_FILTER_INNER
   },
-  CHECKS   : []
+  CHECKS     : []
+};
+
+// Simple fetch check
+exports.FETCH_TEST = {
+  ON_ERROR   : this.NULL_ON_ERROR,
+  STATUS     : this.DEFAULT_CHECK_STATUS,
+  FETCH_BODY : true,
+  REDIRECT   : {
+    FILTER   : this.DEFAULT_FILTER_INNER
+  },
+  CHECKS     : []
 };
 
 
@@ -61,9 +73,10 @@ exports.STATUS_TEST = {
 //   ( standerd tags & dead link )
 exports.STD_TEST = {
 //  ON_ERROR : 'this.NULL_ON_ERROR',
-  STATUS   : this.DEFAULT_CHECK_STATUS,
-  REDIRECT : {
-    FILTER : this.DEFAULT_FILTER_INNER
+  STATUS     : this.DEFAULT_CHECK_STATUS,
+  FETCH_BODY : true,
+  REDIRECT   : {
+    FILTER   : this.DEFAULT_FILTER_INNER
   },
   CHECKS   :[{ // requiring <title>
     METHOD   : 'EXIST',
@@ -75,6 +88,16 @@ exports.STD_TEST = {
     METHOD   : 'TEXT',
     SELECTOR : 'title',
     EXPECTS  : '.'
+  },{          // status check with <frame src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'frame',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // status check with <iframe src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'iframe',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
 //  },{          // status check with <a href="??">
 //    METHOD   : 'LINK',
 //    SELECTOR : 'a',
@@ -95,6 +118,55 @@ exports.STD_TEST = {
     SELECTOR : 'script',
     FILTER   : this.DEFAULT_FILTER,
     TEST     : this.STATUS_TEST
+  }]
+};
+
+
+//---------------
+// Html checks
+//   ( standerd tags & dead link )
+exports.FSTD_TEST = {
+//  ON_ERROR : 'this.NULL_ON_ERROR',
+  STATUS     : this.DEFAULT_CHECK_STATUS,
+  FETCH_BODY : true,
+  REDIRECT   : {
+    FILTER   : this.DEFAULT_FILTER_INNER
+  },
+  CHECKS   :[{ // requiring <title>
+    METHOD   : 'EXIST',
+    SELECTOR : 'title',
+  },{          // requiring <body>
+    METHOD   : 'EXIST',
+    SELECTOR : 'body',
+  },{          // refulsing empty <title>
+    METHOD   : 'TEXT',
+    SELECTOR : 'title',
+    EXPECTS  : '.'
+  },{          // fetch check with <frame src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'frame',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <iframe src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'iframe',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <link href="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'link',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <img src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'img',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <script src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'script',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
   }]
 };
 

@@ -1,4 +1,4 @@
-var sys = require('util');
+//var sys = require('util');
 var common = require(__dirname + '/common.js');
 
 exports.serializer = function() {
@@ -103,5 +103,5 @@ exports.deserialize = function(str){
 }
 
 exports.dump = function(data){
-  sys.puts(this.serialize(data));
+  process.stderr.write(this.serialize(data)+'\n');
 }

@@ -2,6 +2,9 @@
 // Install these packages.
 //   npm install getopt
 //   npm install jsdom
+process.eputs = function(str){
+  process.stderr.write(str+'\n');
+}
 
 //----------------------------------------------
 // Node modules
@@ -25,7 +28,6 @@ var MEM_THRESHOLD = 100*1024*1024; // byte
 //var MEM_THRESHOLD = 10*1024*1024; // byte
 var DATA_DIR = __dirname + '/data';
 
-
 //----------------------------------------------
 // Options
 //----------------------------------------------
@@ -35,7 +37,6 @@ var SSLPROXY= null;
 var TIMEOUT = null;
 var WAIT    = null;
 var STD     = null;
-var CRAWL   = null;
 var URL     = null;
 var CONF    = null;
 var JQUERY  = 'jquery-1.4.4.js'
@@ -43,6 +44,7 @@ var RESUME  = null;
 var WORKER  = null;
 var VERBOSE = null;
 var PARALLEL= 1;
+var ANALYZE = null;
 
 function help(a){
   sys.puts('Usage:');
@@ -55,18 +57,20 @@ function help(a){
   sys.puts('   -t <timeout>   : Specify the http timeout (msec)');
   sys.puts('   -w <wait>      : Specify the request wait (msec)');
   sys.puts('   -S             : Standerd test mode');
+  sys.puts('   -F             : Standerd test (with fetching body) mode');
   sys.puts('   -C             : Crawl test mode');
   sys.puts('   -u <url>       : Specify the target-url ');
   sys.puts('   -c <conf-file> : Specify the config file path');
   sys.puts('   -q <jquery>    : Specify the jquery file ( jquery-1.4.4.js is default )');
   sys.puts('   -j <number>    : Specify the number of the parallel download ( 1 is default )');
   sys.puts('   -R             : Resume mode. if you want to resume prior WATCH is interrupted by anything.');
+  sys.puts('   -A             : Analyze fetch log.');
   sys.puts('   -V             : Verbose log if you want to preserve all contents .');
   process.exit(a);
 }
 
 try {
-  opt.setopt('hl:p:s:u:w:t:c:j:q:SCRWV',process.argv);
+  opt.setopt('hl:p:s:u:w:t:c:j:q:SFCRWVA',process.argv);
   opt.getopt(function ( o , p ){
     switch (o) {
       case 'h':
@@ -88,10 +92,13 @@ try {
       WAIT = p;
       break;
       case 'S':
-      STD   = 1;
+      STD   = 'STD';
+      break;
+      case 'F':
+      STD   = 'FSTD';
       break;
       case 'C':
-      CRAWL = 1;
+      STD   = 'CRAWL';
       break;
       case 'u':
       URL = ''+p;
@@ -114,10 +121,13 @@ try {
       case 'V':
       VERBOSE = 1;
       break;
+      case 'A':
+      ANALYZE = 1;
+      break;
     }
   });
 }catch ( e ) {
-  sys.puts('Invalid option ! "' + e.opt + '" => ' + e.type);
+  process.eputs('Invalid option ! "' + e.opt + '" => ' + e.type);
   help(1);
 }
 
@@ -147,8 +157,9 @@ SETTING.PROXY   =(PROXY===null)?   SETTING.PROXY   :PROXY;
 SETTING.SSLPROXY=(SSLPROXY===null)?SETTING.SSLPROXY:SSLPROXY;
 SETTING.TIMEOUT =(TIMEOUT===null)? SETTING.TIMEOUT :TIMEOUT;
 SETTING.WAIT    =(WAIT===null)?    SETTING.WAIT    :WAIT;
-SETTING.TEST    =(STD===null)?     SETTING.TEST    :stdtest.STD_TEST;
-SETTING.TEST    =(CRAWL===null)?   SETTING.TEST    :stdtest.STD_CRAWL_TEST;
+SETTING.TEST    =(STD==='STD')?    stdtest.STD_TEST       :SETTING.TEST;
+SETTING.TEST    =(STD==='FSTD')?   stdtest.FSTD_TEST      :SETTING.TEST;
+SETTING.TEST    =(STD==='CRAWL')?  stdtest.STD_CRAWL_TEST :SETTING.TEST;
 SETTING.VERBOSE =(VERBOSE===null)? SETTING.VERBOSE :1;
 SETTING.PARALLEL=(PARALLEL===null)? SETTING.PARALLEL :PARALLEL;
 
@@ -156,7 +167,7 @@ SETTING.PARALLEL=(PARALLEL===null)? SETTING.PARALLEL :PARALLEL;
 //---------------
 // Validate 
 if ( ! SETTING.URL ) {
-  sys.puts('=== NO URL ! ===' );
+  process.eputs('=== NO URL ! ===' );
   help(1);
 }
 
@@ -197,7 +208,7 @@ if ( ! WORKER ) {
 
 
   process.on('SIGINT', function () {
-    sys.puts('SIGINT Received !');
+    process.eputs('SIGINT Received !');
     TERM_FLG = true;
   });
 
@@ -213,6 +224,58 @@ if ( ! WORKER ) {
       log.echo(SETTING.URL,'Wait child ',code);
       if ( code === 2 && !TERM_FLG ) {
 	fork_worker();
+      }else{
+	if ( ANALYZE ) {
+	  F.load();
+	  var list = F.get();
+	  // log.info('====ANALYZE==',list);
+	  var result = {};
+	  for ( var u in list ) {
+	    if ( ! /^https?:/.test(u) ) {
+	      continue;
+	    }
+	    var val = list[u];
+	    var parsed = url.parse(u);
+	    var domain = parsed.hostname+((parsed.port)?':'+parsed.port:'');
+	    if ( val.Queuing.code === 'ROOT' ) {
+	      domain = '*' + domain;
+	    }
+	    if ( ! result[domain] ) {
+	      result[domain] = {success:0,error:0,timeout:0,total_size:0,total_time:0,max_time:0};
+	    }
+	    if ( val.End.code === 'ERROR' ) {
+	      result[domain].error++;
+	    }else if ( val.End.code === 'TIMEOUT' ) {
+	      result[domain].timeout++;
+	    }else if (typeof(val.End.code) === 'number') {
+	      result[domain].success++;
+	      result[domain].total_size += val.End.code;
+	    }else{
+	      result[domain].error++;
+	    }
+	    var time = val.End.date - val.Fetching.date;
+	    result[domain].total_time += time;
+	    if ( result[domain].max_time < time ) {
+	      result[domain].max_time = time;
+	    }
+	  }
+	  // log.info('====RESULT==',result);
+	  var root = null;
+	  var summary = {total_time : 0, total_count:0,ptime:0};
+	  for ( var d in result ) {
+	    if ( /^\*/.test(d) ) {
+	      root = d;
+	    }else{
+	      summary.total_count += (result[d].success + result[d].error + result[d].timeout );
+	      summary.total_time  += result[d].total_time;
+	    }
+	  }
+	  var P = 16;
+	  summary.ptime = result[root].total_time + summary.total_time/P;
+	  result['SUMMARY'] = summary;
+	  log.info('====RESULT==',result);
+	  sys.puts(JSON.stringify(result));
+	}
       }
     });
   }
@@ -248,6 +311,7 @@ if ( RESUME ) {
     fs.unlinkSync(CFILE);
   }catch(e){
   }
+  c = F.change(SETTING.URL,'Queuing','ROOT');
   Q.push(SETTING.URL,undefined,SETTING.TEST,undefined);
   log.echo(SETTING.URL,'=== START ===',SETTING.TEST_NAME);
 }
@@ -258,7 +322,7 @@ try {
   log.echo('<URL>','<VAL>','<MSG>','<REFERER>');
   function add_queue ( url , resh , test , referer ) {
     try{
-      c = F.check(url,'Queuing');
+      c = F.check_queuing(url);
       if ( c ) {
 	log.message(url,c,'skip queuing');
 	return;
@@ -282,23 +346,14 @@ try {
       }
       if ( F.fetching_count() < SETTING.PARALLEL ){
 	if ( Q.length() ) {
-//log.error('=== @@@ POP ===', F.fetching_count());
 	  q = Q.pop();
 	  log.echo(q.URL,Math.floor(m.heapUsed/(1024*1024)*100)/100 + ' / ' + Math.floor(m.heapTotal/(1024*1024)*100)/100 + ' (MB)','Q:' + Q.length() + '  F:' + F.fetching_count());
 	  fetch_content(q.URL,q.HEADERS,q.TEST,q.REFERER,add_queue);
 	  loop();
-//	}else if ( F.fetching_count() ){
-//log.error('=== @@@ WAIT ===', F.fetching_count());
-//	  setTimeout(loop,SETTING.WAIT); // Wait for fetching
-//	}else{
-	  // Last ! Nothing to do.
-//log.error('=== @@@ LAST ===', F.fetching_count());
 	}
       }else{
-//log.error('=== @@@ BUSY ===', F.fetching_count());
 	setTimeout(loop,SETTING.WAIT); // Busy ! See you next.. 
       }
-//    log.echo(SETTING.URL,'Normal finished ',' ===== ',' ===== ');
     }catch(e){
       log.error('=======================','LOOP','catch',e.stack);
     }
@@ -315,16 +370,6 @@ return;
 //-----------------------------------
 function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
   var request = null;
-
-  var TO = setTimeout(function () {
-    if ( request ) {
-      request.abort();
-    }
-    if ( F.timeout(strurl) ) {
-      log.error(strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
-      TEST.ON_ERROR('TIMEOUT',strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
-    }
-  },SETTING.TIMEOUT);
 
   var parsed = url.parse(strurl);
   if ( TEST.ON_ERROR === undefined ) {
@@ -411,7 +456,20 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
     return false;
   }
 
+  var TO = setTimeout(function () {
+    if ( request ) {
+      request.abort();
+    }
+    if ( F.timeout(strurl) ) {
+      F.timeout(strurl);
+      log.error(strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
+      TEST.ON_ERROR('TIMEOUT',strurl,'' + SETTING.TIMEOUT + ' (ms)','TIMEOUT');
+    }
+  },SETTING.TIMEOUT);
+
   request.on('error',function(err){
+    clearTimeout(TO);
+    F.error(strurl);
     log.error(strurl,'HTTP ERROR',err);
     TEST.ON_ERROR('REQUEST',strurl,'HTTP ERROR',err);
   });
@@ -424,33 +482,34 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
       L.header(strurl,res.headers);
       
       if ( ! (res.statusCode in  TEST.STATUS) ){
-	log.error(strurl,res.statusCode,'BAD STATUS 1');
-	TEST.ON_ERROR('RESPONSE : ',strurl,res.statusCode,'BAD STATUS 1');
 	clearTimeout(TO);
+	F.skip_fetching(strurl,'BAD STATUS');
+	log.error(strurl,res.statusCode,'BAD STATUS');
+	TEST.ON_ERROR('RESPONSE : ',strurl,res.statusCode,'BAD STATUS');
 	return;
       }
       C.store(parsed.hostname,res.headers['set-cookie']);
 
       if ( res.statusCode === 302 || res.statusCode === 301 ) {
+	clearTimeout(TO);
+	F.skip_fetching(strurl,'REDIRECT');
 	var location = url.resolve(strurl,res.headers['location']);
 	log.trace(location,'LOCATION');
 	if ( strurl === location ) {
 	  log.error(strurl,location,'CIRCULAR LOCATION');
 	  TEST.ON_ERROR('REDIRECT',strurl,location,'CIRCULAR LOCATION');
-	  clearTimeout(TO);
 	  return;
 	}
 	if ( do_filter('REDIRECT',location,TEST.REDIRECT.FILTER) ){
 	  callback(location,res.headers,TEST,strurl);
-	  clearTimeout(TO);
 	  return;
 	}
-	clearTimeout(TO);
 	return;
       }
-      if ( TEST.CHECKS.length === 0 ){
-	log.ok(strurl,res.statusCode,'status ok');
+      if ( TEST.CHECKS.length === 0 && ! TEST.FETCH_BODY){
 	clearTimeout(TO);
+	F.skip_fetching(strurl,'STATUS ONLY');
+	log.ok(strurl,res.statusCode,'status ok');
 	return;
       }
       res.setEncoding('utf8');
@@ -462,15 +521,17 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
 	L.body(strurl,body);
 	log.debug('RESPONSE:'+strurl,res);
       // res.destroy(); // @@@ 
-	var content_type = res.headers['content-type'];
-	if ( ! /html/.test(content_type)  ) {
-	  log.ok(strurl,content_type,'fetch ok');
-	  clearTimeout(TO);
-	  return;
-	}
 	if ( ! body ) {
+	  clearTimeout(TO);
+	  F.skip_fetching(strurl,'NO BODY');
 	  log.error(strurl,content_type,'NO BODY',res.statusCode);
 	  TEST.ON_ERROR('BODY',strurl,content_type,'NO BODY',res.statusCode);
+	  return;
+	}
+	F.fetched(strurl,body.length);
+	var content_type = res.headers['content-type'];
+	if ( ! /html/.test(content_type) || TEST.CHECKS.length === 0 ) {
+	  log.ok(strurl,content_type,'fetch ok');
 	  clearTimeout(TO);
 	  return;
 	}
@@ -588,6 +649,8 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
 	    }catch(e){
 	      log.error(strurl,'jQueryify','Fatal error',e.stack);
 	    }
+	    clearTimeout(TO);
+	    return;
 	  }); // jquery-1.4.4.js
 	}catch(e){
 	  log.error(strurl,content_type,'INVALID HTML',e.stack);

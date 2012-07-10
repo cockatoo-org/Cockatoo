@@ -1,5 +1,5 @@
 //var sys = require('sys');
-var sys = require('util');
+//var sys = require('util');
 var fs = require('fs');
 var path = require('path');
 var common = require(__dirname + '/common.js');
@@ -49,7 +49,7 @@ exports.init = function() {
   try {
     common.mkdirp(path.dirname(log_file));
   }catch(e){
-    sys.puts(e.stack);
+    process.stderr.write(e.stack);
     process.exit(1); // fatal
   }
   this.echo('===== LOG ====',log_lv,path.basename(log_file),log_file);
@@ -183,14 +183,14 @@ crawl_callback_object.prototype = {
 exports.crawl_callback = crawl_callback_object;
 
 exports.dump = function(pre,msg,data){
-  sys.puts(padding(pre,PRE_LEN) + ' : ===== ' + (msg?padding(msg,URL_LEN):'') + '=====');
+  process.stderr.write(padding(pre,PRE_LEN) + ' : ===== ' + (msg?padding(msg,URL_LEN):'') + '=====\n');
   if ( typeof(data)==='object') {
     callback = new crawl_callback_object;
     callback.cb_function = undefined;
     common.crawl_object(data,callback);
-    sys.puts(callback.buffer);
+    process.stderr.write(callback.buffer+'\n');
   }else{
-    sys.puts(padding('',KEY_LEN,1) + ' : ' + data); 
+    process.stderr.write(padding('',KEY_LEN,1) + ' : ' + data+'\n'); 
   }
 }
 //---------------------------------
@@ -198,7 +198,7 @@ exports.dump = function(pre,msg,data){
 //---------------------------------
 function out(pre,url,selector,msg,body,l){
   var msg = padding(pre,PRE_LEN) + ' : ' + padding(url,URL_LEN) + ' ; ' + padding(msg,MSG_LEN) + '  ; ' + padding(selector,SEL_LEN) + (body?'  ; '+body:'');
-  sys.puts(msg);
+  process.stderr.write(msg+'\n');
   if ( l ) { // log
     var fp = fs.openSync(log_file,'a+');
     fs.writeSync(fp,msg+'\n',null);

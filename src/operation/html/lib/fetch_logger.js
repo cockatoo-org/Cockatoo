@@ -1,5 +1,5 @@
 //var sys = require('sys');
-var sys    = require('util');
+//var sys    = require('util');
 var fs     = require('fs');
 var path   = require('path');
 var common = require(__dirname + '/common.js');
@@ -24,7 +24,7 @@ exports.init = function(enable) {
   try {
     common.mkdirp(fetch_logger_dir);
   }catch(e){
-    sys.puts(e.stack);
+    process.stderr.write(e.stack);
     process.exit(1); // fatal
   }
   return this;
