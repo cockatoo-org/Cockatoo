@@ -130,7 +130,7 @@ try {
     $CONTENT_DRAWER->layout($ret[$brl]);
     $CONTENT_DRAWER->components();
   }
-  Include 'wwwutils/core/cms_frame.php';
+  Include Config::COCKATOO_ROOT.'wwwutils/core/cms_frame.php';
 }catch ( \Exception $ex ) {
   print $ex->getMessage();
 }
