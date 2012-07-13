@@ -1,5 +1,5 @@
 {
-"@R":"1334021781",
+"@R":"1341978741",
 "type":"HorizontalWidget",
 "subject":"admin",
 "description":"admin",
@@ -9,7 +9,7 @@
 "class":"",
 "body":"<table border=\"0\"  cellspacing=\"0\" cellpadding=\"0\">\n<tr>\n<th>user<\/th>\n<th>mail<\/th>\n<th>passwd hash<\/th>\n<th>is root<\/th>\n<\/tr>\n<?cs each:item = A.yslowviewer.users ?>\n<tr class=\"selectable \">\n<td class=\"user\"><?cs name:item ?><\/td>\n<td class=\"email\"><?cs var:item.email ?><\/td>\n<td class=\"hash\"><?cs var:item.hash ?><\/td>\n<td class=\"root\"><?cs var:item.root ?><\/td>\n<\/tr>\n<?cs \/each ?>\n<\/table>\n<h5>Add or update member<\/h5>\n<div class=\"window\">\n<form class=\"setuser\" method=\"POST\" action=\"\/yslowviewer\/default\/admin\">\n<div class=\"input\"> <h6>User<\/h6> <input name=\"user\" type=\"text\" value=\"\" \/><\/div>\n<div class=\"input\"> <h6>Password<\/h6> <input name=\"passwd\" type=\"password\" value=\"\" \/><\/div>\n<div class=\"input\"> <h6>Hash<\/h6> <input name=\"hash\" type=\"text\" value=\"\" \/><\/div>\n<div class=\"input\"> <h6>Email<\/h6> <input name=\"email\" type=\"text\" value=\"\" \/><\/div>\n<div class=\"input\"> <h6>Root<\/h6> <input name=\"root\" type=\"checkbox\" value=\"\" \/><\/div>\n<div class=\"input\">\n<input name=\"submit\" type=\"submit\" value=\"add user\" \/>\n<input name=\"submit\" type=\"submit\" value=\"remove user\" \/>\n<\/div>\n<\/form>\n<\/div>\n",
 "action":[
-"action:\/\/wiki-action\/yslowviewer\/AdminAction?keys",
+"action:\/\/yslowviewer-action\/yslowviewer\/AdminAction?keys",
 ""
 ],
 "_u":"admin"
