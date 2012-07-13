@@ -1,6 +1,6 @@
 <?php
 /**
- * config.php - Wiki config
+ * config.php - Sample config
  *  
  * @access public
  * @package cockatoo
@@ -11,12 +11,6 @@
 namespace Cockatoo;
 class Config extends DefaultConfig {
   /**
-   * Specify the application path if you want to run only one application on this domain.
-   *   ex> '/wiki/default'
-   */
-  const APP_OCCUPATION = '/wiki/default';
-  
-  /**
    * Service MODE
    *   You should set Def::MODE_NORMAL in service environment.
    */
@@ -25,20 +19,24 @@ class Config extends DefaultConfig {
   /**
    * The redirect path that when unhandled error occured.
    */
-  const ErrorRedirect  = '/view';
+  const ErrorRedirect  = '/wiki/view';
 
   /**
    * Request analizer
    */
-  const RequestParser     = 'wiki\WikiRequestParser';
-  const DeviceSelector    = 'Cockatoo\DefaultDeviceSelector'; 
+  const RequestParser     = 'Cockatoo\SampleRequestParser';
+  const DeviceSelector    = 'Cockatoo\SampleDeviceSelector'; 
 
   /**
    * Timeout
    */
-  const ActionTimeout  = 1000;  // This means 10 sec.
+  const ActionTimeout  = 10000;  // This means 10 sec.
 
   public static function init () {
+    //--------------------
+    // LOG settings
+    //--------------------
+    // self::$Loglv   = Def::LOGLV_TRACE;
     self::$Loglv   = Def::LOGLV_INFO;
     self::$LogDataDump = false;
     /**

@@ -10,7 +10,7 @@ require cockatoo-beaks-memcached 1.0.0        1.0.999
 require cockatoo-beaks-mongo     1.0.0        1.0.999
 require cockatoo-utils-zoo       1.0.0        1.0.999
 
-require cockatoo-web-wiki        1.0.0        1.0.999
+require cockatoo-web-sample      1.0.0        1.0.999
 require cockatoo-gateway         1.0.0        1.0.999
 require cockatoo-zookeeper       1.0.0        1.0.999
 

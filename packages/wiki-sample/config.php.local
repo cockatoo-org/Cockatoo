@@ -1,6 +1,6 @@
 <?php
 /**
- * config.php - Wiki config
+ * config.php - Sample config
  *  
  * @access public
  * @package cockatoo
@@ -24,8 +24,8 @@ class Config extends DefaultConfig {
   /**
    * Request analizer
    */
-  const RequestParser     = 'wiki\WikiRequestParser';
-  const DeviceSelector    = 'wiki\WikiDeviceSelector'; 
+  const RequestParser     = 'Cockatoo\SampleRequestParser';
+  const DeviceSelector    = 'Cockatoo\SampleDeviceSelector'; 
 
   /**
    * Timeout
@@ -75,19 +75,6 @@ class Config extends DefaultConfig {
       'layout://core-layout/'         => array(''),
       'component://core-component/'   => array(''),
       'static://core-static/'         => array(''),
-      'layout://wiki-layout/'         => array(''),
-      'component://wiki-component/'   => array(''),
-      'static://wiki-static/'         => array(''),
-      'storage://wiki-storage/'       => array(''),
-      'action://wiki-action/'         => array(''),
-      'session://wiki-session/'       => array(''),
-      'layout://yslowviewer-layout/'         => array(''),
-      'component://yslowviewer-component/'   => array(''),
-      'static://yslowviewer-static/'         => array(''),
-      'action://yslowviewer-action/'         => array(''),
-      'session://yslowviewer-session/'       => array(''),
-      'storage://yslow-storage/'       => array(''),
-      'storage://netexport-storage/'   => array(''),
       );
       //--------------------
       // Zookeeper ( dynamic locations )
