@@ -1,4 +1,4 @@
-//var sys = require('sys');
+var sys = require('sys');
 //var sys    = require('util');
 var fs     = require('fs');
 var path   = require('path');
@@ -76,9 +76,9 @@ exports.skip_fetching = function (url,reason) {
   this.change(url,'End',reason);
 }
 
-exports.fetched = function (url,body_len) {
+exports.fetched = function (url,content_type,body_len) {
   fetch_list_c['_FETCHING_']--;
-  this.change(url,'End',body_len);
+  this.change(url,'End',{ content_type: content_type,size:body_len});
 }
 
 exports.timeout = function (url) {

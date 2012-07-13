@@ -66,6 +66,26 @@ exports.FETCH_TEST = {
   },
   CHECKS     : []
 };
+// Simple fetch check
+exports.CSS_TEST = {
+  ON_ERROR   : this.NULL_ON_ERROR,
+  STATUS     : this.DEFAULT_CHECK_STATUS,
+  FETCH_BODY : true,
+  REDIRECT   : {
+    FILTER   : this.DEFAULT_FILTER_INNER
+  },
+  CHECKS     : [{ // fetch check with <style>FOO{ url(??) }</style>
+    METHOD   : 'CSS',
+    SELECTOR : 'style',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <style>FOO{ url(??) }</style>
+    METHOD   : 'CSS',
+    SELECTOR : '[style]',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  }]
+};
 
 
 //---------------
@@ -133,16 +153,16 @@ exports.FSTD_TEST = {
     FILTER   : this.DEFAULT_FILTER_INNER
   },
   CHECKS   :[{ // requiring <title>
-    METHOD   : 'EXIST',
-    SELECTOR : 'title',
-  },{          // requiring <body>
-    METHOD   : 'EXIST',
-    SELECTOR : 'body',
-  },{          // refulsing empty <title>
-    METHOD   : 'TEXT',
-    SELECTOR : 'title',
-    EXPECTS  : '.'
-  },{          // fetch check with <frame src="??">
+//    METHOD   : 'EXIST',
+//    SELECTOR : 'title',
+//  },{          // requiring <body>
+//    METHOD   : 'EXIST',
+//    SELECTOR : 'body',
+//  },{          // refulsing empty <title>
+//    METHOD   : 'TEXT',
+//    SELECTOR : 'title',
+//    EXPECTS  : '.'
+//  },{          // fetch check with <frame src="??">
     METHOD   : 'LINK',
     SELECTOR : 'frame',
     FILTER   : this.DEFAULT_FILTER,
@@ -150,11 +170,6 @@ exports.FSTD_TEST = {
   },{          // fetch check with <iframe src="??">
     METHOD   : 'LINK',
     SELECTOR : 'iframe',
-    FILTER   : this.DEFAULT_FILTER,
-    TEST     : this.FETCH_TEST
-  },{          // fetch check with <link href="??">
-    METHOD   : 'LINK',
-    SELECTOR : 'link',
     FILTER   : this.DEFAULT_FILTER,
     TEST     : this.FETCH_TEST
   },{          // fetch check with <img src="??">
@@ -165,6 +180,79 @@ exports.FSTD_TEST = {
   },{          // fetch check with <script src="??">
     METHOD   : 'LINK',
     SELECTOR : 'script',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <link href="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'link',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <style>FOO{ url(??) }</style>
+    METHOD   : 'CSS',
+    SELECTOR : 'style',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <style>FOO{ url(??) }</style>
+    METHOD   : 'CSS',
+    SELECTOR : '[style]',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  }]
+};
+
+//---------------
+// Html checks
+//   ( standerd tags & dead link )
+exports.CSTD_TEST = {
+//  ON_ERROR : 'this.NULL_ON_ERROR',
+  STATUS     : this.DEFAULT_CHECK_STATUS,
+  FETCH_BODY : true,
+  REDIRECT   : {
+    FILTER   : this.DEFAULT_FILTER_INNER
+  },
+  CHECKS   :[{ // requiring <title>
+//    METHOD   : 'EXIST',
+//    SELECTOR : 'title',
+//  },{          // requiring <body>
+//    METHOD   : 'EXIST',
+//    SELECTOR : 'body',
+//  },{          // refulsing empty <title>
+//    METHOD   : 'TEXT',
+//    SELECTOR : 'title',
+//    EXPECTS  : '.'
+//  },{          // fetch check with <frame src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'frame',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <iframe src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'iframe',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <img src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'img',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <script src="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'script',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <link href="??">
+    METHOD   : 'LINK',
+    SELECTOR : 'link',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.CSS_TEST
+  },{          // fetch check with <style>FOO{ url(??) }</style>
+    METHOD   : 'CSS',
+    SELECTOR : 'style',
+    FILTER   : this.DEFAULT_FILTER,
+    TEST     : this.FETCH_TEST
+  },{          // fetch check with <style>FOO{ url(??) }</style>
+    METHOD   : 'CSS',
+    SELECTOR : '[style]',
     FILTER   : this.DEFAULT_FILTER,
     TEST     : this.FETCH_TEST
   }]

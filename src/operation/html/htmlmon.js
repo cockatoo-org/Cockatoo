@@ -24,7 +24,7 @@ var jsdom   = require('jsdom').jsdom;
 //----------------------------------------------
 // Definitions
 //----------------------------------------------
-var MEM_THRESHOLD = 100*1024*1024; // byte
+var MEM_THRESHOLD = 300*1024*1024; // byte
 //var MEM_THRESHOLD = 10*1024*1024; // byte
 var DATA_DIR = __dirname + '/data';
 
@@ -36,7 +36,7 @@ var PROXY   = null;
 var SSLPROXY= null;
 var TIMEOUT = null;
 var WAIT    = null;
-var STD     = null;
+var STDTEST = null;
 var URL     = null;
 var CONF    = null;
 var JQUERY  = 'jquery-1.4.4.js'
@@ -56,8 +56,9 @@ function help(a){
   sys.puts('   -s <ssl-proxy> : Specify the https-proxy-url ( for example -p http://proxy.example.com:8080 )');
   sys.puts('   -t <timeout>   : Specify the http timeout (msec)');
   sys.puts('   -w <wait>      : Specify the request wait (msec)');
-  sys.puts('   -S             : Standerd test mode');
+  sys.puts('   -T             : Standerd test mode');
   sys.puts('   -F             : Standerd test (with fetching body) mode');
+  sys.puts('   -S             : Standerd test (with fetching body , parsing style) mode');
   sys.puts('   -C             : Crawl test mode');
   sys.puts('   -u <url>       : Specify the target-url ');
   sys.puts('   -c <conf-file> : Specify the config file path');
@@ -70,7 +71,7 @@ function help(a){
 }
 
 try {
-  opt.setopt('hl:p:s:u:w:t:c:j:q:SFCRWVA',process.argv);
+  opt.setopt('hl:p:s:u:w:t:c:j:q:TFSCRWVA',process.argv);
   opt.getopt(function ( o , p ){
     switch (o) {
       case 'h':
@@ -91,14 +92,17 @@ try {
       case 'w':
       WAIT = p;
       break;
-      case 'S':
-      STD   = 'STD';
+      case 'T':
+      STDTEST   = 'STD';
       break;
       case 'F':
-      STD   = 'FSTD';
+      STDTEST   = 'FSTD';
+      break;
+      case 'S':
+      STDTEST   = 'CSTD';
       break;
       case 'C':
-      STD   = 'CRAWL';
+      STDTEST   = 'CRAWL';
       break;
       case 'u':
       URL = ''+p;
@@ -157,9 +161,10 @@ SETTING.PROXY   =(PROXY===null)?   SETTING.PROXY   :PROXY;
 SETTING.SSLPROXY=(SSLPROXY===null)?SETTING.SSLPROXY:SSLPROXY;
 SETTING.TIMEOUT =(TIMEOUT===null)? SETTING.TIMEOUT :TIMEOUT;
 SETTING.WAIT    =(WAIT===null)?    SETTING.WAIT    :WAIT;
-SETTING.TEST    =(STD==='STD')?    stdtest.STD_TEST       :SETTING.TEST;
-SETTING.TEST    =(STD==='FSTD')?   stdtest.FSTD_TEST      :SETTING.TEST;
-SETTING.TEST    =(STD==='CRAWL')?  stdtest.STD_CRAWL_TEST :SETTING.TEST;
+SETTING.TEST    =(STDTEST==='STD')?    stdtest.STD_TEST       :SETTING.TEST;
+SETTING.TEST    =(STDTEST==='FSTD')?   stdtest.FSTD_TEST      :SETTING.TEST;
+SETTING.TEST    =(STDTEST==='CSTD')?   stdtest.CSTD_TEST      :SETTING.TEST;
+SETTING.TEST    =(STDTEST==='CRAWL')?  stdtest.STD_CRAWL_TEST :SETTING.TEST;
 SETTING.VERBOSE =(VERBOSE===null)? SETTING.VERBOSE :1;
 SETTING.PARALLEL=(PARALLEL===null)? SETTING.PARALLEL :PARALLEL;
 
@@ -173,7 +178,7 @@ if ( ! SETTING.URL ) {
 
 //---------------
 // Environments
-// process.chdir(__dirname);
+process.chdir(__dirname);
 
 //---------------
 // Test name
@@ -241,19 +246,31 @@ if ( ! WORKER ) {
 	      domain = '*' + domain;
 	    }
 	    if ( ! result[domain] ) {
-	      result[domain] = {success:0,error:0,timeout:0,total_size:0,total_time:0,max_time:0};
-	    }
-	    if ( val.End.code === 'ERROR' ) {
-	      result[domain].error++;
-	    }else if ( val.End.code === 'TIMEOUT' ) {
-	      result[domain].timeout++;
-	    }else if (typeof(val.End.code) === 'number') {
-	      result[domain].success++;
-	      result[domain].total_size += val.End.code;
-	    }else{
-	      result[domain].error++;
+	      result[domain] = {js:0,css:0,html:0,img:0,other:0,error:0,timeout:0,total_size:0,total_time:0,max_time:0};
 	    }
 	    var time = val.End.date - val.Fetching.date;
+	    if ( val.End.code === 'ERROR' ) {
+	      result[domain].error++;
+	      //time = 0;
+	    }else if ( val.End.code === 'TIMEOUT' ) {
+	      result[domain].timeout++;
+	      //time = 0;
+	    }else if (typeof(val.End.code) === 'object') {
+	      if (       /html/.test(val.End.code.content_type)) {
+		result[domain].html++;
+	      }else if ( /javascript/.test(val.End.code.content_type)) {
+		result[domain].js++;
+	      }else if ( /css/.test(val.End.code.content_type)) {
+		result[domain].css++;
+	      }else if ( /image/.test(val.End.code.content_type)) {
+		result[domain].img++;
+	      }else{
+		result[domain].other++;
+	      }
+	      result[domain].total_size += val.End.code.size;
+	    }else{
+	      result[domain].other++;
+	    }
 	    result[domain].total_time += time;
 	    if ( result[domain].max_time < time ) {
 	      result[domain].max_time = time;
@@ -261,17 +278,25 @@ if ( ! WORKER ) {
 	  }
 	  // log.info('====RESULT==',result);
 	  var root = null;
-	  var summary = {total_time : 0, total_count:0,ptime:0};
+	  var summary = {js:0,css:0,html:0,img:0,other:0,error:0,timeout:0,total:0,total_time:0,total_size:0,ptime:0};
 	  for ( var d in result ) {
 	    if ( /^\*/.test(d) ) {
 	      root = d;
 	    }else{
-	      summary.total_count += (result[d].success + result[d].error + result[d].timeout );
 	      summary.total_time  += result[d].total_time;
 	    }
+	    summary.html += result[d].html;
+	    summary.js   += result[d].js;
+	    summary.css  += result[d].css;
+	    summary.img  += result[d].img;
+	    summary.other+= result[d].other;
+	    summary.error+= result[d].error;
+	    summary.timeout+= result[d].timeout;
+	    summary.total+= result[d].html+result[d].js+result[d].css+result[d].img+result[d].other+result[d].error+result[d].timeout;
+	    summary.total_size+= result[d].total_size;
 	  }
 	  var P = 16;
-	  summary.ptime = result[root].total_time + summary.total_time/P;
+	  summary.ptime = Math.floor(result[root].total_time + result[root].total_size/100 + summary.total_time/P);
 	  result['SUMMARY'] = summary;
 	  log.info('====RESULT==',result);
 	  sys.puts(JSON.stringify(result));
@@ -483,7 +508,7 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
       
       if ( ! (res.statusCode in  TEST.STATUS) ){
 	clearTimeout(TO);
-	F.skip_fetching(strurl,'BAD STATUS');
+	F.error(strurl);
 	log.error(strurl,res.statusCode,'BAD STATUS');
 	TEST.ON_ERROR('RESPONSE : ',strurl,res.statusCode,'BAD STATUS');
 	return;
@@ -523,21 +548,25 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
       // res.destroy(); // @@@ 
 	if ( ! body ) {
 	  clearTimeout(TO);
-	  F.skip_fetching(strurl,'NO BODY');
+	  F.error(strurl);
 	  log.error(strurl,content_type,'NO BODY',res.statusCode);
 	  TEST.ON_ERROR('BODY',strurl,content_type,'NO BODY',res.statusCode);
 	  return;
 	}
-	F.fetched(strurl,body.length);
 	var content_type = res.headers['content-type'];
-	if ( ! /html/.test(content_type) || TEST.CHECKS.length === 0 ) {
+	F.fetched(strurl,content_type,body.length);
+	if ( ! /(html)|(css)/.test(content_type) || TEST.CHECKS.length === 0 ) {
 	  log.ok(strurl,content_type,'fetch ok');
 	  clearTimeout(TO);
 	  return;
 	}
       // The error that "TypeError: Cannot call method 'call' of undefined" often occurs. It's jsdom has some bug ? ( conflecting body's script ? 
 	try {
-	  body = '<html><body id="ROOT">'+body+'</body></html>';
+	  if ( /html/.test(content_type) ) {
+	    body = '<html><body id="ROOT">'+body+'</body></html>';
+	  }else if ( /css/.test(content_type) ) {
+	    body = '<html><body id="ROOT"><html><style>'+body+'</style></html></body></html>';
+	  }
 	  var document = jsdom(body,null,{
 	    features:{
 	      FetchExternalResources : false,
@@ -580,6 +609,37 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
 		});
 		return uniq(links).sort().reverse();
 	      }
+	      function uniq_css_links( elements, links ) {
+		if ( ! links ){
+		  links = [];
+		}
+		var re = /\s*url\s*\("?([^)]*?)"?\)/ig;
+		function css_links(text){
+		  re.lastIndex = null;
+		  for (;;){
+		    var matches = re.exec(text)
+		    if ( ! matches ) {
+		      break;
+		    }
+		    links.push(url.resolve(strurl,encodeURI(matches[1])));
+		  }
+		}
+		elements.each(function (){
+  		  if ( $(this).is('style') ) {
+		    var children = $(this).get(0).childNodes;
+		    for (var i in children ) {
+		      var text = children[i].nodeValue;
+		      css_links(text);
+		    }
+		  }else{
+		    if ( $(this).attr('style') ) {
+		      css_links($(this).attr('style'));
+		    }
+		  }
+		});
+		return uniq(links).sort().reverse();
+	      }
+	      
 	      for( var i in TEST.CHECKS ) {
 		try {
 		  var CHECK = TEST.CHECKS[i];
@@ -632,6 +692,13 @@ function fetch_content(strurl,reqHeaders,TEST,referer,callback) {
 		      }
 		    }else if ( CHECK.METHOD == 'LINK' ) {
 		      var links = uniq_links(elements);
+		      for ( var l in links ) {
+			if ( do_filter('LINK',links[l],CHECK.FILTER )){
+			  callback(links[l],res.headers,CHECK.TEST,strurl);
+			}
+		      }
+		    }else if ( CHECK.METHOD == 'CSS' ) {
+		      var links = uniq_css_links(elements);
 		      for ( var l in links ) {
 			if ( do_filter('LINK',links[l],CHECK.FILTER )){
 			  callback(links[l],res.headers,CHECK.TEST,strurl);
