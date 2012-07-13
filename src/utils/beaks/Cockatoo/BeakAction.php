@@ -38,7 +38,7 @@ class BeakAction extends Beak {
     $base = $scheme . '://' . $domain . '/';
     $beaklocation = BeakLocationGetter::singleton();
     $locations = $beaklocation->getLocation(array($base));
-    if ( count($locations) > 0 ) {
+    if ( Config::Mode === Def::MODE_DEBUG or count($locations) > 0 ) {
       try {
         $clazz = $this->collection.'\\'.$this->path;
         $this->currentAction = new $clazz($this->brl);
