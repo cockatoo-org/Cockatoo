@@ -211,12 +211,15 @@ class BeakFile extends Beak {
    * @see Action.php
    */
   public function getrQuery() {
-    $this->ret  = null;
+    $this->ret  = array();
     $queries = array();
     foreach ( $this->arg as $key => $conds ) {
+      $idata = null;
       if ( $key === Beak::Q_UNIQUE_INDEX ) {
-        $idata = $this->listDir($this->collection_path,'',true);
-        $idata = array_combine($idata,array_map(function($n){return array($n);},$idata));
+        $l = $this->listDir($this->collection_path,'',true);
+        if ( count($l) ){
+          $idata = array_combine($l,array_map(function($n){return array($n);},$l));
+        }
       }else{
         $idata = $this->getIndex($key);
       }
