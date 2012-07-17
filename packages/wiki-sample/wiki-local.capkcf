@@ -23,6 +23,8 @@ dir  -     -               -                                                  /u
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/services-cms
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/services-cms/services
 file -     -               wiki.j                                             /usr/local/cockatoo/datasource/services-cms/services/wiki.j
+dir  -     -               -                                                  /usr/local/cockatoo/datasource/wiki-storage/users 
+file -     -               admin.j                                            /usr/local/cockatoo/datasource/wiki-storage/users/admin.j
 
 =POST_ACTIVATE=
 #!/usr/bin/env sh

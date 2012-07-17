@@ -72,4 +72,3 @@ dir  -     -               -                                                  /u
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/wiki-storage/page  
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/wiki-storage/hist  
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/wiki-storage/users 
-file -     -               admin.j                                            /usr/local/cockatoo/datasource/wiki-storage/users/admin.j
