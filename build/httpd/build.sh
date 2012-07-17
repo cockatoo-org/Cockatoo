@@ -4,7 +4,7 @@ cd ${ROOT}
 ROOT=`pwd`
 source ${ROOT}/../build.env
 
-VERSION='2.2.21'
+VERSION='2.2.22'
 
 ARCHIVE=http://archive.apache.org/dist/httpd/httpd-%s.tar.gz
 FILE_MD5=http://archive.apache.org/dist/httpd/httpd-%s.tar.gz.md5

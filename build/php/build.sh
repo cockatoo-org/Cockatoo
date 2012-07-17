@@ -5,7 +5,7 @@ ROOT=`pwd`
 source ${ROOT}/../build.env
 
 VERSION='5.3.8'
-HTTPD_VERSION='2.2.21'
+HTTPD_VERSION='2.2.22'
 
 ARCHIVE=http://www.php.net/get/php-%s.tar.gz/from/jp.php.net/mirror/
 FNAME=php-%s.tar.gz
