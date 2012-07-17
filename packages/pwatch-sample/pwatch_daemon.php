@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 namespace pwatch;
-require_once(dirname(__FILE__) . '/../def.php');
+require_once(dirname(__FILE__) . '/../../def.php');
 require_once(\Cockatoo\Config::COCKATOO_ROOT.'utils/beak.php');
 declare(ticks = 1);
 
