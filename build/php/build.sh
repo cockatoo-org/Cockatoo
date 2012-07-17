@@ -38,6 +38,7 @@ function build_php(){
 	--enable-mbstring \
 	--enable-pcntl \
 	--enable-sockets 
+	-- with-zlib \
 #	--with-openssl=/usr/local/ssl \
 #	--with-mcrypt=/usr/local \
 #	--with-curl=/usr/local \
@@ -119,7 +120,6 @@ build_php_ext sysvmsg
 build_php_ext sysvsem
 build_php_ext sysvshm --enable-sysvshm
 build_php_ext zip
-build_php_ext zlib
 # You can chose.
 # --with-qdbm 
 # --with-gdbm 
