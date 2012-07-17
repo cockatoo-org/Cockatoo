@@ -157,23 +157,6 @@ dir  -     -               -                                                  /u
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/pagespeed-storage/.idx
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/netexport-storage  
 dir  -     -               -                                                  /usr/local/cockatoo/datasource/netexport-storage/.idx
-=PRE_ACTIVATE=
-#!/usr/bin/env sh
-
-# Add shell commands... 
-
-=POST_ACTIVATE=
-#!/usr/bin/env sh
-
-# Add shell commands... 
-
-=PRE_DEACTIVATE=
-#!/usr/bin/env sh
-
-# Add shell commands... 
-
-=POST_DEACTIVATE=
-#!/usr/bin/env sh
-
-# Add shell commands... 
+dir  -     -               -                                                  /usr/local/cockatoo/datasource/yslowviewer-storage  
+dir  -     -               -                                                  /usr/local/cockatoo/datasource/yslowviewer-storage/users
 
