@@ -12,10 +12,19 @@ require cockatoo-datasource-pwatch      1.0.0 1.0.999
 DEFAULT_OWNER=daemon:bin
 #<type> <permition> <owner> <src> <dst>
 dir  -     -               -                                                  /usr/local/cockatoo
+file -     -               config.php.local                                   /usr/local/cockatoo/config.php
 dir  -     -               -                                                  /usr/local/cockatoo/www
 file -     -               ../../settings/htaccess                            /usr/local/cockatoo/www/.htaccess
 dir  -     -               -                                                  /usr/local/cockatoo/cms
 file -     -               ../../settings/htaccess                            /usr/local/cockatoo/cms/.htaccess
+dir  777   -               -                                                  /usr/local/cockatoo/logs
+dir  -     -               -                                                  /usr/local/cockatoo
+dir  -     -               -                                                  /usr/local/cockatoo/datasource
+dir  -     -               -                                                  /usr/local/cockatoo/datasource/services-cms
+dir  -     -               -                                                  /usr/local/cockatoo/datasource/services-cms/services
+file -     -               pwatch.j                                           /usr/local/cockatoo/datasource/services-cms/services/pwatch.j
+dir  -     -               -                                                  /usr/local/cockatoo/datasource/pwatch-storage/users 
+file -     -               admin.j                                            /usr/local/cockatoo/datasource/pwatch-storage/users/admin.j
 
 =POST_ACTIVATE=
 #!/usr/bin/env sh
