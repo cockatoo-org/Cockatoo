@@ -50,6 +50,10 @@ class PwatchAction extends \Cockatoo\Action {
         $size = $session[\Cockatoo\Def::SESSION_KEY_POST]['size'];
 
         if (  $submit === 'add URL' ) {
+          if ( ! $user and PwatchConfig::ACL ) {
+            \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ ,'Guest users are not allowed to ADD');
+            return null;
+          }
           if ( preg_match('@^https?://@', $url , $matches ) === 0 ) {
             throw new \Exception('Invalid URL');
           }
