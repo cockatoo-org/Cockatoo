@@ -4,7 +4,7 @@ cd ${ROOT}
 ROOT=`pwd`
 source ${ROOT}/../build.env
 
-VERSION='0.6.8'
+VERSION='0.8.1'
 ARCHIVE=http://nodejs.org/dist/v%s/node-v%s.tar.gz
 ARCHIVE=`printf ${ARCHIVE} ${VERSION} ${VERSION}`
 download ${ARCHIVE}
@@ -40,7 +40,7 @@ function build_npm_lib {
     run popd
     run eval ~/.capkg/config/capkg.sh generate -p ${EXT}_npm${VERSION} -i /usr/local/nodejs-${VERSION}/lib/ -s root_${EXT}/node_modules "--require='nodejs${VERSION} 0.0.1 0.0.999'"
 }
-#build_nodejs
-build_npm_lib jsdom
+build_nodejs
+build_npm_lib jsdom@0.2.9
 build_npm_lib getopt
 

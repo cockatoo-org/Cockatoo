@@ -306,7 +306,7 @@ public function testBeakColList(){
   $this->assertEquals($expects,$actual);
 }
 
-public function testBeakIndex(){
+public function genData(){
   // Create index and Input data
   $brl = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_CREATE_COL,array(Beak::Q_INDEXES=>'key,int'),array());
   $ret = BeakController::beakQuery(array($brl));
@@ -323,6 +323,9 @@ public function testBeakIndex(){
   $data = array('key'=>'value2','int' => 4);
   $datas[] = array($brl , $data);
   $datas = BeakController::beakQuery($datas);
+}
+public function testBeakIndex1(){
+  $this->genData();
 
   // Fetch by int
   $arg = array('int' => array(2,3));
@@ -335,6 +338,9 @@ public function testBeakIndex(){
   $actual = json_encode(array_keys($datas[$brl]));
   $expects= '["A","B","C\/D"]';
   $this->assertEquals($expects,$actual);
+}
+public function testBeakIndex2(){
+  $this->genData();
   // Fetch by key
   $arg = array('key' => array('value1','value2'));
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_ARRAY);
@@ -345,51 +351,48 @@ public function testBeakIndex(){
   $this->assertEquals($expects,$actual);
 }
 
-public function testBeakRangeGet(){
-  // Create index and Input data
-  $brl = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_CREATE_COL,array(Beak::Q_INDEXES=>'key,int'),array());
-  $ret = BeakController::beakQuery(array($brl));
-  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','A',Beak::M_SET,array());
-  $data = array('key'=>'value1','int' => 2);
-  $datas[] = array($brl , $data);
-  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','B',Beak::M_SET,array());
-  $data = array('key'=>'value2','int' => 2);
-  $datas[] = array($brl , $data);
-  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','C/D',Beak::M_SET,array());
-  $data = array('key'=>'value3','int' => 3);
-  $datas[] = array($brl , $data);
-  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','C/D/F',Beak::M_SET,array());
-  $data = array('key'=>'value2','int' => 4);
-  $datas[] = array($brl , $data);
-  $datas = BeakController::beakQuery($datas);
+public function testBeakRangeGet1(){
+  $this->genData();
 
   // Fetch by int ($gt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('int' => array('$gt'=>2));
   $datas = BeakController::beakQuery(array(array($brl,$arg)));
   ksort($datas[$brl]);
-  $actual = json_encode(array_keys($datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
   $this->assertEquals('["C\/D","C\/D\/F"]',$actual);
+}
+public function testBeakRangeGet2(){
+  $this->genData();
 
   // Fetch by int ($gt , $lt)
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('int' => array('$gt'=>2,'$lt' => 4));
   $datas = BeakController::beakQuery(array(array($brl,$arg)));
   ksort($datas[$brl]);
-  $actual = json_encode(array_keys($datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
   $this->assertEquals('["C\/D"]',$actual);
+}
+public function testBeakRangeGet3(){
+  $this->genData();
 
   // Fetch by int ($gte , $lte)
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('int' => array('$gte'=>3,'$lte' => 4));
   $datas = BeakController::beakQuery(array(array($brl,$arg)));
   ksort($datas[$brl]);
-  $actual = json_encode(array_keys($datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
   $this->assertEquals('["C\/D","C\/D\/F"]',$actual);
+}
+public function testBeakRangeGet4(){
+  $this->genData();
 
   // Fetch by _u ($gt , $lte)
+  $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('_u' => array('$gt'=>'B','$lte' => 'C/D/F'));
   $datas = BeakController::beakQuery(array(array($brl,$arg)));
   ksort($datas[$brl]);
-  $actual = json_encode(array_keys($datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
   $this->assertEquals('["C\/D","C\/D\/F"]',$actual);
 }
 }

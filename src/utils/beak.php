@@ -415,6 +415,18 @@ abstract class Beak {
    */
   const Q_EXCEPTS       = '_exts';
   /**
+   * Beak query sort columns
+   */
+  const Q_SORT          = '_sort';
+  /**
+   * Beak query skip documents
+   */
+  const Q_SKIP          = '_skip';
+  /**
+   * Beak query limit documents
+   */
+  const Q_LIMIT         = '_limit';
+  /**
    * Beak MV_COL target
    */
   const Q_NEWNAME       = '_new';

@@ -298,7 +298,7 @@ abstract class DefaultConfig {
       }
     }
   }
-  abstract public static function init();
+  //abstract public static function init();
 }
 # PHP settings
 ini_set('error_reporting',2039); # E_ALL & ^E_NOTICE

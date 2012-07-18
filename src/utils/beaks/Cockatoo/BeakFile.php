@@ -204,6 +204,7 @@ class BeakFile extends Beak {
       return $data;
     }
     return null;
+
   }
   /**
    * Range-get document datas
@@ -231,30 +232,37 @@ class BeakFile extends Beak {
 
           $hit = true;
           foreach($conds as $op => $opr){
-            if      ( $op === '$gt' ) {
+            if      ( $op === '$in' ) {
+              $hit = false;
+              foreach( $opr as $oprv ) {
+                if ( $oprv === $v ) {
+                  $hit = true;
+                  break;
+                }
+              }
+            }elseif ( $op === '$gt' ) {
               if ( $opr < $v ) {
                 continue;
               }
               $hit = false;
-              break;
             }elseif ( $op === '$lt' ) {
               if ( $opr > $v ) {
                 continue;
               }
               $hit = false;
-              break;
             }elseif ( $op === '$gte' ) {
               if ( $opr <= $v ) {
                 continue;
               }
               $hit = false;
-              break;
             }elseif ( $op === '$lte' ) {
               if ( $opr >= $v ) {
                 continue;
               }
               $hit = false;
-              break;
+            }else{
+              Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unsupported operation ! op=[ ' . $op . '] ' . $this->brl);
+              return;
             }
           }
           if ( $hit ) {
@@ -264,11 +272,10 @@ class BeakFile extends Beak {
       }
     }
     if ( $queries ) {
-      $this->ret = array();
       foreach($queries as $path){
         $data = $this->getDoc($this->path_gen($path));
         if ( $data !== null ) {
-          $this->ret[$path] = $data;
+          $this->ret[] = $data;
         }
       }
     }

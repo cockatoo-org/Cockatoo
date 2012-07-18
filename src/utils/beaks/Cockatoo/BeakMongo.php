@@ -109,7 +109,8 @@ class BeakMongo extends Beak {
           if ( $data[Beak::ATTR_BIN] ) {
             self::decode($data);
           }
-          $ret [$data[Beak::Q_UNIQUE_INDEX]]= $data;
+//          $ret [$data[Beak::Q_UNIQUE_INDEX]]= $data;
+          $ret []= $data;
         }
       }
       return $ret;
@@ -125,7 +126,6 @@ class BeakMongo extends Beak {
 
       $this->mongocursor = $mongocollection->find($query,$this->columns);
       if ( $this->mongocursor ) {
-        $this->ret = array();
         while ( $this->mongocursor->hasNext() ) {
           $data = $this->mongocursor->getNext();
           if ( $data[Beak::ATTR_BIN] ) {
