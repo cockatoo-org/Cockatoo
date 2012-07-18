@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 export PATH=/usr/local/bin:/usr/sbin:$PATH
 export PATH=/usr/local/php/bin:$PATH
+export NODE_PATH=/usr/local/nodejs/lib/node_modules/
 
 export COCKATOO_CONF=/usr/local/cockatoo/config.php
 

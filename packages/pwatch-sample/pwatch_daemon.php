@@ -25,7 +25,7 @@ declare(ticks = 1);
  */
 class PwatchDaemon {
   const NODEJS        = '/usr/local/nodejs/bin/node';
-  const HTMLMON       = '/usr/local/cockatoo/operation/html/htmlmon.js';
+  const HTMLMON       = '/usr/local/cockatoo/tools/html/htmlmon.js';
   const LOOP_SLEEP    = 60000000;
   public function __construct(){
   }
@@ -42,7 +42,6 @@ class PwatchDaemon {
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
           $last = $ret[$brl];
           if ( ! $last or ($last['_t'] + $setting['interval']*60) < $now ) {
-            \Cockatoo\Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : Watch : ' . $setting['url']);
             $args = array ( self::HTMLMON,'-u',"'".$setting['url']."'",'-w','100','-t','60000','-j','1','-A');
             if ( $setting['style'] === 'on' ) {
               $args []='-S';
@@ -50,6 +49,7 @@ class PwatchDaemon {
               $args []='-F';
             }
             $cmd = self::NODEJS . ' ' . join($args,' ') . ' 2> /dev/null';
+            \Cockatoo\Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : Watch : ' . $setting['url'] . ' =cmd=> ' . $cmd);
             $proc = popen($cmd,'r');
             if ( is_resource($proc) ) {
               $json = '';
@@ -77,6 +77,7 @@ class PwatchDaemon {
               $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array());
               $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$setting)));
             }
+            \Cockatoo\Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : Done : ' . $setting['url']);
           }
         }
       }catch ( \Exception $e ) {
