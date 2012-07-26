@@ -107,9 +107,9 @@ class BeakFile extends Beak {
     }
     return $ret;
   }
-  private function getIndex($column = ''){
+  private function getIndex($key = ''){
     $dir = $this->collection_path . self::DIR_INDEX;
-    if ( ! $column ) {
+    if ( ! $key ) {
       if( is_dir($dir) and $dh = opendir($dir) ) {
         $ret = array();
         while (($index = readdir($dh)) !== false) {
@@ -121,8 +121,14 @@ class BeakFile extends Beak {
         return $ret;
       }
       return array();
+    }elseif ( $key === Beak::Q_UNIQUE_INDEX ) {
+      $l = $this->listDir($this->collection_path,'',true);
+      if ( count($l) ){
+        return array_combine($l,array_map(function($n){return array($n);},$l));
+      }
+      return array();
     }else{
-      $ifile = $dir . $column;
+      $ifile = $dir . $key;
       if ( is_file($ifile)) {
         $json = file_get_contents($ifile);
         return self::decode($json);
@@ -130,13 +136,13 @@ class BeakFile extends Beak {
       return array();
     }
   }
-  private function setIndex($index,$data){
-    $idata = $this->getIndex($index);
-    if ( isset($data[$index])){
-      $idata[$data[$index]] []= $data[Beak::Q_UNIQUE_INDEX];
-      $idata[$data[$index]] = array_unique($idata[$data[$index]]);
-      $json = self::encode($idata);
-      $ifile = $this->collection_path . self::DIR_INDEX.$index;
+  private function setIndex($index_key,$data){
+    $index = $this->getIndex($index_key);
+    if ( isset($data[$index_key])){
+      $index[$data[$index_key]] []= $data[Beak::Q_UNIQUE_INDEX];
+      $index[$data[$index_key]] = array_unique($index[$data[$index_key]]);
+      $json = self::encode($index);
+      $ifile = $this->collection_path . self::DIR_INDEX.$index_key;
       file_put_contents($ifile,$json);
     }
   }
@@ -153,14 +159,14 @@ class BeakFile extends Beak {
     self::mkdir($this->collection_path);
     self::mkdir($this->collection_path . self::DIR_INDEX);
     if ( isset($this->queries[Beak::Q_INDEXES]) ){
-      foreach(explode(',',$this->queries[Beak::Q_INDEXES]) as $index){
-        $ifile = $this->collection_path . self::DIR_INDEX.$index;
+      foreach(explode(',',$this->queries[Beak::Q_INDEXES]) as $index_key){
+        $ifile = $this->collection_path . self::DIR_INDEX.$index_key;
         if ( $this->renew ) {
           file_put_contents($ifile,'{"":[]}');
         }
         foreach($this->listDir($this->collection_path,'',true) as $path){
           $data = $this->getDoc($this->path_gen($path));
-          $this->setIndex($index,$data);
+          $this->setIndex($index_key,$data);
         }
       }
     }
@@ -217,95 +223,108 @@ class BeakFile extends Beak {
    */
   public function getrQuery() {
     $this->ret  = array();
-    $queries = array();
-    if ( count($this->arg) === 0 ) {
-      $queries = $this->listDir($this->collection_path,'',true);
-    }else{
-      foreach ( $this->arg as $key => $conds ) {
-        $idata = null;
-        if ( $key === Beak::Q_UNIQUE_INDEX ) {
-          $l = $this->listDir($this->collection_path,'',true);
-          if ( count($l) ){
-            $idata = array_combine($l,array_map(function($n){return array($n);},$l));
-          }
-        }else{
-          $idata = $this->getIndex($key);
-        }
-        if ( $idata ) {
-          foreach ( $idata as $v => $us ){
-            if ( ! count($us) ){
-              continue;
-            }
-            
-            $hit = true;
-            foreach($conds as $op => $opr){
-              if      ( $op === '$in' ) {
-                $hit = false;
-                foreach( $opr as $oprv ) {
-                  if ( $oprv === $v ) {
-                    $hit = true;
-                    break;
-                  }
-                }
-              }elseif ( $op === '$gt' ) {
-                if ( $opr < $v ) {
-                  continue;
-                }
-                $hit = false;
-              }elseif ( $op === '$lt' ) {
-                if ( $opr > $v ) {
-                  continue;
-                }
-                $hit = false;
-              }elseif ( $op === '$gte' ) {
-                if ( $opr <= $v ) {
-                  continue;
-                }
-                $hit = false;
-              }elseif ( $op === '$lte' ) {
-                if ( $opr >= $v ) {
-                  continue;
-                }
-                $hit = false;
-              }else{
-                Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unsupported operation ! op=[ ' . $op . '] ' . $this->brl);
-                return;
-              }
-            }
-            if ( $hit ) {
-              $queries = array_merge($queries,$us);
-            }
-          }
-        }
+    // Parse sort conditions
+    $sort_key  = null;
+    $sort_type = 0;
+    if ( $this->sort and preg_match('@(^.+):([\-1]+)$@',$this->sort,$matches) !== 0) {
+      $sort_key = $matches[1];
+      $sort_type = (int)$matches[2];
+    }
+    // Determine the terms of the index-key.
+    list($key,$conds) = each($this->arg);
+    if ( ! $key ) { 
+      // Default index-key is the '_u'.
+      // When sorting, Adopt SORT-KEY as the index-key for performance.
+      $key = $this->sort?$sort_key:Beak::Q_UNIQUE_INDEX;
+      $conds = array('$' => null);
+    }
+    $index = $this->getIndex($key);
+    // Sort condition
+    if ( $this->sort ) {
+      if ( $sort_key !== $key ){
+        throw new \Exception('Sort key enfoced all scan : key => ' . $key . ' sort => ' . $sort_key);
+      }
+      if ($sort_type === -1 ) {
+        $index = array_reverse($index);
       }
     }
-    if ( $queries ) {
-      foreach($queries as $path){
+    
+    if ( ! $index ) {
+      return; // return empty. (means no match )
+    }
+    $unique_keys = array(); // Unique key '_u' list
+    $count = 0;
+    foreach ( $index as $v => $us ){
+      if ( ! count($us) ){
+        continue;
+      }
+      $hit = true;
+      foreach($conds as $op => $opr) {
+        if      ( $op === '$' ) {
+          $hit = true;
+          continue;   // LOOP : $conds
+        }elseif ( $op === '$in' ) {
+          $hit = false;
+          foreach( $opr as $oprv ) {
+            if ( $oprv === $v ) {
+              $hit = true;
+              break; // LOOP : $opr 
+            }
+          }
+        }elseif ( $op === '$gt' ) {
+          if ( $opr < $v ) {
+            continue;// LOOP : $conds
+          }
+          $hit = false;
+        }elseif ( $op === '$lt' ) {
+          if ( $opr > $v ) {
+            continue;// LOOP : $conds
+          }
+          $hit = false;
+        }elseif ( $op === '$gte' ) {
+          if ( $opr <= $v ) {
+            continue;// LOOP : $conds
+          }
+          $hit = false;
+        }elseif ( $op === '$lte' ) {
+          if ( $opr >= $v ) {
+            continue;// LOOP : $conds
+          }
+          $hit = false;
+        }else{
+          throw new \Exception('Unsupported operation ! op=[ ' . $op . '] ' . $this->brl);
+        }
+      }
+      if ( ! $hit ) {
+        continue;// LOOP : $index
+      }
+      if ($sort_type === -1 ) {
+        $us = array_reverse($us);
+      }
+      $nskip = $this->skip - $count;
+      $count += count($us);
+      if ( $nskip <= 0 ) {              // add simply
+      }elseif ( $nskip < count($us) ){  // boundary issue
+        $us = array_slice($us,($nskip-count($us)));
+      }else{                            // skip
+        continue;// LOOP : $index
+      }
+      $unique_keys = array_merge($unique_keys,$us);
+      $ncount = $count - ($this->skip + $this->limit);
+      if ( $ncount == 0 ) {
+        break;
+      } elseif ( $ncount > 0 ) {
+        $unique_keys = array_slice($unique_keys,0,$this->limit);
+        break;
+      }
+    } //$index
+    if ( $unique_keys ) {
+      foreach($unique_keys as $path){
         $data = $this->getDoc($this->path_gen($path));
         if ( $data !== null ) {
           $this->ret[] = $data;
         }
       }
-      if ( $this->sort and preg_match('@(^.+):([\-1]+)$@',$this->sort,$matches) !== 0) {
-        if ( (int)$matches[2] === -1 ) {
-          usort($this->ret,function($a,$b) use(&$matches){
-              if ( $a[$matches[1]] === $b[$matches[1]] ){
-                return $a[Beak::Q_UNIQUE_INDEX] < $b[Beak::Q_UNIQUE_INDEX];
-              }else{
-                return $a[$matches[1]] < $b[$matches[1]];
-              }
-            });
-        }elseif ( (int)$matches[2] === 1 ) {
-          usort($this->ret,function($a,$b) use(&$matches){
-              if ( $a[$matches[1]] === $b[$matches[1]] ){
-                return $a[Beak::Q_UNIQUE_INDEX] > $b[Beak::Q_UNIQUE_INDEX];
-              }else{
-                return $a[$matches[1]] > $b[$matches[1]];
-              }
-            });
-        }
-      }
-      $this->ret = array_slice($this->ret,$this->skip,$this->limit);
     }
   }
   /**
@@ -315,25 +334,25 @@ class BeakFile extends Beak {
    */
   public function getaQuery() {
     $this->ret  = null;
-    $queries = array();
+    $unique_keys = array();
     foreach ( $this->arg as $key => $cond ) {
       if ( $key === Beak::Q_UNIQUE_INDEX ) {
-        $queries = $cond;
+        $unique_keys = $cond;
         break;
       }
-      $idata = $this->getIndex($key);
-      if ( $idata ) {
+      $index = $this->getIndex($key);
+      if ( $index ) {
         foreach($cond as $v){
-          if ( isset($idata[$v]) ){
-            $queries = array_merge($queries,$idata[$v]);
+          if ( isset($index[$v]) ){
+            $unique_keys = array_merge($unique_keys,$index[$v]);
           }
         }
         break;
       }
     }
-    if ( $queries ) {
+    if ( $unique_keys ) {
       $this->ret = array();
-      foreach($queries as $path){
+      foreach($unique_keys as $path){
         $data = $this->getDoc($this->path_gen($path));
         if ( $data !== null ) {
           $this->ret[$path] = $data;
@@ -427,8 +446,8 @@ class BeakFile extends Beak {
         }
       }
     }
-    foreach($this->getIndex() as $index ){
-      $this->setIndex($index,$arg);
+    foreach($this->getIndex() as $index_key ){
+      $this->setIndex($index_key,$arg);
     }
 
     $data = self::encode($arg);
