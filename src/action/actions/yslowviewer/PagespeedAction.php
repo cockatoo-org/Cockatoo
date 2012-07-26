@@ -49,7 +49,7 @@ class PagespeedAction extends BeaconAction {
 
       $eurl = \Cockatoo\UrlUtil::urlencode($url);
       $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'stats,stats_c,comps',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
-      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
+      $beacons = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
 
       $graph_summary;
       $graph_summary[0]['label']  = 'Total score';
@@ -64,13 +64,13 @@ class PagespeedAction extends BeaconAction {
 
       $times = array();
       $count = 0;
-      foreach($ret[$brl] as $data ){
-        $u = $data['_u'];
+      foreach($beacons as $beacon ){
+        $u = $beacon['_u'];
         if ( $u ) {
-          $times []= strftime($data['t']);
-          $graph_summary[0]['data'] []= array($count, $data['pageStats']['overallScore']);
-          $graph_summary[1]['data'] []= array($count, $data['pageStats']['pageLoadTime']);
-          foreach($data['rules'] as $i => $rule){
+          $times []= strftime($beacon['t']);
+          $graph_summary[0]['data'] []= array($count, $beacon['pageStats']['overallScore']);
+          $graph_summary[1]['data'] []= array($count, $beacon['pageStats']['pageLoadTime']);
+          foreach($beacon['rules'] as $i => $rule){
             $graph_scores[$i]['label']   = $rule['shortName'];
             $graph_scores[$i]['label2']   = $rule['name'];
             $graph_scores[$i]['dim']     ="";

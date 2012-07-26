@@ -69,29 +69,25 @@ class DefaultCmsAuth extends CmsAuth {
 }
 
 function check_auth( $service , $account , $role ) {
-  $auth=array();
   // check system admin
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_GET);
-  $ret = BeakController::beakQuery(array($brl));
-  $auth = $ret[$brl];
-  if ( $auth['account'][$account] and $auth['account'][$account] > 0 ) {
+  $auth = BeakController::beakSimpleQuery($brl);
+  if ( $auth and $auth['account'] and $auth['account'][$account] and $auth['account'][$account] > 0 ) {
     return true;
   }
   // check service role
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$service,Beak::M_GET);
-  $ret = BeakController::beakQuery(array($brl));
-  $auth = $ret[$brl];
-  if ( $auth['account'][$account] and $auth['account'][$account] >= $role ) {
+  $auth = BeakController::beakSimpleQuery($brl);
+  if ( $auth and $auth['account'] and $auth['account'][$account] and $auth['account'][$account] >= $role ) {
     return true;
   }
   return false;
 }
 function set_auth( $service , $account , $role = -1 ) {
-  $auth=array();
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$service,Beak::M_GET);
-  $ret = BeakController::beakQuery(array($brl));
-  if ( $ret[$brl] ) {
-    $auth = $ret[$brl];
+  $auth = BeakController::beakSimpleQuery($brl);
+  if ( ! $auth ) {
+    $auth = array('account' => array());
   }
   $auth['account'][$account]= $role;
   if ( $role < 0 ) {
@@ -99,8 +95,8 @@ function set_auth( $service , $account , $role = -1 ) {
   }
 
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$service,Beak::M_SET);
-  $ret = BeakController::beakQuery(array(array($brl,$auth)));
-  if ( ! $ret[$brl] ) {
+  $ret = BeakController::beakSimpleQuery($brl,$auth);
+  if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
 }

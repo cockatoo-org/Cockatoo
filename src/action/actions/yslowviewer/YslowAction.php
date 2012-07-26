@@ -49,7 +49,7 @@ class YslowAction extends BeaconAction {
       list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
       $eurl = \Cockatoo\UrlUtil::urlencode($url);
       $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'stats,stats_c,comps',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
-      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
+      $beacons = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
 
       $graph_summary;
       $graph_summary[0]['label']  = 'Total score';
@@ -102,38 +102,38 @@ class YslowAction extends BeaconAction {
 //          $graph_summary[2]['dim'] = '';
       $times = array();
       $count = 0;
-      foreach($ret[$brl] as $data ){
-        $u = $data['_u'];
+      foreach($beacons[$brl] as $beacon ){
+        $u = $beacon['_u'];
         if ( $u ) {
-          $times []= strftime($data['t']);
-          $graph_summary[0]['data'] []= array($count, $data['o']);
-          $graph_summary[1]['data'] []= array($count, $data['lt']);
-//              $graph_summary[1]['data'] []= array($data['_t'], $data['w']/1000);
-//              $graph_summary[2]['data'] []= array($data['_t'], $data['r']);
+          $times []= strftime($beacon['t']);
+          $graph_summary[0]['data'] []= array($count, $beacon['o']);
+          $graph_summary[1]['data'] []= array($count, $beacon['lt']);
+//              $graph_summary[1]['data'] []= array($beacon['_t'], $beacon['w']/1000);
+//              $graph_summary[2]['data'] []= array($beacon['_t'], $beacon['r']);
           
-          $graph_scores[0]['data']  []= array($count, $data['g']['ynumreq']['score']);
-          $graph_scores[1]['data']  []= array($count, $data['g']['ycdn']['score']);
-          $graph_scores[2]['data']  []= array($count, $data['g']['yemptysrc']['score']);
-          $graph_scores[3]['data']  []= array($count, $data['g']['yexpires']['score']);
-          $graph_scores[4]['data']  []= array($count, $data['g']['ycompress']['score']);
-          $graph_scores[5]['data']  []= array($count, $data['g']['ycsstop']['score']);
-          $graph_scores[6]['data']  []= array($count, $data['g']['yjsbottom']['score']);
-          $graph_scores[7]['data']  []= array($count, $data['g']['yexpressions']['score']);
-          $graph_scores[8]['data']  []= array($count, $data['g']['yexternal']['score']);
-          $graph_scores[9]['data']  []= array($count, $data['g']['ydns']['score']);
-          $graph_scores[10]['data'] []= array($count, $data['g']['yminify']['score']);
-          $graph_scores[11]['data'] []= array($count, $data['g']['yredirects']['score']);
-          $graph_scores[12]['data'] []= array($count, $data['g']['ydupes']['score']);
-          $graph_scores[13]['data'] []= array($count, $data['g']['yetags']['score']);
-          $graph_scores[14]['data'] []= array($count, $data['g']['yxhr']['score']);
-          $graph_scores[15]['data'] []= array($count, $data['g']['yxhrmethod']['score']);
-          $graph_scores[16]['data'] []= array($count, $data['g']['ymindom']['score']);
-          $graph_scores[17]['data'] []= array($count, $data['g']['yno404']['score']);
-          $graph_scores[18]['data'] []= array($count, $data['g']['ymincookie']['score']);
-          $graph_scores[19]['data'] []= array($count, $data['g']['ycookiefree']['score']);
-          $graph_scores[20]['data'] []= array($count, $data['g']['ynofilter']['score']);
-          $graph_scores[21]['data'] []= array($count, $data['g']['yimgnoscale']['score']);
-          $graph_scores[22]['data'] []= array($count, $data['g']['yfavicon']['score']);
+          $graph_scores[0]['data']  []= array($count, $beacon['g']['ynumreq']['score']);
+          $graph_scores[1]['data']  []= array($count, $beacon['g']['ycdn']['score']);
+          $graph_scores[2]['data']  []= array($count, $beacon['g']['yemptysrc']['score']);
+          $graph_scores[3]['data']  []= array($count, $beacon['g']['yexpires']['score']);
+          $graph_scores[4]['data']  []= array($count, $beacon['g']['ycompress']['score']);
+          $graph_scores[5]['data']  []= array($count, $beacon['g']['ycsstop']['score']);
+          $graph_scores[6]['data']  []= array($count, $beacon['g']['yjsbottom']['score']);
+          $graph_scores[7]['data']  []= array($count, $beacon['g']['yexpressions']['score']);
+          $graph_scores[8]['data']  []= array($count, $beacon['g']['yexternal']['score']);
+          $graph_scores[9]['data']  []= array($count, $beacon['g']['ydns']['score']);
+          $graph_scores[10]['data'] []= array($count, $beacon['g']['yminify']['score']);
+          $graph_scores[11]['data'] []= array($count, $beacon['g']['yredirects']['score']);
+          $graph_scores[12]['data'] []= array($count, $beacon['g']['ydupes']['score']);
+          $graph_scores[13]['data'] []= array($count, $beacon['g']['yetags']['score']);
+          $graph_scores[14]['data'] []= array($count, $beacon['g']['yxhr']['score']);
+          $graph_scores[15]['data'] []= array($count, $beacon['g']['yxhrmethod']['score']);
+          $graph_scores[16]['data'] []= array($count, $beacon['g']['ymindom']['score']);
+          $graph_scores[17]['data'] []= array($count, $beacon['g']['yno404']['score']);
+          $graph_scores[18]['data'] []= array($count, $beacon['g']['ymincookie']['score']);
+          $graph_scores[19]['data'] []= array($count, $beacon['g']['ycookiefree']['score']);
+          $graph_scores[20]['data'] []= array($count, $beacon['g']['ynofilter']['score']);
+          $graph_scores[21]['data'] []= array($count, $beacon['g']['yimgnoscale']['score']);
+          $graph_scores[22]['data'] []= array($count, $beacon['g']['yfavicon']['score']);
           $count++;
         }
       }

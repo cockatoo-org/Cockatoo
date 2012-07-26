@@ -160,8 +160,8 @@ class BeakTransfer {
     print('transfer_all : ' . $this->scheme . '://' . $this->prefix . '-' . $this->scheme . "\n");
     $brl = brlgen($this->scheme,$this->prefix,'','',Beak::M_COL_LIST);
     Config::$BeakLocation[$this->base_brl] = $this->from_location;
-    $collections = BeakController::beakQuery(array($brl),$this->FROM_BEAKS);
-    foreach ( $collections[$brl] as $collection ) {
+    $collections = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
+    foreach ( $collections as $collection ) {
       $collection = chop($collection,'/');
       $this->transfer_collection($collection,$renew,$callback);
     }
@@ -180,31 +180,30 @@ class BeakTransfer {
     // Get collection info
     $brl   = brlgen($this->scheme,$this->prefix,$original,'',Beak::M_SYSTEM,array(Beak::Q_SYS=>'idxs'));
     Config::$BeakLocation[$this->base_brl] = $this->from_location;
-    $ret = BeakController::beakQuery(array($brl),$this->FROM_BEAKS);
-    $idxs = implode(',',$ret[$brl]);
+    $indexs = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
+    $idxs = implode(',',$indexs);
 
     if ( $renew ) {
       $collection=$collection.'.tmp';
       $brl = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_CREATE_COL,array(Beak::Q_INDEXES=>$idxs),array(Beak::COMMENT_KIND_RENEW));
       Config::$BeakLocation[$this->base_brl] = $this->to_location;
-      $ret = BeakController::beakQuery(array($brl),$this->TO_BEAKS);
+      $ret = BeakController::beakSimpleQuery($brl,null,$this->TO_BEAKS);
     } else {
       $brl = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_CREATE_COL,array(Beak::Q_INDEXES=>$idxs),array());
       Config::$BeakLocation[$this->base_brl] = $this->to_location;
-      $ret = BeakController::beakQuery(array($brl),$this->TO_BEAKS);
+      $ret = BeakController::beakSimpleQuery($brl,null,$this->TO_BEAKS);
     }
     $brl   = brlgen($this->scheme,$this->prefix,$original,'',Beak::M_KEY_LIST);
     Config::$BeakLocation[$this->base_brl] = $this->from_location;
-    $paths = BeakController::beakQuery(array($brl),$this->FROM_BEAKS);
+    $paths = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
 
     $queries = array();
     $count = 0;
-    if ( isset($paths[$brl]) ) {
-      foreach ( $paths[$brl] as $path ) {
+    if ( isset($paths) ) {
+      foreach ( $paths as $path ) {
         $brl = brlgen($this->scheme,$this->prefix,$original,$path,Beak::M_GET);
         Config::$BeakLocation[$this->base_brl] = $this->from_location;
-        $ret = BeakController::beakQuery(array($brl),$this->FROM_BEAKS);
-        $data = &$ret[$brl];
+        $data = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
         $brl = brlgen($this->scheme,$this->prefix,$collection,$path,Beak::M_SET,array());
         if ( $callback ) {
           $data = $callback($data);
@@ -241,7 +240,7 @@ class BeakTransfer {
     }
     if ( $renew ) {
       $brl = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_MV_COL,array(Beak::Q_NEWNAME=>$original));
-      $ret = BeakController::beakQuery(array($brl),$this->TO_BEAKS);
+      $ret = BeakController::beakSimpleQuery($brl,null,$this->TO_BEAKS);
     }
   }
 }

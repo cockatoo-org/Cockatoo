@@ -54,13 +54,8 @@ abstract class AdminAction extends Action {
         }
       }
       // User list
-      $brl = $this->BASE_BRL.'?keys';
-      $ret = BeakController::beakQuery(array($brl));
-      $keys = array(Beak::Q_UNIQUE_INDEX => $ret[$brl]);
-      
-      $brl = $this->BASE_BRL.'?getA';
-      $ret = BeakController::beakQuery(array(array($brl,$keys)));
-      $users = $ret[$brl];
+      $brl = $this->BASE_BRL.'?getR';
+      $users = BeakController::beakSimpleQuery($brl);
       return array('users' => $users);
     }catch ( \Exception $e ) {
       $this->error($e);

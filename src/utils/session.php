@@ -23,8 +23,8 @@ function getSession($sessionID,$prefix){
     return null;
   }
   $brl = brlgen(Def::BP_SESSION,$prefix,'default',$sessionID,Beak::M_GET,array(),array(Beak::COMMENT_KIND_FRESH));
-  $ret = BeakController::beakQuery(array($brl));
-  return $ret[$brl];
+  $session = BeakController::beakSimpleQuery($brl);
+  return $session;
 }
 /**
  * Set session object
@@ -38,7 +38,7 @@ function setSession($sessionID,$prefix,$session){
     return null;
   }
   $brl = brlgen(Def::BP_SESSION,$prefix,'default',$sessionID,Beak::M_SET);
-  $ret = BeakController::beakQuery(array(array($brl,$session)));
+  $ret = BeakController::beakSimpleQuery($brl,$session);
 }
 /**
  * Del session object
@@ -51,5 +51,5 @@ function delSession($sessionID,$prefix){
     return null;
   }
   $brl = brlgen(Def::BP_SESSION,$prefix,'default',$sessionID,Beak::M_DEL);
-  $ret = BeakController::beakQuery(array($brl));
+  $ret = BeakController::beakSimpleQuery($brl);
 }

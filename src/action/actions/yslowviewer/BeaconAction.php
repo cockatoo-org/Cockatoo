@@ -42,21 +42,20 @@ abstract class BeaconAction extends \Cockatoo\Action {
         $beacon = $this->form_beacon($beacon);
         // Create collection
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$beacon['u'],'',\Cockatoo\Beak::M_CREATE_COL,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array($brl));
+        $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
         // Save 
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$beacon['u'],$now,\Cockatoo\Beak::M_SET,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
-        if ( ! $ret[$brl] ) {
+        $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$beacon);
+        if ( ! $ret ) {
           throw new \Exception('Cannot save it ! Probably storage error...');
         }
         // Save list
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,'URLS',$beacon['u'],\Cockatoo\Beak::M_SET,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$beacon)));
+        $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$beacon);
 
       }elseif ( $this->method === \Cockatoo\Beak::M_COL_LIST ) {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,'URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array())));
-        $eurls =$ret[$brl];
+        $eurls = \Cockatoo\BeakController::beakSimpleQuery($brl,array());
 
         $urls = array();
         $THIS = &$this;
@@ -76,10 +75,10 @@ abstract class BeaconAction extends \Cockatoo\Action {
         list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
         $url = \Cockatoo\UrlUtil::urlencode($url);
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_FILTERS=>'_u,t',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
+        $beacons = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
         // times
         $times;
-        foreach($ret[$brl] as $b) {
+        foreach($beacons as $b) {
           if ( $b['_u'] ) {
             $times [$b['_u']]= $b['t'];
           }
@@ -94,23 +93,19 @@ abstract class BeaconAction extends \Cockatoo\Action {
         $beacon = null;
         if ( $t ) {
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,$t,\Cockatoo\Beak::M_GET,array(),array());
-          $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-          if ( ! $ret[$brl] ) {
+          $beacon = \Cockatoo\BeakController::beakSimpleQuery($brl);
+          if ( ! $ret ) {
             // throw new \Exception('Cannot get it ! Probably data not found...');
-          }else{
-            $beacon = $ret[$brl];
           }
         }
         if ( ! $beacon ){
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>1),array());
-          $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
-          // $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-          if ( ! $ret[$brl] ) {
+          $beacons = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
+          if ( ! $beacons ) {
             throw new \Exception('Cannot get it ! Probably data not found...');
           }
-          $beacon = $ret[$brl][0];
+          $beacon = $beacons[0];
         }
-        //$beacon['u'] = \Cockatoo\UrlUtil::urldecode($beacon['u']);
         $beacon['url'] = $url;
         return $this->form_detail($beacon);
       }else{

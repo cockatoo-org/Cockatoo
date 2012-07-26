@@ -15,14 +15,9 @@ require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
 class HistAction extends \Cockatoo\Action {
   public function proc(){
     $this->setNamespace('wiki');
-    // Query strings
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_GET,array(),array());
-    $bret = \Cockatoo\BeakController::beakQuery(array($brl));
-    if ( $bret[$brl] and $bret[$brl]['hist']) {
-      krsort($bret[$brl]['hist']);
-      return $bret[$brl];
-    }
-    return null;
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','',     \Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_SORT => '_u:-1',\Cockatoo\Beak::Q_LIMIT =>10),array());
+    $histories = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    return array('hist' => $histories);
   }
   public function postProc(){
   }

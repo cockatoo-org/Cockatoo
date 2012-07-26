@@ -730,6 +730,18 @@ class BeakController {
 
   /**
    * Beak operation entry-point
+   *   (Wrapping beakQuery )
+   *
+   * @param Array $brl
+   * @param Array $data 
+   * @param Array $classes Be able to specifiy the Beak-drivers @see config.php
+   */
+  public static function beakSimpleQuery($brl,$data=null,$classes=array()) {
+    $ret = self::beakQuery(array(array($brl,$data)));
+    return $ret[$brl];
+  }
+  /**
+   * Beak operation entry-point
    *
    * @param Array $brlTuples Array($brl) when 'get' operation, Array(Array($brl,$data)) when 'set' operation
    * @param Array $classes Be able to specifiy the Beak-drivers @see config.php
@@ -785,8 +797,8 @@ class BeakController {
   /**
    * Singleton
    *
-   */
-  protected static function singleton() {
+   */ 
+ protected static function singleton() {
     if ( ! self::$instance ) {
       self::$instance = new BeakController();
     }

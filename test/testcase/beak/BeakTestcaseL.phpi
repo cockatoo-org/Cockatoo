@@ -1,20 +1,20 @@
 public function testBeakKeyListAll(){
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_KEY_LIST);
-  $datas = BeakController::beakQuery(array($brl));
+  $datas = BeakController::beakSimpleQuery($brl);
   $exp = array('','file1','file2','path/','path/to');
   sort($exp);
   $expects  = json_encode($exp);
-  sort($datas[$brl]);
-  $actual   = json_encode($datas[$brl]);
+  sort($datas);
+  $actual   = json_encode($datas);
   $this->assertEquals($expects,$actual);
 }
 
 public function testBeakColList(){
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','','',Beak::M_COL_LIST);
-  $datas = BeakController::beakQuery(array($brl));
+  $datas = BeakController::beakSimpleQuery($brl);
   $expects  = json_encode(array('device'));
-  ksort($datas[$brl]);
-  $actual   = json_encode($datas[$brl]);
+  ksort($datas);
+  $actual   = json_encode($datas);
   $this->assertEquals($expects,$actual);
 }
 
@@ -42,12 +42,12 @@ public function testBeakIndex1(){
   // Fetch by int
   $arg = array('int' => array(2,3));
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_ARRAY);
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
-  ksort($datas[$brl]);
-  foreach ( $datas[$brl] as $key => $data ){
-    ksort($datas[$brl][$key]);
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
+  ksort($datas);
+  foreach ( $datas as $key => $data ){
+    ksort($datas[$key]);
   }
-  $actual = json_encode(array_keys($datas[$brl]));
+  $actual = json_encode(array_keys($datas));
   $expects= '["A","B","C\/D"]';
   $this->assertEquals($expects,$actual);
 }
@@ -56,9 +56,9 @@ public function testBeakIndex2(){
   // Fetch by key
   $arg = array('key' => array('value1','value2'));
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_ARRAY);
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
-  ksort($datas[$brl]);
-  $actual = json_encode(array_keys($datas[$brl]));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
+  ksort($datas);
+  $actual = json_encode(array_keys($datas));
   $expects= '["A","B","C\/D\/F"]';
   $this->assertEquals($expects,$actual);
 }
@@ -69,9 +69,9 @@ public function testBeakRangeGet0(){
   // Fetch by int ($gt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array();
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
-  sort($datas[$brl]);
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
+  sort($datas);
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["A","B","C\/D\/F","C\/D","","file1","file2","path\/","path\/to"]',$actual);
 }
 public function testBeakRangeGet1(){
@@ -80,9 +80,9 @@ public function testBeakRangeGet1(){
   // Fetch by int ($gt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('int' => array('$gt'=>2));
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
-  sort($datas[$brl]);
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
+  sort($datas);
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["C\/D\/F","C\/D"]',$actual);
 }
 public function testBeakRangeGet2(){
@@ -91,9 +91,9 @@ public function testBeakRangeGet2(){
   // Fetch by int ($gt , $lt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('int' => array('$gt'=>2,'$lt' => 4));
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
-  sort($datas[$brl]);
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
+  sort($datas);
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["C\/D"]',$actual);
 }
 public function testBeakRangeGet3(){
@@ -102,9 +102,9 @@ public function testBeakRangeGet3(){
   // Fetch by int ($gte , $lte)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('int' => array('$gte'=>3,'$lte' => 4));
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
-  sort($datas[$brl]);
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
+  sort($datas);
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["C\/D\/F","C\/D"]',$actual);
 }
 public function testBeakRangeGet4(){
@@ -113,9 +113,9 @@ public function testBeakRangeGet4(){
   // Fetch by _u ($gt , $lte)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE);
   $arg = array('_u' => array('$gt'=>'B','$lte' => 'C/D/F'));
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
-  sort($datas[$brl]);
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
+  sort($datas);
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["C\/D\/F","C\/D"]',$actual);
 }
 
@@ -124,9 +124,9 @@ public function testBeakRangeGet_sort0(){
 
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE,array(Beak::Q_SORT=>'key:1'));
   $arg = array();
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
 
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
 
   $this->assertEquals('["","file1","file2","path\/","path\/to","A","B","C\/D\/F","C\/D"]',$actual);
 }
@@ -136,9 +136,9 @@ public function testBeakRangeGet_sort1(){
 
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE,array(Beak::Q_SORT=>'key:-1'));
   $arg = array();
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
 
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["C\/D","C\/D\/F","B","A","path\/to","path\/","file2","file1",""]',$actual);
 }
 
@@ -149,9 +149,9 @@ public function testBeakRangeGet_sort2(){
   // Fetch by int ($gt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE,array(Beak::Q_SORT=>'key:1'));
   $arg = array();
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
 
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["","file1","file2","path\/","path\/to","A","B","C\/D\/F","C\/D"]',$actual);
 }
 
@@ -161,9 +161,9 @@ public function testBeakRangeGet_skip(){
   // Fetch by int ($gt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE,array(Beak::Q_SORT=>'key:1',Beak::Q_SKIP=>3));
   $arg = array();
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
 
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["path\/","path\/to","A","B","C\/D\/F","C\/D"]',$actual);
 }
 public function testBeakRangeGet_limit(){
@@ -172,9 +172,9 @@ public function testBeakRangeGet_limit(){
   // Fetch by int ($gt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE,array(Beak::Q_SORT=>'key:1',Beak::Q_LIMIT=>4));
   $arg = array();
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
 
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["","file1","file2","path\/"]',$actual);
 }
 public function testBeakRangeGet_skip_limit(){
@@ -183,8 +183,8 @@ public function testBeakRangeGet_skip_limit(){
   // Fetch by int ($gt)
   $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_GET_RANGE,array(Beak::Q_SORT=>'key:1',Beak::Q_SKIP=>3,Beak::Q_LIMIT=>4));
   $arg = array();
-  $datas = BeakController::beakQuery(array(array($brl,$arg)));
+  $datas = BeakController::beakSimpleQuery($brl,$arg);
 
-  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas[$brl]));
+  $actual = json_encode(array_map(function($v){return $v['_u'];},$datas));
   $this->assertEquals('["path\/","path\/to","A","B"]',$actual);
 }

@@ -437,10 +437,12 @@ class ContentDrawer {
       if ( $n === $len ) {
         return $data; // Found
       }
-      foreach ( $data as $k => $v ) {
-        $ret = $this->findKey($key,$len,$v,$cur.'.'.$k);
-        if ( $ret ) {
-          return $ret;
+      if ( $data ) {
+        foreach ( $data as $k => $v ) {
+          $ret = $this->findKey($key,$len,$v,$cur.'.'.$k);
+          if ( $ret ) {
+            return $ret;
+          }
         }
       }
     }

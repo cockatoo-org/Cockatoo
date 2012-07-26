@@ -29,9 +29,9 @@ try {
     // core component
     $BASIC_CONTANT_DRAWER = new ContentDrawer(Def::RESERVED_SERVICE_CORE,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);  
     $brl = brlgen(Def::BP_COMPONENT,Def::RESERVED_SERVICE_CORE,Def::RESERVED_DEVICE_DEFAULT,'',Beak::M_KEY_LIST);
-    $ret = BeakController::beakQuery(array($brl));
+    $components = BeakController::beakSimpleQuery($brl);
     $children = array();
-    foreach ( $ret[$brl] as $p){
+    foreach ( $components as $p){
       if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
 //        if ( strcmp($p,'pagelayout')){
           $pid = $p;
@@ -55,18 +55,22 @@ try {
   }
   $COMPONENTS_DRAWERS []= $BASIC_CONTANT_DRAWER;
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
-  $ret = BeakController::beakQuery(array($brl));
-  foreach ( $ret[$brl] as $sid){
+  $services = BeakController::beakSimpleQuery($brl);
+  foreach ( $services as $sid){
+    if ( ! $sid ) {
+      continue;
+    }
     if ( is_readable($sid) ){
       if (strcmp($sid,Def::RESERVED_SERVICE_CORE)===0){
         continue;
       }
       // service component
-      $COMPONENTS_DRAWER = new ContentDrawer($sid,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);  $brl = brlgen(Def::BP_COMPONENT,$sid,Def::RESERVED_DEVICE_DEFAULT,'',Beak::M_KEY_LIST);
-      $ret = BeakController::beakQuery(array($brl));
+      $COMPONENTS_DRAWER = new ContentDrawer($sid,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);
+      $brl = brlgen(Def::BP_COMPONENT,$sid,Def::RESERVED_DEVICE_DEFAULT,'',Beak::M_KEY_LIST);
+      $components = BeakController::beakSimpleQuery($brl);
       $children = array();
-      if ( $ret[$brl] ) {
-        foreach ( $ret[$brl] as $p){
+      if ( $components ) {
+        foreach ( $components as $p){
           if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
             $pid = $p;
             $children []= array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,$sid,Def::RESERVED_DEVICE_DEFAULT,$pid,Beak::M_GET),
@@ -126,8 +130,8 @@ try {
     // page
     $CONTENT_DRAWER = new ContentDrawer($SERVICE,$DEVICE,$PATH,null,$REQUEST_PARSER,$DEVICE_SELECTOR,Def::RenderingModeCMS);  
     $brl = brlgen(Def::BP_LAYOUT,$SERVICE,$DEVICE,$PATH,Beak::M_GET);
-    $ret = BeakController::beakQuery(array($brl));
-    $CONTENT_DRAWER->layout($ret[$brl]);
+    $page_layout = BeakController::beakSimpleQuery($brl);
+    $CONTENT_DRAWER->layout($page_layout);
     $CONTENT_DRAWER->components();
   }
   Include Config::COCKATOO_ROOT.'wwwutils/core/cms_frame.php';

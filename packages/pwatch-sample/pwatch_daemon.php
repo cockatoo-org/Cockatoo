@@ -36,8 +36,7 @@ class PwatchDaemon {
     while(true) {
       try {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$gt' => '')))));
-        $settings = $ret[$brl];
+        $settings = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$gt' => '')));
         foreach ( $settings as $setting ) {
           $eurl = $setting['_u'];
           $now = time();
@@ -74,10 +73,10 @@ class PwatchDaemon {
               $data['_t'] = $now;
               // Save data
               $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,$now,\Cockatoo\Beak::M_SET,array(),array());
-              $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$data)));
+              $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$data);
               // Save list @@@
               $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_PARTIAL));
-              $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('data' => $data))));
+              $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,array('data' => $data));
             }
             \Cockatoo\Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : Done : ' . $setting['url']);
           }else{

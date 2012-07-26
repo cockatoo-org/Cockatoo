@@ -231,7 +231,7 @@ class BeakFile extends Beak {
       $sort_type = (int)$matches[2];
     }
     // Determine the terms of the index-key.
-    list($key,$conds) = each($this->arg);
+    list($key,$conds) = $this->arg?each($this->arg):array(null,null);
     if ( ! $key ) { 
       // Default index-key is the '_u'.
       // When sorting, Adopt SORT-KEY as the index-key for performance.

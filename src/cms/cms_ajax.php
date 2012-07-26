@@ -71,24 +71,21 @@ try {
       foreach ( $dids as $did){
         // layout
         $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
-        $data = BeakController::beakQuery(array($brl));
-        $data = &$data[$brl];
-        $rev = $data[Beak::ATTR_REV];
-        $eredirect = $data[Def::K_LAYOUT_EREDIRECT];
-        $header = $data[Def::K_LAYOUT_HEADER];
-        $pheader = $data[Def::K_LAYOUT_PHEADER];
-        $bottom = $data[Def::K_LAYOUT_BOTTOM];
-        $session_exp = $data[Def::K_LAYOUT_SESSION_EXP];
-        $expires = $data[Def::K_LAYOUT_EXPIRES];
+        $default_layout = BeakController::beakSimpleQuery($brl);
+        $rev        = $default_layout[Beak::ATTR_REV];
+        $eredirect  = $default_layout[Def::K_LAYOUT_EREDIRECT];
+        $header     = $default_layout[Def::K_LAYOUT_HEADER];
+        $pheader    = $default_layout[Def::K_LAYOUT_PHEADER];
+        $bottom     = $default_layout[Def::K_LAYOUT_BOTTOM];
+        $session_exp= $default_layout[Def::K_LAYOUT_SESSION_EXP];
+        $expires    = $default_layout[Def::K_LAYOUT_EXPIRES];
         // css
         $cssBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonCSS,Beak::M_GET);
-        $cssRet = BeakController::beakQuery(array($cssBrl));
-        $css = $cssRet[$cssBrl];
+        $css = BeakController::beakSimpleQuery($cssBrl);
         $css = $css?$css[Def::K_STATIC_DATA]:'';
         // js
         $jsBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonJs,Beak::M_GET);
-        $jsRet = BeakController::beakQuery(array($jsBrl));
-        $js = $jsRet[$jsBrl];
+        $js = BeakController::beakSimpleQuery($jsBrl);
         $js = $js?$js[Def::K_STATIC_DATA]:'';
         $r []= array('rev' => $rev,
                      'sid' => $sid ,
@@ -187,19 +184,19 @@ try {
   } elseif( $op === 'cpP' ) {
     check_writable($sid);
     $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
-    $data = BeakController::beakQuery(array($brl));
-    $layout = $data[$brl][Def::K_LAYOUT_LAYOUT];
+    $page_layout = BeakController::beakSimpleQuery($brl);
+    $layout = $page_layout[Def::K_LAYOUT_LAYOUT];
     $pid = $_sP['name'];
     setP(false,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'delP' ) {
     $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_DEL);
-    BeakController::beakQuery(array($brl));
+    BeakController::beakSimpleQuery($brl);
   } elseif( $op === 'getC' ) {
     if ( is_readable($sid) ){
       $brl = brlgen(Def::BP_COMPONENT,$sid,'default','',Beak::M_KEY_LIST);
-      $ret = BeakController::beakQuery(array($brl));
+      $components = BeakController::beakSimpleQuery($brl);
       $r = array();
-      foreach ( $ret[$brl] as $c){
+      foreach ( $components as $c){
         $cid = $c;
         if ( preg_match('@[^/]$@',$c,$matches) !== 0 ) {
           $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
@@ -221,19 +218,18 @@ try {
   } elseif( $op === 'getCC' ) {
     if ( is_readable($sid) ){
       $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
-      $ret = BeakController::beakQuery(array($brl));
-      $cdata = &$ret[$brl];
+      $component = BeakController::beakSimpleQuery($brl);
 
-      $r = array('rev'         => $cdata[Beak::ATTR_REV],
-                 'type'        => $cdata[Def::K_COMPONENT_TYPE],
-                 'subject'     => $cdata[Def::K_COMPONENT_SUBJECT],
-                 'description' => $cdata[Def::K_COMPONENT_DESCRIPTION],
-                 'id'          => $cdata[Def::K_COMPONENT_ID],
-                 'clazz'       => $cdata[Def::K_COMPONENT_CLASS],
-                 'body'        => $cdata[Def::K_COMPONENT_BODY],
-                 'actions'     => $cdata[Def::K_COMPONENT_ACTION]?join("\n",$cdata[Def::K_COMPONENT_ACTION]):'',
-                 'js'          => $cdata[Def::K_COMPONENT_JS],
-                 'css'         => $cdata[Def::K_COMPONENT_CSS]
+      $r = array('rev'         => $component[Beak::ATTR_REV],
+                 'type'        => $component[Def::K_COMPONENT_TYPE],
+                 'subject'     => $component[Def::K_COMPONENT_SUBJECT],
+                 'description' => $component[Def::K_COMPONENT_DESCRIPTION],
+                 'id'          => $component[Def::K_COMPONENT_ID],
+                 'clazz'       => $component[Def::K_COMPONENT_CLASS],
+                 'body'        => $component[Def::K_COMPONENT_BODY],
+                 'actions'     => $component[Def::K_COMPONENT_ACTION]?join("\n",$component[Def::K_COMPONENT_ACTION]):'',
+                 'js'          => $component[Def::K_COMPONENT_JS],
+                 'css'         => $component[Def::K_COMPONENT_CSS]
         );
     }
   } elseif( $op === 'addC' ) {
@@ -259,7 +255,7 @@ try {
       throw new \Exception('Still required by ' . implode($required,'<br>'));
     }
     $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_DEL);
-    BeakController::beakQuery(array($brl));
+    BeakController::beakSimpleQuery($brl);
   } elseif( $op === 'setL' ) {
     check_writable($sid);
     $layout = json_decode($_sP['layout'],true);
@@ -267,15 +263,14 @@ try {
       throw new \Exception('Fail to json_decode : ' . $_sP['layout']);
     }
     $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
-    $ret = BeakController::beakQuery(array($brl));
-    $data = $ret[$brl];
-    if ( ! $data ) {
+    $page_layout = BeakController::beakSimpleQuery($brl);
+    if ( ! $page_layout ) {
       throw new \Exception('Fail to get : ' . $brl);
     }
     $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_SET);
-    $data[Def::K_LAYOUT_LAYOUT] = $layout;
-    $ret = BeakController::beakQuery(array(array($brl,$data)));
-    if ( ! $ret[$brl] ) {
+    $page_layout[Def::K_LAYOUT_LAYOUT] = $layout;
+    $ret = BeakController::beakSimpleQuery($brl,$page_layout);
+    if ( ! $ret ) {
       throw new \Exception('Fail to set : ' . $brl);
     }
   } else{
@@ -286,27 +281,27 @@ try {
 
 function getS(){
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
-  $ret = BeakController::beakQuery(array($brl));
-  if ( ! $ret[$brl] ) {
+  $service = BeakController::beakSimpleQuery($brl);
+  if ( ! $service ) {
     throw new \Exception('Fail to get : ' . $brl);
   }
-  return $ret[$brl];
+  return $service;
 }
 function getD($sid){
   $brl = brlgen(Def::BP_LAYOUT,$sid,'','',Beak::M_COL_LIST);
-  $ret = BeakController::beakQuery(array($brl));
-  if ( $ret[$brl] === null ) {
+  $default_layout = BeakController::beakSimpleQuery($brl);
+  if ( $default_layout === null ) {
     throw new \Exception('Fail to get : ' . $brl);
   }
-  return $ret[$brl];
+  return $default_layout;
 }
 function getP($sid,$did){
   $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_KEY_LIST);
-  $ret = BeakController::beakQuery(array($brl));
-  if ( $ret[$brl] === null ) {
+  $page_layout = BeakController::beakSimpleQuery($brl);
+  if ( $page_layout === null ) {
     throw new \Exception('Fail to get : ' . $brl);
   }
-  return $ret[$brl];
+  return $page_layout;
 }
 
 function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
@@ -315,41 +310,41 @@ function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time
   }
   if ( ! $flg ){
     $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
-    $data = BeakController::beakQuery(array($brl));
-    if ( $data[$brl]) {
+    $default_layout = BeakController::beakSimpleQuery($brl);
+    if ( $default_layout) {
       throw new \Exception('Device already exist ! : ' . $did);
     } else {
       // layout
       $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
-      $ret = BeakController::beakQuery(array($brl));
+      $ret = BeakController::beakSimpleQuery($brl);
       // component
       $brl = brlgen(Def::BP_COMPONENT,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
-      $ret = BeakController::beakQuery(array($brl));
+      $ret = BeakController::beakSimpleQuery($brl);
       // STATIC
       $brl = brlgen(Def::BP_STATIC,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
-      $ret = BeakController::beakQuery(array($brl));
+      $ret = BeakController::beakSimpleQuery($brl);
       // session
       $brl = brlgen(Def::BP_SESSION,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
-      $ret = BeakController::beakQuery(array($brl));
+      $ret = BeakController::beakSimpleQuery($brl);
     }
   }else{
   }
   $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
-  $ret = BeakController::beakQuery(array($brl));
-  $data = $ret[$brl]?$ret[$brl]:array();
-  $data[Beak::ATTR_REV] = $rev;
-  $data[Def::K_LAYOUT_EREDIRECT] = $eredirect;
+  $default_layout = BeakController::beakSimpleQuery($brl);
+  $default_layout = $default_layout?$default_layout:array();
+  $default_layout[Beak::ATTR_REV]            = $rev;
+  $default_layout[Def::K_LAYOUT_EREDIRECT]   = $eredirect;
   if ( $layout ) {
-    $data[Def::K_LAYOUT_LAYOUT] = $layout;
+    $default_layout[Def::K_LAYOUT_LAYOUT]    = $layout;
   }
-  $data[Def::K_LAYOUT_HEADER]      = $header;
-  $data[Def::K_LAYOUT_PHEADER]      = $pheader;
-  $data[Def::K_LAYOUT_BOTTOM]      = $bottom;
-  $data[Def::K_LAYOUT_SESSION_EXP] = $session_exp;
-  $data[Def::K_LAYOUT_EXPIRES]     = $expires_time;
+  $default_layout[Def::K_LAYOUT_HEADER]      = $header;
+  $default_layout[Def::K_LAYOUT_PHEADER]     = $pheader;
+  $default_layout[Def::K_LAYOUT_BOTTOM]      = $bottom;
+  $default_layout[Def::K_LAYOUT_SESSION_EXP] = $session_exp;
+  $default_layout[Def::K_LAYOUT_EXPIRES]     = $expires_time;
   $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
-  $ret = BeakController::beakQuery(array(array($brl,$data)));
-  if ( ! $ret[$brl] ) {
+  $ret = BeakController::beakSimpleQuery($brl,$default_layout);
+  if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
   // css
@@ -365,29 +360,27 @@ function setP($flg,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$
   }
   $data = array();
   $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
-  $data = BeakController::beakQuery(array($brl));
-  if ( ! $flg and $data[$brl]) {
+  $page_layout = BeakController::beakSimpleQuery($brl);
+  if ( ! $flg and $page_layout) {
     throw new \Exception('Page already exist ! : ' . $pid);
-  }else{
-    $data = &$data[$brl];
   }
-  $data[Beak::ATTR_REV] = $rev;
-  //$data[Def::K_LAYOUT_CTYPE]       = $ctype;
-  $data[Def::K_LAYOUT_EREDIRECT]   = $eredirect;
-  $data[Def::K_LAYOUT_REDIRECT]    = $redirect;
-  $data[Def::K_LAYOUT_PRE_ACTION]  = $pre_action;
-  $data[Def::K_LAYOUT_POST_ACTION] = $post_action;
-  $data[Def::K_LAYOUT_SESSION_EXP] = $session_exp;
-  $data[Def::K_LAYOUT_EXPIRES]     = $expires_time;
-  $data[Def::K_LAYOUT_HEADER]      = $header;
-  $data[Def::K_LAYOUT_PHEADER]     = $pheader;
-  $data[Def::K_LAYOUT_BOTTOM]      = $bottom;
+  $page_layout[Beak::ATTR_REV]            = $rev;
+  //$page_layout[Def::K_LAYOUT_CTYPE]       = $ctype;
+  $page_layout[Def::K_LAYOUT_EREDIRECT]   = $eredirect;
+  $page_layout[Def::K_LAYOUT_REDIRECT]    = $redirect;
+  $page_layout[Def::K_LAYOUT_PRE_ACTION]  = $pre_action;
+  $page_layout[Def::K_LAYOUT_POST_ACTION] = $post_action;
+  $page_layout[Def::K_LAYOUT_SESSION_EXP] = $session_exp;
+  $page_layout[Def::K_LAYOUT_EXPIRES]     = $expires_time;
+  $page_layout[Def::K_LAYOUT_HEADER]      = $header;
+  $page_layout[Def::K_LAYOUT_PHEADER]     = $pheader;
+  $page_layout[Def::K_LAYOUT_BOTTOM]      = $bottom;
   if ( $layout ) {
-    $data[Def::K_LAYOUT_LAYOUT] = $layout;
+    $page_layout[Def::K_LAYOUT_LAYOUT]    = $layout;
   }
   $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
-  $ret = BeakController::beakQuery(array(array($brl,$data)));
-  if ( ! $ret[$brl] ) {
+  $ret = BeakController::beakSimpleQuery($brl,$page_layout);
+  if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
 }
@@ -395,27 +388,24 @@ function setC($flg,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$clas
   if ( preg_match('@\s@',$cid,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as COMPONENT : ' . $cid);
   }
-  $data = array();
   $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
-  $data = BeakController::beakQuery(array($brl));
-  if ( ! $flg and $data[$brl]) {
+  $component = BeakController::beakSimpleQuery($brl);
+  if ( ! $flg and $component ) {
     throw new \Exception('Component already exist ! : ' . $cid);
-  }else{
-    $data = &$data[$brl];
   }
-  $data[Beak::ATTR_REV] = $rev;
-  $data[Def::K_COMPONENT_TYPE]        = $type;
-  $data[Def::K_COMPONENT_SUBJECT]     = $subject;
-  $data[Def::K_COMPONENT_DESCRIPTION] = $description;
-  $data[Def::K_COMPONENT_CSS]         = $css;
-  $data[Def::K_COMPONENT_JS]          = $js;
-  $data[Def::K_COMPONENT_ID]          = $id;
-  $data[Def::K_COMPONENT_CLASS]       = $class;
-  $data[Def::K_COMPONENT_BODY]        = $body;
-  $data[Def::K_COMPONENT_ACTION]      = $actions;
+  $component[Beak::ATTR_REV]               = $rev;
+  $component[Def::K_COMPONENT_TYPE]        = $type;
+  $component[Def::K_COMPONENT_SUBJECT]     = $subject;
+  $component[Def::K_COMPONENT_DESCRIPTION] = $description;
+  $component[Def::K_COMPONENT_CSS]         = $css;
+  $component[Def::K_COMPONENT_JS]          = $js;
+  $component[Def::K_COMPONENT_ID]          = $id;
+  $component[Def::K_COMPONENT_CLASS]       = $class;
+  $component[Def::K_COMPONENT_BODY]        = $body;
+  $component[Def::K_COMPONENT_ACTION]      = $actions;
   $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
-  $ret = BeakController::beakQuery(array(array($brl,$data)));
-  if ( ! $ret[$brl] ) {
+  $ret = BeakController::beakSimpleQuery($brl,$component);
+  if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
 }

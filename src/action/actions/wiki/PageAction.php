@@ -103,8 +103,8 @@ class PageAction extends \Cockatoo\Action {
     $olds = array();
     $news = array();
     $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, '', \Cockatoo\Beak::M_KEY_LIST);
-    $bret = \Cockatoo\BeakController::beakQuery(array($brl));
-    foreach ( $bret[$brl] as $name ) {
+    $images = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    foreach ( $images as $name ) {
       $old = \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, $name, \Cockatoo\Beak::M_DEL);
       $olds []= $old;
       $obrl  = \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, $name, \Cockatoo\Beak::M_GET);
@@ -114,32 +114,17 @@ class PageAction extends \Cockatoo\Action {
         $news []= array($nset,$oret[$obrl]);
       }
     }
-    $bret = \Cockatoo\BeakController::beakQuery($news);
-    $bret = \Cockatoo\BeakController::beakQuery($olds);
+    $ret = \Cockatoo\BeakController::beakQuery($news);
+    $ret = \Cockatoo\BeakController::beakQuery($olds);
   }
 
 
   private function save_history($page,$user,$op){
-    $date = strftime('%Y%m%d',time());
-    $now = strftime('%Y/%m/%d %H:%M:%S',time());
-    // get
-    $hist = array();
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_GET,array(),array());
-    $bret = \Cockatoo\BeakController::beakQuery(array($brl));
-    if ( $bret[$brl] and $bret[$brl]['hist']) {
-      krsort($bret[$brl]['hist']);
-      $hist = $bret[$brl];
-      $hist['hist'] = array_slice($hist['hist'],0,10);
-    }else {
-      $hist = array();
-    }
-    // save history
-    $hist ['hist'][$now]= array('title' => $page , 'author' => $user , 'op' => $op);
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/'.$date,\Cockatoo\Beak::M_SET,array(),array());
-    $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,$hist)));
-    // save current history
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist','/CUR',\Cockatoo\Beak::M_SET,array(),array());
-    $bret = \Cockatoo\BeakController::beakQuery(array(array($brl,$hist)));
+    $now = time();
+    $str_now = strftime('%Y/%m/%d %H:%M:%S',$now);
+    $history = array('time' => $str_now, 'title' => $page , 'author' => $user , 'op' => $op);
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','hist',$now,\Cockatoo\Beak::M_SET,array(),array());
+    $bret = \Cockatoo\BeakController::beakSimpleQuery($brl,$history);
   }
   public function postProc(){
   }

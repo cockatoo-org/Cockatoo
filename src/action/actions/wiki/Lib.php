@@ -8,24 +8,24 @@ class Lib {
   static function get_page($page){
     $page = \Cockatoo\UrlUtil::urlencode($page);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_GET,array(),array());
-    $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-    return $ret[$brl];
+    $page_data = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    return $page_data;
   }
   static function save_page($page,&$pdata){
     $page = \Cockatoo\UrlUtil::urlencode($page);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_SET,array(),array());
-    $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$pdata)));
-    if ( $ret[$brl] ) {
-      return $ret[$brl];
+    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$pdata);
+    if ( $ret ) {
+      return $ret;
     }
     throw new \Exception('Cannot save it ! Probably storage error...');
   }
   static function remove_page($page){
     $page = \Cockatoo\UrlUtil::urlencode($page);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'wiki','page','/'.$page,\Cockatoo\Beak::M_DEL,array(),array());
-    $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-    if ( $ret[$brl] ) {
-      return $ret[$brl];
+    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( $ret ) {
+      return $ret;
     }
     throw new \Exception('Cannot save it ! Probably storage error...');
   }

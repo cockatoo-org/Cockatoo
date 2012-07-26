@@ -47,16 +47,16 @@ try {
   } elseif( $op === 'delS' ) {
     check_admin('');
     $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$sid,Beak::M_DEL);
-    $ret = BeakController::beakQuery(array($brl));
-    if ( ! $ret[$brl] ) {
+    $ret = BeakController::beakSimpleQuery($brl);
+    if ( ! $ret ) {
       throw new \Exception('Fail to del : ' . $brl);
     }
   } elseif( $op === 'getA' ) {
     if ( is_readable($sid) ){
       $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$sid,Beak::M_GET);
-      $ret = BeakController::beakQuery(array($brl));
-      if ( $ret[$brl] ) {
-        foreach ( $ret[$brl]['account'] as $k => $v ) {
+      $service = BeakController::beakSimpleQuery($brl);
+      if ( $service ) {
+        foreach ( $service['account'] as $k => $v ) {
           $r[] = array(
             'aid'  => $k,
             'name' => $k,
@@ -81,11 +81,11 @@ try {
 }
 function getS(){
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
-  $ret = BeakController::beakQuery(array($brl));
-  if ( ! $ret[$brl] ) {
+  $services = BeakController::beakSimpleQuery($brl);
+  if ( ! $services ) {
     throw new \Exception('Fail to get : ' . $brl);
   }
-  return $ret[$brl];
+  return $services;
 }
 
 if ( $emsg !== '' ) {

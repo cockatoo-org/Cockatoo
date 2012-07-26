@@ -21,10 +21,10 @@ class PwatchAction extends \Cockatoo\Action {
         list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
         $eurl= \Cockatoo\UrlUtil::urlencode($url);
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_FILTERS=>'_u,t,SUMMARY',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
+        $origins = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
         $datas = array();
         $i = 0;
-        foreach( $ret[$brl] as $data ) {
+        foreach( $origins as $data ) {
           $datas[$i] = $data['SUMMARY'];
           $datas[$i]['t'] = $data['t'];
           $i++;
@@ -53,11 +53,11 @@ class PwatchAction extends \Cockatoo\Action {
             throw new \Exception('Invalid Interval');
           }
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_CREATE_COL,array(),array());
-          $ret = \Cockatoo\BeakController::beakQuery(array($brl));
+          $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
           // Save 
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_PARTIAL));
-          $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $eurl,'url' => $url,'interval' => $interval,'style' => $style))));
-          if ( ! $ret[$brl] ) {
+          $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => $eurl,'url' => $url,'interval' => $interval,'style' => $style));
+          if ( ! $ret ) {
             throw new \Exception('Cannot save it ! Probably storage error...');
           }
         }elseif ( $submit === 'remove URL') {
@@ -66,15 +66,15 @@ class PwatchAction extends \Cockatoo\Action {
           }
           // Delete
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_DEL,array(),array());
-          $ret = \Cockatoo\BeakController::beakQuery(array($brl));
+          $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
         }
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array())));
-        return array('urls' => $ret[$brl]);
+        $urls = \Cockatoo\BeakController::beakSimpleQuery($brl,array());
+        return array('urls' => $urls);
       }elseif ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array())));
-        return array('urls' => $ret[$brl]);
+        $urls = \Cockatoo\BeakController::beakSimpleQuery($brl,array());
+        return array('urls' => $urls);
       }
     }catch ( \Exception $e ) {
       $s['emessage'] = $e->getMessage();

@@ -77,8 +77,7 @@ class StaticContent {
 
     Log::info($brl . '   (' . $type . ')');
     $brl .= '?'.Beak::M_SET;
-    $ret = BeakController::beakQuery(array(array($brl,$data)),$TO_BEAKS);
-    $r = $ret[$brl];
+    $r = BeakController::beakSimpleQuery($brl,$data,$TO_BEAKS);
     if ( $r ) {
       Log::info($r.' => '.$brl.' ('.$type.')');
       return True;
@@ -89,8 +88,7 @@ class StaticContent {
   }
 
   static public function get($brl){
-    $ret = BeakController::beakQuery(array($brl));
-    $content = $ret[$brl];
+    $content = BeakController::beakSimpleQuery($brl);
     if ( ! $content ) {
       throw new \Exception('Not found ' . $brl);
     }

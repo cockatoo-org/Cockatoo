@@ -21,7 +21,7 @@ class BeakCacheTest extends \PHPUnit_Framework_TestCase
     
     $this->set();
     $brl = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
-    $ret = BeakController::beakQuery(array($brl));
+    $ret = BeakController::beakSimpleQuery($brl);
     $this->defaultData = array( 'key' => 'value' ,
                                 'list' => array('foo','bar','baz'),
                                 'hash' => array(
@@ -30,7 +30,7 @@ class BeakCacheTest extends \PHPUnit_Framework_TestCase
                                   'baz' => 'BAZ') );
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_DEL_ARRAY);
     $data [Beak::Q_UNIQUE_INDEX]= array('','path/','path/to','path/new','file1','file2');
-    $datas = BeakController::beakQuery(array(array($brl,$data)));
+    $datas = BeakController::beakSimpleQuery($brl,$data);
     
     $datas = array();
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','',Beak::M_SET,array());
@@ -64,36 +64,36 @@ class BeakCacheTest extends \PHPUnit_Framework_TestCase
   public function testCache1(){
     // Make cache ( DEFAULT 300 )
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET,array(),array(Beak::COMMENT_KIND_CACHE));
-    $datas = BeakController::beakQuery(array($brl));
+    $datas = BeakController::beakSimpleQuery($brl);
     $exp = array_merge($this->defaultData,array(Beak::Q_UNIQUE_INDEX=>'path/to'));
     ksort($exp);
     $expects = json_encode($exp);
-    ksort($datas[$brl]);
-    $actual  = json_encode($datas[$brl]);
+    ksort($datas);
+    $actual  = json_encode($datas);
     $this->assertEquals($expects,$actual);
     // Update document
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET);
     $data = array('add' => 'ADD');
-    $datas = BeakController::beakQuery(array(array($brl,$data)));
+    $datas = BeakController::beakSimpleQuery($brl,$data);
     // Get from cache
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET,array(),array(Beak::COMMENT_KIND_CACHE));
-    $datas = BeakController::beakQuery(array($brl));
+    $datas = BeakController::beakSimpleQuery($brl);
     $exp = array_merge($this->defaultData,array(Beak::Q_UNIQUE_INDEX=>'path/to'));
     ksort($exp);
     $expects = json_encode($exp);
-    ksort($datas[$brl]);
-    $actual  = json_encode($datas[$brl]);
+    ksort($datas);
+    $actual  = json_encode($datas);
     $this->assertEquals($expects,$actual);
   }
   public function testCacheExp(){
     // Make cache ( 10 )
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET,array(),array(Beak::COMMENT_KIND_CACHE,Beak::COMMENT_KIND_CACHE_EXP.'=10'));
-    $datas = BeakController::beakQuery(array($brl));
+    $datas = BeakController::beakSimpleQuery($brl);
     $exp = array_merge($this->defaultData,array(Beak::Q_UNIQUE_INDEX=>'path/to'));
     ksort($exp);
     $expects = json_encode($exp);
-    ksort($datas[$brl]);
-    $actual  = json_encode($datas[$brl]);
+    ksort($datas);
+    $actual  = json_encode($datas);
     $this->assertEquals($expects,$actual);
     // Update document
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array(),array(Beak::COMMENT_KIND_PARTIAL));
@@ -101,22 +101,22 @@ class BeakCacheTest extends \PHPUnit_Framework_TestCase
     $datas = BeakController::beakQuery(array(array($brl,$data)));
     // Get from cache
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET,array(),array(Beak::COMMENT_KIND_CACHE,Beak::COMMENT_KIND_CACHE_EXP.'=10'));
-    $datas = BeakController::beakQuery(array($brl));
+    $datas = BeakController::beakSimpleQuery($brl);
     $exp = array_merge($this->defaultData,array(Beak::Q_UNIQUE_INDEX=>'path/to'));
     ksort($exp);
     $expects = json_encode($exp);
-    ksort($datas[$brl]);
-    $actual  = json_encode($datas[$brl]);
+    ksort($datas);
+    $actual  = json_encode($datas);
     $this->assertEquals($expects,$actual);
     sleep(11);
     // Cache expired and gat from origin.
     $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_GET,array(),array(Beak::COMMENT_KIND_CACHE,Beak::COMMENT_KIND_CACHE_EXP.'=10'));
-    $datas = BeakController::beakQuery(array($brl));
+    $datas = BeakController::beakSimpleQuery($brl);
     $exp = array_merge($this->defaultData,array(Beak::Q_UNIQUE_INDEX=>'path/to','add' => 'ADD'));
     ksort($exp);
     $expects = json_encode($exp);
-    ksort($datas[$brl]);
-    $actual  = json_encode($datas[$brl]);
+    ksort($datas);
+    $actual  = json_encode($datas);
     $this->assertEquals($expects,$actual);
   }
   public function wait() {
