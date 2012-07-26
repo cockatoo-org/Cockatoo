@@ -63,12 +63,8 @@ class SampleRequestParser extends DefaultRequestParser {
       $this->session_path = '/'.$matches[1];
       return; // other application
     }elseif ( $this->reqpath === '/favicon.ico' ) {
-      $this->service = 'wiki';
-      $this->device = 'default';
-      $this->path = 'img';
-      $this->args['P'] = 'Cockatoo PHP framework';
-      $this->args['N'] = 'logo.png';
-      return; // favicon
+      redirect('/_s_/core/default/logo.png');
+      return;
     }
     throw new \Exception('Unexpect PATH:' . $this->reqpath);
   }
