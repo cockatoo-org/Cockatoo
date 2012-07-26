@@ -1,8 +1,10 @@
 #!/usr/bin/env php
 <?php
 namespace pwatch;
-require_once(dirname(__FILE__) . '/../../def.php');
+require_once('/usr/local/cockatoo/def.php');
+//require_once(dirname(__FILE__) . '/../../def.php');
 require_once(\Cockatoo\Config::COCKATOO_ROOT.'utils/beak.php');
+require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/actions/Cockatoo/UrlUtil.php');
 declare(ticks = 1);
 
 // svn propset svn:keywords "Date Rev Id" pwatch_daemon.php
@@ -36,12 +38,10 @@ class PwatchDaemon {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
         $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$gt' => '')))));
         $settings = $ret[$brl];
-        foreach ( $settings as $eurl => $setting ) {
+        foreach ( $settings as $setting ) {
+          $eurl = $setting['_u'];
           $now = time();
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'LAST',\Cockatoo\Beak::M_GET,array(),array());
-          $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-          $last = $ret[$brl];
-          if ( ! $last or ($last['_t'] + $setting['interval']*60) < $now ) {
+          if ( ! $setting['data'] or ($setting['data']['_t'] + $setting['interval']*60) < $now ) {
             $args = array ( self::HTMLMON,'-u',"'".$setting['url']."'",'-w','100','-t','60000','-j','1','-A');
             if ( $setting['style'] === 'on' ) {
               $args []='-S';
@@ -60,24 +60,28 @@ class PwatchDaemon {
                 }
               }
               pclose($proc);
-              $data = json_decode($json,true);
+              $results = json_decode($json,true);
+              foreach ( $results as $u => $d ) {
+                if ( preg_match('@\.@',$u,$matches ) === 0 ) {
+                  $data[$u] = $d;
+                }else {
+                  $eu= \Cockatoo\UrlUtil::urlencode($u);
+                  $data[$eu] = $d;
+                  $data[$eu]['name'] = $u;
+                }
+              }
               $data['t'] = strftime('%Y-%m-%d %H:%M:%S',$now);
               $data['_t'] = $now;
               // Save data
               $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,$now,\Cockatoo\Beak::M_SET,array(),array());
               $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$data)));
-              // Save last
-              $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'LAST',\Cockatoo\Beak::M_SET,array(),array());
-              $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$data)));
-              // Save list
-              $setting['last']  = $data['t'];
-              $setting['ptime'] = $data['SUMMARY']['ptime'];
-              $setting['total'] = $data['SUMMARY']['total'];
-              $setting['size']  = $data['SUMMARY']['total_size'];
-              $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array());
-              $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,$setting)));
+              // Save list @@@
+              $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_PARTIAL));
+              $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('data' => $data))));
             }
             \Cockatoo\Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : Done : ' . $setting['url']);
+          }else{
+            \Cockatoo\Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : Skip : ' . $setting['url'] . ' untill : ' . strftime('%Y-%m-%d %H:%M:%S',$setting['data']['_t']+(int)$setting['interval']*60) );
           }
         }
       }catch ( \Exception $e ) {
