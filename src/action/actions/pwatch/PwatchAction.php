@@ -18,9 +18,11 @@ class PwatchAction extends \Cockatoo\Action {
       $session = $this->getSession();
       if ( $this->method === \Cockatoo\Beak::M_GET ) {
         $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
+        $LIMIT = $session[\Cockatoo\Def::SESSION_KEY_GET]['limit'];
+        $LIMIT = $LIMIT?(int)$LIMIT:100;
         list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
         $eurl= \Cockatoo\UrlUtil::urlencode($url);
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_FILTERS=>'_u,t,SUMMARY',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_FILTERS=>'_u,t,SUMMARY',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>$LIMIT),array());
         $origins = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
         $datas = array();
         $i = 0;
