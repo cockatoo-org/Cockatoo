@@ -64,7 +64,7 @@ class PagespeedAction extends BeaconAction {
 
       $times = array();
       $count = 0;
-      foreach($beacons as $beacon ){
+      foreach(array_reverse($beacons) as $beacon ){
         $u = $beacon['_u'];
         if ( $u ) {
           $times []= strftime($beacon['t']);

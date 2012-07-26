@@ -102,7 +102,8 @@ class YslowAction extends BeaconAction {
 //          $graph_summary[2]['dim'] = '';
       $times = array();
       $count = 0;
-      foreach($beacons[$brl] as $beacon ){
+      foreach(array_reverse($beacons) as $beacon ){
+        //foreach(array_reverse($beacons) as $beacon ){
         $u = $beacon['_u'];
         if ( $u ) {
           $times []= strftime($beacon['t']);

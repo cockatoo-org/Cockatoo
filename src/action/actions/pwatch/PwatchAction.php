@@ -32,7 +32,7 @@ class PwatchAction extends \Cockatoo\Action {
         return array(
           'url' => $url,
           'datas' => $datas,
-          '@json' => json_encode($datas),
+          '@json' => json_encode(array_reverse($datas)),
           );
       }elseif ( $this->method === \Cockatoo\Beak::M_SET ) {
         $submit = $session[\Cockatoo\Def::SESSION_KEY_POST]['submit'];
