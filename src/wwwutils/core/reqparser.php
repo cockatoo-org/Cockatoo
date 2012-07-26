@@ -45,7 +45,7 @@ abstract class RequestParser {
     $this->server = &$server;
     $this->get    = &$get;
     $this->cookie = &$cookie;
-    $this->reqpath= &$get['r'];
+    $this->reqpath= &$get[Def::REWRITE_TOKEN];
   }
   /**
    * Parse

@@ -12,6 +12,8 @@ namespace Cockatoo;
 class Def {
   const  PATH_STATIC_PREFIX       = '/_s_'; // Associate with rewrite
 
+  const  REWRITE_TOKEN            = '_R'; // httpd-cockatoo.conf
+
   const  REQUEST_SERVICE          = '_S';
   const  REQUEST_DEVICE           = '_D';
   const  REQUEST_PATH             = '_P';
