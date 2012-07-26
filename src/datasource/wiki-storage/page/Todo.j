@@ -1,6 +1,6 @@
 {
 "title":"Todo",
-"origin":"*\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8\r\n- &del{\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u691c\u7d22\u306f\u3069\u3046\u3057\u3088\u3046\u30fb\u30fb\u30fbRangeGET\u3092\u4f5c\u308d\u3046\u304b};\r\n-- Beak: getR , getA \u6a5f\u80fd\u8ffd\u52a0\r\n-- Beak: keys\u8981\u3089\u306a\u3044\u81ed\u3044\u306a\u30fb\u30fb\u30fb\r\n- Beak\r\n-- \u30de\u30cb\u30e5\u30a2\u30eb\u304c\u5fc5\u8981\u3060\uff01\r\n- \u65b0\u30b5\u30fc\u30d3\u30b9\u8ffd\u52a0\u624b\u9806\uff08\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\uff09\r\n- \u30ad\u30e3\u30c3\u30b7\u30e5\u30fb\u30d5\u30e9\u30a4\u30f3\u30b0\u306e\u8a71\r\n- \u30c4\u30fc\u30eb\u985e\u306e\u8aac\u660e\r\n-- &del{HtmlMon};\r\n-- MongoMon\r\n-- ZooMon\r\n-- Mail\r\n- Debian\u7cfb\u306e\u30af\u30a4\u30c3\u30af\u30b9\u30bf\u30fc\u30c8\r\n\r\n[[test-page]]",
+"origin":"*\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8\r\n- &del{\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u691c\u7d22\u306f\u3069\u3046\u3057\u3088\u3046\u30fb\u30fb\u30fbRangeGET\u3092\u4f5c\u308d\u3046\u304b};\r\n-- Beak: getR , getA \u6a5f\u80fd\u8ffd\u52a0\r\n-- Beak: keys\u8981\u3089\u306a\u3044\u306a\u30fb\u30fb\u30fb\r\n-- Beak: getR \u306bsort , skip , limit \u8ffd\u52a0\r\n-- Beak: beakSimpleQuery(brl,data,)\u8ffd\u52a0\r\n- Beak\r\n-- \u30de\u30cb\u30e5\u30a2\u30eb\u304c\u5fc5\u8981\u3060\uff01\r\n- \u65b0\u30b5\u30fc\u30d3\u30b9\u8ffd\u52a0\u624b\u9806\uff08\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\uff09\r\n- \u30ad\u30e3\u30c3\u30b7\u30e5\u30fb\u30d5\u30e9\u30a4\u30f3\u30b0\u306e\u8a71\r\n- \u30c4\u30fc\u30eb\u985e\u306e\u8aac\u660e\r\n-- &del{HtmlMon};\r\n-- MongoMon\r\n-- ZooMon\r\n-- Mail\r\n- Debian\u7cfb\u306e\u30af\u30a4\u30c3\u30af\u30b9\u30bf\u30fc\u30c8\r\n\r\n[[test-page]]",
 "contents":[
 {
 "tag":"div",
@@ -194,7 +194,47 @@
 "children":[
 {
 "tag":"text",
-"text":" Beak: keys\u8981\u3089\u306a\u3044\u81ed\u3044\u306a\u30fb\u30fb\u30fb"
+"text":" Beak: keys\u8981\u3089\u306a\u3044\u306a\u30fb\u30fb\u30fb"
+}
+]
+}
+]
+},
+{
+"tag":"li",
+"attr":{
+"class":"ul2"
+},
+"children":[
+{
+"tag":"text",
+"attr":[
+
+],
+"children":[
+{
+"tag":"text",
+"text":" Beak: getR \u306bsort , skip , limit \u8ffd\u52a0"
+}
+]
+}
+]
+},
+{
+"tag":"li",
+"attr":{
+"class":"ul2"
+},
+"children":[
+{
+"tag":"text",
+"attr":[
+
+],
+"children":[
+{
+"tag":"text",
+"text":" Beak: beakSimpleQuery(brl,data,)\u8ffd\u52a0"
 }
 ]
 }
@@ -537,6 +577,6 @@
 ]
 }
 ],
-"author":"crumbjp",
+"author":"admin",
 "_u":"Todo"
 }
