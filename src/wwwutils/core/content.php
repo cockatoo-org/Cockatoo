@@ -79,6 +79,12 @@ class ContentDrawer {
 
   private function mergeLayout(&$baseLayout,&$pageLayout){
     if ( strcmp($baseLayout[Def::K_LAYOUT_TYPE],Def::PAGELAYOUT)===0 ){
+      $pageLayout[Def::K_LAYOUT_CLASS]     .= 'co-PageLayout ' . $baseLayout[Def::K_LAYOUT_CLASS];
+      $pageLayout[Def::K_LAYOUT_HEIGHT]    .= $pageLayout[Def::K_LAYOUT_HEIGHT]?$pageLayout[Def::K_LAYOUT_HEIGHT]:$baseLayout[Def::K_LAYOUT_HEIGHT];
+      $pageLayout[Def::K_LAYOUT_WIDTH]     .= $pageLayout[Def::K_LAYOUT_WIDTH]?$pageLayout[Def::K_LAYOUT_WIDTH]:$baseLayout[Def::K_LAYOUT_WIDTH];
+      $pageLayout[Def::K_LAYOUT_MIN_HEIGHT].= $pageLayout[Def::K_LAYOUT_MIN_HEIGHT]?$pageLayout[Def::K_LAYOUT_MIN_HEIGHT]:$baseLayout[Def::K_LAYOUT_MIN_HEIGHT];
+      $pageLayout[Def::K_LAYOUT_MIN_WIDTH] .= $pageLayout[Def::K_LAYOUT_MIN_WIDTH]?$pageLayout[Def::K_LAYOUT_MIN_WIDTH]:$baseLayout[Def::K_LAYOUT_MIN_WIDTH];
+      $pageLayout[Def::K_LAYOUT_EXTRA]     .= ' ' . $pageLayout[Def::K_LAYOUT_EXTRA];
       $baseLayout = $pageLayout;
       return;
     }
