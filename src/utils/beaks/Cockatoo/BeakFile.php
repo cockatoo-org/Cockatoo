@@ -55,6 +55,10 @@ class BeakFile extends Beak {
     }else if ( isset($this->queries[Beak::Q_EXCEPTS]) ) {
       $this->excepts = explode(',',$this->queries[Beak::Q_EXCEPTS]);
     }
+    $this->sort = isset($this->queries[Beak::Q_SORT])?$this->queries[Beak::Q_SORT]:'';
+    $this->skip = isset($this->queries[Beak::Q_SKIP])?$this->queries[Beak::Q_SKIP]:0;
+    $this->limit = isset($this->queries[Beak::Q_LIMIT])?$this->queries[Beak::Q_LIMIT]:Beak::DEFAULT_LIMIT;
+
     $this->collection_path = Config::COCKATOO_ROOT . self::BeakFileDirectory . '/' . $this->domain . '/' . $this->collection . '/';
   }
   private function path_gen($path){
@@ -214,59 +218,63 @@ class BeakFile extends Beak {
   public function getrQuery() {
     $this->ret  = array();
     $queries = array();
-    foreach ( $this->arg as $key => $conds ) {
-      $idata = null;
-      if ( $key === Beak::Q_UNIQUE_INDEX ) {
-        $l = $this->listDir($this->collection_path,'',true);
-        if ( count($l) ){
-          $idata = array_combine($l,array_map(function($n){return array($n);},$l));
+    if ( count($this->arg) === 0 ) {
+      $queries = $this->listDir($this->collection_path,'',true);
+    }else{
+      foreach ( $this->arg as $key => $conds ) {
+        $idata = null;
+        if ( $key === Beak::Q_UNIQUE_INDEX ) {
+          $l = $this->listDir($this->collection_path,'',true);
+          if ( count($l) ){
+            $idata = array_combine($l,array_map(function($n){return array($n);},$l));
+          }
+        }else{
+          $idata = $this->getIndex($key);
         }
-      }else{
-        $idata = $this->getIndex($key);
-      }
-      if ( $idata ) {
-        foreach ( $idata as $v => $us ){
-          if ( ! count($us) ){
-            continue;
-          }
-
-          $hit = true;
-          foreach($conds as $op => $opr){
-            if      ( $op === '$in' ) {
-              $hit = false;
-              foreach( $opr as $oprv ) {
-                if ( $oprv === $v ) {
-                  $hit = true;
-                  break;
-                }
-              }
-            }elseif ( $op === '$gt' ) {
-              if ( $opr < $v ) {
-                continue;
-              }
-              $hit = false;
-            }elseif ( $op === '$lt' ) {
-              if ( $opr > $v ) {
-                continue;
-              }
-              $hit = false;
-            }elseif ( $op === '$gte' ) {
-              if ( $opr <= $v ) {
-                continue;
-              }
-              $hit = false;
-            }elseif ( $op === '$lte' ) {
-              if ( $opr >= $v ) {
-                continue;
-              }
-              $hit = false;
-            }else{
-              Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unsupported operation ! op=[ ' . $op . '] ' . $this->brl);
-              return;
+        if ( $idata ) {
+          foreach ( $idata as $v => $us ){
+            if ( ! count($us) ){
+              continue;
             }
-          }
-          if ( $hit ) {
-            $queries = array_merge($queries,$us);
+            
+            $hit = true;
+            foreach($conds as $op => $opr){
+              if      ( $op === '$in' ) {
+                $hit = false;
+                foreach( $opr as $oprv ) {
+                  if ( $oprv === $v ) {
+                    $hit = true;
+                    break;
+                  }
+                }
+              }elseif ( $op === '$gt' ) {
+                if ( $opr < $v ) {
+                  continue;
+                }
+                $hit = false;
+              }elseif ( $op === '$lt' ) {
+                if ( $opr > $v ) {
+                  continue;
+                }
+                $hit = false;
+              }elseif ( $op === '$gte' ) {
+                if ( $opr <= $v ) {
+                  continue;
+                }
+                $hit = false;
+              }elseif ( $op === '$lte' ) {
+                if ( $opr >= $v ) {
+                  continue;
+                }
+                $hit = false;
+              }else{
+                Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Unsupported operation ! op=[ ' . $op . '] ' . $this->brl);
+                return;
+              }
+            }
+            if ( $hit ) {
+              $queries = array_merge($queries,$us);
+            }
           }
         }
       }
@@ -278,6 +286,26 @@ class BeakFile extends Beak {
           $this->ret[] = $data;
         }
       }
+      if ( $this->sort and preg_match('@(^.+):([\-1]+)$@',$this->sort,$matches) !== 0) {
+        if ( (int)$matches[2] === -1 ) {
+          usort($this->ret,function($a,$b) use(&$matches){
+              if ( $a[$matches[1]] === $b[$matches[1]] ){
+                return $a[Beak::Q_UNIQUE_INDEX] < $b[Beak::Q_UNIQUE_INDEX];
+              }else{
+                return $a[$matches[1]] < $b[$matches[1]];
+              }
+            });
+        }elseif ( (int)$matches[2] === 1 ) {
+          usort($this->ret,function($a,$b) use(&$matches){
+              if ( $a[$matches[1]] === $b[$matches[1]] ){
+                return $a[Beak::Q_UNIQUE_INDEX] > $b[Beak::Q_UNIQUE_INDEX];
+              }else{
+                return $a[$matches[1]] > $b[$matches[1]];
+              }
+            });
+        }
+      }
+      $this->ret = array_slice($this->ret,$this->skip,$this->limit);
     }
   }
   /**

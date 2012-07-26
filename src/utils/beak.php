@@ -343,6 +343,8 @@ abstract class Beak {
    * Beak method definition
    */
   const M_GET_RANGE  = 'getR';
+  const DEFAULT_LIMIT= 100;
+
   /**
    * Beak method definition
    */

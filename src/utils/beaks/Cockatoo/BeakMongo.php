@@ -39,6 +39,10 @@ class BeakMongo extends Beak {
       $this->columns = array_merge($this->columns,array_fill_keys(explode(',',$this->queries[Beak::Q_EXCEPTS]),0));
     }
 
+    $this->sort = isset($this->queries[Beak::Q_SORT])?$this->queries[Beak::Q_SORT]:'';
+    $this->skip = isset($this->queries[Beak::Q_SKIP])?$this->queries[Beak::Q_SKIP]:0;
+    $this->limit = isset($this->queries[Beak::Q_LIMIT])?$this->queries[Beak::Q_LIMIT]:Beak::DEFAULT_LIMIT;
+    
     
     $this->beakLocation = BeakLocationGetter::singleton();
     $base_brl = $scheme . '://' . $domain . '/';
@@ -98,11 +102,18 @@ class BeakMongo extends Beak {
   public function getrQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
       $ret = array();
+      $query = array();
       foreach ( $this->arg as $key => $cond ) {
         $query[$key] = $cond;
       }
+
       $this->mongocursor = $mongocollection->find($query,$this->columns);
       if ( $this->mongocursor ) {
+        if ( $this->sort and preg_match('@(^.+):([\-1]+)$@',$this->sort,$matches) !== 0) {
+          $this->mongocursor->sort(array($matches[1]=>(int)$matches[2]));
+        }
+        $this->mongocursor->limit($this->limit);
+        $this->mongocursor->skip($this->skip);
         $this->ret = array();
         while ( $this->mongocursor->hasNext() ) {
           $data = $this->mongocursor->getNext();
