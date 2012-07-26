@@ -1,1 +1,16 @@
-{"type":"PageLayout","subject":"(pagelayout)","description":"\u30da\u30fc\u30b8\u6bce\u30ec\u30a4\u30a2\u30a6\u30c8","class":"","javascript":"","body":"","action":[],"_u":"pagelayout"}
+{
+"type":"PageLayout",
+"subject":"(pagelayout)",
+"description":"Page layout",
+"class":"",
+"javascript":"",
+"body":"",
+"action":[
+""
+],
+"_u":"pagelayout",
+"@R":"1343210086",
+"css":"",
+"js":"",
+"id":""
+}

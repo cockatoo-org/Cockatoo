@@ -1,1 +1,16 @@
-{"type":"HorizontalWidget","subject":"(horizontal)","description":"\u6c4e\u7528\u7e26\u30ec\u30a4\u30a2\u30a6\u30c8\uff08\u7e26\uff09<br>\u901a\u5e38\u306e\u7e26\u914d\u7f6e","class":"","javascript":"","body":"","action":[],"_u":"horizontal"}
+{
+"type":"HorizontalWidget",
+"subject":"(horizontal)",
+"description":"Generic Horizontal-layout. Children will be draw from top to bottom.",
+"class":"",
+"javascript":"",
+"body":"",
+"action":[
+""
+],
+"_u":"horizontal",
+"@R":"1343020803",
+"css":"",
+"js":"",
+"id":""
+}
