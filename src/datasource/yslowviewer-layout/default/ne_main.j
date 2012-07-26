@@ -20,6 +20,11 @@
 "children":[
 {
 "type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
 "extra":"",
 "component":"component:\/\/yslowviewer-component\/default\/help?get",
 "children":[

@@ -18,7 +18,7 @@ class PagespeedAction extends BeaconAction {
     return json_decode($session[\Cockatoo\Def::SESSION_KEY_POST]['content'],1);
   }
   function form_beacon($beacon){
-    $beacon['u']=self::urlencode($beacon['pageStats']['url']);
+    $beacon['u']=\Cockatoo\UrlUtil::urlencode($beacon['pageStats']['url']);
     foreach($beacon['rules'] as $i => $k){
       $beacon['rules'][$i]['@warnings'] = $beacon['rules'][$i]['warnings'];
       unset($beacon['rules'][$i]['warnings']);
@@ -44,13 +44,12 @@ class PagespeedAction extends BeaconAction {
     if ( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {
       $session = $this->getSession();
       $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
-      $url = self::urlencode($url);
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
-      $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-      $times = &$ret[$brl];
-      rsort($times);
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(),array());
-      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array(\Cockatoo\Beak::Q_UNIQUE_INDEX => $times))));
+
+      list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
+
+      $eurl = \Cockatoo\UrlUtil::urlencode($url);
+      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'stats,stats_c,comps',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
+      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
 
       $graph_summary;
       $graph_summary[0]['label']  = 'Total score';
@@ -65,8 +64,8 @@ class PagespeedAction extends BeaconAction {
 
       $times = array();
       $count = 0;
-      ksort($ret[$brl]);
-      foreach($ret[$brl] as $u => $data ){
+      foreach($ret[$brl] as $data ){
+        $u = $data['_u'];
         if ( $u ) {
           $times []= strftime($data['t']);
           $graph_summary[0]['data'] []= array($count, $data['pageStats']['overallScore']);

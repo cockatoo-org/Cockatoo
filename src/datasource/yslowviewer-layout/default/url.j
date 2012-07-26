@@ -1,12 +1,12 @@
 {
-"@R":"1332144928",
+"@R":"1343015164",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
-"header":"<meta name=\"description\" content=\"\">\n",
+"header":"<meta name=\"description\" content=\"\">\n<link rel=\"stylesheet\" href=\"\/_s_\/core\/default\/css\/smoothness\/jquery-ui-1.8.21.custom.css\" type=\"text\/css\" media=\"all\" \/>\n",
 "pheader":"",
 "layout":{
 "type":"HorizontalWidget",
@@ -18,6 +18,14 @@
 "extra":"",
 "component":"component:\/\/core-component\/default\/horizontal#critical",
 "children":[
+{
+"type":"HorizontalWidget",
+"extra":"",
+"component":"component:\/\/core-component\/default\/utils\/dselector?get",
+"children":[
+
+]
+},
 {
 "type":"HorizontalWidget",
 "class":"",
@@ -47,5 +55,5 @@
 ]
 },
 "_u":"url",
-"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/flot\/jquery.flot.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/flot\/jquery.flot.pie.js\"><\/script>\n"
+"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-ui-1.8.21.custom.min.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/flot\/jquery.flot.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/flot\/jquery.flot.pie.js\"><\/script>\n"
 }

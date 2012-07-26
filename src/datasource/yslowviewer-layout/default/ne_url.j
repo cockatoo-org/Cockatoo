@@ -1,12 +1,12 @@
 {
-"@R":"1332839177",
+"@R":"1343015390",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
-"header":"<link rel=\"stylesheet\" type=\"text\/css\" media=\"all\" href=\"\/_s_\/yslowviewer\/default\/jquery.harview\/jquery.harview.css\"><\/link>\n",
+"header":"<link rel=\"stylesheet\" type=\"text\/css\" media=\"all\" href=\"\/_s_\/yslowviewer\/default\/jquery.harview\/jquery.harview.css\"><\/link>\n<link rel=\"stylesheet\" href=\"\/_s_\/core\/default\/css\/smoothness\/jquery-ui-1.8.21.custom.css\" type=\"text\/css\" media=\"all\" \/>",
 "pheader":"",
 "layout":{
 "type":"HorizontalWidget",
@@ -18,6 +18,14 @@
 "extra":"",
 "component":"component:\/\/core-component\/default\/horizontal#critical",
 "children":[
+{
+"type":"HorizontalWidget",
+"extra":"",
+"component":"component:\/\/core-component\/default\/utils\/dselector?get",
+"children":[
+
+]
+},
 {
 "type":"HorizontalWidget",
 "class":"",
@@ -47,5 +55,5 @@
 ]
 },
 "_u":"ne_url",
-"bottom":"<script src=\"\/_s_\/yslowviewer\/default\/jquery.harview\/jquery.harview.js\"><\/script>\n\n"
+"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-ui-1.8.21.custom.min.js\"><\/script>\n<script src=\"\/_s_\/yslowviewer\/default\/jquery.harview\/jquery.harview.js\"><\/script>\n\n"
 }

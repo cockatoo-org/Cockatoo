@@ -1,5 +1,5 @@
 {
-"@R":"1334040109",
+"@R":"1343105778",
 "eredirect":"\/yslowviewer\/default\/main",
 "layout":{
 "type":"HorizontalWidget",
@@ -83,6 +83,6 @@
 "pheader":"",
 "expires":"0",
 "_u":"",
-"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/jquery-1.4.4.min.js\"><\/script>\n",
+"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-1.7.2.min.js\"><\/script>\n",
 "session_exp":"86400"
 }

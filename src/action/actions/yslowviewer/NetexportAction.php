@@ -18,7 +18,7 @@ class Netexportaction extends BeaconAction {
     return array('har' => json_decode($session[\Cockatoo\Def::SESSION_KEY_POST],1));
   }
   function form_beacon($beacon){
-    $beacon['u']=self::urlencode($beacon['har']['log']['entries'][0]['request']['url']);
+    $beacon['u']=\Cockatoo\UrlUtil::urlencode($beacon['har']['log']['entries'][0]['request']['url']);
     foreach($beacon['har']['log']['entries'] as $k => $req ){
       if ( isset($beacon['har']['log']['entries'][$k]['response']['content']['text'])) {
         $beacon['har']['entries'][$k]['response']['content']['text'] = '...';

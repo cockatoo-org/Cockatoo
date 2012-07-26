@@ -17,7 +17,7 @@ class YslowAction extends BeaconAction {
     return json_decode($session[\Cockatoo\Def::SESSION_KEY_POST],1);
   }
   function form_beacon($beacon){
-    $beacon['u'] = self::urlencode(urldecode($beacon['u']));
+    $beacon['u'] = \Cockatoo\UrlUtil::urlencode(\Cockatoo\UrlUtil::urldecode($beacon['u']));
     return $beacon;
   }
   function list_form($beacon) {
@@ -26,11 +26,11 @@ class YslowAction extends BeaconAction {
   function form_detail($beacon) {
     foreach( $beacon['g'] as $k => $e) {
       foreach ( $beacon['g'][$k]['components'] as $n => $v ) {
-        $beacon['g'][$k]['components'][$n] = urldecode($v);
+        $beacon['g'][$k]['components'][$n] = \Cockatoo\UrlUtil::urldecode($v);
       }
     }
     foreach( $beacon['comps'] as $k => $v ) {
-      $beacon['comps'][$k]['url'] = urldecode($beacon['comps'][$k]['url']);
+      $beacon['comps'][$k]['url'] = \Cockatoo\UrlUtil::urldecode($beacon['comps'][$k]['url']);
     }
     
     uasort($beacon['stats'],function($a,$b){
@@ -46,13 +46,10 @@ class YslowAction extends BeaconAction {
     if ( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {
       $session = $this->getSession();
       $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
-      $url = self::urlencode($url);
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_KEY_LIST,array(),array());
-      $ret = \Cockatoo\BeakController::beakQuery(array($brl));
-      $times = &$ret[$brl];
-      rsort($times);
-      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$url,'',\Cockatoo\Beak::M_GET_ARRAY,array(\Cockatoo\Beak::Q_EXCEPTS => 'stats,stats_c,comps'),array());
-      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array(\Cockatoo\Beak::Q_UNIQUE_INDEX => $times))));
+      list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
+      $eurl = \Cockatoo\UrlUtil::urlencode($url);
+      $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'stats,stats_c,comps',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
+      $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
 
       $graph_summary;
       $graph_summary[0]['label']  = 'Total score';
@@ -105,8 +102,8 @@ class YslowAction extends BeaconAction {
 //          $graph_summary[2]['dim'] = '';
       $times = array();
       $count = 0;
-      ksort($ret[$brl]);
-      foreach($ret[$brl] as $u => $data ){
+      foreach($ret[$brl] as $data ){
+        $u = $data['_u'];
         if ( $u ) {
           $times []= strftime($data['t']);
           $graph_summary[0]['data'] []= array($count, $data['o']);
