@@ -1,5 +1,5 @@
 {
-"@R":"1342078774",
+"@R":"1343013581",
 "type":"HorizontalWidget",
 "subject":"show",
 "description":"show",
@@ -7,7 +7,7 @@
 "js":"",
 "id":"show",
 "class":"show",
-"body":"<h1><?cs var:A.pwatch.url ?><\/h1>\n<table border=\"0\"  cellspacing=\"0\" cellpadding=\"0\">\n<tbody>\n<tr>\n<th class=\"time\">TIME<\/th>\n<th class=\"ptime\">RESP_TIME (ms)<\/th>\n<th class=\"total\">TOTAL<\/th>\n<th class=\"total_size\">TOTAL SIZE (b)<\/th>\n<th class=\"html\">HTML<\/th>\n<th class=\"js\">JS<\/th>\n<th class=\"css\">CSS<\/th>\n<th class=\"img\">IMG<\/th>\n<th class=\"other\">OTHER<\/th>\n<th class=\"error\">ERROR<\/th>\n<th class=\"timeout\">TIMEOUT<\/th>\n<\/tr>\n<?cs each:item = A.pwatch.datas ?>\n<tr >\n<td class=\"time\"><?cs var:item.t ?><\/a><\/td>\n<td class=\"ptime\"><?cs var:item.ptime ?><\/td>\n<td class=\"total\"><?cs var:item.total ?><\/td>\n<td class=\"total_size\"><?cs var:item.total_size ?><\/td>\n<td class=\"html\"><?cs var:item.html ?><\/td>\n<td class=\"js\"><?cs var:item.js ?><\/td>\n<td class=\"css\"><?cs var:item.css ?><\/td>\n<td class=\"img\"><?cs var:item.img ?><\/td>\n<td class=\"other\"><?cs var:item.other ?><\/td>\n<td class=\"error\"><?cs var:item.error ?><\/td>\n<td class=\"timeout\"><?cs var:item.timeout ?><\/td>\n<\/tr>\n<?cs \/each ?>\n<\/tbody>\n<\/table>\n\n\n",
+"body":"<hr>\n<h1><?cs var:A.pwatch.url ?><\/h1>\n<table border=\"0\"  cellspacing=\"0\" cellpadding=\"0\">\n<tbody>\n<tr>\n<th class=\"time\">TIME<\/th>\n<th class=\"ptime\">RESP_TIME (ms)<\/th>\n<th class=\"total\">TOTAL<\/th>\n<th class=\"total_size\">TOTAL SIZE (b)<\/th>\n<th class=\"html\">HTML<\/th>\n<th class=\"js\">JS<\/th>\n<th class=\"css\">CSS<\/th>\n<th class=\"img\">IMG<\/th>\n<th class=\"other\">OTHER<\/th>\n<th class=\"error\">ERROR<\/th>\n<th class=\"timeout\">TIMEOUT<\/th>\n<\/tr>\n<?cs each:item = A.pwatch.datas ?>\n<tr >\n<td class=\"time\"><?cs var:item.t ?><\/a><\/td>\n<td class=\"ptime\"><?cs var:item.ptime ?><\/td>\n<td class=\"total\"><?cs var:item.total ?><\/td>\n<td class=\"total_size\"><?cs var:item.total_size ?><\/td>\n<td class=\"html\"><?cs var:item.html ?><\/td>\n<td class=\"js\"><?cs var:item.js ?><\/td>\n<td class=\"css\"><?cs var:item.css ?><\/td>\n<td class=\"img\"><?cs var:item.img ?><\/td>\n<td class=\"other\"><?cs var:item.other ?><\/td>\n<td class=\"error\"><?cs var:item.error ?><\/td>\n<td class=\"timeout\"><?cs var:item.timeout ?><\/td>\n<\/tr>\n<?cs \/each ?>\n<\/tbody>\n<\/table>\n\n\n",
 "action":[
 "action:\/\/pwatch-action\/pwatch\/PwatchAction?get"
 ],

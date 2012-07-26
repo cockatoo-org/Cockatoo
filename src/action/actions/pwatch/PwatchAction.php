@@ -12,23 +12,19 @@ require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
  * @copyright Copyright (C) 2012, rakuten 
  */
 class PwatchAction extends \Cockatoo\Action {
-  protected static function urlencode($url){
-    $url = urlencode($url);
-    $url = str_replace('-','%2D',$url);
-    return str_replace('.','%2E',$url);
-  }
   public function proc(){
     try{
       $this->setNamespace('pwatch');
       $session = $this->getSession();
       if ( $this->method === \Cockatoo\Beak::M_GET ) {
-        $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['url'];
-        $eurl= self::urlencode($url);
-        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$gt' => 0)))));
+        $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
+        list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
+        $eurl= \Cockatoo\UrlUtil::urlencode($url);
+        $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_FILTERS=>'_u,t,SUMMARY',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>100),array());
+        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$lte' => $date)))));
         $datas = array();
         $i = 0;
-        foreach( $ret[$brl] as $t => $data ) {
+        foreach( $ret[$brl] as $data ) {
           $datas[$i] = $data['SUMMARY'];
           $datas[$i]['t'] = $data['t'];
           $i++;
@@ -40,14 +36,10 @@ class PwatchAction extends \Cockatoo\Action {
           );
       }elseif ( $this->method === \Cockatoo\Beak::M_SET ) {
         $submit = $session[\Cockatoo\Def::SESSION_KEY_POST]['submit'];
-        $url = $session[\Cockatoo\Def::SESSION_KEY_POST]['url'];
-        $eurl = self::urlencode($url);
+        $url = $session[\Cockatoo\Def::SESSION_KEY_POST]['u'];
+        $eurl = \Cockatoo\UrlUtil::urlencode($url);
         $interval = $session[\Cockatoo\Def::SESSION_KEY_POST]['interval'];
         $style    = $session[\Cockatoo\Def::SESSION_KEY_POST]['style'];
-        $last  = $session[\Cockatoo\Def::SESSION_KEY_POST]['last'];
-        $ptime = $session[\Cockatoo\Def::SESSION_KEY_POST]['ptime'];
-        $total = $session[\Cockatoo\Def::SESSION_KEY_POST]['total'];
-        $size = $session[\Cockatoo\Def::SESSION_KEY_POST]['size'];
 
         if (  $submit === 'add URL' ) {
           if ( ! $user and PwatchConfig::ACL ) {
@@ -63,8 +55,8 @@ class PwatchAction extends \Cockatoo\Action {
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_CREATE_COL,array(),array());
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
           // Save 
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array());
-          $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $eurl,'url' => $url,'interval' => $interval,'last' => $last , 'ptime' => $ptime, 'style' => $style,'total' => $total , 'size' => $size))));
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_PARTIAL));
+          $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => $eurl,'url' => $url,'interval' => $interval,'style' => $style))));
           if ( ! $ret[$brl] ) {
             throw new \Exception('Cannot save it ! Probably storage error...');
           }
@@ -77,11 +69,11 @@ class PwatchAction extends \Cockatoo\Action {
           $ret = \Cockatoo\BeakController::beakQuery(array($brl));
         }
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$gt' => '')))));
+        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array())));
         return array('urls' => $ret[$brl]);
       }elseif ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array('_u' => array('$gt' => '')))));
+        $ret = \Cockatoo\BeakController::beakQuery(array(array($brl,array())));
         return array('urls' => $ret[$brl]);
       }
     }catch ( \Exception $e ) {
