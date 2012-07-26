@@ -1,5 +1,5 @@
 {
-"@R":"1343272902",
+"@R":"1343275693",
 "type":"HorizontalWidget",
 "subject":"ne_ulist",
 "description":"ne_ulist",
@@ -7,7 +7,7 @@
 "js":"$(function(){\n $('#ulist div.domain > h3').click(function(){\n  var elem = $(this).next();\n  if ( elem.attr('hide') ){\n   elem.show();\n   elem.removeAttr('hide');\n  }else{\n   elem.hide();\n   elem.attr('hide','hide');\n  }\n });\n});",
 "id":"ulist",
 "class":"",
-"body":"<?cs each:domain = A.yslowviewer.domains?>\n<div class=\"domain\">\n <h3><?cs var:domain.domain ?><\/h3>\n <table>\n <tbody>\n  <tr>\n   <th class=\"url\">URL<\/th>\n   <th class=\"last\">LAST<\/th>\n   <th class=\"ptime\">RESP TIME<\/th>\n  <\/tr>\n <?cs each:item = domain.urls?>\n  <tr>\n   <td class=\"url\"><a href=\"ne_url?u=<?cs name:item ?>\" ><?cs var:item.url ?><\/a><\/td>\n   <td class=\"last\"><?cs var:item.t ?><\/td>\n   <td class=\"ptime\"><?cs var:item.lt ?>(msec)<\/td>\n  <\/tr>\n <?cs \/each ?>\n <\/tbody>\n <\/table>\n<\/div>\n<?cs \/each ?>\n\n\n<h1>Show URL list<\/h1>\n<table>\n<tbody>\n<tr>\n<th class=\"url\">URL<\/th>\n<th class=\"last\">LAST<\/th>\n<th class=\"ptime\">RESP TIME<\/th>\n<\/tr>\n<?cs each:item = A.yslowviewer.urls ?>\n<tr>\n<td class=\"url\"><a href=\"ne_url?u=<?cs name:item ?>\" ><?cs var:item.url ?><\/a><\/td>\n<td class=\"last\"><?cs var:item.t ?><\/td>\n<td class=\"ptime\"><?cs var:item.lt ?>(msec)<\/td>\n<\/tr>\n<?cs \/each ?>\n<\/tbody>\n<\/table>\n",
+"body":"<?cs each:domain = A.yslowviewer.domains?>\n<div class=\"domain\">\n <h3><?cs var:domain.domain ?><\/h3>\n <table>\n <tbody>\n  <tr>\n   <th class=\"url\">URL<\/th>\n   <th class=\"last\">LAST<\/th>\n   <th class=\"ptime\">RESP TIME<\/th>\n  <\/tr>\n <?cs each:item = domain.urls?>\n  <tr>\n   <td class=\"url\"><a href=\"ne_url?u=<?cs name:item ?>\" ><?cs var:item.url ?><\/a><\/td>\n   <td class=\"last\"><?cs var:item.t ?><\/td>\n   <td class=\"ptime\"><?cs var:item.lt ?>(msec)<\/td>\n  <\/tr>\n <?cs \/each ?>\n <\/tbody>\n <\/table>\n<\/div>\n<?cs \/each ?>\n",
 "action":[
 "action:\/\/yslowviewer-action\/yslowviewer\/NetexportAction?cols"
 ],
