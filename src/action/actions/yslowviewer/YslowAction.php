@@ -42,7 +42,7 @@ class YslowAction extends BeaconAction {
     return $beacon;
   }
 
-  function other_methods(){
+   function other_methods(){
     if ( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {
       $session = $this->getSession();
       $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
@@ -52,7 +52,6 @@ class YslowAction extends BeaconAction {
       $eurl = \Cockatoo\UrlUtil::urlencode($url);
       $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'stats,stats_c,comps',\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>$LIMIT),array());
       $beacons = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
-
       $graph_summary;
       $graph_summary[0]['label']  = 'Total score';
       $graph_summary[0]['min']    = 0;
@@ -105,7 +104,6 @@ class YslowAction extends BeaconAction {
       $times = array();
       $count = 0;
       foreach(array_reverse($beacons) as $beacon ){
-        //foreach(array_reverse($beacons) as $beacon ){
         $u = $beacon['_u'];
         if ( $u ) {
           $times []= strftime($beacon['t']);
