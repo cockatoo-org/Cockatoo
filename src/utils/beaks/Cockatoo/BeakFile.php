@@ -245,7 +245,7 @@ class BeakFile extends Beak {
         throw new \Exception('Sort key enfoced all scan : key => ' . $key . ' sort => ' . $sort_key);
       }
       if ($sort_type === -1 ) {
-        $index = array_reverse($index);
+        $index = array_reverse($index,true);
       }
     }
     
