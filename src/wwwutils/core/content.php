@@ -281,7 +281,7 @@ class ContentDrawer {
       setSession($this->sessionID,$this->service,&$this->session);
     }
     // redirect
-    if ( $redirect ) {
+    if ( $redirect !== null ) {
       redirect($redirect);
     }
     return $results;
