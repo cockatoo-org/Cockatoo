@@ -92,9 +92,9 @@ class PageAction extends \Cockatoo\Action {
         return array();
       }
     }catch ( \Exception $e ) {
-      $s['emessage'] = $e->getMessage();
+      $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
       $this->updateSession($s);
-      $this->setRedirect('/error');
+      $this->setRedirect('/wiki/view');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }

@@ -12,6 +12,14 @@
 "component":"component:\/\/core-component\/default\/horizontal?get",
 "children":[
 {
+"type":"HorizontalWidget",
+"extra":"",
+"component":"component:\/\/core-component\/default\/utils\/errmsg?get",
+"children":[
+
+]
+},
+{
 "type":"VerticalWidget",
 "class":"",
 "height":"",
@@ -31,7 +39,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/yslowviewer-component\/default\/login?get",
+"component":"component:\/\/core-component\/default\/utils\/login?get",
 "children":[
 
 ]

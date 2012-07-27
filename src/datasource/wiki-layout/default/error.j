@@ -1,1 +1,0 @@
-{"@R":"1331917616","eredirect":"","redirect":"","pre_action":"","post_action":"","session_exp":"2147483647","expires":"0","header":"<title>cockatoo-wiki : error page<\/title>\n","pheader":"","layout":{"type":"HorizontalWidget","extra":"","component":"component:\/\/wiki-component\/default\/error?get","children":[]},"_u":"error","bottom":""}

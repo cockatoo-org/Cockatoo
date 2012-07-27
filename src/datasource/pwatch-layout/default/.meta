@@ -12,6 +12,14 @@
 "component":"component:\/\/core-component\/default\/horizontal#critical",
 "children":[
 {
+"type":"HorizontalWidget",
+"extra":"",
+"component":"component:\/\/core-component\/default\/utils\/errmsg?get",
+"children":[
+
+]
+},
+{
 "type":"VerticalWidget",
 "class":"",
 "height":"",
@@ -25,13 +33,8 @@
 "children":[
 {
 "type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"200px",
-"min_height":"",
-"min_width":"",
 "extra":"",
-"component":"component:\/\/pwatch-component\/default\/login?get",
+"component":"component:\/\/core-component\/default\/utils\/login?get",
 "children":[
 
 ]

@@ -112,9 +112,9 @@ abstract class BeaconAction extends \Cockatoo\Action {
         return $this->other_methods();
       }
     }catch ( \Exception $e ) {
-      $s['emessage'] = $e->getMessage();
+      $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
       $this->updateSession($s);
-      // $this->setRedirect('/yslowviewer/default/main');
+      $this->setRedirect('main');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }

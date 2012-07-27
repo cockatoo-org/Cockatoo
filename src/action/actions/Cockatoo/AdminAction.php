@@ -2,7 +2,7 @@
 namespace Cockatoo;
 require_once(Config::COCKATOO_ROOT.'action/Action.php');
 /**
- * AccountAction.php - ????
+ * AdminAction.php - ????
  *  
  * @package ????
  * @access public
@@ -11,9 +11,38 @@ require_once(Config::COCKATOO_ROOT.'action/Action.php');
  * @version $Id$
  * @copyright Copyright (C) 2011, rakuten 
  */
+class AdminAction extends Action {
+  protected $BASE_BRL = 'storage://core-storage/default/users';
+  protected $MAIL_FROM= 'root@cockatoo.jp';
+  protected $REPLY_TO = 'root@cockatoo.jp';
+  protected $EREDIRECT = 'login';
+ 
+  protected function preAction(){
+    $this->setNamespace('admin');
 
-abstract class AdminAction extends Action {
-  protected $BASE_BRL  = 'storage://core-storage/users/';
+    $session = $this->getSession();
+    $root  = $session[AccountUtil::SESSION_LOGIN]['root'];
+    if ( ! $root ) {
+      throw new \Exception('You do not have a permission !!');
+    }
+  }
+  protected function genUserData(&$post_data,&$session_login,&$user_data){
+    $this->passwd = $user_data[AccountUtil::KEY_PASSWD];
+    return $user_data;
+  }
+  protected function success(&$submit,&$user_data){
+    if (  $submit === 'add user' ) {
+      $user_data[AccountUtil::KEY_PASSWD] = $this->passwd;
+      AccountUtil::mail($user_data,$this->MAIL_FROM,$this->REPLY_TO);
+      $user_data[AccountUtil::KEY_PASSWD] = '';
+    }
+  }
+  protected function error(&$e){
+    $s[Def::SESSION_KEY_ERROR] = $e->getMessage();
+    $this->updateSession($s);
+    $this->setRedirect($this->EREDIRECT);
+    Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
+  }
 
   public function proc(){
     try {
@@ -62,9 +91,7 @@ abstract class AdminAction extends Action {
     }
     return array();
   }
-  abstract protected function preAction();
-  abstract protected function genUserData(&$post_data,&$session_login,&$user_data);
-  abstract protected function success(&$submit,&$user_data);
-  abstract protected function error(&$exception);
 
+  public function postProc(){
+  }
 }

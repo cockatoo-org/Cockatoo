@@ -1,1 +1,25 @@
-{"_u":"","eredirect":"top","header":"","layout":[],"@R":"1331904067","pheader":"","expires":"86400","bottom":""}
+{
+"@R":"1343370680",
+"eredirect":"",
+"layout":{
+"type":"HorizontalWidget",
+"component":"component:\/\/core-component\/default\/horizontal#critical",
+"extra":null,
+"children":[
+{
+"type":"PageLayout",
+"component":"component:\/\/core-component\/default\/pagelayout",
+"extra":null,
+"children":[
+
+]
+}
+]
+},
+"header":"<meta http-equiv=\"content-type\" content=\"text\/html; charset=utf-8\">\n<meta http-equiv=\"content-style-type\" content=\"text\/css\">\n<meta http-equiv=\"content-script-type\" content=\"text\/javascript\">\n",
+"pheader":"",
+"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-1.7.2.min.js\"><\/script>\n",
+"session_exp":"-1",
+"expires":"0",
+"_u":""
+}

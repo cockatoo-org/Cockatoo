@@ -1,8 +1,8 @@
 {
-"@R":"1334022985",
+"@R":"1343380745",
 "eredirect":"",
 "redirect":"",
-"pre_action":"",
+"pre_action":"action:\/\/yslowviewer-action\/yslowviewer\/AccountAction",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
@@ -12,7 +12,7 @@
 "layout":{
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/yslowviewer-component\/default\/profile?get",
+"component":"component:\/\/core-component\/default\/utils\/profile?get",
 "children":[
 
 ]

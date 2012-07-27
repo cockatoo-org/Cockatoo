@@ -1,8 +1,8 @@
 {
-"@R":"1334022627",
+"@R":"1343380711",
 "eredirect":"",
 "redirect":"",
-"pre_action":"",
+"pre_action":"action:\/\/yslowviewer-action\/yslowviewer\/AdminAction?keys",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
@@ -22,7 +22,7 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/yslowviewer-component\/default\/admin?get",
+"component":"component:\/\/core-component\/default\/utils\/admin?get",
 "children":[
 
 ]

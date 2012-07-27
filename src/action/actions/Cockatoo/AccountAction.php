@@ -12,12 +12,39 @@ require_once(Config::COCKATOO_ROOT.'action/Action.php');
  * @copyright Copyright (C) 2011, rakuten 
  */
 
-abstract class AccountAction extends Action {
-  protected $BASE_BRL  = 'storage://core-storage/users/';
+class AccountAction extends Action {
+  protected $EXPIRES  = 315360000; // 10 years
+  protected $BASE_BRL = 'storage://core-storage/default/users';
+  protected $MAIL_FROM= 'root@cockatoo.jp';
+  protected $REPLY_TO = 'root@cockatoo.jp';
+  protected $REDIRECT = 'login';
+  protected $EREDIRECT = 'login';
+
+  protected function preAction(){
+    $this->setNamespace('login');
+  }
+  protected function genUserData(&$post_data,&$session_login,&$user_data){
+    return $user_data;
+  }
+  protected function success(&$submit,&$user_data){
+    if ( $submit === 'password reset' ) {
+      AccountUtil::mail($user_data,$this->MAIL_FROM,$this->REPLY_TO);
+    }elseif($submit === 'profile' ){
+      return;
+    }
+    $this->setRedirect($this->REDIRECT);
+  }
+  protected function error(&$e){
+    $s[Def::SESSION_KEY_ERROR] = $e->getMessage();
+    $this->updateSession($s);
+    $this->setRedirect($this->EREDIRECT);
+    Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
+  }
 
   public function proc(){
     try {
       $this->preAction();
+      $now = time();
 
       $session = $this->getSession();
       $submit = $session[Def::SESSION_KEY_POST]['submit'];
@@ -28,6 +55,7 @@ abstract class AccountAction extends Action {
           throw new \Exception('Invalid account !');
         } 
         $user_data = AccountUtil::get_account($this->BASE_BRL,$user);
+        $user_data[AccountUtil::KEY_EXPIRES] = $now + $this->EXPIRES;
         if ( $user_data[AccountUtil::KEY_HASH] === md5($user . $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]) ) {
           $s[AccountUtil::SESSION_LOGIN] = $user_data;
         }else{
@@ -73,7 +101,14 @@ abstract class AccountAction extends Action {
         $user_data[AccountUtil::KEY_PASSWD]=$up_passwd;
         $this->success($submit,$user_data);
       }else{
-        throw new \Exception('Invalid Request !');
+        $user_data = $session[AccountUtil::SESSION_LOGIN];
+        if ( $user_data[AccountUtil::KEY_EXPIRES] < $now ) {
+          $s[AccountUtil::SESSION_LOGIN] = null;
+        }else{
+          $user_data[AccountUtil::KEY_EXPIRES] = $now + $this->EXPIRES;
+          $s[AccountUtil::SESSION_LOGIN] = $user_data;
+        }
+        $this->updateSession($s);
       }
     }catch ( \Exception $e ) {
       $this->error($e);
@@ -82,12 +117,4 @@ abstract class AccountAction extends Action {
   }
   public function postProc(){
   }
-
-
-  abstract protected function preAction();
-  abstract protected function genUserData(&$post_data,&$session_login,&$user_data);
-  abstract protected function success(&$submit,&$user_data);
-  abstract protected function error(&$exception);
-
 }
-

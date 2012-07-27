@@ -1,0 +1,15 @@
+{
+"@R":"1343106733",
+"type":"TabWidget",
+"subject":"pagespeedtab",
+"description":"pagespeedtab",
+"css":"",
+"js":"",
+"id":"pagespeedtab",
+"class":"viewtab",
+"body":"",
+"action":[
+""
+],
+"_u":"PageSpeedTab"
+}

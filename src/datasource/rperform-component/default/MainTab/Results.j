@@ -1,0 +1,15 @@
+{
+"@R":"1343100221",
+"type":"TabChildWidget",
+"subject":"results",
+"description":"results",
+"css":"",
+"js":"",
+"id":"",
+"class":"resultstab",
+"body":"<a>Results<\/a>",
+"action":[
+""
+],
+"_u":"MainTab\/Results"
+}

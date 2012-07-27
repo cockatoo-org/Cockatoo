@@ -11,6 +11,19 @@
 "component":"component:\/\/core-component\/default\/horizontal#critical",
 "children":[
 {
+"type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component:\/\/core-component\/default\/utils\/errmsg?get",
+"children":[
+
+]
+},
+{
 "type":"VerticalWidget",
 "class":"",
 "height":"",
@@ -30,7 +43,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/wiki-component\/default\/login?get",
+"component":"component:\/\/core-component\/default\/utils\/login?get",
 "children":[
 
 ]

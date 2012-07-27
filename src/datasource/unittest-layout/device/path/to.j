@@ -1,0 +1,15 @@
+{
+"key":"value",
+"int":1,
+"list":[
+"foo",
+"bar",
+"baz"
+],
+"hash":{
+"foo":"FOO",
+"bar":"BAR",
+"baz":"BAZ"
+},
+"_u":"path\/to"
+}

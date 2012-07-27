@@ -24,9 +24,8 @@ class ImgAction extends \Cockatoo\Action {
     $name   = $this->args['N'];
     if ( $this->method === \Cockatoo\Beak::M_SET and isset($session[\Cockatoo\Def::SESSION_KEY_FILES])) {
       if ( ! $user ) {
-        $s['emessage'] = 'You have to login before update wiki !!';
+        $s[\Cockatoo\Def::SESSION_KEY_ERROR] = 'You have to login before update wiki !!';
         $this->updateSession($s);
-        $this->setRedirect('/wiki/error');
         return;
       }
       foreach($session[\Cockatoo\Def::SESSION_KEY_FILES] as $file){

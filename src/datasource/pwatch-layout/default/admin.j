@@ -1,8 +1,8 @@
 {
-"@R":"1342515650",
+"@R":"1343380224",
 "eredirect":"",
 "redirect":"",
-"pre_action":"",
+"pre_action":"action:\/\/pwatch-action\/pwatch\/AdminAction?keys",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
@@ -22,7 +22,7 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/pwatch-component\/default\/admin?get",
+"component":"component:\/\/core-component\/default\/utils\/admin?get",
 "children":[
 
 ]

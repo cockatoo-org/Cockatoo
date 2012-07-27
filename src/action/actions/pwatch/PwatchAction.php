@@ -45,14 +45,13 @@ class PwatchAction extends \Cockatoo\Action {
 
         if (  $submit === 'add URL' ) {
           if ( ! $user and PwatchConfig::ACL ) {
-            \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ ,'Guest users are not allowed to ADD');
-            return null;
+            throw new \Exception('Guest users are not allowed to ADD');
           }
           if ( preg_match('@^https?://@', $url , $matches ) === 0 ) {
-            throw new \Exception('Invalid URL');
+            throw new \Exception('Invalid URL : ' . $url);
           }
           if ( $interval < 1 ){
-            throw new \Exception('Invalid Interval');
+            throw new \Exception('Invalid Interval : ' . $interval);
           }
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_CREATE_COL,array(),array());
           $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
@@ -64,7 +63,7 @@ class PwatchAction extends \Cockatoo\Action {
           }
         }elseif ( $submit === 'remove URL') {
           if ( preg_match('@^https?://@', $url , $matches ) === 0 ) {
-            throw new \Exception('Invalid URL');
+            throw new \Exception('Invalid URL : ' . $url);
           }
           // Delete
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_DEL,array(),array());
@@ -79,9 +78,9 @@ class PwatchAction extends \Cockatoo\Action {
         return array('urls' => $urls);
       }
     }catch ( \Exception $e ) {
-      $s['emessage'] = $e->getMessage();
+      $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
       $this->updateSession($s);
-      $this->setRedirect('/pwatch/default/main');
+      $this->setRedirect('main');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }
