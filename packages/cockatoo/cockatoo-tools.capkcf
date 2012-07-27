@@ -23,6 +23,6 @@ file 644   -               ../../src/tools/beak/beak_transfer.php             /u
 file 644   -               ../../src/tools/beak/beak_mv.php                   /usr/local/cockatoo/tools/beak/beak_mv.php    
 file 644   -               ../../src/tools/beak/beak_import.php               /usr/local/cockatoo/tools/beak/beak_import.php
 file 755   -               ../../src/tools/beak/beak_mv.bash                  /usr/local/cockatoo/tools/beak/beak_mv.bash
-file 644   -               ../../src/tools/beak/beak_work.php                 /usr/local/cockatoo/tools/beak/beak_work.php
+file 644   -               ../../src/tools/beak/beak_walk.php                 /usr/local/cockatoo/tools/beak/beak_walk.php
 
 
