@@ -30,7 +30,7 @@ class BeakWalk {
     if ( ! $from_driver ) {
       throw new \Exception( 'Unexpect driver ! : ' . $from . ' => ' . $from_driver );
     }
-    foreach ( Config::$SYS_BEAKS as $k => $v ) {
+    foreach ( Config::$BEAKS as $k => $v ) {
       $this->FROM_BEAKS[$k] = $from_driver;
     }
     $this->base_brl = brlgen($this->scheme,$this->prefix,'','','');

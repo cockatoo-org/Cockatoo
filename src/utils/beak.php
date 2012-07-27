@@ -815,7 +815,16 @@ class BeakController {
    */
   protected function prepareQuery(&$brl,&$arg,&$hide,$classes) {
     list($S,$D,$C,$p,$m,$q,$c) = parse_brl($brl);
-    $beak = isset($classes[$S])?$classes[$S]:Config::$BEAKS[$S];
+    if ( isset($classes[$S]) ) {
+      $beak = $classes[$S];
+    }else {
+      $base = $S.'://'.$D.'/';
+      if ( isset(Config::$EXT_BEAKS[$base] ) ){
+        $beak = Config::$EXT_BEAKS[$base];
+      }else{
+        $beak = Config::$BEAKS[$S];
+      }
+    }
     if ( ! $beak ) {
       throw new \Exception('Unsupported BRL Scheme ! :' . $brl);
     }

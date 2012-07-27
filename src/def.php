@@ -113,6 +113,7 @@ class Def {
   const  SESSION_KEY_COOKIE       = '_c';
   const  SESSION_KEY_EXP          = '_e';
   const  SESSION_KEY_FILES        = '_f';
+  const  SESSION_KEY_ERROR        = '_err';
 
   const  F_TYPE                   = 't';
   const  F_ERROR                  = 'e';
@@ -208,6 +209,7 @@ abstract class DefaultConfig {
    * BEAK drivers
    */
   static public $BEAKS;
+  static public $EXT_BEAKS;
   /**
    * BEAK scheme-list
    */
@@ -248,7 +250,7 @@ abstract class DefaultConfig {
       // Pre init
       //--------------------
       self::$PID = posix_getpid();
-      // Domain suffix
+      // Domain suffix  @@@ Reserved 
       self::$SYS_BEAKS = array (
         Def::BP_SESSION  => 'session'  ,
         Def::BP_LAYOUT   => 'layout'   ,
@@ -264,17 +266,22 @@ abstract class DefaultConfig {
       //   It sounds like there are some bugs about connection pool in some httpd_modules.
       //   Then we must kill the httpd process FORCIBLY...
       self::$Error2Die = 10;
+
       /**
        * BEAK Driver switch
        */
       self::$BEAKS = array (
-        Def::BP_CMS      => 'Cockatoo\BeakFile'   ,
-        Def::BP_SESSION  => 'Cockatoo\BeakFile'   ,
-        Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   ,
-        Def::BP_COMPONENT=> 'Cockatoo\BeakFile'   ,
-        Def::BP_STATIC   => 'Cockatoo\BeakFile'   ,
-        Def::BP_STORAGE  => 'Cockatoo\BeakFile'   ,
-        Def::BP_ACTION   => 'Cockatoo\BeakAction' ,
+        Def::BP_CMS      => 'Cockatoo\BeakFile'   , // cms://...
+        Def::BP_SESSION  => 'Cockatoo\BeakFile'   , // session://...
+        Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   , // layout://...
+        Def::BP_COMPONENT=> 'Cockatoo\BeakFile'   , // component://...
+        Def::BP_STATIC   => 'Cockatoo\BeakFile'   , // static://...
+        Def::BP_STORAGE  => 'Cockatoo\BeakFile'   , // storage://...
+        Def::BP_ACTION   => 'Cockatoo\BeakAction' , // action://...
+        null
+        );
+      self::$EXT_BEAKS = array (
+        null
         );
       /**
        * Static locations.

@@ -36,7 +36,7 @@ class BeakImporter {
     if ( ! $to_driver ) {
       throw new \Exception( 'Unexpect driver ! : ' . $to . ' => ' . $to_driver );
     }
-    foreach ( Config::$SYS_BEAKS as $k => $v ) {
+    foreach ( Config::$BEAKS as $k => $v ) {
       $this->TO_BEAKS[$k]   = $to_driver;
     }
     list($S,$D,$C,$p,$m,$q,$c) = parse_brl($brl);
@@ -141,7 +141,7 @@ class BeakTransfer {
     if ( ! $from_driver or ! $to_driver ) {
       throw new \Exception( 'Unexpect driver ! : ' . $from . ' => ' . $from_driver . ' , ' . $to . ' => ' . $to_driver );
     }
-    foreach ( Config::$SYS_BEAKS as $k => $v ) {
+    foreach ( Config::$BEAKS as $k => $v ) {
       $this->TO_BEAKS[$k]   = $to_driver;
       $this->FROM_BEAKS[$k] = $from_driver;
     }
