@@ -22,7 +22,7 @@ class SampleRequestParser extends DefaultRequestParser {
         $reqpath = 'android/'.$reqpath;
       }
       if ( preg_match('@^android/(.*)?$@', $reqpath , $matches ) !== 0 ) {
-        $this->device = 'android';
+        $this->template = 'android';
         $reqpath = $matches[1];
         if ( preg_match('@^view/(.*)?$@', $reqpath , $matches ) !== 0 ) {
           $this->path = 'view';
@@ -35,7 +35,7 @@ class SampleRequestParser extends DefaultRequestParser {
         }
         return; // wiki android
       }else{
-        $this->device = 'default';
+        $this->template = 'default';
         if ( preg_match('@^view/(.*)?$@', $reqpath , $matches ) !== 0 ) {
           $this->path = 'view';
           $this->args['P'] = $matches[1];
@@ -58,7 +58,7 @@ class SampleRequestParser extends DefaultRequestParser {
       }
     }elseif ( preg_match('@^/([^/]+)/([^/]+)/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
       $this->service = $matches[1];
-      $this->device  = $matches[2];
+      $this->template  = $matches[2];
       $this->path    = $matches[3];
       $this->session_path = '/'.$matches[1];
       return; // other application

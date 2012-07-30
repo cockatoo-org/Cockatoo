@@ -18,36 +18,30 @@ require_once(Config::COCKATOO_ROOT.'wwwutils/core/content.php');
 require_once(Config::COCKATOO_ROOT.'utils/beak.php');
   
 $HEADER  = getallheaders();
-list($SERVICE,$DEVICE,$PATH,$ARGS,$REQUEST_PARSER,$DEVICE_SELECTOR) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
+list($SERVICE,$TEMPLATE,$PATH,$ARGS,$REQUEST_PARSER,$TEMPLATE_SELECTOR) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
 
 $SCRIPT='';
-  
+
 try {
   $COMPONENTS_DRAWERS = array();
-
   {
     // core component
     $BASIC_CONTANT_DRAWER = new ContentDrawer(Def::RESERVED_SERVICE_CORE,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);  
-    $brl = brlgen(Def::BP_COMPONENT,Def::RESERVED_SERVICE_CORE,Def::RESERVED_DEVICE_DEFAULT,'',Beak::M_KEY_LIST);
+    $brl = brlgen(Def::BP_COMPONENT,Def::RESERVED_SERVICE_CORE,Def::RESERVED_TEMPLATE_DEFAULT,'',Beak::M_KEY_LIST);
     $components = BeakController::beakSimpleQuery($brl);
     $children = array();
     foreach ( $components as $p){
       if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
 //        if ( strcmp($p,'pagelayout')){
-          $pid = $p;
-          $children []= array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,Def::RESERVED_SERVICE_CORE,Def::RESERVED_DEVICE_DEFAULT,$pid,Beak::M_GET),
-                              Def::K_LAYOUT_EXTRA    => '' ,
-                              Def::K_LAYOUT_CHILDREN => array());
-//        }
+          $page_id = $p;
+          $children []= layoutChildren(Def::RESERVED_SERVICE_CORE,Def::RESERVED_TEMPLATE_DEFAULT,$page_id,'',array());
       }
     }
     $layoutData = array( 
       Def::K_LAYOUT_PRE_ACTION => null,
       Def::K_LAYOUT_POST_ACTION => null,
       Def::K_LAYOUT_SESSION_EXP => '0',
-      Def::K_LAYOUT_LAYOUT => array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,Def::RESERVED_SERVICE_CORE,Def::RESERVED_DEVICE_DEFAULT,'.ghost',''),
-                        Def::K_LAYOUT_EXTRA => '' ,
-                        Def::K_LAYOUT_CHILDREN => $children)
+      Def::K_LAYOUT_LAYOUT => layoutChildren(Def::RESERVED_SERVICE_CORE,Def::RESERVED_TEMPLATE_DEFAULT,'.ghost','',$children),
       );
     // @@@ sort $layoutData by type ?
     $BASIC_CONTANT_DRAWER->layout($layoutData);  
@@ -56,26 +50,24 @@ try {
   $COMPONENTS_DRAWERS []= $BASIC_CONTANT_DRAWER;
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
   $services = BeakController::beakSimpleQuery($brl);
-  foreach ( $services as $sid){
-    if ( ! $sid ) {
+  foreach ( $services as $service_id){
+    if ( ! $service_id ) {
       continue;
     }
-    if ( is_readable($sid) ){
-      if (strcmp($sid,Def::RESERVED_SERVICE_CORE)===0){
+    if ( is_readable($service_id) ){
+      if (strcmp($service_id,Def::RESERVED_SERVICE_CORE)===0){
         continue;
       }
       // service component
-      $COMPONENTS_DRAWER = new ContentDrawer($sid,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);
-      $brl = brlgen(Def::BP_COMPONENT,$sid,Def::RESERVED_DEVICE_DEFAULT,'',Beak::M_KEY_LIST);
+      $COMPONENTS_DRAWER = new ContentDrawer($service_id,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,'',Beak::M_KEY_LIST);
       $components = BeakController::beakSimpleQuery($brl);
       $children = array();
       if ( $components ) {
         foreach ( $components as $p){
           if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
-            $pid = $p;
-            $children []= array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,$sid,Def::RESERVED_DEVICE_DEFAULT,$pid,Beak::M_GET),
-                                Def::K_LAYOUT_EXTRA => '' ,
-                                Def::K_LAYOUT_CHILDREN => array());
+            $page_id = $p;
+            $children []= layoutChildren($service_id,Def::RESERVED_TEMPLATE_DEFAULT,$page_id,'',array());
           }
         }
         // @@@ sort $layoutData by type ?
@@ -85,9 +77,7 @@ try {
         Def::K_LAYOUT_PRE_ACTION => null,
         Def::K_LAYOUT_POST_ACTION => null,
         Def::K_LAYOUT_SESSION_EXP => '0',
-        Def::K_LAYOUT_LAYOUT => array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,Def::RESERVED_SERVICE_CORE,Def::RESERVED_DEVICE_DEFAULT,'.ghost',''),
-                                      Def::K_LAYOUT_EXTRA => '' ,
-                                      Def::K_LAYOUT_CHILDREN => $children)
+        Def::K_LAYOUT_LAYOUT => layoutChildren(Def::RESERVED_SERVICE_CORE,Def::RESERVED_TEMPLATE_DEFAULT,'.ghost','',$children),
         );
       $COMPONENTS_DRAWER->layout($layoutData);  
       $COMPONENTS_DRAWER->components();
@@ -95,45 +85,13 @@ try {
       $COMPONENTS_DRAWERS []= $COMPONENTS_DRAWER;
     }
   }
-/*
-  {
-    // service component
-    $COMPONENTS_DRAWER = new ContentDrawer($SERVICE,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);  
-    $brl = brlgen(Def::BP_COMPONENT,$SERVICE,Def::RESERVED_DEVICE_DEFAULT,'',Beak::M_KEY_LIST);
-    $ret = BeakController::beakQuery(array($brl));
-    $children = array();
-    if ( $ret[$brl] ) {
-      foreach ( $ret[$brl] as $p){
-        if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
-          $pid = $p;
-          $children []= array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,$SERVICE,Def::RESERVED_DEVICE_DEFAULT,$pid,Beak::M_GET),
-                              Def::K_LAYOUT_EXTRA => '' ,
-                              Def::K_LAYOUT_CHILDREN => array());
-        }
-      }
-      // @@@ sort $layoutData by type ?
-      usort($children,'Cockatoo\componentSorter');
-    }
-    $layoutData = array( 
-      Def::K_LAYOUT_PRE_ACTION => null,
-      Def::K_LAYOUT_POST_ACTION => null,
-      Def::K_LAYOUT_SESSION_EXP => '0',
-      Def::K_LAYOUT_LAYOUT => array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,'core',Def::RESERVED_DEVICE_DEFAULT,'.ghost',''),
-                        Def::K_LAYOUT_EXTRA => '' ,
-                        Def::K_LAYOUT_CHILDREN => $children)
-      );
-    $COMPONENTS_DRAWER->layout($layoutData);  
-    $COMPONENTS_DRAWER->components();
-  }
-*/
-  {
-    // page
-    $CONTENT_DRAWER = new ContentDrawer($SERVICE,$DEVICE,$PATH,null,$REQUEST_PARSER,$DEVICE_SELECTOR,Def::RenderingModeCMS);  
-    $brl = brlgen(Def::BP_LAYOUT,$SERVICE,$DEVICE,$PATH,Beak::M_GET);
-    $page_layout = BeakController::beakSimpleQuery($brl);
-    $CONTENT_DRAWER->layout($page_layout);
-    $CONTENT_DRAWER->components();
-  }
+  // page
+  $CONTENT_DRAWER = new ContentDrawer($SERVICE,$TEMPLATE,$PATH,null,$REQUEST_PARSER,$TEMPLATE_SELECTOR,Def::RenderingModeCMS);  
+  $brl = brlgen(Def::BP_LAYOUT,$SERVICE,$TEMPLATE,$PATH,Beak::M_GET);
+  $page_layout = BeakController::beakSimpleQuery($brl);
+  $CONTENT_DRAWER->layout($page_layout);
+  $CONTENT_DRAWER->components();
+  $OP = 'setL';
   Include Config::COCKATOO_ROOT.'wwwutils/core/cms_frame.php';
 }catch ( \Exception $ex ) {
   print $ex->getMessage();
@@ -143,4 +101,9 @@ return;
 
 function componentSorter($a,$b){
   return strcmp($a[Def::K_LAYOUT_COMPONENT] , $b[Def::K_LAYOUT_COMPONENT]);
+}
+function layoutChildren($service,$template,$path,$extra,$children){
+  return array(Def::K_LAYOUT_COMPONENT => brlgen(Def::BP_COMPONENT,$service,$template,$path,''),
+               Def::K_LAYOUT_EXTRA    => $extra ,
+               Def::K_LAYOUT_CHILDREN => $children);
 }

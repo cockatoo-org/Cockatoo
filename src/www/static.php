@@ -23,8 +23,8 @@ try {
   Log::info($NAME);
 
   $HEADER = getallheaders();
-  list($SERVICE,$DEVICE,$PATH) = parseStaticRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
-  $brl = brlgen(Def::BP_STATIC,$SERVICE,$DEVICE,$PATH,Beak::M_GET);
+  list($SERVICE,$TEMPLATE,$PATH) = parseStaticRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
+  $brl = brlgen(Def::BP_STATIC,$SERVICE,$TEMPLATE,$PATH,Beak::M_GET);
   $content = StaticContent::get($brl);
   StaticContent::http($content,$HEADER);
 }catch ( \Exception $e ) {

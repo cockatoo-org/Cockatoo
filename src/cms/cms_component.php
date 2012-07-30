@@ -91,7 +91,7 @@ $(function () {
     }},
     form : {
       rev   : { label: '' , type : 'hidden' },
-      sid   : { label: '' , type : 'hidden' },
+      service_id   : { label: '' , type : 'hidden' },
       name  : { label: 'Service' , type : 'text' }
     },
     validator : {
@@ -102,7 +102,7 @@ $(function () {
 	}
       }
     },
-    change : function (data) { component.settings.args.sid=data.sid;component.list();},
+    change : function (data) { component.settings.args.service_id=data.service_id;component.list();},
     reset  : function () { component.reset();}
   });
   service.list();
@@ -110,7 +110,7 @@ $(function () {
 
   var component = $('#components').cockatoo_list({ 
     title:'Components', 
-    add :    { url : 'cms_ajax.php', args : { op : 'addC'}, hook: function (t) { if ('sid' in t.settings.args) return false; return 'Please select service !'; } },
+    add :    { url : 'cms_ajax.php', args : { op : 'addC'}, hook: function (t) { if ('service_id' in t.settings.args) return false; return 'Please select service !'; } },
     del :    { url : 'cms_ajax.php', args : { op : 'delC'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select component !'; } },
     update : { url : 'cms_ajax.php', args : { op : 'setC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select component !'; } },
     copy   : { url : 'cms_ajax.php', args : { op : 'cpC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select component !'; } },
@@ -126,7 +126,7 @@ $(function () {
 	  url: 'cms_ajax.php',
 	  type: 'POST',
 	  dataType: 'json',
-          data: { sid: t.settings.args.sid, op: 'checkC', brl:d.brl },
+          data: { service_id: t.settings.args.service_id, op: 'checkC', brl:d.brl },
 	  t:t,
 	  d:d,
 	  success: function (data){
@@ -181,7 +181,7 @@ $(function () {
     change : function (data) { 
       var t = component;
       var args = {};
-      args.sid = data.sid;
+      args.service_id = data.service_id;
       args.cid = data.cid;
       args.op = 'getCC';
 	$.ajax({

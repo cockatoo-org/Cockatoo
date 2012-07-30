@@ -35,10 +35,10 @@ try {
     Log::info($NAME);
 
     $HEADER  = getallheaders();
-    list($SERVICE,$DEVICE,$PATH,$ARGS,$SESSION_PATH) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
+    list($SERVICE,$TEMPLATE,$PATH,$ARGS,$SESSION_PATH) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
 
     $mode = isset($_GET['debug'])?$_GET['debug']:Def::RenderingModeNORMAL;
-    $CONTENT_DRAWER = new ContentDrawer($SERVICE,$DEVICE,$PATH,$ARGS,$SESSION_PATH,$mode);  
+    $CONTENT_DRAWER = new ContentDrawer($SERVICE,$TEMPLATE,$PATH,$ARGS,$SESSION_PATH,$mode);  
     $force_redirect = $CONTENT_DRAWER->layout();
     if ( $force_redirect ) {
       redirect($force_redirect);

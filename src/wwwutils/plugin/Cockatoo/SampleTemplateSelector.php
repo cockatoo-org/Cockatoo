@@ -1,6 +1,6 @@
 <?php
 /**
- * SampleDeviceSelector.php - ????
+ * SampleTemplateSelector.php - ????
  *  
  * @package ????
  * @access public
@@ -10,6 +10,6 @@
  * @copyright Copyright (C) 2012, rakuten 
  */
 namespace Cockatoo;
-class SampleDeviceSelector extends DefaultDeviceSelector {
-  protected     $deviceTree = array('android'=>'default');
+class SampleTemplateSelector extends DefaultTemplateSelector {
+  protected     $templateTree = array('android'=>'default');
 }

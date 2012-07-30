@@ -17,7 +17,7 @@
 <meta http-equiv="content-script-type" content="text/javascript">
 <meta name="description" content="">
 <?php
-$CONTENT_DRAWER->drawCommonCss();
+//$CONTENT_DRAWER->drawCommonCss();
 ?>
 <link rel="stylesheet" href="js/jquery-ui/css/ui-lightness/jquery-ui-1.8.9.custom.css" type="text/css" media="all" />
 <link rel="stylesheet" href="js/cockatoo-cms.css" type="text/css" media="all" />
@@ -348,7 +348,7 @@ $(function () {
     $("#fix").click(function (ev) {
       $("#co-main").children("div.co-Widget").each(function (){
  	var ret = widget_json($(this));
- 	change('setL',ret);
+ 	change(OP,ret);
       });
     });
     $("#co-toolbar > h3").click(function (ev) {
@@ -583,7 +583,7 @@ $(function () {
     });
   }
 <?php
-    print 'SID="'.$SERVICE.'";DID="'.$DEVICE.'";PID="'.$PATH.'";';
+    print 'SERVICE_ID="'.$SERVICE.'";TEMPLATE_ID="'.$TEMPLATE.'";PAGE_ID="'.$PATH.'";OP="'.$OP.'";';
 ?>
   set_dd($('div.co-Widget'));
   function change(op,data){
@@ -593,9 +593,9 @@ $(function () {
       dataType: 'json',
       data: {
         op     : op,
-        sid    : SID,
-        did    : DID,
-        pid    : PID,
+        service_id    : SERVICE_ID,
+        template_id    : TEMPLATE_ID,
+        page_id    : PAGE_ID,
 	layout : $.toJSON(data)
       },
       success: function( data ){
@@ -620,7 +620,7 @@ $(function () {
 <b class="message"></b><br>
 <?php
 print "$SERVICE/$PATH<br>";
-print "$DEVICE<br>";
+print "$TEMPLATE<br>";
 ?>
   <div>
    <input id="fix" type="submit" value="fix"></input>

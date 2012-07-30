@@ -30,7 +30,7 @@ abstract class Action {
   public $updateCookie = array();
   public $header = '';
   public $updateArgs = null;
-//   public $deviceName;
+//   public $templateName;
 //   public $requestURL;
   /**
    * Constructor

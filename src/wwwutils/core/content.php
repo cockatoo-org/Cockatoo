@@ -18,7 +18,7 @@ namespace Cockatoo;
 class ContentDrawer {
   protected $mode;
   protected $service;
-  protected $device;
+  protected $template;
   protected $path;
   protected $args;
   protected $session_path;
@@ -47,9 +47,9 @@ class ContentDrawer {
   protected $hdf;
   protected $cs;
 
-  public function __construct ($service,$device,$path,$args,$session_path,$mode) {
+  public function __construct ($service,$template,$path,$args,$session_path,$mode) {
     $this->service      = $service;
-    $this->device       = $device;
+    $this->template       = $template;
     $this->path         = $path;
     $this->args         = $args;
     $this->session_path = $session_path;
@@ -98,8 +98,8 @@ class ContentDrawer {
     if ( $data ) {
       $this->layoutData = $data;
     }else {
-      $this->baseLayoutBrl= brlgen(Def::BP_LAYOUT,$this->service,$this->device,'',Beak::M_GET);
-      $this->layoutBrl    = brlgen(Def::BP_LAYOUT,$this->service,$this->device,$this->path,Beak::M_GET);
+      $this->baseLayoutBrl= brlgen(Def::BP_LAYOUT,$this->service,$this->template,'',Beak::M_GET);
+      $this->layoutBrl    = brlgen(Def::BP_LAYOUT,$this->service,$this->template,$this->path,Beak::M_GET);
 
       if ( strcmp($this->path,'') === 0 or strcmp($this->path,'/') === 0){
         throw new \Exception('Unexpect Layout is specified !' . $this->path );
@@ -109,16 +109,16 @@ class ContentDrawer {
       $datas = BeakController::beakGetsQuery(array($this->baseLayoutBrl,$this->layoutBrl));
       // Base layout
       if ( ! $datas[$this->baseLayoutBrl] ) {
-        // Device not defined.
-        Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback from : ' . $this->device);
-        $this->device = DeviceSelector::$instance->fallback($this->device);
-        if ( $this->device ) {
-          Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback to   : ' . $this->device);
-          $this->debug('== BASE LAYOUT NOT FOUND ! (fallback to '.$this->device.') ==','',Def::RenderingModeDEBUG2);
+        // Template not defined.
+        Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback from : ' . $this->template);
+        $this->template = TemplateSelector::$instance->fallback($this->template);
+        if ( $this->template ) {
+          Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback to   : ' . $this->template);
+          $this->debug('== BASE LAYOUT NOT FOUND ! (fallback to '.$this->template.') ==','',Def::RenderingModeDEBUG2);
           // @@@ fallback or redirect ?
           return $this->layout();
         }
-        throw new \Exception('Device not found !');
+        throw new \Exception('Template not found !');
       }
       $this->baseEredirect = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_EREDIRECT];
       $this->baseHeader    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_HEADER];
@@ -128,11 +128,11 @@ class ContentDrawer {
 
       // Page layout
       if ( ! $datas[$this->layoutBrl] ) {
-        Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback from : ' . $this->device);
-        $this->device = DeviceSelector::$instance->fallback($this->device);
-        if ( $this->device ) {
-          Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback to   : ' . $this->device);
-          $this->debug('== LAYOUT NOT FOUND ! (fallback to '.$this->device.') ==','',Def::RenderingModeDEBUG2);
+        Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback from : ' . $this->template);
+        $this->template = TemplateSelector::$instance->fallback($this->template);
+        if ( $this->template ) {
+          Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback to   : ' . $this->template);
+          $this->debug('== LAYOUT NOT FOUND ! (fallback to '.$this->template.') ==','',Def::RenderingModeDEBUG2);
           // @@@ fallback or redirect ?
           return $this->layout(null,($baseEredirect?$baseEredirect:$this->baseEredirect) );
         }
@@ -212,7 +212,7 @@ class ContentDrawer {
     $this->session[Def::SESSION_KEY_GET]    = $GET;
     $this->session[Def::SESSION_KEY_COOKIE] = $COOKIE;
     $this->session[Def::SESSION_KEY_FILES]  = $files;
-    $this->session[Def::SESSION_KEY_DEVICE] = $this->device;
+    $this->session[Def::SESSION_KEY_TEMPLATE] = $this->template;
     $this->session[Def::SESSION_KEY_EXP]    = $exp;
     // Save
     setSession($this->sessionID,$this->service,$this->session);
@@ -394,12 +394,12 @@ class ContentDrawer {
   }
 
   public function drawCommonCss() {
-    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.Def::RESERVED_SERVICE_CORE.'/'.Def::RESERVED_DEVICE_DEFAULT.'/'.Config::CommonCSS.'"></link>';
-    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.$this->service.'/'.$this->device.'/'.Config::CommonCSS.'"></link>';
+    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.Def::RESERVED_SERVICE_CORE.'/'.Def::RESERVED_TEMPLATE_DEFAULT.'/'.Config::CommonCSS.'"></link>';
+    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.$this->service.'/'.$this->template.'/'.Config::CommonCSS.'"></link>';
   }
   public function drawCommonJs() {
-    print '<script type="text/javascript" src="'.Def::PATH_STATIC_PREFIX.'/'.Def::RESERVED_SERVICE_CORE.'/'.Def::RESERVED_DEVICE_DEFAULT.'/'.Config::CommonJs.'"></script>';
-    print '<script type="text/javascript" src="'.Def::PATH_STATIC_PREFIX.'/'.$this->service.'/'.$this->device.'/'.Config::CommonJs.'"></script>';
+    print '<script type="text/javascript" src="'.Def::PATH_STATIC_PREFIX.'/'.Def::RESERVED_SERVICE_CORE.'/'.Def::RESERVED_TEMPLATE_DEFAULT.'/'.Config::CommonJs.'"></script>';
+    print '<script type="text/javascript" src="'.Def::PATH_STATIC_PREFIX.'/'.$this->service.'/'.$this->template.'/'.Config::CommonJs.'"></script>';
   }
   public function drawCss() {
     print $this->widget->cssWalk();

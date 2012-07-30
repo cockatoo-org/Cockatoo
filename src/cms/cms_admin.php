@@ -86,7 +86,7 @@ $(function () {
     }},
     form : {
       rev   : { label: '' , type : 'hidden' },
-      sid   : { label: '' , type : 'hidden' },
+      service_id   : { label: '' , type : 'hidden' },
       name  : { label: 'Service' , type : 'text' }
     },
     validator : {
@@ -97,7 +97,7 @@ $(function () {
 	}
       }
     },
-    change : function (data) { accounts.settings.args.sid=data.sid;accounts.list();},
+    change : function (data) { accounts.settings.args.service_id=data.service_id;accounts.list();},
     reset  : function () { accounts.reset();}
   });
   service.list();
@@ -105,7 +105,7 @@ $(function () {
 
   var accounts = $('#accounts').cockatoo_list({ 
     title:'Account', 
-    add :    { url : 'cms_ajax_admin.php', args : { op : 'addA'}, hook: function (t) { if ('sid' in t.settings.args) return false; return 'Please select service !'; } }, 
+    add :    { url : 'cms_ajax_admin.php', args : { op : 'addA'}, hook: function (t) { if ('service_id' in t.settings.args) return false; return 'Please select service !'; } }, 
     del :    { url : 'cms_ajax_admin.php', args : { op : 'delA'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select account !'; } },
     update : { url : 'cms_ajax_admin.php', args : { op : 'setA'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select account !'; } },
     list :   { url : 'cms_ajax_admin.php', args : { op : 'getA'}, col : 'name' },

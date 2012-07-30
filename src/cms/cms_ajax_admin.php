@@ -22,38 +22,38 @@ $_sG = $_GET;
 
 $op   = $_sP['op'];
   
-$sid  = $_sP['sid'];
+$service_id  = $_sP['service_id'];
 $aid  = $_sP['aid'];
 $role = $_sP['role'];
 $r;
 $emsg='';
 try {
   if ( $op === 'getS' ) {
-    $sids = getS();
-    foreach ( $sids as $sid){
-      if ( is_readable($sid) ){
-        if ( $sid === '' ) {
-          $r [] = array('sid' => $sid , 'name' => 'ADMIN');
+    $service_ids = getS();
+    foreach ( $service_ids as $service_id){
+      if ( is_readable($service_id) ){
+        if ( $service_id === '' ) {
+          $r [] = array('service_id' => $service_id , 'name' => 'ADMIN');
         }else{
-          $r [] = array('sid' => $sid , 'name' => $sid);
+          $r [] = array('service_id' => $service_id , 'name' => $service_id);
         }
       }
     }
   } elseif( $op === 'addS' ) {
     check_admin('');
-    $sid = $_sP['name'];
+    $service_id = $_sP['name'];
     $account = get_account();
-    set_auth($sid,$account,CmsAuth::ADMIN);
+    set_auth($service_id,$account,CmsAuth::ADMIN);
   } elseif( $op === 'delS' ) {
     check_admin('');
-    $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$sid,Beak::M_DEL);
+    $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$service_id,Beak::M_DEL);
     $ret = BeakController::beakSimpleQuery($brl);
     if ( ! $ret ) {
       throw new \Exception('Fail to del : ' . $brl);
     }
   } elseif( $op === 'getA' ) {
-    if ( is_readable($sid) ){
-      $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$sid,Beak::M_GET);
+    if ( is_readable($service_id) ){
+      $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$service_id,Beak::M_GET);
       $service = BeakController::beakSimpleQuery($brl);
       if ( $service ) {
         foreach ( $service['account'] as $k => $v ) {
@@ -66,15 +66,15 @@ try {
       }
     }
   } elseif( $op === 'addA' ) {
-    check_admin($sid);
+    check_admin($service_id);
     $aid = $_sP['name'];
-    set_auth($sid,$aid,$role);
+    set_auth($service_id,$aid,$role);
   } elseif( $op === 'delA' ) {
-    check_admin($sid);
-    set_auth($sid,$aid);
+    check_admin($service_id);
+    set_auth($service_id,$aid);
   } elseif( $op === 'setA' ) {
-    check_admin($sid);
-    set_auth($sid,$aid,$role);
+    check_admin($service_id);
+    set_auth($service_id,$aid,$role);
   }
 } catch (\Exception $e) {
   $emsg .= $e->getMessage();

@@ -33,13 +33,13 @@ td {
 #services div.label { 
   width: 50px;
 }
-#devices div.value[name=css] { 
+#templates div.value[name=css] { 
   display: none;
 }
-#devices div.value[name=js] { 
+#templates div.value[name=js] { 
   display: none;
 }
-#devices div.value[name=device] { 
+#templates div.value[name=template] { 
   display: none;
 }
 
@@ -49,10 +49,10 @@ form.Services div.label {
 form.Services div.value > input { 
   width: 400px;
 }
-form.Devices div.value > input { 
+form.Templates div.value > input { 
   width: 400px;
 }
-form.Devices div.value > textarea { 
+form.Templates div.value > textarea { 
   width: 400px;
   height: 20em;
 }
@@ -125,7 +125,7 @@ $(function () {
     }},
     form : {
       rev   : { label: '' , type : 'hidden' },
-      sid   : { label: '' , type : 'hidden' },
+      service_id   : { label: '' , type : 'hidden' },
       name  : { label: 'Service' , type : 'text' }
     },
     validator : {
@@ -136,17 +136,17 @@ $(function () {
 	}
       }
     },
-    change : function (data) { device.settings.args.sid=data.sid;device.list();},
-    reset  : function () { device.reset();}
+    change : function (data) { template.settings.args.service_id=data.service_id;template.list();},
+    reset  : function () { template.reset();}
   });
   service.list();
 
 
-  var device = $('#devices').cockatoo_list({ 
-    title:'Devices', 
-    add :    { url : 'cms_ajax.php', args : { op : 'addD'}, hook: function (t) { if ('sid' in t.settings.args) return false; return 'Please select service !'; } },
-/*     del :    { url : 'cms_ajax.php', args : { op : 'delD'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select device !'; } }, */
-    update : { url : 'cms_ajax.php', args : { op : 'setD'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select device !'; } },
+  var template = $('#templates').cockatoo_list({ 
+    title:'Templates', 
+    add :    { url : 'cms_ajax.php', args : { op : 'addD'}, hook: function (t) { if ('service_id' in t.settings.args) return false; return 'Please select service !'; } },
+/*     del :    { url : 'cms_ajax.php', args : { op : 'delD'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select template !'; } }, */
+    update : { url : 'cms_ajax.php', args : { op : 'setD'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select template !'; } },
     list :   { url : 'cms_ajax.php', args : { op : 'getD'}, col : 'name' },
     view : true,
     width: 700,
@@ -155,7 +155,7 @@ $(function () {
       var $sname = root.find('input[name="name"]');
 	$sname.attr("readonly","readonly");
       if ( $kind == 'update' || $kind == 'del') {
-        var $select = root.find('input[name="device"]').attr("readonly","readonly");
+        var $select = root.find('input[name="template"]').attr("readonly","readonly");
       }
       if ( $kind == 'update' || $kind == 'del') {
 	  $select.attr("disabled","disabled");
@@ -183,10 +183,10 @@ $(function () {
     }},
     form : {
       rev        : { label: '' , type : 'hidden' },
-      did        : { label: '' , type : 'hidden' },
-      name       : { label: 'Device' , type : 'text'},
-/*    device     : { label: 'device type' , type : 'select', options : { default :'default', iPhone :'iphone', iPad :'ipad', Android :'android', Xperia :'xperia', GALAPAGOS :'galapagos', au : 'au' , softbank : 'softbank' , docomo : 'docomo' } , def : 'default'},  */
-      device     : { label: 'device type' , type : 'text', def : 'default'},
+      template_id        : { label: '' , type : 'hidden' },
+      name       : { label: 'Template' , type : 'text'},
+/*    template     : { label: 'template type' , type : 'select', options : { default :'default', iPhone :'iphone', iPad :'ipad', Android :'android', Xperia :'xperia', GALAPAGOS :'galapagos', au : 'au' , softbank : 'softbank' , docomo : 'docomo' } , def : 'default'},  */
+      template     : { label: 'template type' , type : 'text', def : 'default'},
       eredirect  : { label: 'error redirect' , type : 'text'},
       layout     : { label: 'Layout editor' , type : 'html'},
       session     : { label: 'default session object' , type : 'select', options : { use :1 , temporary: 0 , disable :-1} , def : 0},
@@ -216,13 +216,13 @@ $(function () {
 	}
       }
     },
-    change : function (data) { path.settings.args.sid=data.sid; path.settings.args.did=data.did; path.list();},
+    change : function (data) { path.settings.args.service_id=data.service_id; path.settings.args.template_id=data.template_id; path.list();},
     reset  : function () { path.reset();}
   });
 
   var path = $('#paths').cockatoo_list({ 
     title:'Paths', 
-    add :    { url : 'cms_ajax.php', args : { op : 'addP'}, hook: function (t) { if ('sid' in t.settings.args) return false; return 'Please select service !'; } },
+    add :    { url : 'cms_ajax.php', args : { op : 'addP'}, hook: function (t) { if ('service_id' in t.settings.args) return false; return 'Please select service !'; } },
     del :    { url : 'cms_ajax.php', args : { op : 'delP'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select path !'; } },
     update : { url : 'cms_ajax.php', args : { op : 'setP'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select path !'; } },
     copy   : { url : 'cms_ajax.php', args : { op : 'cpP'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select path !'; } },
@@ -282,7 +282,7 @@ $(function () {
     }},
     form : {
       rev   : { label: '' , type : 'hidden' },
-      pid   : { label: '' , type : 'hidden' },
+      page_id   : { label: '' , type : 'hidden' },
       name  : { label: 'Path' , type : 'text'},
       _ctype     : { label: 'Type' , type : 'select', options : { html :'html', plain :'plain' , json : 'json' , binary : 'binary'} , def : 'html'},
       ctype      : { label: '' , type : 'hidden' },
@@ -327,9 +327,9 @@ $(function () {
     change : function (data) { 
       var t = path;
       var args = {};
-      args.sid = data.sid;
-      args.did = data.did;
-      args.pid = data.pid;
+      args.service_id = data.service_id;
+      args.template_id = data.template_id;
+      args.page_id = data.page_id;
       args.op = 'getPP';
 	$.ajax({
 	  url: t.settings.list.url,
@@ -371,7 +371,7 @@ $(function () {
    <div id="services" class="main-left" ></div>
    <div class="main-left" >
     <div class="main-block">
-     <div id="devices" class="main-left" ></div>
+     <div id="templates" class="main-left" ></div>
     </div>
     <div class="main-block">
      <div id="paths" class="main-left" ></div>

@@ -13,6 +13,11 @@
 "children":[
 {
 "type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
 "extra":"",
 "component":"component:\/\/fortest-component\/default\/test0?get",
 "children":[
@@ -34,6 +39,11 @@
 },
 {
 "type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
 "extra":"",
 "component":"component:\/\/fortest-component\/default\/test1?get",
 "children":[

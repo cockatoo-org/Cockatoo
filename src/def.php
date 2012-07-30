@@ -15,13 +15,13 @@ class Def {
   const  REWRITE_TOKEN            = '_R'; // httpd-cockatoo.conf
 
   const  REQUEST_SERVICE          = '_S';
-  const  REQUEST_DEVICE           = '_D';
+  const  REQUEST_TEMPLATE           = '_D';
   const  REQUEST_PATH             = '_P';
   const  REQUEST_ARGS             = '_A';
 
   const  RESERVED_SERVICE_CORE    = 'core';
-  const  RESERVED_DEVICE_DEFAULT  = 'default';
-  const  RESERVED_DEVICE_STATIC   = 'static';
+  const  RESERVED_TEMPLATE_DEFAULT  = 'default';
+  const  RESERVED_TEMPLATE_STATIC   = 'static';
 
   const  K_LAYOUT_TYPE            = 'type';
   const  K_LAYOUT_PRE_ACTION      = 'pre_action';
@@ -109,7 +109,7 @@ class Def {
   const  SESSION_KEY_POST         = '_p';
   const  SESSION_KEY_GET          = '_g';
   const  SESSION_KEY_SERVER       = '_s';
-  const  SESSION_KEY_DEVICE       = '_d';
+  const  SESSION_KEY_TEMPLATE       = '_d';
   const  SESSION_KEY_COOKIE       = '_c';
   const  SESSION_KEY_EXP          = '_e';
   const  SESSION_KEY_FILES        = '_f';
@@ -184,7 +184,7 @@ abstract class DefaultConfig {
    * Request analizer
    */
   const RequestParser     = 'Cockatoo\DefaultRequestParser';
-  const DeviceSelector    = 'Cockatoo\DefaultDeviceSelector'; 
+  const TemplateSelector    = 'Cockatoo\DefaultTemplateSelector'; 
   /**
    * Beak serializer
    */

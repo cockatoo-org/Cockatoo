@@ -675,7 +675,6 @@ class TileWidget extends Widget {
   }
 }
 
-
 /**
  * Creater widget by properties
  *

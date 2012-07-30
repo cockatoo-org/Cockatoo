@@ -22,9 +22,9 @@ $_sG = $_GET;
 
 $op   = $_sP['op'];
   
-$sid  = $_sP['sid'];
-$did  = $_sP['did'];
-$pid  = $_sP['pid'];
+$service_id  = $_sP['service_id'];
+$template_id  = $_sP['template_id'];
+$page_id  = $_sP['page_id'];
 $cid  = $_sP['cid'];
 $rev  = $_sP['rev'];
 $ctype= $_sP['ctype'];
@@ -59,18 +59,18 @@ $r;
 $emsg='';
 try {
   if ( $op === 'getS' ) {
-    $sids = getS();
-    foreach ( $sids as $sid){
-      if ( is_readable($sid) ){
-        $r [] = array('sid' => $sid , 'name' => $sid);
+    $service_ids = getS();
+    foreach ( $service_ids as $service_id){
+      if ( is_readable($service_id) ){
+        $r [] = array('service_id' => $service_id , 'name' => $service_id);
       }
     }
   } elseif( $op === 'getD' ) {
-    if ( is_readable($sid) ){
-      $dids = getD($sid);
-      foreach ( $dids as $did){
+    if ( is_readable($service_id) ){
+      $template_ids = getD($service_id);
+      foreach ( $template_ids as $template_id){
         // layout
-        $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
+        $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,'/',Beak::M_GET);
         $default_layout = BeakController::beakSimpleQuery($brl);
         $rev        = $default_layout[Beak::ATTR_REV];
         $eredirect  = $default_layout[Def::K_LAYOUT_EREDIRECT];
@@ -80,17 +80,17 @@ try {
         $session_exp= $default_layout[Def::K_LAYOUT_SESSION_EXP];
         $expires    = $default_layout[Def::K_LAYOUT_EXPIRES];
         // css
-        $cssBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonCSS,Beak::M_GET);
+        $cssBrl = brlgen(Def::BP_STATIC,$service_id,$template_id,Config::CommonCSS,Beak::M_GET);
         $css = BeakController::beakSimpleQuery($cssBrl);
         $css = $css?$css[Def::K_STATIC_DATA]:'';
         // js
-        $jsBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonJs,Beak::M_GET);
+        $jsBrl = brlgen(Def::BP_STATIC,$service_id,$template_id,Config::CommonJs,Beak::M_GET);
         $js = BeakController::beakSimpleQuery($jsBrl);
         $js = $js?$js[Def::K_STATIC_DATA]:'';
         $r []= array('rev' => $rev,
-                     'sid' => $sid ,
-                     'did' => $did ,
-                     'name' => $did ,
+                     'service_id' => $service_id ,
+                     'template_id' => $template_id ,
+                     'name' => $template_id ,
                      'eredirect' => $eredirect,
                      'css' => $css ,
                      'js' => $js,
@@ -101,32 +101,32 @@ try {
                      'header' => $header,
                      'pheader' => $pheader,
                      'bottom' => $bottom,
-                     'layout' => '<a target="_blank" href="cms_layout.php?'.Def::REQUEST_SERVICE.'=' . $sid . '&'.Def::REQUEST_DEVICE.'=' . $did . '&'.Def::REQUEST_PATH.'=/' . "" . '">'. "$did" .'</a>'
+                     'layout' => '<a target="_blank" href="cms_layout.php?'.Def::REQUEST_SERVICE.'=' . $service_id . '&'.Def::REQUEST_TEMPLATE.'=' . $template_id . '&'.Def::REQUEST_PATH.'=/' . "" . '">'. "$template_id" .'</a>'
                     
           );
       }
     }
   } elseif( $op === 'addD' ) {
-    check_writable($sid);
-    $did = $_sP['device'];
+    check_writable($service_id);
+    $template_id = $_sP['template'];
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array(
                       array(Def::K_LAYOUT_TYPE => 'PageLayout' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/pagelayout" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array())
                       ));
-    setD(false,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
+    setD(false,$rev,$service_id,$template_id,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'setD' ) {
-    check_writable($sid);
-    setD(true,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,null);
+    check_writable($service_id);
+    setD(true,$rev,$service_id,$template_id,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,null);
   } elseif( $op === 'getP' ) {
-    if ( is_readable($sid) ){
-      $pids = getP($sid,$did);
-      foreach ( $pids as $pid){
-        $r [] = array('sid' => $sid , 
-                      'did' => $did , 
-                      'pid' => $pid ,
-                      'name' => $pid , 
+    if ( is_readable($service_id) ){
+      $page_ids = getP($service_id,$template_id);
+      foreach ( $page_ids as $page_id){
+        $r [] = array('service_id' => $service_id , 
+                      'template_id' => $template_id , 
+                      'page_id' => $page_id ,
+                      'name' => $page_id , 
                       'ctype' => '',
-                      'page' => '<a target="_blank" href="/index.php?'.Def::REQUEST_SERVICE.'=' . $sid . '&'.Def::REQUEST_DEVICE.'=' . $did . '&'.Def::REQUEST_PATH.'=' . "/$pid"  . '">'. "/$pid" .'</a>',
-                      'layout' => '<a target="_blank" href="cms_layout.php?'.Def::REQUEST_SERVICE.'=' . $sid . '&'.Def::REQUEST_DEVICE.'=' . $did . '&'.Def::REQUEST_PATH.'=' . "/$pid" .'">'. "/$pid".'</a>',
+                      'page' => '<a target="_blank" href="/index.php?'.Def::REQUEST_SERVICE.'=' . $service_id . '&'.Def::REQUEST_TEMPLATE.'=' . $template_id . '&'.Def::REQUEST_PATH.'=' . "/$page_id"  . '">'. "/$page_id" .'</a>',
+                      'layout' => '<a target="_blank" href="cms_layout.php?'.Def::REQUEST_SERVICE.'=' . $service_id . '&'.Def::REQUEST_TEMPLATE.'=' . $template_id . '&'.Def::REQUEST_PATH.'=' . "/$page_id" .'">'. "/$page_id".'</a>',
                       'pre_action' => '',
                       'post_action' => '',
                       'session' => '',
@@ -141,8 +141,8 @@ try {
       }
     }
   } elseif( $op === 'getPP' ) {
-    if ( is_readable($sid) ){
-      $CONTENT_DRAWER = new ContentDrawer($sid,$did,$pid,null,null,null,Def::RenderingModeNORMAL);  
+    if ( is_readable($service_id) ){
+      $CONTENT_DRAWER = new ContentDrawer($service_id,$template_id,$page_id,null,null,null,Def::RenderingModeNORMAL);  
       $CONTENT_DRAWER->layout();
       $CONTENT_DRAWER->components();
       $contents = '';
@@ -174,33 +174,33 @@ try {
         );
     }
   } elseif( $op === 'addP' ) {
-    check_writable($sid);
-    $pid = $_sP['name'];
+    check_writable($service_id);
+    $page_id = $_sP['name'];
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array());
-    setP(false,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
+    setP(false,$rev,$service_id,$template_id,$page_id,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'setP' ) {
-    check_writable($sid);
-    setP(true,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,null);
+    check_writable($service_id);
+    setP(true,$rev,$service_id,$template_id,$page_id,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,null);
   } elseif( $op === 'cpP' ) {
-    check_writable($sid);
-    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
+    check_writable($service_id);
+    $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,$page_id,Beak::M_GET);
     $page_layout = BeakController::beakSimpleQuery($brl);
     $layout = $page_layout[Def::K_LAYOUT_LAYOUT];
-    $pid = $_sP['name'];
-    setP(false,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
+    $page_id = $_sP['name'];
+    setP(false,$rev,$service_id,$template_id,$page_id,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'delP' ) {
-    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_DEL);
+    $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,$page_id,Beak::M_DEL);
     BeakController::beakSimpleQuery($brl);
   } elseif( $op === 'getC' ) {
-    if ( is_readable($sid) ){
-      $brl = brlgen(Def::BP_COMPONENT,$sid,'default','',Beak::M_KEY_LIST);
+    if ( is_readable($service_id) ){
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,'default','',Beak::M_KEY_LIST);
       $components = BeakController::beakSimpleQuery($brl);
       $r = array();
       foreach ( $components as $c){
         $cid = $c;
         if ( preg_match('@[^/]$@',$c,$matches) !== 0 ) {
-          $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
-          $r [] = array('sid' => $sid ,
+          $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
+          $r [] = array('service_id' => $service_id ,
                         'cid' => $cid ,
                         'name' => $cid , 
                         'brl'  => $brl , 
@@ -216,10 +216,9 @@ try {
       }
     }
   } elseif( $op === 'getCC' ) {
-    if ( is_readable($sid) ){
-      $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
+    if ( is_readable($service_id) ){
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
       $component = BeakController::beakSimpleQuery($brl);
-
       $r = array('rev'         => $component[Beak::ATTR_REV],
                  'type'        => $component[Def::K_COMPONENT_TYPE],
                  'subject'     => $component[Def::K_COMPONENT_SUBJECT],
@@ -233,41 +232,41 @@ try {
         );
     }
   } elseif( $op === 'addC' ) {
-    check_writable($sid);
+    check_writable($service_id);
     $cid = $_sP['name'];
-    setC(false,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+    setC(false,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
   } elseif( $op === 'setC' ) {
-    check_writable($sid);
-    setC(true,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+    check_writable($service_id);
+    setC(true,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
   } elseif( $op === 'cpC' ) {
-    check_writable($sid);
+    check_writable($service_id);
     $cid = $_sP['name'];
-    setC(true,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+    setC(true,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
   } elseif( $op === 'checkC' ) {
-    if ( is_readable($sid) ){
+    if ( is_readable($service_id) ){
       $r['required'] = implode(getRequired($check),"\n");
     }
   } elseif( $op === 'delC' ) {
-    check_writable($sid);
-    $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
+    check_writable($service_id);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
     $required = getRequired($brl);
     if ( $required ) {
       throw new \Exception('Still required by ' . implode($required,'<br>'));
     }
-    $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_DEL);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_DEL);
     BeakController::beakSimpleQuery($brl);
   } elseif( $op === 'setL' ) {
-    check_writable($sid);
+    check_writable($service_id);
     $layout = json_decode($_sP['layout'],true);
     if ( ! $layout ) {
       throw new \Exception('Fail to json_decode : ' . $_sP['layout']);
     }
-    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
+    $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,$page_id,Beak::M_GET);
     $page_layout = BeakController::beakSimpleQuery($brl);
     if ( ! $page_layout ) {
       throw new \Exception('Fail to get : ' . $brl);
     }
-    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_SET);
+    $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,$page_id,Beak::M_SET);
     $page_layout[Def::K_LAYOUT_LAYOUT] = $layout;
     $ret = BeakController::beakSimpleQuery($brl,$page_layout);
     if ( ! $ret ) {
@@ -287,16 +286,16 @@ function getS(){
   }
   return $service;
 }
-function getD($sid){
-  $brl = brlgen(Def::BP_LAYOUT,$sid,'','',Beak::M_COL_LIST);
+function getD($service_id){
+  $brl = brlgen(Def::BP_LAYOUT,$service_id,'','',Beak::M_COL_LIST);
   $default_layout = BeakController::beakSimpleQuery($brl);
   if ( $default_layout === null ) {
     throw new \Exception('Fail to get : ' . $brl);
   }
   return $default_layout;
 }
-function getP($sid,$did){
-  $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_KEY_LIST);
+function getP($service_id,$template_id){
+  $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,'',Beak::M_KEY_LIST);
   $page_layout = BeakController::beakSimpleQuery($brl);
   if ( $page_layout === null ) {
     throw new \Exception('Fail to get : ' . $brl);
@@ -304,32 +303,32 @@ function getP($sid,$did){
   return $page_layout;
 }
 
-function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
-  if ( preg_match('@\s@',$did,$matches) !== 0 ) { 
-    throw new \Exception('Cannot use blank-charactor as DEVICE : ' . $pid);
+function setD($flg,$rev,$service_id,$template_id,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
+  if ( preg_match('@\s@',$template_id,$matches) !== 0 ) { 
+    throw new \Exception('Cannot use blank-charactor as TEMPLATE : ' . $page_id);
   }
   if ( ! $flg ){
-    $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
+    $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,'/',Beak::M_GET);
     $default_layout = BeakController::beakSimpleQuery($brl);
     if ( $default_layout) {
-      throw new \Exception('Device already exist ! : ' . $did);
+      throw new \Exception('Template already exist ! : ' . $template_id);
     } else {
       // layout
-      $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakSimpleQuery($brl);
       // component
-      $brl = brlgen(Def::BP_COMPONENT,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,$template_id,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakSimpleQuery($brl);
       // STATIC
-      $brl = brlgen(Def::BP_STATIC,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakSimpleQuery($brl);
       // session
-      $brl = brlgen(Def::BP_SESSION,$sid,$did,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
+      $brl = brlgen(Def::BP_SESSION,$service_id,$template_id,'',Beak::M_CREATE_COL,array(),array(Beak::COMMENT_KIND_RENEW));
       $ret = BeakController::beakSimpleQuery($brl);
     }
   }else{
   }
-  $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_GET);
+  $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,'/',Beak::M_GET);
   $default_layout = BeakController::beakSimpleQuery($brl);
   $default_layout = $default_layout?$default_layout:array();
   $default_layout[Beak::ATTR_REV]            = $rev;
@@ -342,27 +341,27 @@ function setD($flg,$rev,$sid,$did,$eredirect,$css,$js,$session_exp,$expires_time
   $default_layout[Def::K_LAYOUT_BOTTOM]      = $bottom;
   $default_layout[Def::K_LAYOUT_SESSION_EXP] = $session_exp;
   $default_layout[Def::K_LAYOUT_EXPIRES]     = $expires_time;
-  $brl = brlgen(Def::BP_LAYOUT,$sid,$did,'/',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
+  $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,'/',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
   $ret = BeakController::beakSimpleQuery($brl,$default_layout);
   if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
   // css
-  $cssBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonCSS,'');
+  $cssBrl = brlgen(Def::BP_STATIC,$service_id,$template_id,Config::CommonCSS,'');
   StaticContent::save($cssBrl,'text/css','',$css,null,$expires_time);
   // js
-  $jsBrl = brlgen(Def::BP_STATIC,$sid,$did,Config::CommonJs,'');
+  $jsBrl = brlgen(Def::BP_STATIC,$service_id,$template_id,Config::CommonJs,'');
   StaticContent::save($jsBrl,'text/javascript','',$js,null,$expires_time);
 }
-function setP($flg,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
-  if ( preg_match('@\s@',$pid,$matches) !== 0 ) { 
-    throw new \Exception('Cannot use blank-charactor as PAGE : ' . $pid);
+function setP($flg,$rev,$service_id,$template_id,$page_id,$ctype,$eredirect,$redirect,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
+  if ( preg_match('@\s@',$page_id,$matches) !== 0 ) { 
+    throw new \Exception('Cannot use blank-charactor as PAGE : ' . $page_id);
   }
   $data = array();
-  $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_GET);
+  $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,$page_id,Beak::M_GET);
   $page_layout = BeakController::beakSimpleQuery($brl);
   if ( ! $flg and $page_layout) {
-    throw new \Exception('Page already exist ! : ' . $pid);
+    throw new \Exception('Page already exist ! : ' . $page_id);
   }
   $page_layout[Beak::ATTR_REV]            = $rev;
   //$page_layout[Def::K_LAYOUT_CTYPE]       = $ctype;
@@ -378,17 +377,17 @@ function setP($flg,$rev,$sid,$did,$pid,$ctype,$eredirect,$redirect,$pre_action,$
   if ( $layout ) {
     $page_layout[Def::K_LAYOUT_LAYOUT]    = $layout;
   }
-  $brl = brlgen(Def::BP_LAYOUT,$sid,$did,$pid,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
+  $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,$page_id,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
   $ret = BeakController::beakSimpleQuery($brl,$page_layout);
   if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
 }
-function setC($flg,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions) {
+function setC($flg,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions) {
   if ( preg_match('@\s@',$cid,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as COMPONENT : ' . $cid);
   }
-  $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_GET);
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
   $component = BeakController::beakSimpleQuery($brl);
   if ( ! $flg and $component ) {
     throw new \Exception('Component already exist ! : ' . $cid);
@@ -403,7 +402,7 @@ function setC($flg,$rev,$sid,$cid,$type,$subject,$description,$css,$js,$id,$clas
   $component[Def::K_COMPONENT_CLASS]       = $class;
   $component[Def::K_COMPONENT_BODY]        = $body;
   $component[Def::K_COMPONENT_ACTION]      = $actions;
-  $brl = brlgen(Def::BP_COMPONENT,$sid,'default',$cid,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
   $ret = BeakController::beakSimpleQuery($brl,$component);
   if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
@@ -414,17 +413,17 @@ function getRequired($check){
   if ( preg_match('@^(.+)\?|#@',$check,$matches) ){
     $check = $matches[1];
   }
-  $sids = getS();
-  foreach( $sids as $sid ) {
-    $dids = getD($sid);
-    foreach( $dids as $did ) {
-      $pids = getP($sid,$did);
-      foreach( $pids as $pid ) {
-        if ( ! $pid ){
+  $service_ids = getS();
+  foreach( $service_ids as $service_id ) {
+    $template_ids = getD($service_id);
+    foreach( $template_ids as $template_id ) {
+      $page_ids = getP($service_id,$template_id);
+      foreach( $page_ids as $page_id ) {
+        if ( ! $page_id ){
           continue;
         }
         try { 
-          $CONTENT_DRAWER = new ContentDrawer($sid,$did,$pid,null,null,null,Def::RenderingModeNORMAL);  
+          $CONTENT_DRAWER = new ContentDrawer($service_id,$template_id,$page_id,null,null,null,Def::RenderingModeNORMAL);  
           $CONTENT_DRAWER->layout();
           $CONTENT_DRAWER->components();
           foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
@@ -436,7 +435,7 @@ function getRequired($check){
             }
           }
         } catch (\Exception $e) {
-          $emsg .= $sid.'/'.$did.'/'.$pid . ' : ' . $e->getMessage() . "\n";
+          $emsg .= $service_id.'/'.$template_id.'/'.$page_id . ' : ' . $e->getMessage() . "\n";
         }
       }
     }

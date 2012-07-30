@@ -25,7 +25,7 @@ class Config extends DefaultConfig {
    * Request analizer
    */
   const RequestParser     = 'Cockatoo\SampleRequestParser';
-  const DeviceSelector    = 'Cockatoo\SampleDeviceSelector'; 
+  const TemplateSelector    = 'Cockatoo\SampleTemplateSelector'; 
 
   /**
    * Timeout

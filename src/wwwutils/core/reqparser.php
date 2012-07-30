@@ -13,7 +13,7 @@ namespace Cockatoo;
 \ClassLoader::addClassPath(Config::COCKATOO_ROOT.'wwwutils/plugin');
 
 
-// DeviceSelector
+// TemplateSelector
 /**
  * Request URL parser base
  *
@@ -28,7 +28,7 @@ abstract class RequestParser {
   protected $reqpath;
 
   public    $service;
-  public    $device;
+  public    $template;
   public    $path;
   public    $args         = array();
   public    $session_path = '/';
@@ -53,7 +53,7 @@ abstract class RequestParser {
    *  Result :
    *    Set members
    *     - $service
-   *     - $device
+   *     - $template
    *     - $path        
    *     - $args        
    *     - $session_path 
@@ -72,7 +72,7 @@ abstract class RequestParser {
    *  Result :
    *    Set members
    *     - $service
-   *     - $device
+   *     - $template
    *     - $path        
    *     - $args        
    *     - $session_path 
@@ -86,7 +86,7 @@ abstract class RequestParser {
    *  Result :
    *    Set members
    *     - $service
-   *     - $device
+   *     - $template
    *     - $path        
    *    )
    *
@@ -95,7 +95,7 @@ abstract class RequestParser {
   public function parseStatic(){
     if ( preg_match('@^'.Def::PATH_STATIC_PREFIX.'/?([^/]+)/([^/]+)(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
       $this->service      = $matches[1];
-      $this->device       = $matches[2];
+      $this->template       = $matches[2];
       $this->path         = $matches[3];
       return;
     }
@@ -112,7 +112,7 @@ class DefaultRequestParser extends RequestParser {
   public function parseImpl(){
     if ( preg_match('@^/?([^/]+)/([^/]+)(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
       $this->service      = $matches[1];
-      $this->device       = $matches[2];
+      $this->template       = $matches[2];
       $this->path         = $matches[3];
       $this->session_path = '/' . $matches[1];
       return;
@@ -122,13 +122,13 @@ class DefaultRequestParser extends RequestParser {
 }
 
 /**
- * Device selector base
+ * Template selector base
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */
-abstract class DeviceSelector {
+abstract class TemplateSelector {
   public static $instance;
-  protected     $deviceTree = array();
+  protected     $templateTree = array();
   protected     $header;
   protected     $server;
   protected     $get;
@@ -148,38 +148,38 @@ abstract class DeviceSelector {
     $this->cookie = &$cookie;
   }
   /**
-   * Select device
+   * Select template
    *
-   * @param String $device  device
-   * @return String device
+   * @param String $template  template
+   * @return String template
    */
-  abstract public function select($device);
+  abstract public function select($template);
   /**
-   * Fallback device
+   * Fallback template
    *
-   * @param String $device current device
-   * @return String Returns next device or Null
+   * @param String $template current template
+   * @return String Returns next template or Null
    */
-  public function fallback(&$device) {
-    $fallbackDevice = $this->deviceTree[$device];
-    if ( $fallbackDevice ) {
-      return $fallbackDevice;
+  public function fallback(&$template) {
+    $fallbackTemplate = $this->templateTree[$template];
+    if ( $fallbackTemplate ) {
+      return $fallbackTemplate;
     }
     return null;
   }
 }
 
 /**
- * Default device selector base
+ * Default template selector base
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */
-class DefaultDeviceSelector extends DeviceSelector {
+class DefaultTemplateSelector extends TemplateSelector {
   /**
    * Selector
    */
-  public function select($device) {
-    return $device;
+  public function select($template) {
+    return $template;
   }
 }
 
@@ -189,7 +189,7 @@ class DefaultDeviceSelector extends DeviceSelector {
  *  Return:
  *   Array ( 
  *     [0] => String, // service
- *     [1] => String, // device
+ *     [1] => String, // template
  *     [2] => String, // path
  *     [3] => String  // args
  *     [4] => String  // session_path
@@ -206,46 +206,46 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
     $clazz = Config::RequestParser;
     RequestParser::$instance = new $clazz($header,$server,$get,$cookie);
   }
-  if ( ! DeviceSelector::$instance ) {
-    $clazz = Config::DeviceSelector;
-    DeviceSelector::$instance = new $clazz($header,$server,$get,$cookie);
+  if ( ! TemplateSelector::$instance ) {
+    $clazz = Config::TemplateSelector;
+    TemplateSelector::$instance = new $clazz($header,$server,$get,$cookie);
   }
 
   // The mode of specifying the path as a query string (debug)
   if ( Config::Mode === Def::MODE_DEBUG and 
        (
          isset($get[Def::REQUEST_SERVICE]) or 
-         isset($get[Def::REQUEST_DEVICE]) or 
+         isset($get[Def::REQUEST_TEMPLATE]) or 
          isset($get[Def::REQUEST_PATH]) or 
          isset($get[Def::REQUEST_ARGS])
          )
     ) {
     // Override 
     $service= isset($get[Def::REQUEST_SERVICE])?$get[Def::REQUEST_SERVICE]:$service;
-    $device = isset($get[Def::REQUEST_DEVICE])?$get[Def::REQUEST_DEVICE]:$device;
+    $template = isset($get[Def::REQUEST_TEMPLATE])?$get[Def::REQUEST_TEMPLATE]:$template;
     $path   = isset($get[Def::REQUEST_PATH])?$get[Def::REQUEST_PATH]:$path;
     $args   = isset($get[Def::REQUEST_ARGS])?$get[Def::REQUEST_ARGS]:$args;
-    Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-    return array($service,$device,$path,$args);
+    Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
+    return array($service,$template,$path,$args);
   }
 
-//  list($service,$device,$path,$args) = RequestParser::$instance->parse();
+//  list($service,$template,$path,$args) = RequestParser::$instance->parse();
   RequestParser::$instance->parse();
   $service      = RequestParser::$instance->service;
-  $device       = RequestParser::$instance->device;
+  $template       = RequestParser::$instance->template;
   $path         = RequestParser::$instance->path;
   $args         = RequestParser::$instance->args;
   $session_path = RequestParser::$instance->session_path;
-  Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request preparsed : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
+  Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request preparsed : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
   
   if ( strcmp($service,Def::RESERVED_SERVICE_CORE) === 0 ) {
-  }elseif ( strcmp($device,Def::RESERVED_DEVICE_STATIC) === 0 ) {
+  }elseif ( strcmp($template,Def::RESERVED_TEMPLATE_STATIC) === 0 ) {
   }else{
-    $device = DeviceSelector::$instance->select($device);
+    $template = TemplateSelector::$instance->select($template);
   }
 
-  Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed    : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-  return array($service,$device,$path,$args,$session_path);
+  Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed    : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
+  return array($service,$template,$path,$args,$session_path);
 }
 
 function parseStaticRequest(&$header,&$server,&$get,&$cookie){
@@ -253,26 +253,26 @@ function parseStaticRequest(&$header,&$server,&$get,&$cookie){
   if ( Config::Mode === Def::MODE_DEBUG and 
        (
          isset($get[Def::REQUEST_SERVICE]) or 
-         isset($get[Def::REQUEST_DEVICE]) or 
+         isset($get[Def::REQUEST_TEMPLATE]) or 
          isset($get[Def::REQUEST_PATH]) or 
          isset($get[Def::REQUEST_ARGS])
          )
     ) {
     // Override 
     $service= isset($get[Def::REQUEST_SERVICE])?$get[Def::REQUEST_SERVICE]:$service;
-    $device = isset($get[Def::REQUEST_DEVICE])?$get[Def::REQUEST_DEVICE]:$device;
+    $template = isset($get[Def::REQUEST_TEMPLATE])?$get[Def::REQUEST_TEMPLATE]:$template;
     $path   = isset($get[Def::REQUEST_PATH])?$get[Def::REQUEST_PATH]:$path;
     $args   = isset($get[Def::REQUEST_ARGS])?$get[Def::REQUEST_ARGS]:$args;
-    Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-    return array($service,$device,$path,$args,'/');
+    Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
+    return array($service,$template,$path,$args,'/');
   }
 
   RequestParser::$instance = new DefaultRequestParser($header,$server,$get,$cookie);
   RequestParser::$instance->parseStatic();
   $service = RequestParser::$instance->service;
-  $device  = RequestParser::$instance->device;
+  $template  = RequestParser::$instance->template;
   $path    = RequestParser::$instance->path;
  
-  Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $device . ' , ' . $path . ' , ' . $args);
-  return array($service,$device,$path);
+  Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
+  return array($service,$template,$path);
 }
