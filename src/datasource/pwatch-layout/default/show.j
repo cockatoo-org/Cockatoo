@@ -1,5 +1,5 @@
 {
-"@R":"1343014835",
+"@R":"1343698907",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
@@ -8,7 +8,7 @@
 "expires":"0",
 "header":"<meta name=\"description\" content=\"\">\n<link rel=\"stylesheet\" href=\"\/_s_\/core\/default\/css\/smoothness\/jquery-ui-1.8.21.custom.css\" type=\"text\/css\" media=\"all\" \/>\n\n",
 "pheader":"",
-"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-ui-1.8.21.custom.min.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/pwatch\/default\/js\/flot\/jquery.flot.js\"><\/script>\n",
+"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-ui-1.8.21.custom.min.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/pwatch\/default\/js\/flot\/jquery.flot.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/pwatch\/default\/js\/flot\/jquery.flot.selection.js\"><\/script>\n",
 "layout":{
 "type":"HorizontalWidget",
 "class":"",

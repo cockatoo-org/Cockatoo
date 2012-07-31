@@ -56,6 +56,12 @@ class SampleRequestParser extends DefaultRequestParser {
         }
         return; // wiki default
       }
+    }elseif ( preg_match('@^/core/([^/]+)/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+      $this->service = 'core';
+      $this->template  = $matches[1];
+      $this->path    = $matches[2];
+      $this->session_path = '/';
+      return; // core application
     }elseif ( preg_match('@^/([^/]+)/([^/]+)/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
       $this->service = $matches[1];
       $this->template  = $matches[2];

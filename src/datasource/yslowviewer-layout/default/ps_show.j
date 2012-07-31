@@ -1,14 +1,14 @@
 {
-"@R":"1343015356",
+"@R":"1343723378",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"",
-"header":"<link rel=\"stylesheet\" href=\"\/_s_\/core\/default\/css\/smoothness\/jquery-ui-1.8.21.custom.css\" type=\"text\/css\" media=\"all\" \/>",
+"header":"",
 "pheader":"",
-"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-ui-1.8.21.custom.min.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/flot\/jquery.flot.js\"><\/script>\n<script type=\"text\/javascript\" src=\"\/_s_\/yslowviewer\/default\/js\/flot\/jquery.flot.pie.js\"><\/script>",
+"bottom":"",
 "layout":{
 "type":"HorizontalWidget",
 "extra":"",

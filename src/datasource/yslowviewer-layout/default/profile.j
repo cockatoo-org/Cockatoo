@@ -1,12 +1,12 @@
 {
-"@R":"1343380745",
+"@R":"1343723735",
 "eredirect":"",
 "redirect":"",
 "pre_action":"action:\/\/yslowviewer-action\/yslowviewer\/AccountAction",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
-"header":"<meta name=\"description\" content=\"\">\n",
+"header":"",
 "pheader":"",
 "bottom":"",
 "layout":{

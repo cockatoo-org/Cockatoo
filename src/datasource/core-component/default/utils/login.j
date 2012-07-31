@@ -1,5 +1,5 @@
 {
-"@R":"1343377433",
+"@R":"1343634410",
 "type":"HorizontalWidget",
 "subject":"login",
 "description":"login",
@@ -7,7 +7,7 @@
 "js":"",
 "id":"login",
 "class":"",
-"body":"<?cs if: S.login.user ?>\n <div class=\"user\">\n   Welcome <span><?cs var:S.login.user ?><\/span>\n <form method=\"POST\" action=\"profile\">\n   <input name=\"submit\" type=\"submit\" value=\"logout\" \/>\n   <input name=\"submit\" type=\"submit\" value=\"profile\" \/>\n <\/form>\n<?cs if: S.login.root ?>\n<a id=\"reset\" href=\"admin\">admin tool<\/a>\n<?cs \/if ?>\n <\/div>\n<?cs else ?>\n <div class=\"window\">\n  <form method=\"POST\" action=\"login\">\n   <div class=\"input\"><h6>User<\/h6> <input name=\"user\" type=\"text\" value=\"\" \/><\/div>\n   <div class=\"input\"><h6>Password<\/h6> <input name=\"passwd\" type=\"password\" value=\"\" \/><\/div>\n   <div class=\"input\"> <input name=\"submit\" type=\"submit\" value=\"login\" \/><input name=\"submit\" type=\"submit\" value=\"password reset\" \/><\/div>\n  <\/form>\n <\/div>\n<?cs \/if ?>\n\n",
+"body":"<?cs if: S.login.user ?>\n <div class=\"user\">\n   Welcome <span><?cs var:S.login.user ?><\/span>\n <form method=\"POST\" action=\"profile\">\n   <input name=\"submit\" type=\"submit\" value=\"logout\" \/>\n   <input name=\"submit\" type=\"submit\" value=\"profile\" \/>\n <\/form>\n<?cs if: S.login.root ?>\n<a id=\"reset\" href=\"admin\">admin tool<\/a>\n<?cs \/if ?>\n <\/div>\n<?cs else ?>\n <div class=\"window\">\n  <form method=\"POST\" action=\"login\">\n   <div class=\"input\"><h6>User<\/h6> <input name=\"user\" type=\"text\" value=\"\" \/><\/div>\n   <div class=\"input\"><h6>Password<\/h6> <input name=\"passwd\" type=\"password\" value=\"\" \/><\/div>\n   <?cs if:?S._g.r ?>\n   <div class=\"input\"><input name=\"r\" type=\"hidden\" value=\"<?cs var:S._g.r ?>\" \/><\/div>\n   <?cs \/if ?> \n   <div class=\"input\"> <input name=\"submit\" type=\"submit\" value=\"login\" \/><input name=\"submit\" type=\"submit\" value=\"password reset\" \/><\/div>\n  <\/form>\n <\/div>\n<?cs \/if ?>\n\n",
 "action":[
 ""
 ],
