@@ -77,22 +77,6 @@ class  Widget {
   }
 
   /**
-   * Collect action BRL list with recursive
-   *
-   * @return Array Returns action BRL list
-   */
-  public function actionWalk(){
-    $ret = $this->component[Def::K_COMPONENT_ACTION];
-    foreach ( $this->children as $child ) {
-      $childRet = $child->actionWalk();
-      if ( $childRet ) {
-        $ret = array_merge($ret,$childRet);
-      }
-    }
-    return $ret;
-  }
-
-  /**
    * Collect CSS data string with recursive
    *
    * @return String Returns CSS
@@ -113,6 +97,48 @@ class  Widget {
     $ret = isset($this->component[Def::K_COMPONENT_JS])?$this->component[Def::K_COMPONENT_JS]:'';
     foreach ( $this->children as $child ) {
       $ret .= $child->jsWalk();
+    }    
+    return $ret;
+  }
+
+  /**
+   * Collect action BRL list with recursive
+   *
+   * @return Array Returns action BRL list
+   */
+  public function actionWalk(){
+    $ret = $this->component[Def::K_COMPONENT_ACTION];
+    foreach ( $this->children as $child ) {
+      $childRet = $child->actionWalk();
+      if ( $childRet ) {
+        $ret = array_merge($ret,$childRet);
+      }
+    }
+    return $ret;
+  }
+
+  /**
+   * Collect HEADER data string with recursive
+   *
+   * @return String Returns HEADER
+   */
+  public function headerWalk(){
+    $ret = isset($this->component[Def::K_COMPONENT_HEADER])?$this->component[Def::K_COMPONENT_HEADER]:'';
+    foreach ( $this->children as $child ) {
+      $ret .= $child->headerWalk();
+    }    
+    return $ret;
+  }
+
+  /**
+   * Collect BODY-BOTTOM data string with recursive
+   *
+   * @return String Returns BODY-BOTTOM
+   */
+  public function bottomWalk(){
+    $ret = isset($this->component[Def::K_COMPONENT_BOTTOM])?$this->component[Def::K_COMPONENT_BOTTOM]:'';
+    foreach ( $this->children as $child ) {
+      $ret .= $child->bottomWalk();
     }    
     return $ret;
   }
