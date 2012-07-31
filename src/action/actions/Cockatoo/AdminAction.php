@@ -12,7 +12,7 @@ require_once(Config::COCKATOO_ROOT.'action/Action.php');
  * @copyright Copyright (C) 2011, rakuten 
  */
 class AdminAction extends Action {
-  protected $BASE_BRL = 'storage://core-storage/default/users';
+  protected $BASE_BRL = 'storage://core-storage/users/';
   protected $MAIL_FROM= 'root@cockatoo.jp';
   protected $REPLY_TO = 'root@cockatoo.jp';
   protected $EREDIRECT = 'login';

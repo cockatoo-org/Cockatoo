@@ -14,7 +14,7 @@ require_once(Config::COCKATOO_ROOT.'action/Action.php');
 
 class AccountAction extends Action {
   protected $EXPIRES  = 315360000; // 10 years
-  protected $BASE_BRL = 'storage://core-storage/default/users';
+  protected $BASE_BRL = 'storage://core-storage/users/';
   protected $MAIL_FROM= 'root@cockatoo.jp';
   protected $REPLY_TO = 'root@cockatoo.jp';
   protected $REDIRECT = 'login';
@@ -32,7 +32,13 @@ class AccountAction extends Action {
     }elseif($submit === 'profile' ){
       return;
     }
-    $this->setRedirect($this->REDIRECT);
+    $session = $this->getSession();
+    $redirect = $session[Def::SESSION_KEY_POST]['r'];
+    if ( $redirect ) {
+      $this->setRedirect($redirect);
+    }else{
+      $this->setRedirect($this->REDIRECT);
+    }
   }
   protected function error(&$e){
     $s[Def::SESSION_KEY_ERROR] = $e->getMessage();
