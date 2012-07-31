@@ -255,11 +255,13 @@
 	      continue;
 	    }
 	    var p = html_encode(t.data[d][t.settings.list.col]);
+	    var re = /(\S+\/)([^\/]+\/?)$/;
 	    for(;;){
-	      if ( ! p ) {
+	      if ( ! p || p.match(/:\/\/[^\/]+\/$/) ) {
+		nkeys.push(p);
+		ndata[p] = { dc : 'P /' , c : clazz , i : d , p : p};
 		break;
 	      }
-	      var re = /(\S+\/)([^\/]+\/?)$/;
 	      var m = p.match(re);
 	      if ( ndata[p] ) {
 		ndata[p].dc = ndata[p].dc + ' P';
@@ -274,6 +276,7 @@
 		p = m[1];
 		continue;
 	      }else{
+		// Reserve code... 
 		ndata[p] = { dc : (d==='-')?'/ P':'/' , c : clazz , i : d , p : p};
 	      }
 	      break;
@@ -283,12 +286,10 @@
 	  for ( k in nkeys ) {
 	    n = nkeys[k];
 	    html += '<div class="'+ndata[n].dc+'" index="'+ndata[n].i+'"><a class="'+ndata[n].c+'" index="'+ndata[n].i+'">'+ndata[n].p+'</a></div>';
-//	    html += '<div class="'+dc+'"><a class="'+clazz+'" index="'+d+'">'+html_encode(t.data[d][t.settings.list.col])+'</a></div>';
 	  }
 	  t.root.find('div.list').append(html);
 	  t.root.find('div.list > div.P').click( function (ev){
-	    selector = 'div.list > div.' + $(this).text().replaceAll('/','\\/').replaceAll(':','\\:');
-//	    alert(selector);
+	    selector = 'div.list > div.' + $(this).text().replaceAll('/','\\/').replaceAll(':','\\:').replaceAll('\.','\\\.');
 	    t.root.find(selector).show();
 	  });
 

@@ -61,6 +61,8 @@ class Def {
   const  K_COMPONENT_JS           = 'js';
   const  K_COMPONENT_CSS          = 'css';
   const  K_COMPONENT_ACTION       = 'action';
+  const  K_COMPONENT_HEADER       = 'header';
+  const  K_COMPONENT_BOTTOM       = 'bottom';
 
   const  K_STATIC_TYPE            = 'type';
   const  K_STATIC_DATA            = 'data';
@@ -200,7 +202,7 @@ abstract class DefaultConfig {
   /**
    * CMS acl
    */
-  const CMSAuth       = 'Cockatoo\DefaultCmsAuth';
+  const CMSAuth       = 'Cockatoo\SkipCmsAuth';
   /**
    * PID
    */

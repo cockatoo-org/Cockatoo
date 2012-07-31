@@ -25,7 +25,8 @@ $op   = $_sP['op'];
 $service_id  = $_sP['service_id'];
 $template_id  = $_sP['template_id'];
 $page_id  = $_sP['page_id'];
-$cid  = $_sP['cid'];
+$component_id  = $_sP['component_id'];
+$static_id  = $_sP['static_id'];
 $rev  = $_sP['rev'];
 $ctype= $_sP['ctype'];
 
@@ -53,6 +54,7 @@ $description  = $_sP['description'];
 $id           = $_sP['id'];
 $class        = $_sP['clazz'];
 $body         = $_sP['body'];
+$bin          = $_sP['bin'];
 $actions      = explode("\n",$_sP['actions']);
 $check        = $_sP['brl'];
 $r;
@@ -197,12 +199,12 @@ try {
       $components = BeakController::beakSimpleQuery($brl);
       $r = array();
       foreach ( $components as $c){
-        $cid = $c;
+        $component_id = $c;
         if ( preg_match('@[^/]$@',$c,$matches) !== 0 ) {
-          $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
+          $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_GET);
           $r [] = array('service_id' => $service_id ,
-                        'cid' => $cid ,
-                        'name' => $cid , 
+                        'component_id' => $component_id ,
+                        'name' => $component_id , 
                         'brl'  => $brl , 
                         'description' => '' , 
                         'type' => '',
@@ -217,7 +219,7 @@ try {
     }
   } elseif( $op === 'getCC' ) {
     if ( is_readable($service_id) ){
-      $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,'');
       $component = BeakController::beakSimpleQuery($brl);
       $r = array('rev'         => $component[Beak::ATTR_REV],
                  'type'        => $component[Def::K_COMPONENT_TYPE],
@@ -228,32 +230,69 @@ try {
                  'body'        => $component[Def::K_COMPONENT_BODY],
                  'actions'     => $component[Def::K_COMPONENT_ACTION]?join("\n",$component[Def::K_COMPONENT_ACTION]):'',
                  'js'          => $component[Def::K_COMPONENT_JS],
-                 'css'         => $component[Def::K_COMPONENT_CSS]
+                 'css'         => $component[Def::K_COMPONENT_CSS],
+                 'header'      => $component[Def::K_COMPONENT_HEADER],
+                 'bottom'      => $component[Def::K_COMPONENT_BOTTOM]
         );
     }
   } elseif( $op === 'addC' ) {
     check_writable($service_id);
-    $cid = $_sP['name'];
-    setC(false,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+    $component_id = $_sP['name'];
+    setC(false,$rev,$service_id,$component_id,$type,$subject,$description,$css,$js,$id,$class,$body,$actions,$header,$bottom);
   } elseif( $op === 'setC' ) {
     check_writable($service_id);
-    setC(true,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+    setC(true,$rev,$service_id,$component_id,$type,$subject,$description,$css,$js,$id,$class,$body,$actions,$header,$bottom);
   } elseif( $op === 'cpC' ) {
     check_writable($service_id);
-    $cid = $_sP['name'];
-    setC(true,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions);
+    $component_id = $_sP['name'];
+    setC(true,$rev,$service_id,$component_id,$type,$subject,$description,$css,$js,$id,$class,$body,$actions,$header,$bottom);
   } elseif( $op === 'checkC' ) {
     if ( is_readable($service_id) ){
       $r['required'] = implode(getRequired($check),"\n");
     }
   } elseif( $op === 'delC' ) {
     check_writable($service_id);
-    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_GET);
     $required = getRequired($brl);
     if ( $required ) {
       throw new \Exception('Still required by ' . implode($required,'<br>'));
     }
-    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_DEL);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_DEL);
+    BeakController::beakSimpleQuery($brl);
+  } elseif( $op === 'getSC' ) {
+    $brl = brlgen(Def::BP_STATIC,$service_id,'default','',Beak::M_KEY_LIST);
+    $static_contents = BeakController::beakSimpleQuery($brl);
+    $r = array();
+    foreach ( $static_contents as $static_id){
+      $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,'');
+      $r [] = array('service_id' => $service_id ,
+                    'static_id' => $static_id ,
+                    'name' => $static_id , 
+                    'brl'  => $brl
+        );
+      }
+  } elseif( $op === 'getSCC' ) {
+    if ( is_readable($service_id) ){
+      $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,Beak::M_GET);
+      $static_content = BeakController::beakSimpleQuery($brl);
+      $r = array('type'        => $static_content[Def::K_STATIC_TYPE],
+                 'etag'        => $static_content[Def::K_STATIC_ETAG],
+                 'expires'     => $static_content[Def::K_STATIC_EXPIRE],
+                 'bin'         => (bool)$static_content[Def::K_STATIC_BIN],
+                 'body'        => $static_content[Def::K_STATIC_DATA],
+                 'description' => $static_content[Def::K_STATIC_DESCRIPTION]
+        );
+    }
+  } elseif( $op === 'addSC' ) {
+    check_writable($service_id);
+    $static_id = $_sP['name'];
+    setSC(false,$rev,$service_id,$static_id,$type,$expires,$bin,$body,$description);
+  } elseif( $op === 'setSC' ) {
+    check_writable($service_id);
+    setSC(true,$rev,$service_id,$static_id,$type,$expires,$bin,$body,$description);
+  } elseif( $op === 'delSC' ) {
+    check_writable($service_id);
+    $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,Beak::M_DEL);
     BeakController::beakSimpleQuery($brl);
   } elseif( $op === 'setL' ) {
     check_writable($service_id);
@@ -383,14 +422,14 @@ function setP($flg,$rev,$service_id,$template_id,$page_id,$ctype,$eredirect,$red
     throw new \Exception('Fail to set : ' . $brl);
   }
 }
-function setC($flg,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$id,$class,$body,$actions) {
-  if ( preg_match('@\s@',$cid,$matches) !== 0 ) { 
-    throw new \Exception('Cannot use blank-charactor as COMPONENT : ' . $cid);
+function setC($flg,$rev,$service_id,$component_id,$type,$subject,$description,$css,$js,$id,$class,$body,$actions,$header,$bottom) {
+  if ( preg_match('@\s@',$component_id,$matches) !== 0 ) { 
+    throw new \Exception('Cannot use blank-charactor as COMPONENT : ' . $component_id);
   }
-  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_GET);
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_GET);
   $component = BeakController::beakSimpleQuery($brl);
   if ( ! $flg and $component ) {
-    throw new \Exception('Component already exist ! : ' . $cid);
+    throw new \Exception('Component already exist ! : ' . $component_id);
   }
   $component[Beak::ATTR_REV]               = $rev;
   $component[Def::K_COMPONENT_TYPE]        = $type;
@@ -402,12 +441,33 @@ function setC($flg,$rev,$service_id,$cid,$type,$subject,$description,$css,$js,$i
   $component[Def::K_COMPONENT_CLASS]       = $class;
   $component[Def::K_COMPONENT_BODY]        = $body;
   $component[Def::K_COMPONENT_ACTION]      = $actions;
-  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$cid,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
+  $component[Def::K_COMPONENT_HEADER]      = $header;
+  $component[Def::K_COMPONENT_BOTTOM]      = $bottom;
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
   $ret = BeakController::beakSimpleQuery($brl,$component);
   if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
 }
+function setSC($flg,$rev,$service_id,$static_id,$type,$expires,$bin,$data,$description) {
+  if ( preg_match('@\s@',$static_id,$matches) !== 0 ) { 
+    throw new \Exception('Cannot use blank-charactor as STATIC : ' . $static_id);
+  }
+  $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,Beak::M_GET);
+  $static_content = BeakController::beakSimpleQuery($brl);
+  if ( ! $flg and $static_content ) {
+    throw new \Exception('Static already exist ! : ' . $static_id);
+  }
+  if ( $bin === 'true' ) {
+    $data = $static_content[Def::K_STATIC_BIN];
+  }
+  $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,'');
+  $ret = StaticContent::save($brl,$type,$description,$data,null,$expires);
+  if ( ! $ret ) {
+    throw new \Exception('Fail to set : ' . $brl);
+  }
+}
+
 function getRequired($check){
   $requires=array();
   if ( preg_match('@^(.+)\?|#@',$check,$matches) ){

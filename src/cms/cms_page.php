@@ -19,8 +19,8 @@ require_once(dirname(__FILE__) . '/../def.php');
 <meta http-equiv="content-script-type" content="text/javascript">
 <meta name="description" content="">
 <title>Cockatoo - page editor β - 0.0.1 </title>
-<link rel="stylesheet" href="js/jquery-ui/css/ui-lightness/jquery-ui-1.8.9.custom.css" type="text/css" media="all" />
-<link rel="stylesheet" href="js/cockatoo-cms.css" type="text/css" media="all" />
+<link rel="stylesheet" href="css/redmond/jquery-ui-1.8.22.custom.css" type="text/css" media="all" />
+<link rel="stylesheet" href="css/cockatoo-cms.css" type="text/css" media="all" />
 <style type="text/css">
 /* main layout */
 body {
@@ -90,9 +90,9 @@ form.Actions div.value > textarea {
 
 </style>
 
-<script type="text/javascript" src="js/jquery-1.4.4.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.22.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-json/jquery.json-2.2.js"></script>
-<script type="text/javascript" src="js/jquery-ui/js/jquery-ui-1.8.9.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/cockatoo-cms.js"></script>
 <script type="text/javascript" src="js/cockatoo-validator.js"></script>
@@ -358,9 +358,6 @@ $(function () {
 </script>
 </head>
  <body>
-  <div id="header">
-   <h1>Cockatoo - page editor β</h1>
-   <div id="header-main">
 <?php
   namespace Cockatoo;
   require_once(Config::COCKATOO_ROOT.'/wwwutils/core/cms_link.php');

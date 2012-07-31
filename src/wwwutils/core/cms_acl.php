@@ -50,10 +50,10 @@ abstract class CmsAuth {
     return check_auth($service,$this->get_account(),self::WRITABLE);
   }
   abstract public function get_account();
-
+  abstract public function get_loginpage();
 }
 
-class DefaultCmsAuth extends CmsAuth {
+class SkipCmsAuth extends CmsAuth {
   public function is_admin($service){
     return true;
   }
@@ -65,6 +65,27 @@ class DefaultCmsAuth extends CmsAuth {
   }
   public function get_account(){
     return 'admin';
+  }
+  public function get_loginpage(){
+    return null;
+  }
+}
+
+require_once(Config::COCKATOO_ROOT.'utils/session.php');
+class DefaultCmsAuth extends CmsAuth {
+  public function __construct(&$header,&$server,&$get,&$cookie){
+    parent::__construct($header,$server,$get,$cookie);
+    $sessionID = isset($_COOKIE[Config::SESSION_COOKIE])?$_COOKIE[Config::SESSION_COOKIE]:null;
+    if ( $sessionID ) {
+      $session = getSession($sessionID,'core');
+      $this->account= $session['login']['user'];
+    }
+  }  
+  public function get_account(){
+    return $this->account;
+  }
+  public function get_loginpage(){
+    return '/core/default/login?r=/_cms_/cms_page.php';
   }
 }
 
@@ -123,4 +144,7 @@ function check_writable( $service ) {
 }
 function is_readable( $service ) {
   return CmsAuth::$instance->is_readable($service );
+}
+function get_loginpage( ) {
+  return CmsAuth::$instance->get_loginpage( );
 }

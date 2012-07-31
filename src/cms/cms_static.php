@@ -1,6 +1,6 @@
 <?php
 /**
- * cms_component.php - CMS
+ * cms_static.php - CMS
  *  
  * @access public
  * @package cockatoo-cms
@@ -33,10 +33,10 @@ td {
 #services div.label { 
   width: 50px;
 }
-#components div.value[name=css] { 
+#static_contents div.value[name=css] { 
   display: none;
 }
-#components div.value[name=js] { 
+#static_contents div.value[name=js] { 
   display: none;
 }
 
@@ -46,10 +46,10 @@ form.Services div.label {
 form.Services div.value > input { 
   width: 600px;
 }
-form.Components div.value > input { 
+form.Static_Contents div.value > input { 
   width: 600px;
 }
-form.Components div.value > textarea { 
+form.Static_Contents div.value > textarea { 
   width: 600px;
   height: 20em;
 }
@@ -102,51 +102,26 @@ $(function () {
 	}
       }
     },
-    change : function (data) { component.settings.args.service_id=data.service_id;component.list();},
-    reset  : function () { component.reset();}
+    change : function (data) { static_content.settings.args.service_id=data.service_id;static_content.list();},
+    reset  : function () { static_content.reset();}
   });
   service.list();
 
 
-  var component = $('#components').cockatoo_list({ 
-    title:'Components', 
-    add :    { url : 'cms_ajax.php', args : { op : 'addC'}, hook: function (t) { if ('service_id' in t.settings.args) return false; return 'Please select service !'; } },
-    del :    { url : 'cms_ajax.php', args : { op : 'delC'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select component !'; } },
-    update : { url : 'cms_ajax.php', args : { op : 'setC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select component !'; } },
-    copy   : { url : 'cms_ajax.php', args : { op : 'cpC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select component !'; } },
-    list :   { url : 'cms_ajax.php', args : { op : 'getC'}, col : 'brl' },
-    custom1 :{ 
-      label : 'check' ,
-      hook: function(t) { 
-	d = getVal(t.data,t.index);
-	if (! d ) {
-	  return 'Please select component !'; 
-	} 
-	$.ajax({
-	  url: 'cms_ajax.php',
-	  type: 'POST',
-	  dataType: 'json',
-          data: { service_id: t.settings.args.service_id, op: 'checkC', brl:d.brl },
-	  t:t,
-	  d:d,
-	  success: function (data){
-	    if ( 'emsg' in data ) {
-	      var m = t.root.find('b.message');
-	      m.text(data.emsg).slideDown(1000);
-	      setTimeout(function(){ m.slideUp(1000);},3000);
-	    }
-	    d['required'] = data['required'];
-	    t.view();
-	  }
-	});
-      }
-    },
+  var static_content = $('#static_contents').cockatoo_list({ 
+    title:'Static_Contents', 
+    add :    { url : 'cms_ajax.php', args : { op : 'addSC'}, hook: function (t) { if ('service_id' in t.settings.args) return false; return 'Please select service !'; } },
+    del :    { url : 'cms_ajax.php', args : { op : 'delSC'}, hook: function (t) { if (getVal(t.data,t.index)){return false;} return 'Please select content !'; } },
+    update : { url : 'cms_ajax.php', args : { op : 'setSC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select content !'; } },
+        // copy   : { url : 'cms_ajax.php', args : { op : 'cpSC'}, hook: function (t) { if (getVal(t.data,t.index)) return false; return 'Please select content !'; } },
+    list :   { url : 'cms_ajax.php', args : { op : 'getSC'}, col : 'brl' },
     view : true,
     width: 700,
     dialog : { width: 800 , height: 630 , post_init: function ( root ) { 
       root.find('textarea[name="required"]').attr("disabled","disabled");
       var $kind = root.attr('kind');
       root.find('input[name="brl"]').attr("readonly","readonly");
+      root.find('input[name="etag"]').attr("readonly","readonly");
       if ( $kind == 'update' || $kind == 'del') {
         root.find('input[name="name"]').attr("readonly","readonly");
         root.find('select').attr("readonly","readonly");
@@ -154,38 +129,32 @@ $(function () {
     }},
     form : {
       rev        : { label: '' , type : 'hidden' },
-      component_id        : { label: '' , type : 'hidden' },
+      static_id  : { label: '' , type : 'hidden' },
       brl        : { label: 'Brl' , type : 'text'},
-      name       : { label: 'Component name' , type : 'text'},
-      subject    : { label: 'Subject' , type : 'text'},
-      description: { label: 'Description' , type : 'text'},
-      type       : { label: 'Widget type' , type : 'select', options : { horizontal :'HorizontalWidget', vertical :'VerticalWidget', tab :'TabWidget', tabchild :'TabChildWidget', random :'RandomWidget', tile :'TileWidget', time : 'TimeWidget',plain : 'PlainWidget',json : 'JsonWidget',binary : 'BinaryWidget' } , def : 'HorizontalWidget'},
-      id         : { label: 'HTML id' , type : 'text' },
-      clazz      : { label: 'HTML class' , type : 'text' },
-      body       : { label: 'body' , type : 'textarea' },
-      actions    : { label: 'actions' , type : 'textarea' },
-      css        : { label: 'CSS' , type : 'textarea' },
-      js         : { label: 'JS' , type : 'textarea' },
-      header     : { label: 'header' , type : 'textarea' },
-      bottom     : { label: 'body bottom' , type : 'textarea' },
-      required   : { label: 'Required' , type : 'textarea'}
+      name       : { label: 'Name' , type : 'text'},
+      type       : { label: 'Content-type' , type : 'text'},
+      etag       : { label: 'Etag' , type : 'text'},
+      expires    : { label: 'Expires' , type : 'text'},
+      bin        : { label: '' , type : 'hidden'},
+      body       : { label: 'Data body' , type : 'textarea'},
+      description: { label: 'Description' , type : 'textarea'}
     },
     validator: {
       rules: {
 	name: {
           required : true
         },
-	actions: {
-          brls : true
-        }
+	expires: {
+	  number: true
+	}
       }
     },
     change : function (data) { 
-      var t = component;
+      var t = static_content;
       var args = {};
       args.service_id = data.service_id;
-      args.component_id = data.component_id;
-      args.op = 'getCC';
+      args.static_id = data.static_id;
+      args.op = 'getSCC';
 	$.ajax({
 	  url: t.settings.list.url,
 	  type: 'POST',
@@ -223,7 +192,7 @@ $(function () {
    <div id="services" class="main-left" ></div>
    <div class="main-left" >
     <div class="main-block">
-     <div id="components" class="main-left" ></div>
+     <div id="static_contents" class="main-left" ></div>
     </div>
    </div>
   </div>

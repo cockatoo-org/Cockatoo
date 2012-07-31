@@ -1,1 +1,6 @@
-{"account":{"admin":8},"_u":"yslowviewer"}
+{
+"account":{
+"crumb":"1"
+},
+"_u":"yslowviewer"
+}

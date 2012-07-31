@@ -380,6 +380,7 @@ class ContentDrawer {
   }
 
   public function drawHeader() {
+    $this->header .= $this->widget->headerWalk();
     if ( $this->header ) {
       if ( strstr($this->header,'<?cs ') ) {
         // template engine (cs)
@@ -407,7 +408,6 @@ class ContentDrawer {
   public function drawJs() {
     print $this->widget->jsWalk();
   }
-
   public function drawMain() {
     $template = $this->widget->drawWalk();
     // template engine (cs)
@@ -417,8 +417,9 @@ class ContentDrawer {
     cs_destroy($this->cs);
   }
   public function drawBottom() {
+    $this->bottom .= $this->widget->bottomWalk();
     if ( $this->bottom ) {
-      if ( strstr($this->header,'<?cs ') ) {
+      if ( strstr($this->bottom,'<?cs ') ) {
         // @@@ Todo: The number of runnign cs too match !!!
         // template engine (cs)
         $this->cs = \cs_init($this->hdf);
@@ -485,8 +486,12 @@ class ContentDrawer {
     $data = array();
     $template = $this->widget->drawWalk();
     foreach( explode("\n",$template) as $key ) {
+      list($key,$name) = explode(' ',$key);
       if ( preg_match('@^\s*$@',$key,$matches) === 0 ) {
-        $data[$key] = $this->findResults($key,strlen($key));
+        if ( $name === null or $name === '' ){
+          $data = $this->findResults($key,strlen($key));
+        }
+        $data[$name] = $this->findResults($key,strlen($key));
       }
     }
     print json_encode($data);
