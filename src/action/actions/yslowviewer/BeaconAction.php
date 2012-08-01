@@ -33,9 +33,7 @@ abstract class BeaconAction extends \Cockatoo\Action {
           return null; // Guest users are not allowed to POST
         }
         $now = time();
-        $beacon = json_decode($session[\Cockatoo\Def::SESSION_KEY_POST],1);
         $beacon = $this->get_json();
-
 
         $beacon['t'] = strftime('%Y-%m-%d %H:%M:%S',$now);
         $beacon['_t'] = $now;
