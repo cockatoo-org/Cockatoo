@@ -383,6 +383,9 @@ $(function () {
     });
     return ret;
   }
+  // @@@ It sounds like there are some bugs around greedy ...
+  curEventTimeStamp = 0;
+
   function set_dd (widget) {
     widget.filter('.co-Template').not('.co-Trash').find('div.co-Wbody').text('');
     widget.filter('.co-Template').not('.co-Trash').draggable({
@@ -431,6 +434,24 @@ $(function () {
 	return true;
       },
       drop: function(e,ui){
+	if ( curEventTimeStamp == e.timeStamp ) {
+	  return; // @@@ maybe greedy bug ...
+	}
+	curEventTimeStamp = e.timeStamp;
+
+	// Vertical regulation
+	if ( $(this).parent().parent().parent().hasClass('co-Vertical') && $(this).parent().parent().children().size() >= 2) {
+	  full = true;
+	  $(this).parent().parent().children().each(function (i,child){
+	    if ( child == ui.draggable.context ) {
+	      full = false;
+	    }
+	  });
+	  if ( full ) {
+	    return; // Cannot add any more !!
+	  }
+	}
+
         ui.draggable.css('left',0);
         ui.draggable.css('top',0);
 	if ( ui.draggable.hasClass('co-Template') ) {
@@ -466,6 +487,24 @@ $(function () {
 	return true;
       },
       drop: function(e,ui){
+	if ( curEventTimeStamp == e.timeStamp ) {
+	  return; // @@@ maybe greedy bug ...
+	}
+	curEventTimeStamp = e.timeStamp;
+
+	// Vertical regulation
+	if ( $(this).parent().hasClass('co-Vertical') && $(this).children().size() >= 2) {
+	  full = true;
+	  $(this).children().each(function (i,child){
+	    if ( child == ui.draggable.context ) {
+	      full = false;
+	    }
+	  });
+	  if ( full ) {
+	    return; // Cannot add any more !!
+	  }
+	}
+
         ui.draggable.css('left',0);
         ui.draggable.css('top',0);
 	if ( ui.draggable.hasClass('co-Template') ) {
@@ -503,9 +542,10 @@ $(function () {
         t.find('> div.co-Wbody > div.co-Widget:last-child').removeClass('co-VSub');
         t.find('> div.co-Wbody > div.co-Widget:last-child').addClass('co-VMain');
         t.find('> div.co-Wbody > div.co-VMain').css('float','none');
-        //t.find('> div.co-Wbody > div.co-VMain').css('width','auto');
+        t.find('> div.co-Wbody > div.co-VMain').css('width','auto');
         t.find('> div.co-Wbody > div.co-VMain').css('margin-'+f.find('select[name=vpos]').val(),f.find('input[name=swidth]').val());
         t.find('> div.co-Wbody > div.co-VSub').not('.co-VMain').css('float',f.find('select[name=vpos]').val());
+        t.find('> div.co-Wbody > div.co-VSub').css('width',f.find('input[name=swidth]').val());
       }
     }
     function auto_size(v){

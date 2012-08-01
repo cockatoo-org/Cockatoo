@@ -515,16 +515,13 @@ class VerticalWidget extends Widget {
 
     $ret = '<div '.($this->id?'id="'.$this->id.'"':'').' class="' . $clazz . ' ' . $this->clazz .'" extra="'.$this->prop[Def::K_LAYOUT_EXTRA].($style?'" style="'.$style:'').'">' .
       '<div class="co-Wbody">' . $this->component[Def::K_COMPONENT_BODY];
+
     $c = count($this->children);
-    $i = 0;
-    foreach ( $this->children as $child ) {
-      $i++;
-      if ( $i === $c ) {
-        // last
-        $ret .= $child->drawWalk('','float:none;width:auto;margin-'.$this->prop[Def::K_LAYOUT_VPOS].':'.$this->prop[Def::K_LAYOUT_SWIDTH]);
-      }else {
-        $ret .= $child->drawWalk('','float:'.$this->prop[Def::K_LAYOUT_VPOS]);
-      }
+    if ( $c > 0 ) {
+      $ret .= $this->children[0]->drawWalk('','float:'.$this->prop[Def::K_LAYOUT_VPOS].';width:'.$this->prop[Def::K_LAYOUT_SWIDTH]);
+    }
+    if ( $c > 1 ) {
+      $ret .= $this->children[1]->drawWalk('','float:none;width:auto;margin-'.$this->prop[Def::K_LAYOUT_VPOS].':'.$this->prop[Def::K_LAYOUT_SWIDTH]);
     }
     $ret .= '</div></div>';
     return $ret;
