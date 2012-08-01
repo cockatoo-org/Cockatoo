@@ -100,7 +100,7 @@ class ZookeeperWatch {
         Log::warn(__CLASS__ . '::' . __FUNCTION__ . ' : Leave terminator');
         return 0;
       }
-      $usage = memory_get_usage();
+      $usage = memory_get_usage(true);
       if ( $usage > self::MEM_THRESHOLD ) {
         Log::warn(__CLASS__ . '::' . __FUNCTION__ . ' : Too much memory used. : ' . $usage );
         reexec_myself();

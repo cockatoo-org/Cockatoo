@@ -118,28 +118,28 @@ class Log {
     if ( Config::$Loglv & Def::LOGLV_PERFORMANCE0 ){
       $now = utime();
       $diff = diffutime($now,$per);
-      Log::log('P ',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage()/1000)) . $msg,$data);
+      Log::log('P ',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage(true)/1000)) . $msg,$data);
     }
   }
   static function performance1($per,$msg,$data=''){
     if ( Config::$Loglv & Def::LOGLV_PERFORMANCE1 ){
       $now = utime();
       $diff = diffutime($now,$per);
-      Log::log('P1',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage()/1000)) . $msg,$data);
+      Log::log('P1',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage(true)/1000)) . $msg,$data);
     }
   }
   static function performance2($per,$msg,$data=''){
     if ( Config::$Loglv & Def::LOGLV_PERFORMANCE2 ){
       $now = utime();
       $diff = diffutime($now,$per);
-      Log::log('P2',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage()/1000)) . $msg,$data);
+      Log::log('P2',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage(true)/1000)) . $msg,$data);
     }
   }
   static function performance3($per,$msg,$data=''){
     if ( Config::$Loglv & Def::LOGLV_PERFORMANCE3 ){
       $now = utime();
       $diff = diffutime($now,$per);
-      Log::log('P3',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage()/1000)) . $msg,$data);
+      Log::log('P3',sprintf('%4.3f (msec) %4.3f (KB) ',$diff/1000,(memory_get_usage(true)/1000)) . $msg,$data);
     }
   }
 
