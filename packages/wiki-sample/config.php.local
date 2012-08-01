@@ -28,6 +28,10 @@ class Config extends DefaultConfig {
   const TemplateSelector    = 'Cockatoo\SampleTemplateSelector'; 
 
   /**
+   * CMS acl
+   */
+  const CMSAuth       = 'Cockatoo\DefaultCmsAuth';
+  /**
    * Timeout
    */
   const ActionTimeout  = 5000;  // This means 5 sec.
