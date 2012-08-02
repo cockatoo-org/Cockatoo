@@ -1,12 +1,12 @@
 {
-"@R":"1331917735",
+"@R":"1343880134",
 "eredirect":"",
 "redirect":"",
-"pre_action":"",
+"pre_action":"action:\/\/wiki-action\/wiki\/AccountAction",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
-"header":"<title>cockatoo-wiki : profile<\/title>\n",
+"header":"<title>cockatoo-wiki : profile<\/title>\r\n",
 "pheader":"",
 "layout":{
 "type":"HorizontalWidget",
