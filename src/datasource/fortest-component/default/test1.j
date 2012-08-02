@@ -1,15 +1,17 @@
 {
-"@R":"1333959003",
+"@R":"1343792237",
 "type":"HorizontalWidget",
 "subject":"test1",
 "description":"test1",
-"css":"\/\/ TEST1 CSS\n",
-"js":"\/\/ TEST1 JS\n",
+"css":"#test1 {\r\nbackground-color: #CCFFCC;\r\n}",
+"js":"\/\/ TEST1 JS\r\n",
 "id":"test1",
 "class":"test1",
-"body":"TEST1 body\n",
+"body":"TEST1 body\r\n",
 "action":[
 ""
 ],
-"_u":"test1"
+"_u":"test1",
+"header":"",
+"bottom":""
 }

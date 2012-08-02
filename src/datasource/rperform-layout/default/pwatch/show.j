@@ -1,14 +1,14 @@
 {
-"@R":"1343114663",
+"@R":"1343872293",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
-"header":"<meta name=\"description\" content=\"\">\n",
+"header":"<style>\r\ndiv#show > div.co-Wbody > h1 {\r\n  display:none;\r\n}\r\n<\/style>\r\n",
 "pheader":"",
-"bottom":"<script>\nvar maintab = 'resultstab';\nvar subtab  = 'periodicaltab';\nvar viewtab = null;\n<\/script>",
+"bottom":"<script>\r\nvar maintab = 'resultstab';\r\nvar subtab  = 'periodicaltab';\r\nvar viewtab = null;\r\n<\/script>",
 "layout":{
 "type":"HorizontalWidget",
 "class":"",

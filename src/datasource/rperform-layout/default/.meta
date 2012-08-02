@@ -72,6 +72,14 @@
 },
 {
 "type":"TabChildWidget",
+"extra":"",
+"component":"component:\/\/rperform-component\/default\/MainTab\/Improve",
+"children":[
+
+]
+},
+{
+"type":"TabChildWidget",
 "class":"",
 "height":"",
 "width":"",

@@ -100,12 +100,17 @@ abstract class BeaconAction extends \Cockatoo\Action {
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$eurl,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_SORT=>'_u:-1',\Cockatoo\Beak::Q_LIMIT=>1),array());
           $beacons = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => array('$lte' => $date)));
           if ( ! $beacons ) {
-            throw new \Exception('Cannot get it ! Probably data not found...');
+            // throw new \Exception('Cannot get it ! Probably data not found...');
           }
           $beacon = $beacons[0];
         }
-        $beacon['url'] = $url;
-        return $this->form_detail($beacon);
+        if ( $beacon ) {
+          $beacon['url'] = $url;
+          return $this->form_detail($beacon);
+        }else{
+          $beacon['url'] = $url;
+          return $beacon;
+        }
       }else{
         return $this->other_methods();
       }
