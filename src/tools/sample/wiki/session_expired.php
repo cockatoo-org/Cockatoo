@@ -14,7 +14,7 @@
 namespace wiki;
 ini_set('log_errors','On');
 ini_set('display_errors','On');
-require_once(dirname(__FILE__) . '/../../def.php');
+require_once(dirname(__FILE__) . '/../../../def.php');
 require_once(\Cockatoo\Config::COCKATOO_ROOT.'utils/session.php');
 require_once(\Cockatoo\Config::COCKATOO_ROOT.'tools/beak/beak_walk.php');
 require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/actions/wiki/Lib.php');

@@ -42,21 +42,23 @@ class BeakWalk {
     $brl = brlgen($this->scheme,$this->prefix,'','',Beak::M_COL_LIST);
     Config::$BeakLocation[$this->base_brl] = $this->from_location;
     $collections = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
-    foreach ( $collections[$brl] as $collection ) {
-      $collection = chop($collection,'/');
-      $brl   = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_KEY_LIST);
-      Config::$BeakLocation[$this->base_brl] = $this->from_location;
-      $paths = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
-      if ( isset($paths) ) {
-        foreach ( $paths as $path ) {
-          $brl = brlgen($this->scheme,$this->prefix,$collection,$path,Beak::M_GET);
-          Config::$BeakLocation[$this->base_brl] = $this->from_location;
-          $data = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
-          if ( $data ) {
-            Log::info('BeakWalk data : ' . $brl);
-            print('BeakWalk data : ' . $brl."\n");
-            if ( $callback ) {
-              $callback($brl,$data);
+    if ( $collections ) {
+      foreach ( $collections as $collection ) {
+        $collection = chop($collection,'/');
+        $brl   = brlgen($this->scheme,$this->prefix,$collection,'',Beak::M_KEY_LIST);
+        Config::$BeakLocation[$this->base_brl] = $this->from_location;
+        $paths = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
+        if ( isset($paths) ) {
+          foreach ( $paths as $path ) {
+            $brl = brlgen($this->scheme,$this->prefix,$collection,$path,Beak::M_GET);
+            Config::$BeakLocation[$this->base_brl] = $this->from_location;
+            $data = BeakController::beakSimpleQuery($brl,null,$this->FROM_BEAKS);
+            if ( $data ) {
+              Log::info('BeakWalk data : ' . $brl);
+              print('BeakWalk data : ' . $brl."\n");
+              if ( $callback ) {
+                $callback($brl,$data);
+              }
             }
           }
         }
