@@ -54,25 +54,25 @@ function parse_brl($brl) {
  * @return Array queries hash ([key] => value)
  */
 function parse_brl_query($query) {
-  parse_str($query,$ret);
-  return $ret;
-//  $ret = array();
-//  if ( preg_match_all('@&([^=]+)=((?:\'[^\']*\')|(?:"[^\']*")|(?:[^&]*))@', $query , $matches ) !== 0 ) {
-//    foreach(array_keys($matches[1]) as $i ) {
-//      $k = $matches[1][$i];
-//      $v = trim($matches[2][$i],'\'"');
-//      if ( strncmp($k,'[]',2) === 0 ){
-//        $k = substr($k,2);
-//        if ( !isset($ret[$k]) ) {
-//          $ret[$k] = array();
-//        }
-//        $ret[$k] []= $v;
-//      }else {
-//        $ret[$k] = $v;
-//      }
-//    }
-//  }
+//  parse_str($query,$ret);
 //  return $ret;
+  $ret = array();
+  if ( preg_match_all('@&([^=]+)=((?:\'[^\']*\')|(?:"[^\']*")|(?:[^&]*))@', $query , $matches ) !== 0 ) {
+    foreach(array_keys($matches[1]) as $i ) {
+      $k = $matches[1][$i];
+      $v = trim($matches[2][$i],'\'"');
+      if ( strncmp($k,'[]',2) === 0 ){
+        $k = substr($k,2);
+        if ( !isset($ret[$k]) ) {
+          $ret[$k] = array();
+        }
+        $ret[$k] []= $v;
+      }else {
+        $ret[$k] = $v;
+      }
+    }
+  }
+  return $ret;
 }
 
 /**
