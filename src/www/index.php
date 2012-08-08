@@ -38,6 +38,10 @@ try {
     list($SERVICE,$TEMPLATE,$PATH,$ARGS,$SESSION_PATH) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
 
     $mode = isset($_GET['debug'])?$_GET['debug']:Def::RenderingModeNORMAL;
+    if ( $mode !== Def::RenderingModeNORMAL ) {
+      header('Content-Type: text/html; charset=UTF-8');
+    }
+
     $CONTENT_DRAWER = new ContentDrawer($SERVICE,$TEMPLATE,$PATH,$ARGS,$SESSION_PATH,$mode);  
     $force_redirect = $CONTENT_DRAWER->layout();
     if ( $force_redirect ) {
