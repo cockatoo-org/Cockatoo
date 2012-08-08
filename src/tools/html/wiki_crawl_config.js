@@ -40,8 +40,9 @@ exports.get = function() {
 	  FILTER   : {
 	    ERROR  : [],
 	    IGNORE : [],
-	    FOLLOW : ['http://cockatoo\.jp/wiki/view/'],
-	    INNER_DOMAIN   : false
+	    // FOLLOW : ['http://cockatoo\.jp/wiki/view/'],
+	    // INNER_DOMAIN   : false
+	    INNER_DOMAIN   : true
 	  }
 	}]
     }

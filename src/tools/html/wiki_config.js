@@ -42,7 +42,7 @@ exports.get = function() {
 	  FILTER   : {
 	    ERROR  : [],
 	    IGNORE : [],
-	    FOLLOW : ['http://'],
+	    // FOLLOW : ['http://'],
 	    INNER_DOMAIN   : true
 	  },
 	  TEST     : stdtest.STATUS_TEST

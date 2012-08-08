@@ -107,6 +107,9 @@ exports.store = function (domain,cookies) {
   this.change();
 }
 exports.get = function (protocol,domain,path) {
+  if ( ! domain ){
+    return null;
+  }
   function get_cookie_p ( place,protocol,path  ) {
     if ( ! place || ! place['/'] ) {
       return '';

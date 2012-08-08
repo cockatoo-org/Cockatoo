@@ -8,10 +8,10 @@ exports.common = function(){
 }
 exports.mkdirp = function(dir){
   var parent = path.dirname(dir);
-  if ( ! path.existsSync(parent) ) {
+  if ( ! fs.existsSync(parent) ) {
     mkdirp(parent);
   }
-  if ( ! path.existsSync(dir) ) {
+  if ( ! fs.existsSync(dir) ) {
     fs.mkdirSync(dir,'755');
   }
 }
@@ -126,6 +126,10 @@ exports.crawl_object = function ( data , cbobj ) {
   crawl_object_impl(data,cbobj,[],[],[],undefined);
 }
 
+exports.cond_default = function (val,defalut,cond){
+  return (val==null)?defalut:val;
+}
+
 // Extend string
 String.prototype.replaceAll = function (org, dest){  
   return this.split(org).join(dest);  
@@ -134,5 +138,4 @@ String.prototype.replaceAll = function (org, dest){
 String.prototype.reverse = function (){
   return this.split('').reverse().join('')
 }
-
 
