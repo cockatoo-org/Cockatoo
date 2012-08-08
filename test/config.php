@@ -24,8 +24,8 @@ class Config extends DefaultConfig {
   /**
    * Request analizer
    */
-  const RequestParser     = 'wiki\WikiRequestParser';
-  const DeviceSelector    = 'wiki\WikiDeviceSelector'; 
+  const RequestParser     = 'Cockatoo\SampleRequestParser';
+  const TemplateSelector    = 'Cockatoo\SampleTemplateSelector'; 
 
   /**
    * Timeout
@@ -47,20 +47,24 @@ class Config extends DefaultConfig {
     //--------------------
     // Beak cache settings
     //--------------------
-    self::$UseMemcache         = array('127.0.0.1:11211');;
+    // self::$UseMemcache         = array('127.0.0.1:11211');;
 
     /**
      * BEAK Driver switch
      */
     // Local mode
     self::$BEAKS = array (
-      Def::BP_CMS      => 'Cockatoo\BeakFile'   ,
-      Def::BP_SESSION  => 'Cockatoo\BeakFile'   ,
-      Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   ,
-      Def::BP_COMPONENT=> 'Cockatoo\BeakFile'   ,
-      Def::BP_STATIC   => 'Cockatoo\BeakFile'   ,
-      Def::BP_STORAGE  => 'Cockatoo\BeakFile'   ,
-      Def::BP_ACTION   => 'Cockatoo\BeakAction' ,
+      Def::BP_CMS      => 'Cockatoo\BeakFile'   , // cms://...
+      Def::BP_SESSION  => 'Cockatoo\BeakFile'   , // session://...
+      Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   , // layout://...
+      Def::BP_COMPONENT=> 'Cockatoo\BeakFile'   , // component://...
+      Def::BP_STATIC   => 'Cockatoo\BeakFile'   , // static://...
+      Def::BP_STORAGE  => 'Cockatoo\BeakFile'   , // storage://...
+      Def::BP_ACTION   => 'Cockatoo\BeakAction' , // action://...
+      null
+      );
+    self::$EXT_BEAKS = array (
+      'action://core-action/'   => 'Cockatoo\BeakAction' ,
       null
       );
 
@@ -75,19 +79,6 @@ class Config extends DefaultConfig {
       'layout://core-layout/'         => array(''),
       'component://core-component/'   => array(''),
       'static://core-static/'         => array(''),
-      'layout://wiki-layout/'         => array(''),
-      'component://wiki-component/'   => array(''),
-      'static://wiki-static/'         => array(''),
-      'storage://wiki-storage/'       => array(''),
-      'action://wiki-action/'         => array(''),
-      'session://wiki-session/'       => array(''),
-      'layout://yslowviewer-layout/'         => array(''),
-      'component://yslowviewer-component/'   => array(''),
-      'static://yslowviewer-static/'         => array(''),
-      'action://yslowviewer-action/'         => array(''),
-      'session://yslowviewer-session/'       => array(''),
-      'storage://yslow-storage/'       => array(''),
-      'storage://netexport-storage/'   => array(''),
       );
       //--------------------
       // Zookeeper ( dynamic locations )

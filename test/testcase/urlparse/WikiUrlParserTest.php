@@ -15,7 +15,12 @@ class WikiUrlParserTest extends \PHPUnit_Framework_TestCase
   public function testFavicon(){
     global $HEADER,$_SERVER,$_GET,$_COOKIE;
     pre_www('index.php','/favicon.ico');
-    list($SERVICE,$DEVICE,$PATH,$ARGS,$SESSION_PATH) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
+    try {
+      list($SERVICE,$DEVICE,$PATH,$ARGS,$SESSION_PATH) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
+    }catch(RedirectException $e){
+      $this->assertEquals('301 redirect : /_s_/core/default/logo.png',$e->getMessage());
+    }
+    return;
     $this->assertEquals('wiki',$SERVICE);
     $this->assertEquals('default',$DEVICE);
     $this->assertEquals('img',$PATH);

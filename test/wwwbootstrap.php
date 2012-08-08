@@ -2,6 +2,7 @@
 namespace Cockatoo;
 require_once('/usr/local/cockatoo/def.php');
 require_once(Config::COCKATOO_ROOT.'utils/beak.php');
+require_once(Config::COCKATOO_ROOT.'wwwutils/core/webutils.php');
 
 $_SERVER;
 $HEADER;
@@ -80,7 +81,7 @@ function pre_www ($file,$uri,$get=array(),$post=array(),$server=array(),$header=
     $token = '&';
   }
   $_SERVER['REQUEST_URI']=$ruri;
-  $_SERVER['QUERY_STRING'] = 'r='.$ruri;
+  $_SERVER['QUERY_STRING'] = Def::REWRITE_TOKEN.'='.$ruri;
   $_SERVER['REDIRECT_QUERY_STRING'] = $_SERVER['QUERY_STRING'];
   $_SERVER['argv'] = array($_SERVER['QUERY_STRING']);
 
@@ -88,7 +89,7 @@ function pre_www ($file,$uri,$get=array(),$post=array(),$server=array(),$header=
   $HEADER  = array_merge($HEADER,$header);
   $_POST   = $post;
   $_GET = $get;
-  $_GET['r'] = $uri;
+  $_GET[Def::REWRITE_TOKEN] = $uri;
   $_COOKIE = $cookie;
 }
 
@@ -102,6 +103,9 @@ function run_www ($file,$uri,$get=array(),$post=array(),$server=array(),$header=
   ob_start("Cockatoo\www_output");
   include($PATH . $file);
   ob_end_flush();
+  
+  $OUTPUT = str_replace("\r\n","\n",$OUTPUT);
+  
   return $OUTPUT;
 }
 

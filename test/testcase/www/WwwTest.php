@@ -27,19 +27,23 @@ MAIN header
 <link rel="stylesheet" type="text/css" media="all" href="/_s_/core/default/css/cockatoo.css"></link><link rel="stylesheet" type="text/css" media="all" href="/_s_/fortest/default/css/cockatoo.css"></link>
 <style type="text/css">
 <!--
-// TEST0 CSS
-// TEST2 CSS
-// TEST3 CSS
-// TEST1 CSS
-
+#test0 {
+background-color: #FFCCCC;
+}#test3 {
+background-color: #FFFFCC;
+}#test2 {
+background-color: #CCCCFF;
+}#test1 {
+background-color: #CCFFCC;
+}
 -->
 </style>
 </head>
 <body id="co-frame">
  <div id="co-main">
 <div  class=" co-Widget   co-Horizontal" extra=""><div class="co-Wbody"><div id="test0" class=" co-Widget  test0 co-Horizontal" extra=""><div class="co-Wbody">TEST0 body
-</div></div><div  class=" co-Widget   co-Horizontal" extra=""><div class="co-Wbody"><div id="test2" class=" co-Widget  test2 co-Horizontal" extra=""><div class="co-Wbody">TEST2 body
-<div id="test3" class=" co-Widget  test3 co-Horizontal" extra=""><div class="co-Wbody">TEST3 body
+</div></div><div  class=" co-Widget co-PageLayout   co-Horizontal" extra=" "><div class="co-Wbody"><div  class=" co-Widget   co-Vertical" extra=""><div class="co-Wbody"><div id="test3" class=" co-Widget  test3 co-Horizontal" extra="" style="float:left;width:200px;"><div class="co-Wbody">TEST3 body
+</div></div><div id="test2" class=" co-Widget  test2 co-Horizontal" extra="" style="float:none;width:auto;margin-left:200px;"><div class="co-Wbody">TEST2 body
 </div></div></div></div></div></div><div id="test1" class=" co-Widget  test1 co-Horizontal" extra=""><div class="co-Wbody">TEST1 body
 </div></div></div></div> </div>
 FORTEST body bottom
@@ -48,8 +52,8 @@ MAIN body bottom
 <script type="text/javascript">
 <!--
 // TEST0 JS
-// TEST2 JS
 // TEST3 JS
+// TEST2 JS
 // TEST1 JS
 
 -->
@@ -58,6 +62,7 @@ MAIN body bottom
 </html>
 
 __HTML__;
+
     $this->assertEquals($EXPECTS,$HTML);
   }
   public function testWikiTop(){

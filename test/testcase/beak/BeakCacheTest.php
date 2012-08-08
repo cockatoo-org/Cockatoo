@@ -1,16 +1,16 @@
 <?php
 namespace Cockatoo;
 require_once('/usr/local/cockatoo/def.php');
+Config::$UseMemcache = array('127.0.0.1:11211');
+Config::$BEAKS = array (
+  Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   ,
+  null
+  );
 require_once(Config::COCKATOO_ROOT.'utils/beak.php');
 
 class BeakCacheTest extends \PHPUnit_Framework_TestCase
 {
   function set(){
-    Config::$UseMemcache            = array('127.0.0.1:11211');
-    Config::$BEAKS = array (
-      Def::BP_LAYOUT   => 'Cockatoo\BeakFile'   ,
-      null
-      );
   }
 
   public function setUp(){
