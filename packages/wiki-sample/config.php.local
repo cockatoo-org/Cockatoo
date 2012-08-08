@@ -74,9 +74,6 @@ class Config extends DefaultConfig {
 
     /**
      * Static locations.
-     *
-     *  @@@ Todo:
-     *    $BeakLocation should be merged with $BEAK but have to consider zookeeper ...
      */
     self::$BeakLocation = array (
       'cms://services-cms/'           => array(''),

@@ -171,7 +171,7 @@ class GatewayController {
     $realIPC = $frontIPC . '.' . $pid;
     usleep(self::FORK_WAIT);
     Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : ' . $realIPC . ' => ' . $frontIPC);
-    // @@@ Force option not suppoted, so couldn't do atmic.
+    // @@@ symlink don't support force option, and also it couldn't do in atmic.
     // symlink ( $realIPC , $frontIPC );
     system ( "ln -sf $realIPC $frontIPC" );
     $hpid = $this->forkHealthCheck($brl);

@@ -141,8 +141,6 @@
 	      t.gen_form(t.settings.del.url,args,'del');
 	      t.set_form();
 	      t.root.find('form *:input').attr('readonly','readonly');
-	      // @@@ serialize()が上手く動かない・・・
-              // t.root.find('form > div.value > *').attr('disabled','disabled');
 	      t.settings.dialog.title = 'Delete from ' + t.settings.title;
 	      t.root.find('form').dialog_form(t.settings.dialog);
 	    });

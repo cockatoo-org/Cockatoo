@@ -384,6 +384,7 @@ $(function () {
     return ret;
   }
   // @@@ It sounds like there are some bugs around greedy ...
+  //      Sometimes it fire in double.
   curEventTimeStamp = 0;
 
   function set_dd (widget) {

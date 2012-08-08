@@ -252,7 +252,7 @@ abstract class DefaultConfig {
       // Pre init
       //--------------------
       self::$PID = posix_getpid();
-      // Domain suffix  @@@ Reserved 
+      // Domain suffix
       self::$SYS_BEAKS = array (
         Def::BP_SESSION  => 'session'  ,
         Def::BP_LAYOUT   => 'layout'   ,
@@ -288,8 +288,6 @@ abstract class DefaultConfig {
       /**
        * Static locations.
        *
-       *  @@@ Todo:
-       *    $BeakLocation should be merged with $BEAK but have to consider zookeeper ...
        */
       self::$BeakLocation = array (
         'cms://services-cms/'           => array(''),

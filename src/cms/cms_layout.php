@@ -43,7 +43,6 @@ try {
       Def::K_LAYOUT_SESSION_EXP => '0',
       Def::K_LAYOUT_LAYOUT => layoutChildren(Def::RESERVED_SERVICE_CORE,Def::RESERVED_TEMPLATE_DEFAULT,'.ghost','',$children),
       );
-    // @@@ sort $layoutData by type ?
     $BASIC_CONTANT_DRAWER->layout($layoutData);  
     $BASIC_CONTANT_DRAWER->components();  
   }
@@ -70,7 +69,6 @@ try {
             $children []= layoutChildren($service_id,Def::RESERVED_TEMPLATE_DEFAULT,$page_id,'',array());
           }
         }
-        // @@@ sort $layoutData by type ?
         usort($children,'Cockatoo\componentSorter');
       }
       $layoutData = array( 

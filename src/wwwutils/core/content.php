@@ -115,7 +115,7 @@ class ContentDrawer {
         if ( $this->template ) {
           Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback to   : ' . $this->template);
           $this->debug('== BASE LAYOUT NOT FOUND ! (fallback to '.$this->template.') ==','',Def::RenderingModeDEBUG2);
-          // @@@ fallback or redirect ?
+          // @@@ whick is more correct wether fallback or redirect ?
           return $this->layout();
         }
         throw new \Exception('Template not found !');
@@ -133,7 +133,7 @@ class ContentDrawer {
         if ( $this->template ) {
           Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback to   : ' . $this->template);
           $this->debug('== LAYOUT NOT FOUND ! (fallback to '.$this->template.') ==','',Def::RenderingModeDEBUG2);
-          // @@@ fallback or redirect ?
+          // @@@ whick is more correct wether fallback or redirect ?
           return $this->layout(null,($baseEredirect?$baseEredirect:$this->baseEredirect) );
         }
         throw new \Exception('Page not found !');
@@ -230,7 +230,6 @@ class ContentDrawer {
     $this->widget->layoutWalk($this->componentData);
   }
 
-  // @@@ Need to give consideration $context What should be containig.
   protected function doActions(&$brls){
     $hide = array(
       Def::AC_SERVICE    => $this->service ,
@@ -305,7 +304,6 @@ class ContentDrawer {
     $this->actionResults = $this->doActions($this->actionBrls);
   }
 
-  // @@@ static or util
   protected function array2hdf(&$array, &$hdf, $node_name = null) {
     if ( $array ) {
       foreach ($array as $k => $v) {
@@ -366,6 +364,8 @@ class ContentDrawer {
     http_200($type,$etag,$this->expires);
     if ( $this->pheader ) {
       if ( strstr($this->pheader,'<?cs ') ) {
+        // @@@ Todo: How to run CS only one time ?
+        // template engine (cs)
         $this->cs = \cs_init($this->hdf);
         cs_parse_string($this->cs, $this->pheader);
         $this->pheader = cs_render($this->cs);
@@ -383,6 +383,7 @@ class ContentDrawer {
     $this->header .= $this->widget->headerWalk();
     if ( $this->header ) {
       if ( strstr($this->header,'<?cs ') ) {
+        // @@@ Todo: How to run CS only one time ?
         // template engine (cs)
         $this->cs = \cs_init($this->hdf);
         cs_parse_string($this->cs, $this->header);
@@ -420,7 +421,7 @@ class ContentDrawer {
     $this->bottom .= $this->widget->bottomWalk();
     if ( $this->bottom ) {
       if ( strstr($this->bottom,'<?cs ') ) {
-        // @@@ Todo: The number of runnign cs too match !!!
+        // @@@ Todo: How to run CS only one time ?
         // template engine (cs)
         $this->cs = \cs_init($this->hdf);
         cs_parse_string($this->cs, $this->bottom);
@@ -534,7 +535,7 @@ class ContentDrawer {
      }
     }
     if ( $COCKATOO_GLFLG ) {
-      // @@@ It's not exact work because flushed stdbuffer is possibly buffered by the other modules, for instance mod_zip and so on...
+      // @@@ Actually, it doesn't work properly because to flush the STD-buffer can be buffered by the other mods, for instance mod_zip and so on...
       if ( Config::$Error2Die and rand(1,Config::$Error2Die) === 1 ) {
         Log::warn(__CLASS__ . '::' . __FUNCTION__ . ' : Something occurd and kill myself : ' . $COCKATOO_GLFLG);
         flush();

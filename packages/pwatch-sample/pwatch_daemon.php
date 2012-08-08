@@ -74,7 +74,7 @@ class PwatchDaemon {
               // Save data
               $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,$now,\Cockatoo\Beak::M_SET,array(),array());
               $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$data);
-              // Save list @@@
+              // Save list
               $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_PARTIAL));
               $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,array('data' => $data));
             }
