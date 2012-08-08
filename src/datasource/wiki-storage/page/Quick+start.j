@@ -1,6 +1,6 @@
 {
 "title":"Quick start",
-"origin":"*\u30bb\u30c3\u30c8\u30a2\u30c3\u30d7\r\n\u5927\u898f\u6a21\u30b5\u30a4\u30c8\u306e\u5b9f\u904b\u7528\u306b\u306f\u5411\u304b\u306a\u3044\u6700\u77ed\u624b\u9806\u3067\u3059\u3002\r\n\u5b9f\u969b\u306e\u904b\u7528\u3092\u76ee\u6307\u3057\u305f\u624b\u9806\u306f\u3053\u3061\u3089[[for-service|Cockatoo\u69cb\u7bc9]]\r\n***\u624b\u9806\r\n+Apache\r\n+PHP\r\n+ClierSilver\r\n+PHP\u62e1\u5f35\r\n+Cockatoo\r\n\r\n**Debian\/Ubuntu\u7de8\r\n\r\n**CentOS\/Fedora\u7de8\r\nApache\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n yum install httpd-devel\r\nPHP\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n yum install php53-devel php53-process\r\nClearsilver\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n yum install clearsilver-devel\r\nPHP-extention\u30d3\u30eb\u30c9\uff06\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n wget http:\/\/www.geodata.soton.ac.uk\/software\/php_clearsilver\/php-clearsilver-0.4.tar.gz -O php-clearsilver-0.4.tar.gz\r\n tar xzvf php-clearsilver-0.4.tar.gz\r\n cd php-clearsilver-0.4\r\n \/usr\/local\/php-5.3.8\/bin\/phpize\r\n .\/configure --with-php-config=\/usr\/bin\/php-config --with-clearsilver=\/usr\r\n make\r\n make install\r\n echo 'extension=clearsilver.so' > \/etc\/php.d\/clearsilver.ini\r\nCockatoo\u53d6\u5f97\r\n cd \/tmp\r\n git clone git@github.com:cockatoo-org\/Cockatoo.git\r\nCockatoo\u8a2d\u5b9a\r\n cd \/tmp\/cockatoo\r\n # \u30bd\u30fc\u30b9\u914d\u5099\uff06\u6a29\u9650\u8a2d\u5b9a\r\n cp -rT .\/src \/usr\/local\/cockatoo\r\n chown apache    \/usr\/local\/cockatoo\/logs\r\n chmod apache -R \/usr\/local\/cockatoo\/datasource\r\n # HTTPD\u8a2d\u5b9a\r\n cp .\/settings\/httpd\/httpd-cockatoo.conf \/etc\/httpd\/conf.d\/\r\n cp .\/settings\/htaccess \/usr\/local\/cockatoo\/www\/.htaccess\r\n # PHP\u8a2d\u5b9a\r\n cp .\/settings\/php\/cockatoo.ini          \/etc\/php\/conf.d\/\r\n # Cockatoo wiki \u7528\u8a2d\u5b9a\r\n cp .\/packages\/wiki-sample\/config.php.local \/usr\/local\/cockatoo\/config.php\r\nApache\u8d77\u52d5\r\n \/etc\/init.d\/httpd start\r\nwiki\u304c\u8868\u793a\u3055\u308c\u308c\u3070\u5b8c\u4e86\r\n http:\/\/<hostname>\/view\r\n\r\n**\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\u3078\r\n[[\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\u30fbCMS]]\r\n\r\n",
+"origin":"*\u30bb\u30c3\u30c8\u30a2\u30c3\u30d7\r\n\u5927\u898f\u6a21\u30b5\u30a4\u30c8\u306e\u5b9f\u904b\u7528\u306b\u306f\u5411\u304b\u306a\u3044\u6700\u77ed\u624b\u9806\u3067\u3059\u3002\r\n\u5b9f\u969b\u306e\u904b\u7528\u3092\u76ee\u6307\u3057\u305f\u624b\u9806\u306f\u3053\u3061\u3089[[For service|Cockatoo\u69cb\u7bc9]]\r\n***\u624b\u9806\r\n+Apache\r\n+PHP\r\n+ClierSilver\r\n+PHP\u62e1\u5f35\r\n+Cockatoo\r\n\r\n**Debian\/Ubuntu\u7de8\r\n\r\n**CentOS\/Fedora\u7de8\r\nApache\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n yum install httpd-devel\r\nPHP\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n yum install php53-devel php53-process\r\nClearsilver\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n yum install clearsilver-devel\r\nPHP-extention\u30d3\u30eb\u30c9\uff06\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\r\n wget http:\/\/www.geodata.soton.ac.uk\/software\/php_clearsilver\/php-clearsilver-0.4.tar.gz -O php-clearsilver-0.4.tar.gz\r\n tar xzvf php-clearsilver-0.4.tar.gz\r\n cd php-clearsilver-0.4\r\n \/usr\/local\/php-5.3.8\/bin\/phpize\r\n .\/configure --with-php-config=\/usr\/bin\/php-config --with-clearsilver=\/usr\r\n make\r\n make install\r\n echo 'extension=clearsilver.so' > \/etc\/php.d\/clearsilver.ini\r\nCockatoo\u53d6\u5f97\r\n cd \/tmp\r\n git clone git@github.com:cockatoo-org\/Cockatoo.git\r\nCockatoo\u8a2d\u5b9a\r\n cd \/tmp\/cockatoo\r\n # \u30bd\u30fc\u30b9\u914d\u5099\uff06\u6a29\u9650\u8a2d\u5b9a\r\n cp -rT .\/src \/usr\/local\/cockatoo\r\n chown apache    \/usr\/local\/cockatoo\/logs\r\n chmod apache -R \/usr\/local\/cockatoo\/datasource\r\n # HTTPD\u8a2d\u5b9a\r\n cp .\/settings\/httpd\/httpd-cockatoo.conf \/etc\/httpd\/conf.d\/\r\n cp .\/settings\/htaccess \/usr\/local\/cockatoo\/www\/.htaccess\r\n # PHP\u8a2d\u5b9a\r\n cp .\/settings\/php\/cockatoo.ini          \/etc\/php\/conf.d\/\r\n # Cockatoo wiki \u7528\u8a2d\u5b9a\r\n cp .\/packages\/wiki-sample\/config.php.local \/usr\/local\/cockatoo\/config.php\r\nApache\u8d77\u52d5\r\n \/etc\/init.d\/httpd start\r\nwiki\u304c\u8868\u793a\u3055\u308c\u308c\u3070\u5b8c\u4e86\r\n http:\/\/<hostname>\/view\r\n\r\n**\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\u3078\r\n[[\u30c1\u30e5\u30fc\u30c8\u30ea\u30a2\u30eb\u30fbCMS]]\r\n\r\n",
 "contents":[
 {
 "tag":"div",
@@ -237,7 +237,7 @@
 {
 "tag":"a",
 "attr":{
-"href":"\/wiki\/view\/for-service"
+"href":"\/wiki\/view\/For service"
 },
 "children":[
 {
@@ -1021,6 +1021,6 @@
 ]
 }
 ],
-"author":"crumbjp",
+"author":"admin",
 "_u":"Quick+start"
 }
