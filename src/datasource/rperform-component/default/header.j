@@ -1,9 +1,9 @@
 {
-"@R":"1343628685",
+"@R":"1344409217",
 "type":"HorizontalWidget",
 "subject":"header",
 "description":"header",
-"css":"#header {\n margin-bottom: 10px;\n background-color : #FFFFFF;\n border-bottom: 2px solid #404040;\n}",
+"css":"#header {\r\n margin-bottom: 10px;\r\n background-color : #FFFFFF;\r\n border-bottom: 2px solid #404040;\r\n}",
 "js":"",
 "id":"header",
 "class":"",
@@ -11,5 +11,7 @@
 "action":[
 ""
 ],
-"_u":"header"
+"_u":"header",
+"header":"",
+"bottom":""
 }
