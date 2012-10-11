@@ -120,7 +120,7 @@ if [ "${OPT_MONGO}" = "1" ];then
 fi    
 
 if [ "${OPT_MEMCACHED}" = "1" ];then
-    VERSION='2.0.0b2'
+    VERSION='2.1.0'
     ARCHIVE=http://pecl.php.net/get/memcached-%s.tgz
     ARCHIVE=`printf ${ARCHIVE} ${VERSION}`
     download ${ARCHIVE} 
