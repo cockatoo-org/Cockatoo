@@ -60,10 +60,12 @@ abstract class BeaconAction extends \Cockatoo\Action {
         array_map(function($r) use(&$urls,$THIS){ 
             $url = \Cockatoo\UrlUtil::urldecode($r['_u']);
             $domain = parse_url($url,\PHP_URL_HOST );
-            $edomain = \Cockatoo\UrlUtil::urlencode($domain);
-            $urls[$edomain]['domain'] = $domain;
-            $urls[$edomain]['urls'][$r['_u']] = $THIS->list_form($r);
-            $urls[$edomain]['urls'][$r['_u']]['url'] = $url;
+            if ( $domain ){
+              $edomain = \Cockatoo\UrlUtil::urlencode($domain);
+              $urls[$edomain]['domain'] = $domain;
+              $urls[$edomain]['urls'][$r['_u']] = $THIS->list_form($r);
+              $urls[$edomain]['urls'][$r['_u']]['url'] = $url;
+            }
             return;
           },$eurls);
         return array('domains' => $urls);
