@@ -1,0 +1,21 @@
+*** clearsilver/clearsilver.c	2009-10-28 00:05:50.000000000 +0900
+--- clearsilver_for_PHP5.4.X/clearsilver.c	2012-10-11 14:17:43.563039765 +0900
+***************
+*** 84,90 ****
+  	return err_str;
+  }
+  
+! 
+  /* {{{ clearsilver_functions[]
+   *
+   * Every user visible function must have an entry in clearsilver_functions[].
+--- 84,92 ----
+  	return err_str;
+  }
+  
+! #if PHP_VERSION_ID >= 50400
+! # define function_entry		zend_function_entry
+! #endif
+  /* {{{ clearsilver_functions[]
+   *
+   * Every user visible function must have an entry in clearsilver_functions[].

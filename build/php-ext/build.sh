@@ -29,7 +29,7 @@ echo uuid        $OPT_UUID
 echo memcached   $OPT_MEMCACHED
 
 
-PHP_VERSION='5.3.8'
+PHP_VERSION='5.4.7'
 PHP_NAME='php-'${PHP_VERSION}
 
 function build_php_ext3 {
@@ -89,6 +89,7 @@ if [ "${OPT_CLEARSILVER}" = "1" ];then
     run tar xzvf ${NAME}.tar.gz
     run rm -rf clearsilver
     run mv ${NAME} clearsilver
+    run patch -p 0 <php-clearsilver_for_PHP5.4.X.patch
     build_php_ext3 clearsilver  --with-clearsilver=/usr/local 
 fi
 
@@ -101,11 +102,18 @@ if [ "${OPT_ZMQ}" = "1" ];then
 fi    
 
 if [ "${OPT_MONGO}" = "1" ];then
-    VERSION='1.2.7c'
+#    VERSION='1.2.2'
 #    git_download http://github.com/mongodb/mongo-php-driver.git $VERSION
 #    run patch -p 0 <mongo1.2.2.non-wait.patch
 #    run patch -p 0 <mongo1.2.2.sock-leak.patch
-    git_download http://github.com/cockatoo-org/mongo-php-driver.git $VERSION
+#    VERSION='1.2.7c'
+#    git_download http://github.com/cockatoo-org/mongo-php-driver.git $VERSION
+#    VERSION='1.2.12'
+#    git_download http://github.com/mongodb/mongo-php-driver.git $VERSION
+    VERSION='origin/v1.2'
+    run git_download http://github.com/mongodb/mongo-php-driver.git $VERSION
+#    VERSION='origin/crumbjp-v1.2'
+#    run git_download http://github.com/cockatoo-org/mongo-php-driver.git $VERSION
     run rm -rf mongo
     run mv -T mongo-php-driver mongo
     build_php_ext3 mongo
@@ -125,7 +133,8 @@ if [ "${OPT_MEMCACHED}" = "1" ];then
 fi
 
 if [ "${OPT_ZOOKEEPER}" = "1" ];then
-    VERSION='v0.2.1'
+#    VERSION='v0.2.1'
+    VERSION=
     git_download http://github.com/andreiz/php-zookeeper.git $VERSION
 #   patch -i php_zookeeper.patch
     run rm -rf zookeeper
