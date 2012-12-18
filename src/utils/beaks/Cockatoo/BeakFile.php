@@ -48,7 +48,7 @@ class BeakFile extends Beak {
    * @see Action.php
    */
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
-    parent::__construct($brl,$scheme,$domain,&$collection,$path,$method,$queries,$comments,$arg,$hide);
+    parent::__construct($brl,$scheme,$domain,$collection,$path,$method,$queries,$comments,$arg,$hide);
 
     if ( isset($this->queries[Beak::Q_FILTERS]) ) {
       $this->filters = explode(',',$this->queries[Beak::Q_FILTERS]);
@@ -432,7 +432,7 @@ class BeakFile extends Beak {
    * Set impl
    */
   private function setDoc($file,$path,&$arg) {
-    if ( ! $this->judgeRev($file,&$arg) ){
+    if ( ! $this->judgeRev($file,$arg) ){
       return false;
     }
     self::mkDir(dirname($file));

@@ -33,7 +33,7 @@ class BeakAction extends Beak {
    * @see Action.php
    */
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
-    parent::__construct($brl,$scheme,$domain,&$collection,$path,$method,$queries,$comments,$arg,$hide);
+    parent::__construct($brl,$scheme,$domain,$collection,$path,$method,$queries,$comments,$arg,$hide);
 
     $base = $scheme . '://' . $domain . '/';
     $beaklocation = BeakLocationGetter::singleton();

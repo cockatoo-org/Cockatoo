@@ -277,7 +277,7 @@ class ContentDrawer {
     }
     // update session
     if ( $this->session ) {
-      setSession($this->sessionID,$this->service,&$this->session);
+      setSession($this->sessionID,$this->service,$this->session);
     }
     // redirect
     if ( $redirect !== null ) {
@@ -531,7 +531,7 @@ class ContentDrawer {
         $this->session[Def::SESSION_KEY_GET]    = null;
         $this->session[Def::SESSION_KEY_COOKIE] = null;
         $this->session[Def::SESSION_KEY_FILES]  = null;
-        setSession($this->sessionID,$this->service,&$this->session);
+        setSession($this->sessionID,$this->service,$this->session);
      }
     }
     if ( $COCKATOO_GLFLG ) {
