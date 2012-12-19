@@ -491,8 +491,9 @@ class ContentDrawer {
       if ( preg_match('@^\s*$@',$key,$matches) === 0 ) {
         if ( $name === null or $name === '' ){
           $data = $this->findResults($key,strlen($key));
+        } else {
+          $data[$name] = $this->findResults($key,strlen($key));
         }
-        $data[$name] = $this->findResults($key,strlen($key));
       }
     }
     print json_encode($data);
