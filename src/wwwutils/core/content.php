@@ -277,7 +277,7 @@ class ContentDrawer {
     }
     // update session
     if ( $this->session ) {
-      setSession($this->sessionID,$this->service,&$this->session);
+      setSession($this->sessionID,$this->service,$this->session);
     }
     // redirect
     if ( $redirect !== null ) {
@@ -491,8 +491,9 @@ class ContentDrawer {
       if ( preg_match('@^\s*$@',$key,$matches) === 0 ) {
         if ( $name === null or $name === '' ){
           $data = $this->findResults($key,strlen($key));
+        } else {
+          $data[$name] = $this->findResults($key,strlen($key));
         }
-        $data[$name] = $this->findResults($key,strlen($key));
       }
     }
     print json_encode($data);
@@ -531,7 +532,7 @@ class ContentDrawer {
         $this->session[Def::SESSION_KEY_GET]    = null;
         $this->session[Def::SESSION_KEY_COOKIE] = null;
         $this->session[Def::SESSION_KEY_FILES]  = null;
-        setSession($this->sessionID,$this->service,&$this->session);
+        setSession($this->sessionID,$this->service,$this->session);
      }
     }
     if ( $COCKATOO_GLFLG ) {
