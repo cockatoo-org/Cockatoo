@@ -30,7 +30,7 @@ class BeakMongo extends Beak {
    * @see Action.php
    */
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
-    parent::__construct($brl,$scheme,$domain,&$collection,$path,$method,$queries,$comments,$arg,$hide);
+    parent::__construct($brl,$scheme,$domain,$collection,$path,$method,$queries,$comments,$arg,$hide);
     
     $this->columns = array('_id' => 0);
     if ( isset($this->queries[Beak::Q_FILTERS]) ) {
