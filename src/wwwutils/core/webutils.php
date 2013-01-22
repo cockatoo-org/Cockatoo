@@ -60,9 +60,13 @@ function http_200(&$type=null,&$etag=null,&$expire=null){
     expires_header($expire);
   }
 }
-function http_301(&$redirect){
+function http_301(&$location){
   header('HTTP/1.1 301 Moved Permanently');
-  header('Location: ' . $redirect);
+  header('Location: ' . $location);
+}
+function http_302(&$location){
+  header('HTTP/1.1 302 Moved Temporary');
+  header('Location: ' . $location);
 }
 function http_304(&$etag,&$expire){
   header("HTTP/1.1 304 Not Modified");
@@ -87,12 +91,23 @@ class RedirectException extends \Exception{
 /**
  * Redirect marker exception
  *
- * @param String $redirect URL
+ * @param String $location URL
  * @throw RedirectException
  */
-function redirect($redirect){
-  http_301($redirect);
-  throw new RedirectException('301 redirect : ' . $redirect);
+function moved_permanently($location){
+  http_301($location);
+  throw new RedirectException('301 redirect : ' . $location);
+}
+
+/**
+ * Redirect marker exception
+ *
+ * @param String $location URL
+ * @throw RedirectException
+ */
+function moved_temporary($location){
+  http_302($location);
+  throw new RedirectException('302 redirect : ' . $location);
 }
 
 

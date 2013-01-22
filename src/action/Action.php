@@ -25,7 +25,8 @@ abstract class Action {
   public $args;
   public $session = null;
   public $updateSession = array();
-  public $redirect = null;
+  public $moved_temporary  = null;
+  public $moved_permanently= null;
   public $namespace = null;
   public $updateCookie = array();
   public $header = '';
@@ -93,10 +94,31 @@ abstract class Action {
    *
    *  It means that it doesn't do render this page.
    *
-   * @param String $data session-data
+   * @deplicated Use setMovedTemporary
+   * @param String redirect location
    */
   protected function setRedirect($redirect){
-    $this->redirect = $redirect;
+    $this->moved_temporary = $redirect;
+  }
+  /**
+   * Moved permanently redirect (301)
+   *
+   *  It means that it doesn't do render this page.
+   *
+   * @param String redirect location
+   */
+  protected function setMovedPermanently($location){
+    $this->moved_permanently = $location;
+  }
+  /**
+   * Moved temporary redirect (302)
+   *
+   *  It means that it doesn't do render this page.
+   *
+   * @param String redirect location
+   */
+  protected function setMovedTemporary($location){
+    $this->moved_temporary = $location;
   }
   /**
    * Set namespace of the rendering object
@@ -157,7 +179,8 @@ abstract class Action {
                    $this->namespace,
                    $ret,
                    $this->updateSession,
-                   $this->redirect,
+                   $this->moved_permanently,
+                   $this->moved_temporary,
                    $this->updateCookie,
                    $this->header,
                    $this->updateArgs

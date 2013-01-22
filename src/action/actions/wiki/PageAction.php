@@ -14,6 +14,7 @@ require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
 
 class PageAction extends \Cockatoo\Action {
   public function proc(){
+
     try{
       //list($P,$D,$C,$p,$m,$q,$c) = \Cockatoo\parse_brl($this->BRL);
       // 
@@ -64,7 +65,7 @@ class PageAction extends \Cockatoo\Action {
                            $user);
         Lib::save_page($page,$pdata);
         $this->save_history($page,$user,'EDIT');
-        $this->setRedirect('/wiki/view/'.$page);
+        $this->setMovedTemporary('/wiki/view/'.$page);
         return array();
       }elseif( $op === 'move' ) {
         if ( ! $user ) {
@@ -82,19 +83,19 @@ class PageAction extends \Cockatoo\Action {
             $this->move_image($new,$page);
             Lib::remove_page($page);
             $this->save_history($new,$user,'MOVE from ' . $page ) ;
-            $this->setRedirect('/wiki/view/'.$new);
+            $this->setMovedTemporary('/wiki/view/'.$new);
             return array();
           }
-          $this->setRedirect('/wiki/view');
+          $this->setMovedTemporary('/wiki/view');
         }else{
-          $this->setRedirect('/wiki/view/'.$page);
+          $this->setMovedTemporary('/wiki/view/'.$page);
         }
         return array();
       }
     }catch ( \Exception $e ) {
       $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
       $this->updateSession($s);
-      $this->setRedirect('/wiki/view');
+      $this->setMovedTemporary('/wiki/view');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }

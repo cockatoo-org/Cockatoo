@@ -35,15 +35,15 @@ class AccountAction extends Action {
     $session = $this->getSession();
     $redirect = $session[Def::SESSION_KEY_POST]['r'];
     if ( $redirect ) {
-      $this->setRedirect($redirect);
+      $this->setMovedTemporary($redirect);
     }else{
-      $this->setRedirect($this->REDIRECT);
+      $this->setMovedTemporary($this->REDIRECT);
     }
   }
   protected function error(&$e){
     $s[Def::SESSION_KEY_ERROR] = $e->getMessage();
     $this->updateSession($s);
-    $this->setRedirect($this->EREDIRECT);
+    $this->setMovedTemporary($this->EREDIRECT);
     Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
   }
 

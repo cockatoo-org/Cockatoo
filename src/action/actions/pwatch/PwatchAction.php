@@ -81,7 +81,7 @@ class PwatchAction extends \Cockatoo\Action {
     }catch ( \Exception $e ) {
       $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
       $this->updateSession($s);
-      $this->setRedirect('main');
+      $this->setMovedTemporary('main');
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }

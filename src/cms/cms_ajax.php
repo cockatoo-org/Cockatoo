@@ -76,6 +76,7 @@ try {
         $default_layout = BeakController::beakSimpleQuery($brl);
         $rev        = $default_layout[Beak::ATTR_REV];
         $eredirect  = $default_layout[Def::K_LAYOUT_EREDIRECT];
+        $redirect   = $default_layout[Def::K_LAYOUT_REDIRECT];
         $header     = $default_layout[Def::K_LAYOUT_HEADER];
         $pheader    = $default_layout[Def::K_LAYOUT_PHEADER];
         $bottom     = $default_layout[Def::K_LAYOUT_BOTTOM];
@@ -94,6 +95,7 @@ try {
                      'template_id' => $template_id ,
                      'name' => $template_id ,
                      'eredirect' => $eredirect,
+                     'redirect' => $redirect,
                      'css' => $css ,
                      'js' => $js,
                      'session' => $session_exp,
@@ -114,10 +116,10 @@ try {
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array(
                       array(Def::K_LAYOUT_TYPE => 'PageLayout' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/pagelayout" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array())
                       ));
-    setD(false,$rev,$service_id,$template_id,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
+    setD(false,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'setD' ) {
     check_writable($service_id);
-    setD(true,$rev,$service_id,$template_id,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,null);
+    setD(true,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,null);
   } elseif( $op === 'getP' ) {
     if ( is_readable($service_id) ){
       $page_ids = getP($service_id,$template_id);
@@ -342,7 +344,7 @@ function getP($service_id,$template_id){
   return $page_layout;
 }
 
-function setD($flg,$rev,$service_id,$template_id,$eredirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
+function setD($flg,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
   if ( preg_match('@\s@',$template_id,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as TEMPLATE : ' . $page_id);
   }
@@ -372,6 +374,7 @@ function setD($flg,$rev,$service_id,$template_id,$eredirect,$css,$js,$session_ex
   $default_layout = $default_layout?$default_layout:array();
   $default_layout[Beak::ATTR_REV]            = $rev;
   $default_layout[Def::K_LAYOUT_EREDIRECT]   = $eredirect;
+  $default_layout[Def::K_LAYOUT_REDIRECT]    = $redirect;
   if ( $layout ) {
     $default_layout[Def::K_LAYOUT_LAYOUT]    = $layout;
   }

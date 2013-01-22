@@ -170,7 +170,7 @@ abstract class DefaultConfig {
    */
   const Mode           = Def::MODE_NORMAL;
   /**
-   * The redirect path that when unhandled error occured.
+   * The default redirect path that when unhandled error occured.
    */
   const ErrorRedirect  = '/default/error';
   /**

@@ -17,7 +17,7 @@ class Config extends DefaultConfig {
   const Mode           = Def::MODE_DEBUG;
 
   /**
-   * The redirect path that when unhandled error occured.
+   * The default redirect path that when unhandled error occured.
    */
   const ErrorRedirect  = '/wiki/view';
 

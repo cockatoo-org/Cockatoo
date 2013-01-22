@@ -40,7 +40,7 @@ class AdminAction extends Action {
   protected function error(&$e){
     $s[Def::SESSION_KEY_ERROR] = $e->getMessage();
     $this->updateSession($s);
-    $this->setRedirect($this->EREDIRECT);
+    $this->setMovedTemporary($this->EREDIRECT);
     Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
   }
 

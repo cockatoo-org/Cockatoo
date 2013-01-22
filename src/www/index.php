@@ -45,7 +45,7 @@ try {
     $CONTENT_DRAWER = new ContentDrawer($SERVICE,$TEMPLATE,$PATH,$ARGS,$SESSION_PATH,$mode);  
     $force_redirect = $CONTENT_DRAWER->layout();
     if ( $force_redirect ) {
-      redirect($force_redirect);
+      moved_permanently($force_redirect);
     }
 
     if ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_HTML) === 0 ) {
@@ -104,12 +104,12 @@ try {
     }
     if ( $CONTENT_DRAWER ) {
       if ( $CONTENT_DRAWER->eredirect ) {
-        redirect($CONTENT_DRAWER->eredirect);
+        moved_temporary($CONTENT_DRAWER->eredirect);
       }elseif( $CONTENT_DRAWER->baseEredirect ) {
-        redirect($CONTENT_DRAWER->baseEredirect);
+        moved_temporary($CONTENT_DRAWER->baseEredirect);
       }
     }
-    redirect(Config::ErrorRedirect);
+    moved_temporary(Config::ErrorRedirect);
   }catch ( RedirectException $e ) {
     Log::info($NAME . $e->getMessage());
     if ( $mode & (Def::RenderingModeDEBUG1 | Def::RenderingModeDEBUG2) ) {

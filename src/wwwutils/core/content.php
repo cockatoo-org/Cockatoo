@@ -102,11 +102,16 @@ class ContentDrawer {
       $this->layoutBrl    = brlgen(Def::BP_LAYOUT,$this->service,$this->template,$this->path,Beak::M_GET);
 
       if ( strcmp($this->path,'') === 0 or strcmp($this->path,'/') === 0){
-        throw new \Exception('Unexpect Layout is specified !' . $this->path );
+        $this->layoutBrl = null;
+        // throw new \Exception('Unexpect Layout is specified !' . $this->path );
       }
       
       $this->debug('== LAYOUT(BRL) ==',array($this->layoutBrl,$this->baseLayoutBrl),Def::RenderingModeDEBUG2);
-      $datas = BeakController::beakGetsQuery(array($this->baseLayoutBrl,$this->layoutBrl));
+      if ( $this->layoutBrl === null ) {
+        $datas[$this->baseLayoutBrl] = BeakController::beakSimpleQuery($this->baseLayoutBrl);
+      }else{
+        $datas = BeakController::beakGetsQuery(array($this->baseLayoutBrl,$this->layoutBrl));
+      }
       // Base layout
       if ( ! $datas[$this->baseLayoutBrl] ) {
         // Template not defined.
@@ -120,6 +125,12 @@ class ContentDrawer {
         }
         throw new \Exception('Template not found !');
       }
+      if ( $this->layoutBrl === null ) {
+        if ( isset($datas[$this->baseLayoutBrl][Def::K_LAYOUT_REDIRECT]) && strcmp($datas[$this->baseLayoutBrl][Def::K_LAYOUT_REDIRECT],'') !== 0 ) {
+          return $datas[$this->baseLayoutBrl][Def::K_LAYOUT_REDIRECT]; // Redirect to Top page 
+        }
+      }
+
       $this->baseEredirect = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_EREDIRECT];
       $this->baseHeader    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_HEADER];
       $this->basePHeader   = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_PHEADER];
@@ -140,7 +151,7 @@ class ContentDrawer {
       }
       $this->redirect      = $datas[$this->layoutBrl][Def::K_LAYOUT_REDIRECT];
       if ( $this->redirect ) {
-        return $this->redirect;
+        return $this->redirect; // Moved permanently
       }
       $this->eredirect     = $datas[$this->layoutBrl][Def::K_LAYOUT_EREDIRECT];
       $this->debug('== LAYOUT(BRL) ==',$datas,Def::RenderingModeDEBUG2);
@@ -171,6 +182,7 @@ class ContentDrawer {
     $this->sessionExp   = (int)(((int)$this->layoutData[Def::K_LAYOUT_SESSION_EXP]===Def::SESSION_DEFAULT)?($this->baseSessionExp):($this->layoutData[Def::K_LAYOUT_SESSION_EXP]));
     $this->expires      = $this->layoutData[Def::K_LAYOUT_EXPIRES];
     $this->collectComponentBrls($this->layout);
+    return null;
   }
 
 
@@ -244,7 +256,8 @@ class ContentDrawer {
     $results = BeakController::beakQuery($queries);
     $this->debug('== ACTIONS DATA ==',$results,Def::RenderingModeDEBUG4);
 
-    $redirect = null;
+    $moved_permanently = null;
+    $moved_temporary = null;
     foreach( $results as $brl => $rets ) {
       if ( $rets and $rets[0] === Def::ActionSuccess) {
         // merge session
@@ -253,23 +266,27 @@ class ContentDrawer {
             $this->session[$sk] = $sv;
           }
         }
-        // reserve redirect
-        if ( ! $redirect ) {
-          $redirect = $rets[4];
+        // reserve moved_permanently
+        if ( ! $moved_permanently ) {
+          $moved_permanently = $rets[4];
+        }
+        // reserve moved_temporary
+        if ( ! $moved_temporary ) {
+          $moved_temporary = $rets[5];
         }
         // set cookie
-        if ( isset($rets[5]) ) {
-          foreach($rets[5] as $cn => $cs ) {
+        if ( isset($rets[6]) ) {
+          foreach($rets[6] as $cn => $cs ) {
             setcookie($cn,$cs[0],$cs[1],$cs[2],$cs[3],$cs[4],$cs[5]);
           }
         }
         // set header
-        if ( isset($rets[6]) ) {
-          $this->pheader.="\n".$rets[6];
+        if ( isset($rets[7]) ) {
+          $this->pheader.="\n".$rets[7];
         }
         // merge args
-        if ( isset($rets[7]) ) {
-          foreach($rets[7] as $ak => $av ) {
+        if ( isset($rets[8]) ) {
+          foreach($rets[8] as $ak => $av ) {
             $this->args[$ak] = $av;
           }
         }
@@ -279,9 +296,13 @@ class ContentDrawer {
     if ( $this->session ) {
       setSession($this->sessionID,$this->service,$this->session);
     }
-    // redirect
-    if ( $redirect !== null ) {
-      redirect($redirect);
+    // moved_permanently
+    if ( $moved_permanently !== null ) {
+      moved_permanently($moved_permanently);
+    }
+    // moved_temporary
+    if ( $moved_temporary !== null ) {
+      moved_temporary($moved_temporary);
     }
     return $results;
   }

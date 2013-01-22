@@ -12,7 +12,8 @@
 namespace Cockatoo;
 class SampleRequestParser extends DefaultRequestParser {
   public function parseImpl(){
-    if ( preg_match('@^/wiki/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+    if ( preg_match('@^/wiki/(.*)?$@', $this->reqpath , $matches ) !== 0 ||
+         preg_match('@^/wiki$@', $this->reqpath , $matches ) !== 0 ) {
       // application = wiki
       $this->service = 'wiki';
       $this->session_path = '/wiki';
@@ -69,7 +70,7 @@ class SampleRequestParser extends DefaultRequestParser {
       $this->session_path = '/'.$matches[1];
       return; // other application
     }elseif ( $this->reqpath === '/favicon.ico' ) {
-      redirect('/_s_/core/default/logo.png');
+      moved_permanentry('/_s_/core/default/logo.png');
       return;
     }
     throw new \Exception('Unexpect PATH:' . $this->reqpath);

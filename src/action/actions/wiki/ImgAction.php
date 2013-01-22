@@ -37,7 +37,7 @@ class ImgAction extends \Cockatoo\Action {
           $names []= $file[\Cockatoo\Def::F_NAME];
         }
       }
-      $this->setRedirect('/wiki/uploaded/'.$page);
+      $this->setMovedTemporary('/wiki/uploaded/'.$page);
       return;
     }else if ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
       $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, '', \Cockatoo\Beak::M_KEY_LIST);
