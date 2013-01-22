@@ -90,6 +90,7 @@ if [ "${OPT_CLEARSILVER}" = "1" ];then
     run rm -rf clearsilver
     run mv ${NAME} clearsilver
     run patch -p 0 <php-clearsilver_for_PHP5.4.X.patch
+    run patch -p 0 <php-clearsilver_for_PHP5.4.X-2.patch
     build_php_ext3 clearsilver  --with-clearsilver=/usr/local 
 fi
 
