@@ -1,0 +1,33 @@
+*** clearsilver/clearsilver.c	2012-11-16 14:36:52.000000000 +0900
+--- clearsilver_for_PHP5.4.X/clearsilver.c	2012-11-16 14:40:24.000000000 +0900
+***************
+*** 479,492 ****
+  	}
+  
+  	/* start buffering */
+! 	php_start_ob_buffer (NULL, 0, 1 TSRMLS_CC);
+  
+  	/* print zval */
+  	zend_print_variable(value);
+  
+  	/* retrieve output buffer */
+! 	php_ob_get_buffer (return_value TSRMLS_CC);
+! 	php_end_ob_buffer (0, 0 TSRMLS_CC);
+  	
+  	err = hdf_set_value(hdf, name, Z_STRVAL_P(return_value));
+  	if (err != STATUS_OK) {
+--- 479,492 ----
+  	}
+  
+  	/* start buffering */
+!	php_output_start_default(TSRMLS_C);
+  
+  	/* print zval */
+  	zend_print_variable(value);
+  
+  	/* retrieve output buffer */
+!	php_output_get_contents(return_value TSRMLS_CC);
+!	php_output_clean(TSRMLS_C);
+  	
+  	err = hdf_set_value(hdf, name, Z_STRVAL_P(return_value));
+  	if (err != STATUS_OK) {
