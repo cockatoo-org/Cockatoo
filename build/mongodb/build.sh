@@ -33,7 +33,9 @@ function build_mongodb {
     run ln -sfT ${NAME}/bin usr/local/mongo/bin
     run sudo mkdir -p /usr/local/mongo 
     run sudo cp -r usr/local/mongo /usr/local/
-    run ~/.capkg/config/capkg.sh generate -p mongodb${VERSION} -i /usr -s usr/local/
+    if [ "${WITH_CAPKG}" != "" ]; then
+	run eval ~/.capkg/config/capkg.sh generate -p mongodb${VERSION} -i /usr -s usr/local/
+    fi
 }
 build_mongodb
 

@@ -13,7 +13,9 @@ function build_jdk {
     run ln -sfT ${NAME} ${ROOT}/usr/local/java/jdk
     run sudo mkdir -p        /usr/local/java
     run sudo cp -r ${ROOT}/usr/local/java   /usr/local/
-    run ~/.capkg/config/capkg.sh generate -p jdk -v ${VERSION} -i /usr -s usr/local/
+    if [ "${WITH_CAPKG}" != "" ]; then
+	run eval ~/.capkg/config/capkg.sh generate -p jdk -v ${VERSION} -i /usr -s usr/local/
+    fi
 }
 
 for T in `find . -maxdepth 1 -type d  | grep '^./jdk'`;

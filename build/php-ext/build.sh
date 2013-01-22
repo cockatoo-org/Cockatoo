@@ -61,7 +61,9 @@ function build_php_ext3 {
 #    run sudo cp ${CONFD}/${EXT}.ini /usr/local/${PHP_NAME}/lib/conf.d/
     run popd
     run cp -rfT root_${EXT}/usr usr
-    run eval  ~/.capkg/config/capkg.sh generate -p php${PHP_VERSION}-${EXT}  -i /usr/local -s root_${EXT}/usr/local/${PHP_NAME} ${CAPKCF_OPTIONS}
+    if [ "${WITH_CAPKG}" != "" ]; then
+	run eval ~/.capkg/config/capkg.sh generate -p php${PHP_VERSION}-${EXT}  -i /usr/local -s root_${EXT}/usr/local/${PHP_NAME} ${CAPKCF_OPTIONS}
+    fi
 }
 
 # APC

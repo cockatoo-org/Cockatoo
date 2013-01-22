@@ -4,17 +4,17 @@ cd ${ROOT}
 ROOT=`pwd`
 source ${ROOT}/../build.env
 
-VERSION='5.4.7'
+VERSION='5.4.11'
 HTTPD_VERSION='2.2.22'
-
-ARCHIVE=http://www.php.net/get/php-%s.tar.gz/from/jp.php.net/mirror/
+        
+ARCHIVE=http://jp1.php.net/get/php-%s.tar.gz/from/jp2.php.net/mirror/
 FNAME=php-%s.tar.gz
 FNAME=`printf ${FNAME} ${VERSION}`
 ARCHIVE=`printf ${ARCHIVE} ${VERSION}`
 download ${ARCHIVE} ${FNAME}
 
 
-NAME=php-${VERSION}
+NAME="php-${VERSION}"
 
 function build_php(){
     # sudo yum install libxslt-devel libicu-devel 
@@ -79,8 +79,10 @@ function build_php(){
 #    run sudo mkdir -p /usr/local/${NAME}/lib/conf.d/
 #    run sudo ln -sfT ${NAME} /usr/local/php
 
-    run ~/.capkg/config/capkg.sh generate -p php${VERSION}-cli    -i /usr -s root_php/usr/local
-    run ~/.capkg/config/capkg.sh generate -p php${VERSION}-httpd  -i /usr -s root_httpd/usr/local 
+    if [ "${WITH_CAPKG}" != "" ]; then
+	run eval ~/.capkg/config/capkg.sh generate -p php${VERSION}-cli    -i /usr -s root_php/usr/local
+	run eval ~/.capkg/config/capkg.sh generate -p php${VERSION}-httpd  -i /usr -s root_httpd/usr/local 
+    fi
 
     run cp -rfT ${ROOT}/root_php/usr ${ROOT}/usr
 }
@@ -110,7 +112,9 @@ function build_php_ext {
 #    run sudo cp ${CONFD}/${EXT}.ini /usr/local/${NAME}/lib/conf.d/
     run popd
     run cp -rfT ${ROOT}/root_${EXT}/usr ${ROOT}/usr
-    run eval  ~/.capkg/config/capkg.sh generate -p php${VERSION}-${EXT}  -i /usr/local -s root_${EXT}/usr/local/${NAME} ${CAPKCF_OPTIONS}
+    if [ "${WITH_CAPKG}" != "" ]; then
+	run eval ~/.capkg/config/capkg.sh generate -p php${VERSION}-${EXT}  -i /usr/local -s root_${EXT}/usr/local/${NAME} ${CAPKCF_OPTIONS}
+    fi
 }
 build_php
 build_php_ext bcmath

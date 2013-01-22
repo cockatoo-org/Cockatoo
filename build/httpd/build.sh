@@ -54,8 +54,10 @@ function build_httpd(){
 }
 
 build_httpd
-run ~/.capkg/config/capkg.sh generate -p httpd${VERSION} -i /usr -s usr/local
-run eval ~/.capkg/config/capkg.sh generate -p httpd${VERSION}-conf -i /usr/local -s conf/usr/local/apache-${VERSION} "--require='httpd${VERSION} 0.0.1 0.0.999'"
+if [ "${WITH_CAPKG}" != "" ]; then
+    run eval ~/.capkg/config/capkg.sh generate -p httpd${VERSION} -i /usr -s usr/local
+    run eval ~/.capkg/config/capkg.sh generate -p httpd${VERSION}-conf -i /usr/local -s conf/usr/local/apache-${VERSION} "--require='httpd${VERSION} 0.0.1 0.0.999'"
+fi
 
 # SELinux
 # sudo /usr/sbin/semanage port -a -t http_port_t -p tcp 80
