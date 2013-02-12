@@ -37,8 +37,8 @@ function build_php(){
 	--enable-libgcc \
 	--enable-mbstring \
 	--enable-pcntl \
-	--enable-sockets 
-	-- with-zlib \
+	--enable-sockets \ 
+	--with-zlib \
 #	--with-openssl=/usr/local/ssl \
 #	--with-mcrypt=/usr/local \
 #	--with-curl=/usr/local \
