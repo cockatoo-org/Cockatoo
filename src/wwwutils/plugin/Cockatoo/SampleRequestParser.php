@@ -12,6 +12,36 @@
 namespace Cockatoo;
 class SampleRequestParser extends DefaultRequestParser {
   public function parseImpl(){
+    if ( preg_match('@^/mongo/(.*)?$@', $this->reqpath , $matches ) !== 0 ||
+         preg_match('@^/mongo$@', $this->reqpath , $matches ) !== 0 ) {
+      $this->service = 'mongo';
+      $this->session_path = '/mongo';
+      $this->template = 'default';
+      $reqpath = $matches[1];
+      if ( preg_match('@^edit/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'edit';
+        $this->args['P'] = $matches[1];
+      }elseif ( preg_match('@^img/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'img';
+        $this->args['P'] = $matches[1];
+      }elseif ( preg_match('@^upload/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'upload';
+        $this->args['P'] = $matches[1];
+      }elseif ( preg_match('@^uploaded/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'uploaded';
+        $this->args['P'] = $matches[1];
+      }elseif ( preg_match('@^events/edit/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'events/edit';
+        $this->args['E'] = $matches[1];
+      }elseif ( preg_match('@^events/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'events/';
+        $this->args['E'] = $matches[1];
+      }else{ 
+        $this->path = $reqpath;
+        $this->args['P'] = $reqpath;
+      }
+      return;
+    }
     if ( preg_match('@^/wiki/(.*)?$@', $this->reqpath , $matches ) !== 0 ||
          preg_match('@^/wiki$@', $this->reqpath , $matches ) !== 0 ) {
       // application = wiki

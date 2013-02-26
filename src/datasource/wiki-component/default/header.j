@@ -3,7 +3,7 @@
 "type":"HorizontalWidget",
 "subject":"header",
 "description":"header",
-"css":"#header  div.a-Wbody {\n}\n#header  ul {\n  overflow: hidden;\n}\n#header  ul > li {\n  list-style-image: none;\n  list-style-position: outside;\n  list-style-type: none;\n  float: left;\n  padding: 0 10px 0 10px;\n}",
+"css":"#header  div.co-Wbody {\n}\n#header  ul {\n  overflow: hidden;\n}\n#header  ul > li {\n  list-style-image: none;\n  list-style-position: outside;\n  list-style-type: none;\n  float: left;\n  padding: 0 10px 0 10px;\n}",
 "js":"$( function () {\n  $('#new').click(function(e){\n     $('#hform').html('<form method=\"GET\" action=\"'+$(this).attr('action')+'\">Input page name : <input type=\"text\" value=\"\" name=\"page\"><\/input><\/form>');\n  });\n  $('#upload').click(function(e){\n     $('#hform').html('<form method=\"POST\" enctype=\"multipart\/form-data\" action=\"'+$(this).attr('action')+'\">FIlename : <input id=\"fupload\" type=\"file\" value=\"\" name=\"filename\"><input type=\"submit\" value=\"save\" name=\"op\"><\/input><\/form>');\n  });\n\n  $('#move').click(function(e){\n     $('#hform').html('<form method=\"POST\" action=\"'+$(this).attr('action')+'\">New page name : <input type=\"text\" value=\"\" name=\"new\"><\/input><input type=\"hidden\" name=\"op\" value=\"move\"><\/input><\/form>');\n  });\n  $('#jump').click(function(e){\n     $('#hform').html('<form method=\"GET\" action=\"'+$(this).attr('action')+'\">Input page name : <input type=\"text\" value=\"\" name=\"page\"><\/input><\/form>');\n  });\n});\n",
 "id":"header",
 "class":"",

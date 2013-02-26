@@ -1,0 +1,1 @@
+{"@R":"1328327357","type":"HorizontalWidget","subject":"error","description":"error","css":"#emessage {\n color:red;\n}","js":"","id":"","class":"","body":"<h2>Error page<\/h2>\n<div id=\"emessage\">\n  <?cs var:S.emessage ?>\n<\/div>","action":[""],"_u":"error"}

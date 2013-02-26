@@ -1,0 +1,1 @@
+{"@R":"1311603737","type":"JsonWidget","subject":"upload","description":"","css":"","js":"","id":"","class":"","body":"","action":["action:\/\/mongo-action\/mongo\/ImgAction?set"],"_u":"img\/upload"}
