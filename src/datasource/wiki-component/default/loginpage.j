@@ -1,0 +1,17 @@
+{
+"@R":"1361937819",
+"type":"HorizontalWidget",
+"subject":"loginpage",
+"description":"",
+"css":"",
+"js":"",
+"id":"loginpage",
+"class":"",
+"body":"TWITTER",
+"action":[
+"action:\/\/wiki-action\/wiki\/LoginAction"
+],
+"header":"",
+"bottom":"",
+"_u":"loginpage"
+}

@@ -15,3 +15,19 @@
    - Obsolute Selectable unique-key
    - Select by index
    - Selectable column
+
+1.0.0
+  PHP 5.4 support
+
+  Separate redirect feature to "moved permanently (301)" and "moved temporary (301)"
+   You can specify on CMS and Action
+   [CMS]
+    - "top page (301)" in each TEMPLATE
+    - "error page (302)" in each TEMPLATE
+    - "redirect (301)" in each PATH
+    - "error page (302)" in eath PATH
+   [Action]
+    - setMovedPermanently($location)
+    - setMovedTemporary($location)
+
+  
