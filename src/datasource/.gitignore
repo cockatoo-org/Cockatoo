@@ -1,5 +1,6 @@
 *-storage
 !wiki-storage
+wiki-storage/toc
 !mongo-storage
 *-session
 rperform-layout

@@ -16,14 +16,13 @@ class EventAction extends \Cockatoo\Action {
   public function proc(){
 
     try{
-      list($P,$D,$C,$p,$m,$q,$c) = \Cockatoo\parse_brl($this->BRL);
       // 
       $this->setNamespace('mongo');
       $session = $this->getSession();
       $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
       $eventid   = $this->args['E'];
 
-      if ( $m === \Cockatoo\Beak::M_GET ) {
+      if ( $this->method === \Cockatoo\Beak::M_GET ) {
         $edata = Lib::get_event($eventid);
         if ( $edata ) {
           return array( 'event' => $edata);
@@ -36,10 +35,10 @@ class EventAction extends \Cockatoo\Action {
                         'contents' => $contents,
                         'owner' => $user
                         ));
-      }elseif( $m === \Cockatoo\Beak::M_GET_ARRAY ) {
+      }elseif( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {
         $events = Lib::get_events();
         return array('events' => $events);
-      }elseif( $m === \Cockatoo\Beak::M_SET ) {
+      }elseif( $this->method === \Cockatoo\Beak::M_SET ) {
         if ( ! $user ) {
           throw new \Exception('You have to login before update mongo !!');
         }

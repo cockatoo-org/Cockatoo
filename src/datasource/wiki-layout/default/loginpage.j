@@ -1,11 +1,11 @@
 {
-"@R":"1361936396",
+"@R":"1361944874",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
-"post_action":"",
+"post_action":"action:\/\/wiki-action\/wiki\/TwitterOauthAction",
 "session_exp":"2147483647",
-"expires":"",
+"expires":"0",
 "header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
 "bottom":"",
@@ -19,14 +19,7 @@
 "extra":"",
 "component":"component:\/\/core-component\/default\/horizontal#critical",
 "children":[
-{
-"type":"HorizontalWidget",
-"extra":"",
-"component":"component:\/\/wiki-component\/default\/loginpage",
-"children":[
 
-]
-}
 ]
 },
 "_u":"loginpage"
