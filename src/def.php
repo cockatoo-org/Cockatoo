@@ -123,8 +123,14 @@ class Def {
   const  F_CONTENT                = 'c';
   const  F_SIZE                   = 's';
 
+  const  CS_CORE                  = 'C';
   const  CS_SESSION               = 'S';
   const  CS_ACTION                = 'A';
+
+  const  CS_CORE_BASE             = '_base';
+  const  CS_CORE_FULLURL          = '_url';
+  const  CS_CORE_FULLEURL         = '_eurl';
+
 
   const  MODE_NORMAL              = 0;
   const  MODE_DEBUG               = 1;

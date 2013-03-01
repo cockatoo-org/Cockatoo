@@ -1,12 +1,12 @@
 {
-"@R":"1343370899",
+"@R":"1362019310",
 "eredirect":"",
 "redirect":"",
 "pre_action":"action:\/\/core-action\/Cockatoo\/AccountAction",
 "post_action":"",
 "session_exp":"86400",
 "expires":"0",
-"header":"<meta name=\"description\" content=\"\">\n",
+"header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
 "bottom":"",
 "layout":{

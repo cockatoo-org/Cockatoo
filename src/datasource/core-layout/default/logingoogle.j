@@ -1,26 +1,21 @@
 {
-"@R":"1361944874",
+"@R":"1362100301",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
-"post_action":"action:\/\/wiki-action\/wiki\/TwitterOauthAction",
-"session_exp":"2147483647",
+"post_action":"action:\/\/core-action\/Cockatoo\/GoogleOauthAction",
+"session_exp":"86400",
 "expires":"0",
 "header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
 "bottom":"",
 "layout":{
 "type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
-"extra":"",
 "component":"component:\/\/core-component\/default\/horizontal#critical",
+"extra":null,
 "children":[
 
 ]
 },
-"_u":"loginpage"
+"_u":"logingoogle"
 }

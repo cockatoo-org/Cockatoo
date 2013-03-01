@@ -2,6 +2,7 @@
 !wiki-storage
 wiki-storage/toc
 !mongo-storage
+mongo-storage/toc
 *-session
 rperform-layout
 rperform-component

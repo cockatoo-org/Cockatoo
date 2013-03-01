@@ -143,10 +143,10 @@
 ]
 },
 "header":"<meta http-equiv=\"content-type\" content=\"text\/html; charset=utf-8\">\r\n<meta http-equiv=\"content-style-type\" content=\"text\/css\">\r\n<meta http-equiv=\"content-script-type\" content=\"text\/javascript\">\r\n\r\n\r\n\r\n\r\n",
-"@R":"1358844291",
+"@R":"1362105166",
 "_u":"",
 "pheader":"X-COCKATOO: 1.0\r\n",
-"expires":"3600",
+"expires":"0",
 "bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-1.7.2.min.js\"><\/script>\r\n<script type=\"text\/javascript\" src=\"\/_s_\/wiki\/default\/js\/jquery.upload-1.0.2.js\"><\/script>\r\n",
 "session_exp":"86400",
 "redirect":"\/wiki\/view"

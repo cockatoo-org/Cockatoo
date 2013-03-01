@@ -76,14 +76,18 @@ abstract class Action {
    * @param String $data session-data
    */
   protected function updateSession($data){
-    $this->updateSession = $data;
+    if ( $this->updateSession == null ) {
+      $this->updateSession = $data;
+    }else{
+      $this->updateSession = array_merge($this->updateSession,$data);
+    }
   }
   /**
    * Get session
    *
    * @return array session objcet
    */
-  protected function getSession(){
+  protected function &getSession(){
     if ( ! $this->session ) {
       $this->session = getSession($this->sessionID,$this->service);
     }
@@ -198,4 +202,5 @@ abstract class Action {
    *
    */
   public function postRun(){}
+
 }

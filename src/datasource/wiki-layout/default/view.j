@@ -1,11 +1,11 @@
 {
-"@R":"1334045614",
+"@R":"1362105341",
 "eredirect":"",
 "redirect":"",
 "pre_action":"action:\/\/wiki-action\/wiki\/PreAction",
 "post_action":"",
 "session_exp":"2147483647",
-"header":"<title>cockatoo-wiki: <?cs var:A.wiki.page.title?><\/title>\n",
+"header":"<title>cockatoo-wiki: <?cs var:A.wiki.page.title?><\/title>\r\n",
 "pheader":"",
 "layout":{
 "type":"HorizontalWidget",
@@ -33,6 +33,6 @@
 ]
 },
 "_u":"view",
-"expires":"60",
+"expires":"0",
 "bottom":""
 }
