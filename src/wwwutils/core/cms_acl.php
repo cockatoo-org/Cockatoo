@@ -85,7 +85,7 @@ class DefaultCmsAuth extends CmsAuth {
     return $this->account;
   }
   public function get_loginpage(){
-    return '/core/default/login?r=/_cms_/cms_page.php';
+    return '/core/login?r=/_cms_/cms_page.php';
   }
 }
 
