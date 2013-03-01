@@ -13,20 +13,20 @@ namespace Cockatoo;
 \ClassLoader::addClassPath(Config::COCKATOO_ROOT.'wwwutils/plugin');
 
 
-// TemplateSelector
 /**
  * Request URL parser base
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */
-abstract class RequestParser {
-  public static $instance;
+class RequestParser {
+  static public $instance;
   protected $header;
   protected $server;
   protected $get;
   protected $cookie;
   protected $reqpath;
 
+  public    $base;
   public    $service;
   public    $template;
   public    $path;
@@ -40,12 +40,13 @@ abstract class RequestParser {
    * @param Array $get    $_GET
    * @param Array $cookie $_COOKIE
    */
-  public function __construct(&$header,&$server,&$get,&$cookie){
+  public function __construct(&$base,&$header,&$server,&$get,&$cookie,&$reqpath){
+    $this->base   = &$base;
     $this->header = &$header;
     $this->server = &$server;
     $this->get    = &$get;
     $this->cookie = &$cookie;
-    $this->reqpath= &$get[Def::REWRITE_TOKEN];
+    $this->reqpath= &$reqpath;
   }
   /**
    * Parse
@@ -61,9 +62,6 @@ abstract class RequestParser {
    * @return Array Parsed array
    */
   public function parse() {
-//    if ( Config::APP_OCCUPATION ) {
-//      $this->reqpath = Config::APP_OCCUPATION.$this->reqpath;
-//    }
     $this->parseImpl();
   }
   /**
@@ -79,7 +77,9 @@ abstract class RequestParser {
    *
    * @return Array Parsed array
    */
-  abstract public function parseImpl();
+  public function parseImpl() {
+    throw new \Exception('Unexpect PATH:' . $this->reqpath);
+  }
   /**
    * Parse
    *
@@ -95,65 +95,24 @@ abstract class RequestParser {
   public function parseStatic(){
     if ( preg_match('@^'.Def::PATH_STATIC_PREFIX.'/?([^/]+)/([^/]+)(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
       $this->service      = $matches[1];
-      $this->template       = $matches[2];
+      $this->template     = $matches[2];
       $this->path         = $matches[3];
       return;
     }
     throw new \Exception('Unexpect PATH:' . $this->reqpath);
   }
-}
 
-/**
- * Default Request URL parser
- *
- * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
- */
-class DefaultRequestParser extends RequestParser {
-  public function parseImpl(){
-    if ( preg_match('@^/?([^/]+)/([^/]+)(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
-      $this->service      = $matches[1];
-      $this->template       = $matches[2];
-      $this->path         = $matches[3];
-      $this->session_path = '/' . $matches[1];
-      return;
-    }
-    throw new \Exception('Unexpect PATH:' . $this->reqpath);
-  }
-}
 
-/**
- * Template selector base
- *
- * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
- */
-abstract class TemplateSelector {
-  public static $instance;
   protected     $templateTree = array();
-  protected     $header;
-  protected     $server;
-  protected     $get;
-  protected     $cookie;
-  /**
-   * Constructor
-   *
-   * @param Array $header $_HEADER
-   * @param Array $server $_SERVER
-   * @param Array $get    $_GET
-   * @param Array $cookie $_COOKIE
-   */
-  public function __construct(&$header,&$server,&$get,&$cookie){
-    $this->header = &$header;
-    $this->server = &$server;
-    $this->get    = &$get;
-    $this->cookie = &$cookie;
-  }
   /**
    * Select template
    *
    * @param String $template  template
    * @return String template
    */
-  abstract public function select($template);
+  public function select($template) {
+    return $template;
+  }
   /**
    * Fallback template
    *
@@ -170,18 +129,24 @@ abstract class TemplateSelector {
 }
 
 /**
- * Default template selector base
+ * Default Request URL parser
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */
-class DefaultTemplateSelector extends TemplateSelector {
-  /**
-   * Selector
-   */
-  public function select($template) {
-    return $template;
-  }
-}
+//class DefaultRequestParser extends RequestParser {
+//  public function parseImpl(){
+//    if ( preg_match('@^/?([^/]+)/([^/]+)(?:/(.*))?$@', $this->reqpath , $matches ) !== 0 ) {
+//      $this->service      = $matches[1];
+//      $this->template     = $matches[2];
+//      $this->path         = $matches[3];
+//      $this->session_path = '/' . $matches[1];
+//      return;
+//    }
+//    throw new \Exception('Unexpect PATH:' . $this->reqpath);
+//  }
+//}
+
+
 
 /**
  * Parse
@@ -202,14 +167,17 @@ class DefaultTemplateSelector extends TemplateSelector {
  * @return Array Parsed array
  */
 function parseRequest(&$header,&$server,&$get,&$cookie){
-  if ( ! RequestParser::$instance ) {
-    $clazz = Config::RequestParser;
-    RequestParser::$instance = new $clazz($header,$server,$get,$cookie);
+  $reqpath = $get[Def::REWRITE_TOKEN];
+  $clazz = Config::$DefaultRequestParser;
+  $base  = '/';
+  foreach ( Config::$RequestParser as $k => $v)
+  if ( preg_match('@^('.$k.')(/.*)?$@', $reqpath , $matches ) !== 0 ){
+    $clazz = $v;
+    $base  = $k;
+    $reqpath = $matches[2];
   }
-  if ( ! TemplateSelector::$instance ) {
-    $clazz = Config::TemplateSelector;
-    TemplateSelector::$instance = new $clazz($header,$server,$get,$cookie);
-  }
+  RequestParser::$instance = new $clazz($base,$header,$server,$get,$cookie,$reqpath);
+ 
 
   // The mode of specifying the path as a query string (debug)
   if ( Config::Mode === Def::MODE_DEBUG and 
@@ -232,7 +200,7 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
 //  list($service,$template,$path,$args) = RequestParser::$instance->parse();
   RequestParser::$instance->parse();
   $service      = RequestParser::$instance->service;
-  $template       = RequestParser::$instance->template;
+  $template     = RequestParser::$instance->template;
   $path         = RequestParser::$instance->path;
   $args         = RequestParser::$instance->args;
   $session_path = RequestParser::$instance->session_path;
@@ -241,7 +209,7 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
   if ( strcmp($service,Def::RESERVED_SERVICE_CORE) === 0 ) {
   }elseif ( strcmp($template,Def::RESERVED_TEMPLATE_STATIC) === 0 ) {
   }else{
-    $template = TemplateSelector::$instance->select($template);
+    $template = RequestParser::$instance->select($template);
   }
 
   Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed    : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
@@ -267,10 +235,12 @@ function parseStaticRequest(&$header,&$server,&$get,&$cookie){
     return array($service,$template,$path,$args,'/');
   }
 
-  RequestParser::$instance = new DefaultRequestParser($header,$server,$get,$cookie);
+  $reqpath = $get[Def::REWRITE_TOKEN];
+  $base = '/';
+  RequestParser::$instance = new RequestParser($base,$header,$server,$get,$cookie,$reqpath);
   RequestParser::$instance->parseStatic();
   $service = RequestParser::$instance->service;
-  $template  = RequestParser::$instance->template;
+  $template= RequestParser::$instance->template;
   $path    = RequestParser::$instance->path;
  
   Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);

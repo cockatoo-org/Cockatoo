@@ -44,6 +44,7 @@ class ContentDrawer {
   protected $sessionID;
   protected $session;
   public    $expires;
+  protected $core;
   protected $hdf;
   protected $cs;
 
@@ -116,7 +117,7 @@ class ContentDrawer {
       if ( ! $datas[$this->baseLayoutBrl] ) {
         // Template not defined.
         Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback from : ' . $this->template);
-        $this->template = TemplateSelector::$instance->fallback($this->template);
+        $this->template = RequestParser::$instance->fallback($this->template);
         if ( $this->template ) {
           Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (D) Try to fallback to   : ' . $this->template);
           $this->debug('== BASE LAYOUT NOT FOUND ! (fallback to '.$this->template.') ==','',Def::RenderingModeDEBUG2);
@@ -140,7 +141,7 @@ class ContentDrawer {
       // Page layout
       if ( ! $datas[$this->layoutBrl] ) {
         Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback from : ' . $this->template);
-        $this->template = TemplateSelector::$instance->fallback($this->template);
+        $this->template = RequestParser::$instance->fallback($this->template);
         if ( $this->template ) {
           Log::info(__CLASS__ . '::' . __FUNCTION__ . ' : (P) Try to fallback to   : ' . $this->template);
           $this->debug('== LAYOUT NOT FOUND ! (fallback to '.$this->template.') ==','',Def::RenderingModeDEBUG2);
@@ -187,6 +188,23 @@ class ContentDrawer {
 
 
   public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
+    $scheme = (isset($SERVER['HTTPS'])?'https':'http');
+    $port = '';
+    if ( $scheme === 'https' && $SERVER['SERVER_PORT'] !== '443' ){
+      $port = ':'.$SERVER['SERVER_PORT'];
+    }else if ( $scheme === 'http' && $SERVER['SERVER_PORT'] !== '80' ){
+      $port = ':'.$SERVER['SERVER_PORT'];
+    }
+    $url = $scheme.'://'.$SERVER['HTTP_HOST'].$port.$SERVER['REQUEST_URI'];
+    $HEADER[Def::CS_CORE_FULLURL] = $url;
+    $HEADER[Def::CS_CORE_FULLEURL] = urlencode($url);
+    
+    $this->core = array (
+      Def::CS_CORE_BASE     => RequestParser::$instance->base,
+      Def::CS_CORE_FULLURL  => $HEADER[Def::CS_CORE_FULLURL],
+      Def::CS_CORE_FULLEURL => $HEADER[Def::CS_CORE_FULLEURL]
+      );
+    
     $this->now = time();
     if ( $this->sessionExp === Def::SESSION_NO_SESSION ) {
       // Nothing to do
@@ -226,6 +244,7 @@ class ContentDrawer {
     $this->session[Def::SESSION_KEY_FILES]  = $files;
     $this->session[Def::SESSION_KEY_TEMPLATE] = $this->template;
     $this->session[Def::SESSION_KEY_EXP]    = $exp;
+
     // Save
     setSession($this->sessionID,$this->service,$this->session);
   }
@@ -354,6 +373,9 @@ class ContentDrawer {
   public function prepareDraw() {
     // template variable (hdf)
     $this->hdf = \hdf_init();
+    if ( $this->core ) {
+      $this->array2hdf($this->core,$this->hdf,Def::CS_CORE);
+    }
     if ( is_array($this->preActionResults) && count($this->preActionResults) > 0 ) {
       foreach( $this->preActionResults as $brl => $rets ) {
         if( $rets) {

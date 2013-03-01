@@ -24,8 +24,11 @@ class Config extends DefaultConfig {
   /**
    * Request analizer
    */
-  const RequestParser     = 'Cockatoo\SampleRequestParser';
-  const TemplateSelector    = 'Cockatoo\SampleTemplateSelector'; 
+  static $DefaultRequestParser;
+  static $RequestParser;
+
+//  const RequestParser     = 'Cockatoo\SampleRequestParser';
+//  const TemplateSelector    = 'Cockatoo\SampleTemplateSelector'; 
 
   /**
    * CMS acl
@@ -87,5 +90,12 @@ class Config extends DefaultConfig {
 //    self::$UseZookeeper        = array('127.0.0.1:2181');
 //    self::$ZookeeperCacheFile  = self::COCKATOO_ROOT.'daemon/etc/zoo.json';
       //
+
+    self::$RequestParser = array (
+      '/core' => 'Cockatoo\CoreRequestParser',
+      '/wiki' => 'wiki\WikiRequestParser',
+      '/mongo' => 'mongo\MongoRequestParser'
+      );
+    self::$DefaultRequestParser = 'Cockatoo\DefaultRequestParser';
   }
 }
