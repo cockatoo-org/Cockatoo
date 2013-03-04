@@ -19,7 +19,7 @@ class DefaultRequestParser extends RequestParser {
       $this->session_path = '/'.$matches[1];
       return; // other application
     }elseif ( $this->reqpath === '/favicon.ico' ) {
-      moved_permanentry('/_s_/core/default/logo.png');
+      moved_permanently('/_s_/core/default/logo.png');
       return;
     }
     throw new \Exception('Unexpect PATH:' . $this->reqpath);

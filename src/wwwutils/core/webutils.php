@@ -94,7 +94,7 @@ class RedirectException extends \Exception{
  * @param String $location URL
  * @throw RedirectException
  */
-function moved_permanentry($location){
+function moved_permanently($location){
   http_301($location);
   throw new RedirectException('301 redirect : ' . $location);
 }
