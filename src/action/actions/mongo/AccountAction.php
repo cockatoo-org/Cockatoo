@@ -17,17 +17,24 @@ class AccountAction extends \Cockatoo\AccountAction {
   protected $REPLY_TO = MongoConfig::MAIL_FROM;
   protected $REDIRECT = 'main';
   protected $EREDIRECT = 'main';
-  public function proc(){
-    $session = $this->getSession();
-    if ( $session[\Cockatoo\AccountUtil::SESSION_LOGIN] ) {
-      $s[\Cockatoo\AccountUtil::SESSION_LOGIN] = null;
-      $this->updateSession($s);
-      $this->setMovedTemporary(MongoConfig::TOP_PAGE);
-    }else{
-      $user_data = \Cockatoo\AccountUtil::get_account($this->BASE_BRL,'admin');
-      $s[\Cockatoo\AccountUtil::SESSION_LOGIN] = $user_data;
-      $this->updateSession($s);
-      $this->setMovedTemporary(MongoConfig::TOP_PAGE);
-    }
+
+  protected function login_hook(&$user_data) {
+    return array(
+      'user' => 'admin',
+      'root' => '1',
+      'writable' => '1'
+      );
+//    return array(
+//      'user' => 'crumb',
+//      'writable' => '1'
+//      );
+  }
+  protected function already_hook(&$user_data) {
+    return null;
+  }
+  protected function first_hook() {
+    parent::first_hook();
+    $session =& $this->getSession();
+    $session[\Cockatoo\Def::SESSION_KEY_POST]['r'] = $session[\Cockatoo\Def::SESSION_KEY_REQ]['Referer'];
   }
 }

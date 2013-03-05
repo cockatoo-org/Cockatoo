@@ -1,0 +1,17 @@
+{
+"@R":"1362386348",
+"type":"HorizontalWidget",
+"subject":"getexampage",
+"description":"",
+"css":"",
+"js":"",
+"id":"",
+"class":"",
+"body":"",
+"action":[
+"action:\/\/mongo-action\/mongo\/ExamAction?get"
+],
+"header":"",
+"bottom":"",
+"_u":"t\/getexampage"
+}

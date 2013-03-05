@@ -7,6 +7,7 @@ class AccountUtil {
   const KEY_HASH    ='hash';
   const KEY_EMAIL   ='email';
   const KEY_ROOT    ='root';
+  const KEY_WRITABLE='writable';
   const KEY_EXPIRES ='expires';
 
   const SESSION_LOGIN='login';

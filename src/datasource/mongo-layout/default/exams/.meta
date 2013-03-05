@@ -1,5 +1,5 @@
 {
-"@R":"1361859456",
+"@R":"1362373369",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
@@ -35,7 +35,7 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/e\/geteventpage",
+"component":"component:\/\/mongo-component\/default\/t\/getexampage",
 "children":[
 
 ]
@@ -48,12 +48,12 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/e\/eventpage",
+"component":"component:\/\/mongo-component\/default\/t\/exampage",
 "children":[
 
 ]
 }
 ]
 },
-"_u":"events\/"
+"_u":"exams\/"
 }

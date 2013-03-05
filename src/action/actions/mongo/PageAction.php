@@ -21,7 +21,7 @@ class PageAction extends \Cockatoo\Action {
       $this->setNamespace('mongo');
       $session = $this->getSession();
 
-      $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
+      $user  = Lib::user($session);
       $page   = $this->args['P'];
       $name   = $this->args['N'];
       // Query strings
@@ -52,9 +52,7 @@ class PageAction extends \Cockatoo\Action {
                                 $parser->parse(),
                                 $user));
       }elseif( $op === 'save' ) {
-        if ( ! $user ) {
-          throw new \Exception('You have to login before update mongo !!');
-        }
+        Lib::isRoot($session);
         $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
         $lines = explode("\n",$origin);
         $parser = new PageParser($page,$lines);
@@ -63,13 +61,10 @@ class PageAction extends \Cockatoo\Action {
                            $parser->parse(),
                            $user);
         Lib::save_page($page,$pdata);
-        // $this->save_history($page,$user,'EDIT');
         $this->setMovedTemporary('/mongo/'.$page);
         return array();
       }elseif( $op === 'move' ) {
-        if ( ! $user ) {
-          throw new \Exception('You have to login before update mongo !!');
-        }
+        Lib::isRoot($session);
         $new = $session[\Cockatoo\Def::SESSION_KEY_POST]['new'];
         if ( $new ) {
           $pdata = Lib::get_page($page);
@@ -81,7 +76,6 @@ class PageAction extends \Cockatoo\Action {
             Lib::save_page($new,$pdata);
             $this->move_image($new,$page);
             Lib::remove_page($page);
-            // $this->save_history($new,$user,'MOVE from ' . $page ) ;
             $this->setMovedTemporary('/mongo/'.$new);
             return array();
           }
@@ -118,15 +112,6 @@ class PageAction extends \Cockatoo\Action {
     $ret = \Cockatoo\BeakController::beakQuery($olds);
   }
 
-/*
-  private function save_history($page,$user,$op){
-    $now = time();
-    $str_now = strftime('%Y/%m/%d %H:%M:%S',$now);
-    $history = array('time' => $str_now, 'title' => $page , 'author' => $user , 'op' => $op);
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','hist',$now,\Cockatoo\Beak::M_SET,array(),array());
-    $bret = \Cockatoo\BeakController::beakSimpleQuery($brl,$history);
-  }
-*/
   public function postProc(){
   }
 }

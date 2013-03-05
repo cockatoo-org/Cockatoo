@@ -2,7 +2,7 @@
 namespace mongo;
 require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
 /**
- * GetEventAction.php - ????
+ * EventAction.php - ????
  *  
  * @package ????
  * @access public
@@ -19,7 +19,7 @@ class EventAction extends \Cockatoo\Action {
       // 
       $this->setNamespace('mongo');
       $session = $this->getSession();
-      $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
+      $user  = Lib::user($session);
       $eventid   = $this->args['E'];
 
       if ( $this->method === \Cockatoo\Beak::M_GET ) {
@@ -27,22 +27,23 @@ class EventAction extends \Cockatoo\Action {
         if ( $edata ) {
           return array( 'event' => $edata);
         }
-        $origin = '*New';
-        $contents = array(array('tag' => 'h2','attr'=>array(),'children' => array(array('tag'=>'text' , 'text' => 'New'))));
-        return array( 'event' => array(
-                        'eventid' => 'new',
-                        'origin' => $origin,
-                        'contents' => $contents,
-                        'owner' => $user
-                        ));
+        return null;
       }elseif( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {
         $events = Lib::get_events();
         return array('events' => $events);
       }elseif( $this->method === \Cockatoo\Beak::M_SET ) {
-        if ( ! $user ) {
-          throw new \Exception('You have to login before update mongo !!');
-        }
+        Lib::isWritable($session);
         $op = $session[\Cockatoo\Def::SESSION_KEY_POST]['op'];
+        if ( ! $op ) {
+          $origin = '*New';
+          $contents = array(array('tag' => 'h2','attr'=>array(),'children' => array(array('tag'=>'text' , 'text' => 'New'))));
+          return array( 'event' => array(
+                          'eventid' => 'new',
+                          'origin' => $origin,
+                          'contents' => $contents,
+                          'owner' => $user
+                          ));
+        }
         if( $op === 'preview' ) {
           $edata = $session[\Cockatoo\Def::SESSION_KEY_POST];
           $origin   = $edata['origin'];

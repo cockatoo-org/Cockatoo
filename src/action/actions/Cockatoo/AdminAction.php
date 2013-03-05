@@ -64,7 +64,11 @@ class AdminAction extends Action {
             $user_data[AccountUtil::KEY_HASH]   = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_HASH];
           }
           $user_data[AccountUtil::KEY_EMAIL] = ($session[Def::SESSION_KEY_POST][AccountUtil::KEY_EMAIL])?$session[Def::SESSION_KEY_POST][AccountUtil::KEY_EMAIL]:'';
+          $user_data[AccountUtil::KEY_WRITABLE]  = isset($session[Def::SESSION_KEY_POST][AccountUtil::KEY_WRITABLE])?'1':'';
           $user_data[AccountUtil::KEY_ROOT]  = isset($session[Def::SESSION_KEY_POST][AccountUtil::KEY_ROOT])?'1':'';
+          if ( $user_data[AccountUtil::KEY_ROOT] === '1' ) {
+            $user_data[AccountUtil::KEY_WRITABLE] = '1';
+          }
 
           if ( ! $user_data[AccountUtil::KEY_HASH] ) {
             $user_data[AccountUtil::KEY_PASSWD] = AccountUtil::mkpasswd();
