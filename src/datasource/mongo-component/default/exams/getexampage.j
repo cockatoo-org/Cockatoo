@@ -1,5 +1,5 @@
 {
-"@R":"1362386348",
+"@R":"1362554489",
 "type":"HorizontalWidget",
 "subject":"getexampage",
 "description":"",
@@ -13,5 +13,5 @@
 ],
 "header":"",
 "bottom":"",
-"_u":"t\/getexampage"
+"_u":"exams\/getexampage"
 }

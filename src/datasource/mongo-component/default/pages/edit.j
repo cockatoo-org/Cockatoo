@@ -11,7 +11,7 @@
 "action":[
 "action:\/\/mongo-action\/mongo\/PageAction?get"
 ],
-"_u":"w\/edit",
+"_u":"pages\/edit",
 "header":"",
 "bottom":""
 }

@@ -13,5 +13,5 @@
 ],
 "header":"",
 "bottom":"",
-"_u":"t\/exampage"
+"_u":"exams\/exampage"
 }

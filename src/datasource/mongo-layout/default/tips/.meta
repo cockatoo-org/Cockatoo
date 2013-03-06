@@ -1,12 +1,12 @@
 {
-"@R":"1361782659",
+"@R":"1361859456",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"",
-"header":"<title>MongoDB JP : <?cs var:A.mongo.page.title?><\/title>\r\n",
+"header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
 "bottom":"",
 "layout":{
@@ -34,13 +34,8 @@
 },
 {
 "type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/tips\/tips",
+"component":"component:\/\/mongo-component\/default\/tips\/gettippage",
 "children":[
 
 ]
@@ -53,25 +48,12 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/pages\/getpage",
-"children":[
-
-]
-},
-{
-"type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
-"extra":"",
-"component":"component:\/\/mongo-component\/default\/pages\/page",
+"component":"component:\/\/mongo-component\/default\/tips\/tippage",
 "children":[
 
 ]
 }
 ]
 },
-"_u":"tips"
+"_u":"tips\/"
 }

@@ -35,7 +35,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/t\/exampage",
+"component":"component:\/\/mongo-component\/default\/exams\/exampage",
 "children":[
 
 ]
@@ -48,7 +48,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/t\/examedit",
+"component":"component:\/\/mongo-component\/default\/exams\/examedit",
 "children":[
 
 ]

@@ -13,6 +13,8 @@ require_once(\Cockatoo\Config::COCKATOO_ROOT.'action/Action.php');
  */
 
 class ExamAction extends \Cockatoo\Action {
+  private static $EREDIRECT = '/mongo/exams';
+
   public function proc(){
     static $NUM_QUESTION  = 10;
     static $NUM_CANDIDATE = 4;
@@ -27,8 +29,8 @@ class ExamAction extends \Cockatoo\Action {
       if ( $this->method === \Cockatoo\Beak::M_GET ) {
         $op = $post['op'];
         if ( $op === 'eval' ) {
-          $edata = $session['exam'];
-          $qs =& $edata['qs'];
+          $data = $session['exam'];
+          $qs =& $data['qs'];
           
           $all = sizeof($qs);
           $correct = 0;
@@ -39,15 +41,15 @@ class ExamAction extends \Cockatoo\Action {
               $e['checked'] = $post['q'.$i.'a'];
               $e['show'] = 'show';
             });
-          $edata['score'] = floor(100*$correct/$all);
-          $edata['done'] = '1';
+          $data['score'] = floor(100*$correct/$all);
+          $data['done'] = '1';
           $s['exam'] = null;
           $this->updateSession($s);
-          return array( 'exam' => $edata);
+          return array( 'exam' => $data);
         }else{
-          $edata = Lib::get_exam($examid);
-          if ( $edata ) {
-            $qs = array_filter($edata['qs'],function ($e) {
+          $data = Lib::get_exam($session,$examid);
+          if ( $data ) {
+            $qs = array_filter($data['qs'],function ($e) {
                 return (boolean)$e['show'];
               });
             array_walk($qs,function(&$e){
@@ -61,26 +63,29 @@ class ExamAction extends \Cockatoo\Action {
                 }
               });
             shuffle($qs);
-            $qs = array_slice($qs,0,$edata['qnum']);
+            $qs = array_slice($qs,0,$data['qnum']);
             $qs[sizeof($qs)-1]['last'] = 1;
-            $edata['qs'] = $qs;
-            $s['exam'] = $edata;
+            $data['qs'] = $qs;
+            $s['exam'] = $data;
             $this->updateSession($s);
-            return array( 'exam' => $edata);
+            return array( 'exam' => $data);
           }
         }
+        $this->setMovedTemporary(self::$EREDIRECT);
         return null;
       }elseif( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {
-        $exams = Lib::get_exams();
-        return array('exams' => $exams);
+        $datas = Lib::get_exams($session);
+        return array('exams' => $datas);
       }elseif( $this->method === \Cockatoo\Beak::M_SET ) {
-        Lib::isWritable($session);
+        if ( ! Lib::isWritable($session) ) {
+          throw new \Exception('You do not have write permission.');
+        }
         $op = $post['op'];
         if ( ! $op ) {
-          $edata = Lib::get_exam($examid);
-          if ( $edata ) {
-            $edata['done'] = '1';
-            return array( 'exam' => $edata);
+          $data = Lib::get_exam($session,$examid);
+          if ( $data ) {
+            $data['done'] = '1';
+            return array( 'exam' => $data);
           }
           $qname = 'new';
           $qs = null;
@@ -102,20 +107,21 @@ class ExamAction extends \Cockatoo\Action {
                           'owner' => $user
                           ));
         }
-        $public = $post['public'];
+        $public  = $post['public'];
         $qname   = $post['qname'];
         $qnum    = $post['qnum'];
         $qsummary= $post['qsummary'];
         $examid  = $post['examid'];
+        $owner   = $post['owner'];
         $qs = null;
         for( $i = 0 ; $i < $NUM_QUESTION ; $i++ ) {
           $origin   = $post['q'.$i];
-          $lines    = explode("\n",$origin);
+          $lines    = preg_split("@\r?\n@",$origin);
           $parser   = new PageParser($qname,$lines);
           $contents =  $parser->parse();
           $answer   = $post['q'.$i.'a'];
           $eorigin   = $post['q'.$i.'e'];
-          $lines    = explode("\n",$eorigin);
+          $lines    = preg_split("@\r?\n@",$eorigin);
           $parser   = new PageParser($qname,$lines);
           $explanation =  $parser->parse();
           $candidates = null;
@@ -133,23 +139,23 @@ class ExamAction extends \Cockatoo\Action {
             's' => array_merge(array($answer),$candidates)
             );
         }
-        $edata = array(
+        $data = array(
           'public' => $public,
           'examid' => $examid,
           'qname' => $qname,
           'qnum' => $qnum,
           'qsummary' => $qsummary,
           'qs' => $qs,
-          'owner' => $user);
+          'owner' => $owner);
 
         if( $op === 'preview' ) {
-          $edata['done'] = '1';
-          return array( 'exam' => $edata);
+          $data['done'] = '1';
+          return array( 'exam' => $data);
         }elseif( $op === 'save' ) {
           $prev_examid = $examid;
           $examid = uniqid();
-          $edata['examid'] = $examid;
-          Lib::save_exam($examid,$edata);
+          $data['examid'] = $examid;
+          Lib::save_exam($examid,$data);
           Lib::remove_exam($prev_examid);
           $this->setMovedTemporary('/mongo/exams/'.$examid);
           return array();
@@ -158,7 +164,7 @@ class ExamAction extends \Cockatoo\Action {
     }catch ( \Exception $e ) {
       $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
       $this->updateSession($s);
-      $this->setMovedTemporary('/mongo/exams');
+      $this->setMovedTemporary(self::$EREDIRECT);
        \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }

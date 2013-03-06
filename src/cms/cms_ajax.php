@@ -39,7 +39,7 @@ $post_action = $_sP['post_action'];
 $header = $_sP['header'];
 $bottom = $_sP['bottom'];
 $pheader = '';
-foreach ( explode("\n",$_sP['pheader']) as $p ) {
+foreach ( preg_split("@\r?\n@",$_sP['pheader']) as $p ) {
   if ( preg_match('@^\s*$@',$p,$matches) === 0 ) {
     $pheader .= $p . "\n";
   }
@@ -55,7 +55,7 @@ $id           = $_sP['id'];
 $class        = $_sP['clazz'];
 $body         = $_sP['body'];
 $bin          = $_sP['bin'];
-$actions      = explode("\n",$_sP['actions']);
+$actions      = preg_split("@\r?\n@",$_sP['actions']);
 $check        = $_sP['brl'];
 $r;
 $emsg='';

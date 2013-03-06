@@ -45,7 +45,7 @@ class PageAction extends \Cockatoo\Action {
         }
       }elseif( $op === 'preview' ) {
         $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
-        $lines = explode("\n",$origin);
+        $lines = preg_split("@\r?\n@",$origin);
         $parser = new WikiParser($page,$lines);
         return array( 'page' => 
                       Lib::page($page,
@@ -57,7 +57,7 @@ class PageAction extends \Cockatoo\Action {
           throw new \Exception('You have to login before update wiki !!');
         }
         $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
-        $lines = explode("\n",$origin);
+        $lines = preg_split("@\r?\n@",$origin);
         $parser = new WikiParser($page,$lines);
         $pdata = Lib::page($page,
                            $origin,
@@ -76,7 +76,7 @@ class PageAction extends \Cockatoo\Action {
           $pdata = Lib::get_page($page);
           if ( $pdata ) {
             $pdata['title'] = $new;
-            $lines = explode("\n",$pdata['origin']);
+            $lines = preg_split("@\r?\n@",$pdata['origin']);
             $parser = new WikiParser($page,$lines);
             $pdata['contents'] = $parser->parse();
             Lib::save_page($new,$pdata);

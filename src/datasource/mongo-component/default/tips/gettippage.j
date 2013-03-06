@@ -1,7 +1,7 @@
 {
 "@R":"1362386336",
 "type":"HorizontalWidget",
-"subject":"geteventpage",
+"subject":"gettippage",
 "description":"",
 "css":"",
 "js":"",
@@ -9,9 +9,9 @@
 "class":"",
 "body":"",
 "action":[
-"action:\/\/mongo-action\/mongo\/EventAction?get"
+"action:\/\/mongo-action\/mongo\/TipAction?get"
 ],
 "header":"",
 "bottom":"",
-"_u":"e\/geteventpage"
+"_u":"tips\/gettippage"
 }

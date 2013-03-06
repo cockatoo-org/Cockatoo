@@ -35,7 +35,7 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/e\/geteventpage",
+"component":"component:\/\/mongo-component\/default\/events\/geteventpage",
 "children":[
 
 ]
@@ -48,7 +48,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/e\/eventpage",
+"component":"component:\/\/mongo-component\/default\/events\/eventpage",
 "children":[
 
 ]

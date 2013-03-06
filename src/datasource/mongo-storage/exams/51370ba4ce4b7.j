@@ -1,6 +1,6 @@
 {
 "public":"on",
-"examid":"5135b504417ad",
+"examid":"51370ba4ce4b7",
 "qname":"ReplicaSet \u57fa\u790e\u7de8\uff08\u57fa\u790e\u3058\u3083\u306a\u3044\u30fb\u30fb\u30fb\uff09",
 "qnum":"5",
 "qsummary":"ReplicaSet \u306e\u57fa\u790e\u77e5\u8b58\u306e\u554f\u984c\u96c6\u3067\u3059\u3002",
@@ -1872,6 +1872,6 @@
 ]
 }
 ],
-"owner":"crumb",
-"_u":"5135b504417ad"
+"owner":"admin",
+"_u":"51370ba4ce4b7"
 }

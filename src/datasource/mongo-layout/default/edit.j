@@ -34,7 +34,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/w\/edit?get",
+"component":"component:\/\/mongo-component\/default\/pages\/edit?get",
 "children":[
 
 ]
@@ -47,7 +47,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/w\/page?get",
+"component":"component:\/\/mongo-component\/default\/pages\/page?get",
 "children":[
 
 ]
@@ -60,7 +60,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/editpage?get",
+"component":"component:\/\/mongo-component\/default\/pages\/editpage?get",
 "children":[
 
 ]

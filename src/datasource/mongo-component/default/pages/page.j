@@ -11,7 +11,7 @@
 "action":[
 ""
 ],
-"_u":"w\/page",
+"_u":"pages\/page",
 "header":"",
 "bottom":""
 }

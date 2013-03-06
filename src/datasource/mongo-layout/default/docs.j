@@ -35,7 +35,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/getpage",
+"component":"component:\/\/mongo-component\/default\/pages\/getpage",
 "children":[
 
 ]
@@ -48,7 +48,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/w\/page",
+"component":"component:\/\/mongo-component\/default\/pages\/page",
 "children":[
 
 ]

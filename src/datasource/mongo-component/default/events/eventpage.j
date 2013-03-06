@@ -13,5 +13,5 @@
 ],
 "header":"",
 "bottom":"<script src=\"https:\/\/maps.googleapis.com\/maps\/api\/js?v=3.exp&sensor=false&libraries=places\"><\/script>",
-"_u":"e\/eventpage"
+"_u":"events\/eventpage"
 }

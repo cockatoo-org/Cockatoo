@@ -13,5 +13,5 @@
 ],
 "header":"",
 "bottom":"",
-"_u":"t\/exams"
+"_u":"exams\/exams"
 }

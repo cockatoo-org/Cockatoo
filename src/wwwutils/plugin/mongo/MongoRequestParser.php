@@ -42,6 +42,12 @@ class MongoRequestParser extends \Cockatoo\DefaultRequestParser {
       }elseif ( preg_match('@^exams/(.*)?$@', $reqpath , $matches ) !== 0 ) {
         $this->path = 'exams/';
         $this->args['E'] = $matches[1];
+      }elseif ( preg_match('@^tips/edit/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'tips/edit';
+        $this->args['E'] = $matches[1];
+      }elseif ( preg_match('@^tips/(.*)?$@', $reqpath , $matches ) !== 0 ) {
+        $this->path = 'tips/';
+        $this->args['E'] = $matches[1];
       }else{ 
         $this->path = $reqpath;
         $this->args['P'] = $reqpath;

@@ -44,7 +44,7 @@ class PageAction extends \Cockatoo\Action {
                                 $user));
       }elseif( $op === 'preview' ) {
         $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
-        $lines = explode("\n",$origin);
+        $lines = preg_split("@\r?\n@",$origin);
         $parser = new PageParser($page,$lines);
         return array( 'page' => 
                       Lib::page($page,
@@ -52,9 +52,11 @@ class PageAction extends \Cockatoo\Action {
                                 $parser->parse(),
                                 $user));
       }elseif( $op === 'save' ) {
-        Lib::isRoot($session);
+        if ( ! Lib::isRoot($session) ) {
+          throw new \Exception('You are not admin.');
+        }
         $origin   = $session[\Cockatoo\Def::SESSION_KEY_POST]['origin'];
-        $lines = explode("\n",$origin);
+        $lines = preg_split("@\r?\n@",$origin);
         $parser = new PageParser($page,$lines);
         $pdata = Lib::page($page,
                            $origin,
@@ -64,13 +66,15 @@ class PageAction extends \Cockatoo\Action {
         $this->setMovedTemporary('/mongo/'.$page);
         return array();
       }elseif( $op === 'move' ) {
-        Lib::isRoot($session);
+        if ( ! Lib::isRoot($session) ) {
+          throw new \Exception('You are not admin.');
+        }
         $new = $session[\Cockatoo\Def::SESSION_KEY_POST]['new'];
         if ( $new ) {
           $pdata = Lib::get_page($page);
           if ( $pdata ) {
             $pdata['title'] = $new;
-            $lines = explode("\n",$pdata['origin']);
+            $lines = preg_split("@\r?\n@",$pdata['origin']);
             $parser = new PageParser($page,$lines);
             $pdata['contents'] = $parser->parse();
             Lib::save_page($new,$pdata);

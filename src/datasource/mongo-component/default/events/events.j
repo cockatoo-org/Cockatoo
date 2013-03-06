@@ -13,5 +13,5 @@
 ],
 "header":"",
 "bottom":"",
-"_u":"e\/events"
+"_u":"events\/events"
 }

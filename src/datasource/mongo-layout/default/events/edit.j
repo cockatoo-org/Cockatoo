@@ -30,7 +30,7 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/e\/eventpage",
+"component":"component:\/\/mongo-component\/default\/events\/eventpage",
 "children":[
 
 ]
@@ -38,7 +38,7 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/e\/eventedit",
+"component":"component:\/\/mongo-component\/default\/events\/eventedit",
 "children":[
 
 ]

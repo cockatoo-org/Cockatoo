@@ -414,7 +414,7 @@ class ContentDrawer {
         $this->pheader = cs_render($this->cs);
         cs_destroy($this->cs);
       }    
-      foreach ( explode("\n",$this->pheader) as $line ) {
+      foreach ( preg_split("@\r?\n@",$this->pheader) as $line ) {
         if ( $line ) {
           header($line);
         }
@@ -529,7 +529,7 @@ class ContentDrawer {
   public function drawJson() {
     $data = array();
     $template = $this->widget->drawWalk();
-    foreach( explode("\n",$template) as $key ) {
+    foreach( preg_split("@\r?\n@",$template) as $key ) {
       list($key,$name) = explode(' ',$key);
       if ( preg_match('@^\s*$@',$key,$matches) === 0 ) {
         if ( $name === null or $name === '' ){
@@ -545,7 +545,7 @@ class ContentDrawer {
   public function drawBinary() {
     $content = null;
     $template = $this->widget->drawWalk();
-    foreach( explode("\n",$template) as $key ) {
+    foreach( preg_split("@\r?\n@",$template) as $key ) {
       if ( preg_match('@^\s*$@',$key,$matches) === 0 ) {
         $content = $this->findResults($key,strlen($key));
         break;

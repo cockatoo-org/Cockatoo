@@ -1,9 +1,9 @@
 {
-"@R":"1361769570",
+"@R":"1362550927",
 "type":"HorizontalWidget",
 "subject":"notation",
 "description":"notation",
-"css":"table {\r\n  border: 2px solid #2020E0;\r\n}\r\ntable th{\r\n  border-bottom: 2px solid #2020E0;\r\n  border-right: 1px solid #2020E0;\r\n}\r\ntable td{\r\n  border-bottom: 1px solid #2020E0;\r\n  border-right: 1px solid #2020E0;\r\n  vertical-align: top;\r\n}\r\npre.syn {\r\n  border: 1px dashed #808080;\r\n  padding: 5px;\r\n  margin: 0;\r\n}\r\npre.ex {\r\n  border: 1px dashed #808080;\r\n  padding: 5px;\r\n  margin: 0;\r\n}\r\ndiv.page  {\r\n  padding: 5px;\r\n  border: 1px dashed #808080;\r\n  color: #101010;\r\n  line-height: 1.5em;\r\n}\r\n\r\n",
+"css":"table {\r\n  border: 2px solid #bbbbbb;\r\n}\r\ntable th{\r\n  border-bottom: 2px solid #bbbbbb;\r\n  border-right: 1px solid #bbbbbb;\r\n}\r\ntable td{\r\n  border-bottom: 1px solid #bbbbbb;\r\n  border-right: 1px solid #bbbbbb;\r\n  vertical-align: top;\r\n}\r\npre.syn {\r\n  border: 1px dashed #402817;\r\n  padding: 5px;\r\n  margin: 0;\r\n}\r\npre.ex {\r\n  border: 1px dashed #402817;\r\n  padding: 5px;\r\n  margin: 0;\r\n}\r\ndiv.page  {\r\n  padding: 5px;\r\n  border: 1px dashed #402817;\r\n  color: #101010;\r\n  line-height: 1.5em;\r\n}\r\n\r\n",
 "js":"",
 "id":"",
 "class":"",

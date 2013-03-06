@@ -22,7 +22,7 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/t\/exams",
+"component":"component:\/\/mongo-component\/default\/exams\/exams",
 "children":[
 
 ]

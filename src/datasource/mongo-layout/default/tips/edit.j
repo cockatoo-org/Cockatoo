@@ -1,9 +1,9 @@
 {
-"@R":"1362373369",
-"eredirect":"",
+"@R":"1361857427",
+"eredirect":"\/mongo\/tips",
 "redirect":"",
 "pre_action":"",
-"post_action":"",
+"post_action":"action:\/\/mongo-action\/mongo\/TipAction?set",
 "session_exp":"2147483647",
 "expires":"",
 "header":"<meta name=\"description\" content=\"\">\r\n",
@@ -21,11 +21,6 @@
 "children":[
 {
 "type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
 "extra":"",
 "component":"component:\/\/mongo-component\/default\/utils\/page",
 "children":[
@@ -35,25 +30,20 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/exams\/getexampage",
+"component":"component:\/\/mongo-component\/default\/tips\/tippage",
 "children":[
 
 ]
 },
 {
 "type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/exams\/exampage",
+"component":"component:\/\/mongo-component\/default\/tips\/tipedit",
 "children":[
 
 ]
 }
 ]
 },
-"_u":"exams\/"
+"_u":"tips\/edit"
 }

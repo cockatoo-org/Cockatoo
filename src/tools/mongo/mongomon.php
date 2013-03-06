@@ -81,7 +81,7 @@ class MongoMon {
       // Parse
       $flg = 0;
       $stat = '';
-      foreach( explode("\n",$str) as $line ) {
+      foreach( preg_split("@\r?\n@",$str) as $line ) {
         if ( preg_match('@{@',$line,$matches) !== 0 and ! $flg) {
           $flg = 1;
           $stat = '{';

@@ -10,13 +10,13 @@ class Lib {
          $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_WRITABLE] ) {
       return true;
     }
-    throw new \Exception('You do not have write permission.');
+    return false;
   }
   static function isRoot(&$session) {
     if ( $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_ROOT] ) {
       return true;
     }
-    throw new \Exception('You are not admin.');
+    return false;
   }
 
   # Page
@@ -48,21 +48,30 @@ class Lib {
     throw new \Exception('Cannot save it ! Probably storage error...');
   }
 
-  static function get_event($eventid){
+  static function get_event(&$session,$eventid){
     $eventid = \Cockatoo\UrlUtil::urlencode($eventid);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','events','/'.$eventid,\Cockatoo\Beak::M_GET,array(),array());
-    $edata = \Cockatoo\BeakController::beakSimpleQuery($brl);
-    return $edata;
+    $data = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( $data &&
+         ( Lib::isRoot($session) || (boolean)$data['public'] || $data['owner'] === Lib::user($session) ) ) {
+      return $data;
+    }
+    return $data;
   }
-  static function get_events(){
+  static function get_events(&$session){
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','events','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-    $events = \Cockatoo\BeakController::beakSimpleQuery($brl);
-    return $events;
+    $datas = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( ! Lib::isRoot($session) ) {
+      $datas = array_filter($datas,function ($e) use (&$session) {
+          return (boolean)$e['public'] || $e['owner'] === Lib::user($session);
+        });
+    }
+    return $datas;
   }
-  static function save_event($eventid,&$edata){
+  static function save_event($eventid,&$data){
     $eventid = \Cockatoo\UrlUtil::urlencode($eventid);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','events','/'.$eventid,\Cockatoo\Beak::M_SET,array(),array());
-    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$edata);
+    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$data);
     if ( $ret ) {
       return $ret;
     }
@@ -79,21 +88,30 @@ class Lib {
   }
 
 
-  static function get_exam($examid){
+  static function get_exam(&$session,$examid){
     $examid = \Cockatoo\UrlUtil::urlencode($examid);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','exams','/'.$examid,\Cockatoo\Beak::M_GET,array(),array());
-    $edata = \Cockatoo\BeakController::beakSimpleQuery($brl);
-    return $edata;
+    $data = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( $data &&
+         ( Lib::isRoot($session) || (boolean)$data['public'] || $data['owner'] === Lib::user($session) ) ) {
+      return $data;
+    }
+    return null;
   }
-  static function get_exams(){
+  static function get_exams(&$session){
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','exams','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
-    $exams = \Cockatoo\BeakController::beakSimpleQuery($brl);
-    return $exams;
+    $datas = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( ! Lib::isRoot($session) ) {
+      $datas = array_filter($datas,function ($e) use (&$session) {
+          return (boolean)$e['public'] || $e['owner'] === Lib::user($session);
+        });
+    }
+    return $datas;
   }
-  static function save_exam($examid,&$edata){
+  static function save_exam($examid,&$data){
     $examid = \Cockatoo\UrlUtil::urlencode($examid);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','exams','/'.$examid,\Cockatoo\Beak::M_SET,array(),array());
-    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$edata);
+    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$data);
     if ( $ret ) {
       return $ret;
     }
@@ -109,4 +127,42 @@ class Lib {
     throw new \Exception('Cannot save it ! Probably storage error...');
   }
 
+  static function get_tip(&$session,$tipid){
+    $tipid = \Cockatoo\UrlUtil::urlencode($tipid);
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','tips','/'.$tipid,\Cockatoo\Beak::M_GET,array(),array());
+    $data = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( $data &&
+         ( Lib::isRoot($session) || (boolean)$data['public'] || $data['owner'] === Lib::user($session) ) ) {
+      return $data;
+    }
+    return $data;
+  }
+  static function get_tips(&$session){
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','tips','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
+    $datas = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( ! Lib::isRoot($session) ) {
+      $datas = array_filter($datas,function ($e) use (&$session) {
+          return (boolean)$e['public'] || $e['owner'] === Lib::user($session);
+        });
+    }
+    return $datas;
+  }
+  static function save_tip($tipid,&$data){
+    $tipid = \Cockatoo\UrlUtil::urlencode($tipid);
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','tips','/'.$tipid,\Cockatoo\Beak::M_SET,array(),array());
+    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$data);
+    if ( $ret ) {
+      return $ret;
+    }
+    throw new \Exception('Cannot save it ! Probably storage error...');
+  }
+  static function remove_tip($tipid){
+    $tipid = \Cockatoo\UrlUtil::urlencode($tipid);
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'mongo','tips','/'.$tipid,\Cockatoo\Beak::M_DEL,array(),array());
+    $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    if ( $ret ) {
+      return $ret;
+    }
+    throw new \Exception('Cannot save it ! Probably storage error...');
+  }
 }

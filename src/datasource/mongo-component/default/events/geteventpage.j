@@ -1,7 +1,7 @@
 {
-"@R":"1361775547",
+"@R":"1362386336",
 "type":"HorizontalWidget",
-"subject":"getpage",
+"subject":"geteventpage",
 "description":"",
 "css":"",
 "js":"",
@@ -9,9 +9,9 @@
 "class":"",
 "body":"",
 "action":[
-"action:\/\/mongo-action\/mongo\/PageAction?get#cache#cexp=30"
+"action:\/\/mongo-action\/mongo\/EventAction?get"
 ],
 "header":"",
 "bottom":"",
-"_u":"getpage"
+"_u":"events\/geteventpage"
 }
