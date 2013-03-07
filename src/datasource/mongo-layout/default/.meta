@@ -41,7 +41,7 @@
 "type":"HorizontalWidget",
 "class":"side",
 "height":"",
-"width":"",
+"width":"150px",
 "min_height":"",
 "min_width":"",
 "extra":"",
