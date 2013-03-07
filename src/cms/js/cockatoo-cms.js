@@ -4,17 +4,76 @@
 	if (!this.length) {
 	  return;
 	}
-	return new $.CockatooList($(this),options);
+	var instance =  new $.CockatooList($(this),options);
+	$.CockatooList.instances[instance.id] = instance;
+	return instance;
       }
     });
 
     $.CockatooList = function (node,options) {
       var t = this;
-      t.root  = node;
+      t.id  = ++$.CockatooList.generator;
+      t.root   = node;
       t.settings = $.extend( {}, $.CockatooList.defaults, options );
       t.init();
+      $.CockatooList.select();
     };
     $.extend($.CockatooList, {
+      instances : [],
+      cursor : 1,
+      generator: 0,
+      space : function (){
+	var instance = this.instances[this.cursor];
+	instance.root.find('div.list > div[index="'+instance.cursor+'"] > a').click();
+      },
+      add : function (){
+	var instance = this.instances[this.cursor];
+	instance.root.find('h2 > div > a.add').click();
+      },
+      update : function (){
+	var instance = this.instances[this.cursor];
+	instance.root.find('h2 > div > a.update').click();
+      },
+      up : function (){
+	var instance = this.instances[this.cursor];
+	var length = instance.root.find('div.list > div').length;
+	if ( length == 0 ) {
+	  return;
+	}
+	if ( --instance.cursor < 0 ) {
+	  instance.cursor = length-1;
+	}
+	instance.root.find('div.list > div > a').removeClass('cursor');
+	instance.root.find('div.list > div[index="'+instance.cursor+'"] > a').addClass('cursor');
+      },
+      down : function (){
+	var instance = this.instances[this.cursor];
+	var length = instance.root.find('div.list > div').length;
+	if ( length == 0 ) {
+	  return;
+	}
+	if ( ++instance.cursor >= length ) {
+	  instance.cursor = 0;
+	}
+	instance.root.find('div.list > div > a').removeClass('cursor');
+	instance.root.find('div.list > div[index="'+instance.cursor+'"] > a').addClass('cursor');
+      },
+      next : function (){
+	if ( ++this.cursor > this.generator ) {
+	  this.cursor = 1;
+	}
+	this.select();
+      },
+      prev : function (){
+	if ( --this.cursor < 1 ) {
+	  this.cursor = this.generator;
+	}
+	this.select();
+      },
+      select : function (){
+	  $('h2[index]').next().removeClass('cursor');
+	  $('h2[index="'+this.cursor+'"]').next().addClass('cursor');
+      },
       defaults: {
 	custom1 : null,
 	get : null,
@@ -31,6 +90,8 @@
 	dialog : { width : 600 , height : 300 }
       },
       prototype: {
+	index: null,
+	cursor: -1,
 	root: null,
 	gen_form : function ( url,args,kind ) {
 	  var t = this;
@@ -88,7 +149,7 @@
 	  var t = this;
 	  t.root.css('width','' + t.settings.width + 'px');
 	  // Head
-	  t.root.append('<h2 class="ui-widget-header ui-corner-tr ui-corner-tl">' + t.settings.title + '<div></div></h2><div class="list"></div>');
+	  t.root.append('<h2 index="'+t.id+'" class="ui-widget-header ui-corner-tr ui-corner-tl">' + t.settings.title + '<div></div></h2><div class="list"></div>');
 	  t.root.append('<b class="message"></b>');
 	  // Custom1 button
 	  if (t.settings.custom1 ) {
@@ -237,6 +298,7 @@
 	  t.root.find('div.view div.value').text('');
 	  t.root.find('div.list > *').remove();
 	  delete(t.index);
+	  t.cursor = -1;
 	  t.settings.reset();
 	},
 	relist: function () {
@@ -281,23 +343,30 @@
 	    }
 	  }
 	  nkeys.sort();
+	  var id = 0;
 	  for ( k in nkeys ) {
 	    n = nkeys[k];
-	    html += '<div class="'+ndata[n].dc+'" index="'+ndata[n].i+'"><a class="'+ndata[n].c+'" index="'+ndata[n].i+'">'+ndata[n].p+'</a></div>';
+	    html += '<div class="'+ndata[n].dc+'" index="'+(id++)+'"><a class="'+ndata[n].c+'" index="'+ndata[n].i+'">'+ndata[n].p+'</a></div>';
+	    //html += '<div class="'+ndata[n].dc+'" index="'+ndata[n].i+'"><a class="'+ndata[n].c+'" index="'+ndata[n].i+'">'+ndata[n].p+'</a></div>';
 	  }
 	  t.root.find('div.list').append(html);
 	  t.root.find('div.list > div.P').click( function (ev){
-	    selector = 'div.list > div.' + $(this).text().replaceAll('/','\\/').replaceAll(':','\\:').replaceAll('\.','\\\.');
-	    t.root.find(selector).show();
+	    if ( $(this).text() ) {
+	      selector = 'div.list > div.' + $(this).text().replaceAll('/','\\/').replaceAll(':','\\:').replaceAll('\.','\\\.');
+	      t.root.find(selector).show();
+	    }
 	  });
 
 	  t.root.find('div.list > div > a').not('[index="-"]').click(function(ev){
-	    if ( !$(this).hasClass('selected')){
+	    if ( $(this).text() ) {
+//	    if ( !$(this).hasClass('selected')){
 	      t.root.find('div.list > div > a').removeClass('selected');
 		$(this).addClass('selected');
 	      t.index = $(this).attr('index');
+	      t.cursor = $(this).parent().attr('index');
 	      t.view();
 	      t.settings.change(t.data[t.index]);
+//	    }
 	    }
 	  });
 	},
@@ -444,6 +513,44 @@
 	}
       }
     });
+    $(window).keydown(function(e){
+      if ( e.ctrlKey == true ) {
+	if       ( e.which == 40 ) { // down
+	  $.CockatooList.down();
+	}else if ( e.which == 38 ) { // up
+	  $.CockatooList.up();
+	}else if ( e.which == 37 ) { // left
+	  $.CockatooList.prev();
+	}else if ( e.which == 39 ) { // right
+	  $.CockatooList.next();
+	}else if ( e.which == 32 ) { // space
+	  $.CockatooList.space();
+	}else if ( e.which == 65 ) { // a
+	  $.CockatooList.add();
+	}else if ( e.which == 68 ) { // d
+	}else if ( e.which == 85 ) { // u
+	  $.CockatooList.update();
+	}
+	return false;
+      }
+      return true;
+    });
+  function shortcut(){
+    node = $('<div class="shortcut"></div>');
+    node.append('<table><tbody></tbody></table>');
+    node.find('tbody').append('<tr><th>Shortcut</th><th>Effect</th></tr>')
+      .append('<tr><th>Ctrl-[UP]</th><td>Move cursor vertically up</td></tr>')
+      .append('<tr><th>Ctrl-[DOWN]</th><td>Move cursor vertically down</td></tr>')
+      .append('<tr><th>Ctrl-[LEFT]</th><td>Move list forcus to left</td></tr>')
+      .append('<tr><th>Ctrl-[RIGHT]</th><td>Move list forcus to right</td></tr>')
+      .append('<tr><th>Ctrl-[SPACE]</th><td>Click current cursor</td></tr>')
+      .append('<tr><th>Ctrl-a</th><td>Click Add</td></tr>')
+      .append('<tr><th>Ctrl-a</th><td>Click Update</td></tr>');
+    node.hover(null,function(){
+//	$(this).empty();
+    });
+    elem.append(node);
+  }
 })(jQuery);
   function html_encode(str){
     str=str.replace(/&/g,'&amp;');

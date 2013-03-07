@@ -348,8 +348,11 @@ $(function () {
     $("#fix").click(function (ev) {
       $("#co-main").children("div.co-Widget").each(function (){
  	var ret = widget_json($(this));
- 	change(OP,ret);
+ 	fix(OP,ret);
       });
+    });
+    $("#preview").click(function (ev) {
+ 	preview();
     });
     $("#co-toolbar > h3").click(function (ev) {
       $(this).next().slideToggle();
@@ -421,6 +424,7 @@ $(function () {
         ui.draggable.css('left',0);
         ui.draggable.css('top',0);
         ui.draggable.appendTo($(this));
+        preview();
       }
     });
     widget.not('.co-Template').not('.co-Pagelayout').children('h3').droppable({
@@ -470,6 +474,7 @@ $(function () {
             $(this).parent().before(ui.draggable);
 	}
         verticalProc( $(this).parent().parent().parent() );
+        preview();
       },
       over: function(ev, ui) {
       },
@@ -524,6 +529,7 @@ $(function () {
 	}
 	$(this).removeAttr('over');
         verticalProc( $(this).parent() );
+        preview();
       },
       over: function(e, ui) {
 	$(this).attr('over',true);
@@ -627,7 +633,14 @@ $(function () {
     print 'SERVICE_ID="'.$SERVICE.'";TEMPLATE_ID="'.$TEMPLATE.'";PAGE_ID="'.$PATH.'";OP="'.$OP.'";';
 ?>
   set_dd($('div.co-Widget'));
-  function change(op,data){
+  function preview(){
+    $("#co-main").children("div.co-Widget").each(function (){
+ 	var ret = widget_json($(this));
+        $('#pform > input[name="layout"]').val($.toJSON(ret));
+        $('#pform').submit();
+      });
+  }
+  function fix(op,data){
     $.ajax({
       url: 'cms_ajax.php',
       type:'POST',
@@ -711,5 +724,8 @@ $CONTENT_DRAWER->drawCMS();
 ?>
   </div>
  </div>
+ <form id="pform" method="POST" action="">
+  <input type="hidden" name="layout" value=""></input>
+ </form>
 </body>
 </html>

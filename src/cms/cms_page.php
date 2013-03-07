@@ -363,10 +363,8 @@ $(function () {
   namespace Cockatoo;
   require_once(Config::COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
 ?>
-   </div>
-  </div>
   <div id="main">
-   <div id="services" class="main-left" ></div>
+   <div id="services" class="main-left"></div>
    <div class="main-left" >
     <div class="main-block">
      <div id="templates" class="main-left" ></div>

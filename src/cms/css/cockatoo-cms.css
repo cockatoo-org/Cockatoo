@@ -39,6 +39,9 @@ div.list {
   border:1px solid #DDDDDD;
   background-color: #EEEEEE;
 }
+div.list.cursor {
+  border:1px solid #FF8080;
+}
 div.list .selected {
   background-color: #80FF80;
 }
@@ -56,11 +59,10 @@ div.list .yet {
 div.list > div > a[index] {
   cursor: pointer; 
 }
-div.list > div > a[index]:hover {
-  cursor: pointer; 
-  background-color: #C0FFC0;
-}
+div.list > div > a[index].cursor,
+div.list > div > a[index]:hover,
 div.list > div > a[index].selected:hover {
+  cursor: pointer; 
   background-color: #C0FFC0;
 }
 
@@ -159,7 +161,40 @@ div.helpmsg {
     position:relative;
 }
 #header > h1 {
-    color: #404040;
+  color: #404040;
+  margin:0;
+}
+#header > #shortcut-help  {
+  float : left;
+  vertical-align:bottom;
+  margin: 0 0 0 600px;
+}
+#header > #shortcut-help > a  {
+  text-decoration: underline;
+  color: blue;
+}
+#header > #shortcut-help > div.shortcut  {
+  display: none;
+}
+#header > #shortcut-help:hover > div.shortcut  {
+  display: block;
+  position: fixed;
+  overflow: visible;
+  z-index:99999;
+  text-align: left;
+  border: solid 1px #4444FF;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+#header > #shortcut-help table {
+    margin:0;
+    padding:10px;
+    border-spacing:0;
+}
+#header > #shortcut-help table th,
+#header > #shortcut-help table td {
+    padding:0 0 0 10px;
+    border-bottom: dashed 1px #4444FF;
 }
 #header-main {
     margin: 0 0 0 10px;

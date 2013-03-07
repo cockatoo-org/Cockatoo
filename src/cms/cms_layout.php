@@ -83,10 +83,14 @@ try {
       $COMPONENTS_DRAWERS []= $COMPONENTS_DRAWER;
     }
   }
-  // page
+
   $CONTENT_DRAWER = new ContentDrawer($SERVICE,$TEMPLATE,$PATH,null,$REQUEST_PARSER,$TEMPLATE_SELECTOR,Def::RenderingModeCMS);  
+  // page
   $brl = brlgen(Def::BP_LAYOUT,$SERVICE,$TEMPLATE,$PATH,Beak::M_GET);
   $page_layout = BeakController::beakSimpleQuery($brl);
+  if ( $_POST['layout'] ) {
+    $page_layout[Def::K_LAYOUT_LAYOUT] = json_decode($_POST['layout'],true);
+  }
   $CONTENT_DRAWER->layout($page_layout);
   $CONTENT_DRAWER->components();
   $OP = 'setL';

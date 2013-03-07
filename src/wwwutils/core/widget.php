@@ -580,7 +580,7 @@ class VerticalWidget extends Widget {
         $ret .= $child->cmsWalk('co-VSub','float:'.$this->prop[Def::K_LAYOUT_VPOS]);
       }
     }
-    $ret .= '</div></div>';
+    $ret .= '<br clear="both"/></div></div>';
     return $ret;
   }
 }
