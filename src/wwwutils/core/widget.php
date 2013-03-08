@@ -710,6 +710,64 @@ class TileWidget extends Widget {
 }
 
 /**
+ * Html5 widget
+ *
+ *   add class :  co-Layout
+ *
+ * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
+ * @see Widget.php
+ */
+class Html5Widget extends Widget {
+  /**
+   * Constructor
+   *
+   * @see Widget.php
+   */
+  public function __construct( &$prop,&$cprops,$mode ) {
+    parent::__construct( $prop,$cprops,$mode);
+    $this->clazz = '';
+  }
+  /**
+   * Collect HTML-String with recursive
+   *
+   * @return String Returns HTML
+   */
+  public function drawWalk($clazz='',$style=''){
+    if ( $style ) {
+      $style = $style . ';';
+    }
+    if ( isset($this->prop[Def::K_LAYOUT_HEIGHT]) and $this->prop[Def::K_LAYOUT_HEIGHT] ) {
+      $style .= 'height:'.$this->prop[Def::K_LAYOUT_HEIGHT].';';
+    }
+    if ( isset($this->prop[Def::K_LAYOUT_WIDTH]) and $this->prop[Def::K_LAYOUT_WIDTH] ) {
+      $style .= 'width:'.$this->prop[Def::K_LAYOUT_WIDTH].';';
+    }
+    if ( isset($this->prop[Def::K_LAYOUT_MIN_HEIGHT]) and $this->prop[Def::K_LAYOUT_MIN_HEIGHT] ) {
+      $style .= 'min-height:'.$this->prop[Def::K_LAYOUT_MIN_HEIGHT].';';
+    }
+    if ( isset($this->prop[Def::K_LAYOUT_MIN_WIDTH]) and $this->prop[Def::K_LAYOUT_MIN_WIDTH] ) {
+      $style .= 'min-width:'.$this->prop[Def::K_LAYOUT_MIN_WIDTH].';';
+    }
+    $elem = $this->component['_u'];
+    $clazz .= ' ' . $this->clazz;
+    $clazz = trim($clazz);
+    $ret = '<'.$elem.($this->id?' id=" '.$this->id.'"':'').($clazz?' class="'.$clazz.'"':'').($style?' style="'.$style.'" ':'').'>';
+    foreach ( $this->children as $child ) {
+      $ret .= $child->drawWalk();
+    }
+    $ret .= '</'.$elem.'>';
+    return $ret;
+  }
+  public function cmsWalk($clazz='',$style=''){
+    $this->clazz .= 'co-Widget co-Html5';
+    return parent::cmsWalk($clazz,$style);
+  }
+  public function templateWalk(){
+    $this->clazz .= 'co-Widget co-Html5';
+    return parent::templateWalk();
+  }
+}
+/**
  * Creater widget by properties
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 

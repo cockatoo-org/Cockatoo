@@ -460,8 +460,8 @@ class ContentDrawer {
   }
 
   public function drawCommonCss() {
-    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.Def::RESERVED_SERVICE_CORE.'/'.Def::RESERVED_TEMPLATE_DEFAULT.'/'.Config::CommonCSS.'"></link>';
-    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.$this->service.'/'.$this->template.'/'.Config::CommonCSS.'"></link>';
+    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.Def::RESERVED_SERVICE_CORE.'/'.Def::RESERVED_TEMPLATE_DEFAULT.'/'.Config::CommonCSS.'" />';
+    print '<link rel="stylesheet" type="text/css" media="all" href="'.Def::PATH_STATIC_PREFIX.'/'.$this->service.'/'.$this->template.'/'.Config::CommonCSS.'" />';
   }
   public function drawCommonJs() {
     print '<script type="text/javascript" src="'.Def::PATH_STATIC_PREFIX.'/'.Def::RESERVED_SERVICE_CORE.'/'.Def::RESERVED_TEMPLATE_DEFAULT.'/'.Config::CommonJs.'"></script>';

@@ -9,7 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="ja">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -53,6 +53,7 @@ div.co-Widget {
 div.co-Widget > h3 {
   padding: 0 0 0 0;
   margin: 0 0 0 0;
+  color : #808080;
 }
 
 div.co-Widget > h3 > spawn {
@@ -76,12 +77,19 @@ div.co-Pagelayout > div.co-Wbody {
   color : #FFFFFF;
 }
 div.co-Layout > h3 {
-  background-color : #888888;
+  background-color : #444444;
   color : #C0C0C0;
 }
 div.co-Layout > div.co-Wbody {
+  background-color : #888888;
+  color : #FFFFFF;
+}
+div.co-Html5 > h3 {
   background-color : #bbbbbb;
   color : #FFFFFF;
+}
+div.co-Html5 > div.co-Wbody {
+  background-color : #eeeeee;
 }
 div.co-Horizontal > h3 {
    background-color : #FFD8D8;
@@ -452,7 +460,7 @@ $(function () {
 	curEventTimeStamp = e.timeStamp;
 
 	// Vertical regulation
-	if ( $(this).parent().parent().parent().hasClass('co-Vertical') && $(this).parent().parent().children().size() >= 2) {
+	if ( $(this).parent().parent().parent().hasClass('co-Vertical') && $(this).parent().parent().children().size() >= 3) {
 	  full = true;
 	  $(this).parent().parent().children().each(function (i,child){
 	    if ( child == ui.draggable.context ) {
@@ -504,8 +512,8 @@ $(function () {
 	}
 	curEventTimeStamp = e.timeStamp;
 
-	// Vertical regulation
-	if ( $(this).parent().hasClass('co-Vertical') && $(this).children().size() >= 2) {
+	// Vertical nregulation
+	if ( $(this).parent().hasClass('co-Vertical') && $(this).children().size() >= 3) {
 	  full = true;
 	  $(this).children().each(function (i,child){
 	    if ( child == ui.draggable.context ) {
@@ -688,12 +696,12 @@ print "$TEMPLATE<br>";
 
 ?>
   <div>
-   <input id="fix" type="submit" value="fix"></input>
-   <input id="preview" type="submit" value="preview"></input>
+   <input id="fix" type="submit" value="fix" />
+   <input id="preview" type="submit" value="preview" />
   </div>
 <!--
   <div>
-   <input id="reset" type="submit" value="reset"></input>
+   <input id="reset" type="submit" value="reset" />
   </div>
 -->
  <div id="co-toolbar">
@@ -721,7 +729,7 @@ $CONTENT_DRAWER->drawCMS();
   </div>
  </div>
  <form id="pform" method="POST" action="">
-  <input type="hidden" name="layout" value=""></input>
+  <input type="hidden" name="layout" value="" />
  </form>
 </body>
 </html>
