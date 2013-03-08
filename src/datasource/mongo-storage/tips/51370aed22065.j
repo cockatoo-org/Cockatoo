@@ -1,8 +1,8 @@
 {
-"title":"\u66f8\u304d\u304b\u3051\u306f\u8868\u793a\u3055\u308c\u306a\u3044",
+"title":"\u66f8\u304d\u304b\u3051\u306f\u30aa\u30fc\u30ca\u3057\u304b\u8868\u793a\u3055\u308c\u306a\u3044",
 "origin":"*New",
 "owner":"admin",
-"tipid":"51370aed22065",
+"docid":"51370aed22065",
 "op":"save",
 "contents":[
 {

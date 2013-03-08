@@ -1,6 +1,6 @@
 {
 "public":null,
-"examid":"51370ad6b2a12",
+"docid":"51370ad6b2a12",
 "qname":"\u66f8\u304d\u304b\u3051\u306f\u30aa\u30fc\u30ca\u3057\u304b\u8868\u793a\u3055\u308c\u306a\u3044",
 "qnum":"5",
 "qsummary":"",

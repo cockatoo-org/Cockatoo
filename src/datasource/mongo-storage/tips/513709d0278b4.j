@@ -1,10 +1,10 @@
 {
 "public":"on",
 "title":"mongod \u8a2d\u5b9a\u30d5\u30a1\u30a4\u30eb\u30c6\u30f3\u30d7\u30ec\u30fc\u30c8",
-"origin":"***\u4ee5\u4e0b\u306e\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u4f5c\u3063\u3066\u304a\u304f\r\n-\/usr\/local\/mongo\r\n-\/usr\/local\/mongo\/conf\r\n-\/usr\/local\/mongo\/data\r\n-\/usr\/local\/mongo\/logs\r\n\r\n***\/usr\/local\/mongo\/conf\/mongod.conf\r\n replSet=YourRSName\r\n port=27017\r\n dbpath=\/usr\/local\/mongo\/data\r\n pidfilepath=\/usr\/local\/mongo\/logs\/mongod.pid\r\n logpath=\/usr\/local\/mongo\/logs\/mongod.log\r\n logappend=true\r\n quiet=true\r\n fork=true\r\n directoryperdb=true\r\n maxConns=20000\r\n slowms=1000\r\n nohttpinterface = true\r\n notablescan = true\r\n nssize = 4\r\n noauth = true\r\n # 10GB\r\n oplogSize = 10240\r\n\r\n*** mongod\u8d77\u52d5\r\n $ \/path\/to\/mongod -f \/usr\/local\/mongo\/conf\/mongod.conf",
-"tipid":"513709d0278b4",
-"op":"save",
+"origin":"***\u4ee5\u4e0b\u306e\u30c7\u30a3\u30ec\u30af\u30c8\u30ea\u3092\u4f5c\u3063\u3066\u304a\u304f\r\n-\/usr\/local\/mongo\r\n-\/usr\/local\/mongo\/conf\r\n-\/usr\/local\/mongo\/data\r\n-\/usr\/local\/mongo\/logs\r\n\r\n***\/usr\/local\/mongo\/conf\/mongod.conf\r\n replSet=YourRSName\r\n port=27017\r\n dbpath=\/usr\/local\/mongo\/data\r\n pidfilepath=\/usr\/local\/mongo\/logs\/mongod.pid\r\n logpath=\/usr\/local\/mongo\/logs\/mongod.log\r\n logappend=true\r\n quiet=true\r\n fork=true\r\n directoryperdb=true\r\n maxConns=20000\r\n slowms=1000\r\n nohttpinterface = true\r\n notablescan = true\r\n nssize = 4\r\n noauth = true\r\n # 10GB\r\n oplogSize = 10240\r\n\r\n*** mongod\u8d77\u52d5\r\n $ \/path\/to\/mongod -f \/usr\/local\/mongo\/conf\/mongod.conf\r\n",
 "owner":"admin",
+"docid":"513709d0278b4",
+"op":"save",
 "contents":[
 {
 "tag":"div",
@@ -302,6 +302,30 @@
 {
 "tag":"text",
 "text":" $ \/path\/to\/mongod -f \/usr\/local\/mongo\/conf\/mongod.conf\n"
+}
+]
+},
+{
+"tag":"text",
+"attr":[
+
+],
+"children":[
+{
+"tag":"text",
+"attr":[
+
+],
+"children":[
+{
+"tag":"text",
+"text":""
+}
+]
+},
+{
+"tag":"br",
+"text":""
 }
 ]
 }
