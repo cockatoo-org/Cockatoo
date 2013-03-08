@@ -26,6 +26,7 @@ $service_id  = $_sP['service_id'];
 $template_id  = $_sP['template_id'];
 $page_id  = $_sP['page_id'];
 $component_id  = $_sP['component_id'];
+$layout_id  = $_sP['layout_id'];
 $static_id  = $_sP['static_id'];
 $rev  = $_sP['rev'];
 $ctype= $_sP['ctype'];
@@ -152,7 +153,7 @@ try {
       $contents = '';
       $contents .= "$CONTENT_DRAWER->layoutBrl\n";
       $contents .= " * $CONTENT_DRAWER->preAction\n";
-      foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
+      foreach ( $CONTENT_DRAWER->componentDatas as $b => $c ) {
         $contents .= " - $b\n";
         foreach ( $c[Def::K_COMPONENT_ACTION] as $a ) {
           if ( $a ) {
@@ -197,13 +198,13 @@ try {
     BeakController::beakSimpleQuery($brl);
   } elseif( $op === 'getC' ) {
     if ( is_readable($service_id) ){
-      $brl = brlgen(Def::BP_COMPONENT,$service_id,'default','',Beak::M_KEY_LIST);
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,'',Beak::M_KEY_LIST);
       $components = BeakController::beakSimpleQuery($brl);
       $r = array();
       foreach ( $components as $c){
         $component_id = $c;
         if ( preg_match('@[^/]$@',$c,$matches) !== 0 ) {
-          $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_GET);
+          $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$component_id,Beak::M_GET);
           $r [] = array('service_id' => $service_id ,
                         'component_id' => $component_id ,
                         'name' => $component_id , 
@@ -221,7 +222,7 @@ try {
     }
   } elseif( $op === 'getCC' ) {
     if ( is_readable($service_id) ){
-      $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,'');
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$component_id,'');
       $component = BeakController::beakSimpleQuery($brl);
       $r = array('rev'         => $component[Beak::ATTR_REV],
                  'type'        => $component[Def::K_COMPONENT_TYPE],
@@ -254,19 +255,103 @@ try {
     }
   } elseif( $op === 'delC' ) {
     check_writable($service_id);
-    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_GET);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$component_id,Beak::M_GET);
     $required = getRequired($brl);
     if ( $required ) {
       throw new \Exception('Still required by ' . implode($required,'<br>'));
     }
-    $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_DEL);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$component_id,Beak::M_DEL);
     BeakController::beakSimpleQuery($brl);
+
+
+
+/* @@@ */
+
+  } elseif( $op === 'getL' ) {
+    if ( is_readable($service_id) ){
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,'',Beak::M_KEY_LIST);
+      $layoutwidgets = BeakController::beakSimpleQuery($brl);
+      $r = array();
+      foreach ( $layoutwidgets as $layout_id){
+        
+        if ( preg_match('@[^/]$@',$layout_id,$matches) !== 0 ) {
+          $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_GET);
+          $r [] = array('service_id' => $service_id ,
+                        'layout_id' => $layout_id ,
+                        'name' => $layout_id , 
+                        'brl'  => $brl , 
+                        'description' => '' , 
+                        'type' => '',
+                        'layout' => '<a target="_blank" href="cms_layout.php?'.Def::REQUEST_SERVICE.'=' . $service_id . '&'.Def::REQUEST_TEMPLATE.'=' . $template_id . '&'.Def::REQUEST_LAYOUT.'='.$layout_id.'">'.$layout_id.'</a>'
+            );
+        }
+      }
+    }
+  } elseif( $op === 'getLL' ) {
+    if ( is_readable($service_id) ){
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,'');
+      $layoutwidget = BeakController::beakSimpleQuery($brl);
+      $r = array('rev'         => $layoutwidget[Beak::ATTR_REV],
+                 'type'        => $layoutwidget[Def::K_COMPONENT_TYPE],
+                 'subject'     => $layoutwidget[Def::K_COMPONENT_SUBJECT],
+                 'description' => $layoutwidget[Def::K_COMPONENT_DESCRIPTION]
+        );
+    }
+  } elseif( $op === 'addL' ) {
+    check_writable($service_id);
+    $layout_id = $_sP['name'];
+    $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array());
+    setL(false,$rev,$service_id,$layout_id,$type,$subject,$description,$layout);
+  } elseif( $op === 'setL' ) {
+    setL(true,$rev,$service_id,$layout_id,$type,$subject,$description,null);
+  } elseif( $op === 'setCL' ) {
+    check_writable($service_id);
+
+    $layout = json_decode($_sP['layout'],true);
+    if ( ! $layout ) {
+      throw new \Exception('Fail to json_decode : ' . $_sP['layout']);
+    }
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_GET);
+    $layoutwidget = BeakController::beakSimpleQuery($brl);
+    if ( ! $layoutwidget ) {
+      throw new \Exception('Fail to get : ' . $brl);
+    }
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_SET);
+    $layoutwidget[Def::K_LAYOUT_LAYOUT] = $layout;
+    $ret = BeakController::beakSimpleQuery($brl,$layoutwidget);
+    if ( ! $ret ) {
+      throw new \Exception('Fail to set : ' . $brl);
+    }
+  } elseif( $op === 'cpL' ) {
+    check_writable($service_id);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_GET);
+    $layoutwidget = BeakController::beakSimpleQuery($brl);
+    $layout = $layoutwidget[Def::K_LAYOUT_LAYOUT];
+    $layout_id = $_sP['name'];
+    setL(true,$rev,$service_id,$layout_id,$type,$subject,$description,$layout);
+  } elseif( $op === 'checkL' ) {
+    if ( is_readable($service_id) ){
+      $r['required'] = implode(getRequired($check),"\n");
+    }
+  } elseif( $op === 'delL' ) {
+    check_writable($service_id);
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_GET);
+    $required = getRequired($brl);
+    if ( $required ) {
+      throw new \Exception('Still required by ' . implode($required,'<br>'));
+    }
+    $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_DEL);
+    BeakController::beakSimpleQuery($brl);
+
+
+
+
   } elseif( $op === 'getSC' ) {
-    $brl = brlgen(Def::BP_STATIC,$service_id,'default','',Beak::M_KEY_LIST);
+    $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,'',Beak::M_KEY_LIST);
     $static_contents = BeakController::beakSimpleQuery($brl);
     $r = array();
     foreach ( $static_contents as $static_id){
-      $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,'');
+      $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,'');
       $r [] = array('service_id' => $service_id ,
                     'static_id' => $static_id ,
                     'name' => $static_id , 
@@ -275,7 +360,7 @@ try {
       }
   } elseif( $op === 'getSCC' ) {
     if ( is_readable($service_id) ){
-      $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,Beak::M_GET);
+      $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,Beak::M_GET);
       $static_content = BeakController::beakSimpleQuery($brl);
       $r = array('type'        => $static_content[Def::K_STATIC_TYPE],
                  'etag'        => $static_content[Def::K_STATIC_ETAG],
@@ -294,9 +379,9 @@ try {
     setSC(true,$rev,$service_id,$static_id,$type,$expires,$bin,$body,$description);
   } elseif( $op === 'delSC' ) {
     check_writable($service_id);
-    $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,Beak::M_DEL);
+    $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,Beak::M_DEL);
     BeakController::beakSimpleQuery($brl);
-  } elseif( $op === 'setL' ) {
+  } elseif( $op === 'setPL' ) {
     check_writable($service_id);
     $layout = json_decode($_sP['layout'],true);
     if ( ! $layout ) {
@@ -429,7 +514,7 @@ function setC($flg,$rev,$service_id,$component_id,$type,$subject,$description,$c
   if ( preg_match('@\s@',$component_id,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as COMPONENT : ' . $component_id);
   }
-  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_GET);
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$component_id,Beak::M_GET);
   $component = BeakController::beakSimpleQuery($brl);
   if ( ! $flg and $component ) {
     throw new \Exception('Component already exist ! : ' . $component_id);
@@ -446,17 +531,41 @@ function setC($flg,$rev,$service_id,$component_id,$type,$subject,$description,$c
   $component[Def::K_COMPONENT_ACTION]      = $actions;
   $component[Def::K_COMPONENT_HEADER]      = $header;
   $component[Def::K_COMPONENT_BOTTOM]      = $bottom;
-  $brl = brlgen(Def::BP_COMPONENT,$service_id,'default',$component_id,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$component_id,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
   $ret = BeakController::beakSimpleQuery($brl,$component);
   if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
   }
 }
+
+function setL($flg,$rev,$service_id,$layout_id,$type,$subject,$description,$layout) {
+  if ( preg_match('@\s@',$layout_id,$matches) !== 0 ) { 
+    throw new \Exception('Cannot use blank-charactor as LAYOUT : ' . $layout_id);
+  }
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_GET);
+  $layoutwidget = BeakController::beakSimpleQuery($brl);
+  if ( ! $flg and $layoutwidget ) {
+    throw new \Exception('Component already exist ! : ' . $layout_id);
+  }
+  $layoutwidget[Beak::ATTR_REV]               = $rev;
+  $layoutwidget[Def::K_COMPONENT_TYPE]        = $type;
+  $layoutwidget[Def::K_COMPONENT_SUBJECT]     = $subject;
+  $layoutwidget[Def::K_COMPONENT_DESCRIPTION] = $description;
+  if ( $layout ) {
+    $layoutwidget[Def::K_LAYOUT_LAYOUT]    = $layout;
+  }
+  $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));
+  $ret = BeakController::beakSimpleQuery($brl,$layoutwidget);
+  if ( ! $ret ) {
+    throw new \Exception('Fail to set : ' . $brl);
+  }
+}
+
 function setSC($flg,$rev,$service_id,$static_id,$type,$expires,$bin,$data,$description) {
   if ( preg_match('@\s@',$static_id,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as STATIC : ' . $static_id);
   }
-  $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,Beak::M_GET);
+  $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,Beak::M_GET);
   $static_content = BeakController::beakSimpleQuery($brl);
   if ( ! $flg and $static_content ) {
     throw new \Exception('Static already exist ! : ' . $static_id);
@@ -464,7 +573,7 @@ function setSC($flg,$rev,$service_id,$static_id,$type,$expires,$bin,$data,$descr
   if ( $bin === 'true' ) {
     $data = $static_content[Def::K_STATIC_BIN];
   }
-  $brl = brlgen(Def::BP_STATIC,$service_id,'default',$static_id,'');
+  $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,'');
   $ret = StaticContent::save($brl,$type,$description,$data,null,$expires);
   if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);
@@ -489,7 +598,17 @@ function getRequired($check){
           $CONTENT_DRAWER = new ContentDrawer($service_id,$template_id,$page_id,null,null,null,Def::RenderingModeNORMAL);  
           $CONTENT_DRAWER->layout();
           $CONTENT_DRAWER->components();
-          foreach ( $CONTENT_DRAWER->componentData as $b => $c ) {
+          if ( $CONTENT_DRAWER->layoutDatas ) {
+            foreach ( $CONTENT_DRAWER->layoutDatas as $b => $c ) {
+              if ( preg_match('@^(.+)\?|#@',$b,$matches) ){
+                $b = $matches[1];
+              }
+              if ( $b === $check ) {
+                $requires []= " $CONTENT_DRAWER->layoutBrl";
+              }
+            }
+          }
+          foreach ( $CONTENT_DRAWER->componentDatas as $b => $c ) {
             if ( preg_match('@^(.+)\?|#@',$b,$matches) ){
               $b = $matches[1];
             }

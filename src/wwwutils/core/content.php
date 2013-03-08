@@ -31,8 +31,10 @@ class ContentDrawer {
   public    $baseEredirect;
   public    $eredirect;
   public    $redirect;
+  protected $layoutBrls;
   protected $componentBrls;
-  public    $componentData;
+  public    $layoutDatas;
+  public    $componentDatas;
   public    $actionBrls;
   protected $actionResults;
   public    $preAction;
@@ -72,15 +74,21 @@ class ContentDrawer {
   }
 
   private function collectComponentBrls ( &$data ) {
-    $this->componentBrls[] = $data[Def::K_LAYOUT_COMPONENT];
+    if ( strcmp($data[Def::K_LAYOUT_TYPE],Def::LAYOUTWIDGET) === 0) {
+      $this->layoutBrls[] = $data[Def::K_LAYOUT_COMPONENT];
+    }else {
+      $this->componentBrls[] = $data[Def::K_LAYOUT_COMPONENT];
+    }
     foreach ( $data[Def::K_LAYOUT_CHILDREN] as $child ) {
       $this->collectComponentBrls($child);
     }
   }
 
-  private function mergeLayout(&$baseLayout,&$pageLayout){
-    if ( strcmp($baseLayout[Def::K_LAYOUT_TYPE],Def::PAGELAYOUT)===0 ){
-      $pageLayout[Def::K_LAYOUT_CLASS]     .= 'co-PageLayout ' . $baseLayout[Def::K_LAYOUT_CLASS];
+  private function mergeLayout($brl,&$baseLayout,&$pageLayout){
+
+
+    if ( strcmp($baseLayout[Def::K_LAYOUT_COMPONENT],$brl)===0 ){
+      $pageLayout[Def::K_LAYOUT_CLASS]     .= $baseLayout[Def::K_LAYOUT_CLASS];
       $pageLayout[Def::K_LAYOUT_HEIGHT]    .= $pageLayout[Def::K_LAYOUT_HEIGHT]?$pageLayout[Def::K_LAYOUT_HEIGHT]:$baseLayout[Def::K_LAYOUT_HEIGHT];
       $pageLayout[Def::K_LAYOUT_WIDTH]     .= $pageLayout[Def::K_LAYOUT_WIDTH]?$pageLayout[Def::K_LAYOUT_WIDTH]:$baseLayout[Def::K_LAYOUT_WIDTH];
       $pageLayout[Def::K_LAYOUT_MIN_HEIGHT].= $pageLayout[Def::K_LAYOUT_MIN_HEIGHT]?$pageLayout[Def::K_LAYOUT_MIN_HEIGHT]:$baseLayout[Def::K_LAYOUT_MIN_HEIGHT];
@@ -90,7 +98,7 @@ class ContentDrawer {
       return;
     }
     foreach ( array_keys($baseLayout[Def::K_LAYOUT_CHILDREN]) as $k ) {
-      $this->mergeLayout($baseLayout[Def::K_LAYOUT_CHILDREN][$k],$pageLayout);
+      $this->mergeLayout($brl,$baseLayout[Def::K_LAYOUT_CHILDREN][$k],$pageLayout);
     }
   }
 
@@ -168,7 +176,7 @@ class ContentDrawer {
         $this->layoutData = $datas[$this->layoutBrl];
       }else {
         $this->ctype = Def::K_LAYOUT_CTYPE_HTML;
-        $this->mergeLayout($datas[$this->baseLayoutBrl][Def::K_LAYOUT_LAYOUT],$datas[$this->layoutBrl][Def::K_LAYOUT_LAYOUT]);
+        $this->mergeLayout(Def::PAGELAYOUT_BRL,$datas[$this->baseLayoutBrl][Def::K_LAYOUT_LAYOUT],$datas[$this->layoutBrl][Def::K_LAYOUT_LAYOUT]);
         $this->layoutData = $datas[$this->layoutBrl];
         $this->layoutData[Def::K_LAYOUT_LAYOUT] = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_LAYOUT];
       }
@@ -249,16 +257,29 @@ class ContentDrawer {
     setSession($this->sessionID,$this->service,$this->session);
   }
   
-  public function components() {
+  public function components($nomerge = false) {
+    $this->debug('== LAYOUTS(BRL) ==',$this->layoutBrls,Def::RenderingModeDEBUG3);
+    if ( sizeof($this->layoutBrls) > 0 ) {
+      if ( $nomerge ) {
+        $this->componentBrls = array_merge($this->componentBrls,$this->layoutBrls);
+      }else{
+        $this->layoutDatas = BeakController::beakGetsQuery($this->layoutBrls);
+        foreach ( $this->layoutDatas as $brl => $layout ) {
+          $this->collectComponentBrls($layout[Def::K_LAYOUT_LAYOUT]);
+          $this->mergeLayout($brl,$this->layoutData[Def::K_LAYOUT_LAYOUT],$layout[Def::K_LAYOUT_LAYOUT]);
+          $this->layout = $this->layoutData[Def::K_LAYOUT_LAYOUT];
+        }
+      }
+    }
+
     $this->debug('== COMPONENTS(BRL) ==',$this->componentBrls,Def::RenderingModeDEBUG3);
 
-    //$this->componentData = BeakController::beakQuery($this->componentBrls);
-    $this->componentData = BeakController::beakGetsQuery($this->componentBrls);
+    $this->componentDatas = BeakController::beakGetsQuery($this->componentBrls);
 
-    $this->debug('== COMPONENTS DATA ==',$this->componentData,Def::RenderingModeDEBUG3);
+    $this->debug('== COMPONENTS DATA ==',$this->componentDatas,Def::RenderingModeDEBUG3);
 
-    $this->widget = WidgetFactory::getWidget($this->layout,$this->componentData,$this->mode);
-    $this->widget->layoutWalk($this->componentData);
+    $this->widget = WidgetFactory::getWidget($this->layout,$this->componentDatas,$this->mode);
+    $this->widget->layoutWalk($this->componentDatas);
   }
 
   protected function doActions(&$brls){

@@ -15,23 +15,23 @@ class CoreRequestParser extends DefaultRequestParser {
   public $session_path = '/';
   public function parseImpl(){
     if ( preg_match('@^/admin$@', $this->reqpath , $matches ) !== 0 ) {
-      $this->template= 'default';
+      $this->template= Def::RESERVED_TEMPLATE_DEFAULT;
       $this->path    = 'admin';
       return;
     }elseif ( preg_match('@^/login$@', $this->reqpath , $matches ) !== 0 ){
-      $this->template= 'default';
+      $this->template= Def::RESERVED_TEMPLATE_DEFAULT;
       $this->path    = 'login';
       return;
     }elseif ( preg_match('@^/logintwitter$@', $this->reqpath , $matches ) !== 0 ){
-      $this->template= 'default';
+      $this->template= Def::RESERVED_TEMPLATE_DEFAULT;
       $this->path    = 'logintwitter';
       return;
     }elseif ( preg_match('@^/logingoogle$@', $this->reqpath , $matches ) !== 0 ){
-      $this->template= 'default';
+      $this->template= Def::RESERVED_TEMPLATE_DEFAULT;
       $this->path    = 'logingoogle';
       return;
     }elseif ( preg_match('@^/profile@', $this->reqpath , $matches ) !== 0 ){
-      $this->template= 'default';
+      $this->template= Def::RESERVED_TEMPLATE_DEFAULT;
       $this->path    = 'profile';
       return;
     }elseif ( preg_match('@^/([^/]+)/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {

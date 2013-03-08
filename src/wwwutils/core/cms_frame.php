@@ -75,6 +75,14 @@ div.co-Pagelayout > div.co-Wbody {
   background-color : #404040;
   color : #FFFFFF;
 }
+div.co-Layout > h3 {
+  background-color : #888888;
+  color : #C0C0C0;
+}
+div.co-Layout > div.co-Wbody {
+  background-color : #bbbbbb;
+  color : #FFFFFF;
+}
 div.co-Horizontal > h3 {
    background-color : #FFD8D8;
 }
@@ -211,28 +219,28 @@ div.co-Tab > div.co-Wbody > div.co-Widget.co-TabChild a:hover {
   min-height: 0px;
 }
 
-#co-WidgetTree div.co-Widget {
+#co-toolbar div.co-WidgetTree div.co-Widget {
   font-size: 0.6em;
   margin: 5px 1px 0 0;
   height: 20px;
   min-height: 20px;
   width: 70px;
 }
-#co-WidgetTree div.co-Widget > h3 {
+#co-toolbar div.co-WidgetTree div.co-Widget > h3 {
   min-height: 20px;
   height: 20px;
 }
-#co-WidgetTree div.co-Widget > div.co-Wbody {
+#co-toolbar div.co-WidgetTree div.co-Widget > div.co-Wbody {
   height: 0px;
   min-height: 0px;
   width: 100%;
   min-width: 20px;
 }
 
-#co-WidgetTree div.dir {
+#co-toolbar div.co-WidgetTree div.dir {
   margin-left:10px;
 }
-#co-WidgetTree h4.name {
+#co-toolbar div.co-WidgetTree h4.name {
   margin-left:-10px;
   background-color : #F0F0E0;
   cursor: pointer;
@@ -322,7 +330,7 @@ $(function () {
       name.replace(regex,function(){
 	root = arguments[1];
 	path = arguments[2]+'?';
-	var selector = '#co-WidgetTree';
+	var selector = '#co-toolbar div.co-WidgetTree';
 	p=path.split('/');
 	p.unshift(root);
 	for(i in p){
@@ -341,8 +349,8 @@ $(function () {
 	}
       });
     });
-    $('#co-WidgetTree div.dir > div').hide();
-    $('#co-WidgetTree h4.name').click(function(ev){
+    $('#co-toolbar div.co-WidgetTree div.dir > div').hide();
+    $('#co-toolbar div.co-WidgetTree h4.name').click(function(ev){
 	$(this).parent().children('div').toggle();
     });
     $("#fix").click(function (ev) {
@@ -424,7 +432,6 @@ $(function () {
         ui.draggable.css('left',0);
         ui.draggable.css('top',0);
         ui.draggable.appendTo($(this));
-        preview();
       }
     });
     widget.not('.co-Template').not('.co-Pagelayout').children('h3').droppable({
@@ -474,7 +481,6 @@ $(function () {
             $(this).parent().before(ui.draggable);
 	}
         verticalProc( $(this).parent().parent().parent() );
-        preview();
       },
       over: function(ev, ui) {
       },
@@ -529,7 +535,6 @@ $(function () {
 	}
 	$(this).removeAttr('over');
         verticalProc( $(this).parent() );
-        preview();
       },
       over: function(e, ui) {
 	$(this).attr('over',true);
@@ -630,7 +635,7 @@ $(function () {
     });
   }
 <?php
-    print 'SERVICE_ID="'.$SERVICE.'";TEMPLATE_ID="'.$TEMPLATE.'";PAGE_ID="'.$PATH.'";OP="'.$OP.'";';
+    print 'SERVICE_ID="'.$SERVICE.'";TEMPLATE_ID="'.$TEMPLATE.'";PAGE_ID="'.$PATH.'";LAYOUT_ID="'.$LAYOUT.'";OP="'.$OP.'";';
 ?>
   set_dd($('div.co-Widget'));
   function preview(){
@@ -650,6 +655,7 @@ $(function () {
         service_id    : SERVICE_ID,
         template_id    : TEMPLATE_ID,
         page_id    : PAGE_ID,
+        layout_id    : LAYOUT_ID,
 	layout : $.toJSON(data)
       },
       success: function( data ){
@@ -673,11 +679,17 @@ $(function () {
 <body id="co-frame">
 <b class="message"></b><br>
 <?php
-print "$SERVICE/$PATH<br>";
+if ( $LAYOUT ) {
+  print "$SERVICE/(layout)$LAYOUT<br>";
+}else{
+  print "$SERVICE/$PATH<br>";
+}
 print "$TEMPLATE<br>";
+
 ?>
   <div>
    <input id="fix" type="submit" value="fix"></input>
+   <input id="preview" type="submit" value="preview"></input>
   </div>
 <!--
   <div>
@@ -691,31 +703,15 @@ print "$TEMPLATE<br>";
     <div class="co-Wbody"></div>
   </div>
   <h3>Widgets</h3>
-  <div id="co-WidgetTree"><h4 class="name"></h4>
+  <div class="co-WidgetTree"><h4 class="name"></h4>
   </div>
   <div id="Hidden" style="display:none">
 <?php
-//$BASIC_CONTANT_DRAWER->drawTemplate();
-//$COMPONENTS_DRAWER->drawTemplate();
 foreach( $COMPONENTS_DRAWERS as $COMPONENTS_DRAWER ) {
   $COMPONENTS_DRAWER->drawTemplate();
 }
 ?>
   </div>
-<!--
-  <h3>Basic-Widget</h3>
-  <div>
-<?php
-//$BASIC_CONTANT_DRAWER->drawTemplate();
-?>
-  </div>
-  <h3>Components</h3>
-  <div>
-<?php
-//$COMPONENTS_DRAWER->drawTemplate();
-?>
-  </div>
--->
  </div>
  <div id="co-cms">
   <div id="co-main">

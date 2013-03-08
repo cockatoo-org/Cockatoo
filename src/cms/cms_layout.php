@@ -17,13 +17,9 @@ require_once(Config::COCKATOO_ROOT.'wwwutils/core/widget.php');
 require_once(Config::COCKATOO_ROOT.'wwwutils/core/content.php');
 require_once(Config::COCKATOO_ROOT.'utils/beak.php');
   
-$HEADER  = getallheaders();
-list($SERVICE,$TEMPLATE,$PATH,$ARGS,$REQUEST_PARSER,$TEMPLATE_SELECTOR) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
-
 $SCRIPT='';
 
 try {
-  $COMPONENTS_DRAWERS = array();
   {
     // core component
     $BASIC_CONTANT_DRAWER = new ContentDrawer(Def::RESERVED_SERVICE_CORE,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);  
@@ -44,8 +40,10 @@ try {
       Def::K_LAYOUT_LAYOUT => layoutChildren(Def::RESERVED_SERVICE_CORE,Def::RESERVED_TEMPLATE_DEFAULT,'.ghost','',$children),
       );
     $BASIC_CONTANT_DRAWER->layout($layoutData);  
-    $BASIC_CONTANT_DRAWER->components();  
+    $BASIC_CONTANT_DRAWER->components(true);  
   }
+
+  $COMPONENTS_DRAWERS = array();
   $COMPONENTS_DRAWERS []= $BASIC_CONTANT_DRAWER;
   $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
   $services = BeakController::beakSimpleQuery($brl);
@@ -59,9 +57,9 @@ try {
       }
       // service component
       $COMPONENTS_DRAWER = new ContentDrawer($service_id,'','/',null,null,null,Def::RenderingModeCMSTEMPLATE);
+      $children = array();
       $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,'',Beak::M_KEY_LIST);
       $components = BeakController::beakSimpleQuery($brl);
-      $children = array();
       if ( $components ) {
         foreach ( $components as $p){
           if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
@@ -71,6 +69,19 @@ try {
         }
         usort($children,'Cockatoo\componentSorter');
       }
+
+      $brl = brlgen(Def::BP_COMPONENT,$service_id,Def::RESERVED_TEMPLATE_LAYOUT,'',Beak::M_KEY_LIST);
+      $layouts = BeakController::beakSimpleQuery($brl);
+      if ( $layouts ) {
+        foreach ( $layouts as $p){
+          if ( preg_match('@[^/]$@',$p,$matches) !== 0 ) {
+            $layout_id = $p;
+            $children []= layoutChildren($service_id,Def::RESERVED_TEMPLATE_LAYOUT,$layout_id,'',array());
+          }
+        }
+        usort($children,'Cockatoo\componentSorter');
+      }
+
       $layoutData = array( 
         Def::K_LAYOUT_PRE_ACTION => null,
         Def::K_LAYOUT_POST_ACTION => null,
@@ -78,22 +89,34 @@ try {
         Def::K_LAYOUT_LAYOUT => layoutChildren(Def::RESERVED_SERVICE_CORE,Def::RESERVED_TEMPLATE_DEFAULT,'.ghost','',$children),
         );
       $COMPONENTS_DRAWER->layout($layoutData);  
-      $COMPONENTS_DRAWER->components();
+      $COMPONENTS_DRAWER->components(true);
 
       $COMPONENTS_DRAWERS []= $COMPONENTS_DRAWER;
     }
   }
 
+  $HEADER  = getallheaders();
+  list($SERVICE,$TEMPLATE,$PATH,$ARGS,$REQUEST_PARSER,$TEMPLATE_SELECTOR) = parseRequest($HEADER,$_SERVER,$_GET,$_COOKIE);
+
   $CONTENT_DRAWER = new ContentDrawer($SERVICE,$TEMPLATE,$PATH,null,$REQUEST_PARSER,$TEMPLATE_SELECTOR,Def::RenderingModeCMS);  
+  $LAYOUT = $_GET[Def::REQUEST_LAYOUT];
+  if ( $LAYOUT ) {
+    // layout widget
+    $brl = brlgen(Def::BP_COMPONENT,$SERVICE,Def::RESERVED_TEMPLATE_LAYOUT,$LAYOUT,Beak::M_GET);
+    $page_layout = BeakController::beakSimpleQuery($brl);
+    $OP = 'setCL';
+  }else {
   // page
-  $brl = brlgen(Def::BP_LAYOUT,$SERVICE,$TEMPLATE,$PATH,Beak::M_GET);
-  $page_layout = BeakController::beakSimpleQuery($brl);
-  if ( $_POST['layout'] ) {
+    $brl = brlgen(Def::BP_LAYOUT,$SERVICE,$TEMPLATE,$PATH,Beak::M_GET);
+    $page_layout = BeakController::beakSimpleQuery($brl);
+    $OP = 'setPL';
+  }
+  // preview
+  if ( $_POST['layout'] ) { 
     $page_layout[Def::K_LAYOUT_LAYOUT] = json_decode($_POST['layout'],true);
   }
   $CONTENT_DRAWER->layout($page_layout);
-  $CONTENT_DRAWER->components();
-  $OP = 'setL';
+  $CONTENT_DRAWER->components(true);
   Include Config::COCKATOO_ROOT.'wwwutils/core/cms_frame.php';
 }catch ( \Exception $ex ) {
   print $ex->getMessage();

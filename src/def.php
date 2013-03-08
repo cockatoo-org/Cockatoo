@@ -16,11 +16,13 @@ class Def {
 
   const  REQUEST_SERVICE          = '_S';
   const  REQUEST_TEMPLATE           = '_D';
+  const  REQUEST_LAYOUT           = '_L';
   const  REQUEST_PATH             = '_P';
   const  REQUEST_ARGS             = '_A';
 
   const  RESERVED_SERVICE_CORE    = 'core';
   const  RESERVED_TEMPLATE_DEFAULT  = 'default';
+  const  RESERVED_TEMPLATE_LAYOUT  = 'layout';
   const  RESERVED_TEMPLATE_STATIC   = 'static';
 
   const  K_LAYOUT_TYPE            = 'type';
@@ -92,7 +94,8 @@ class Def {
   const  RenderingModeCMS         = 0x10;
   const  RenderingModeCMSTEMPLATE = 0x20;
 
-  const  PAGELAYOUT               = 'PageLayout';
+  const  PAGELAYOUT_BRL           = 'component://core-component/default/pagelayout';
+  const  LAYOUTWIDGET             = 'LayoutWidget';
   const  PLAINWIDGET              = 'PlainWidget';
   const  JSONWIDGET               = 'JsonWidget';
   const  BINARYWIDGET             = 'BinaryWidget';

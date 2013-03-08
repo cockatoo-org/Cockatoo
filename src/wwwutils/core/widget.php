@@ -196,11 +196,6 @@ class  Widget {
       $style .= 'min-width:'.$this->prop[Def::K_LAYOUT_MIN_WIDTH].';';
     }
 
-    $actions = '';
-    foreach ( $this->component[Def::K_COMPONENT_ACTION] as $action ) {
-      $actions .= $action . "\n";
-    }
-
     $ret = '<div class="' . $clazz . ' ' . $this->clazz .'" ' . Def::K_COMPONENT_TYPE . '="' . $this->component[Def::K_COMPONENT_TYPE] . '" ' . Def::K_LAYOUT_COMPONENT . '="' . $this->prop[Def::K_LAYOUT_COMPONENT] . '" ' . Def::K_LAYOUT_EXTRA . '="'.$this->prop[Def::K_LAYOUT_EXTRA].'" style="'. $style .'">'.
       '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<spawn class="del">x</spawn><spawn class="down">v</spawn><spawn class="up">^</spawn></h3>'.
       '<form style="display:none;">'.
@@ -454,6 +449,26 @@ class PageLayout extends Widget {
 }
 
 /**
+ * Layout widget
+ *
+ *   add class :  co-Layout
+ *
+ * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
+ * @see Widget.php
+ */
+class LayoutWidget extends Widget {
+  /**
+   * Constructor
+   *
+   * @see Widget.php
+   */
+  public function __construct( &$prop,&$cprops,$mode ) {
+    parent::__construct( $prop,$cprops,$mode);
+    $this->clazz .= ' co-Layout';
+  }
+}
+
+/**
  * Horizontal
  *
  *   add class :  co-Horizontal
@@ -548,10 +563,6 @@ class VerticalWidget extends Widget {
       $style .= 'min-width:'.$this->prop[Def::K_LAYOUT_MIN_WIDTH].';';
     }
 
-    $actions = '';
-    foreach ( $this->component[Def::K_COMPONENT_ACTION] as $action ) {
-      $actions .= $action . "\n";
-    }
     $ret = '<div class="' . $clazz . ' ' . $this->clazz .'" ' . Def::K_COMPONENT_TYPE . '="' . $this->component[Def::K_COMPONENT_TYPE] . '" ' . Def::K_LAYOUT_COMPONENT . '="' . $this->prop[Def::K_LAYOUT_COMPONENT] . '" ' . Def::K_LAYOUT_EXTRA . '="'.$this->prop[Def::K_LAYOUT_EXTRA].'" style="'. $style .'">'.
       '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<spawn class="del">x</spawn><spawn class="down">v</spawn><spawn class="up">^</spawn></h3>'.
       '<form style="display:none;">'.
