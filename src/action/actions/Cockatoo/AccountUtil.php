@@ -18,7 +18,7 @@ class AccountUtil {
     if ( $accounts ) {
       return $accounts;
     }
-    throw new \Exception('Invalid account !');
+    return null;
   }
   public static function save_account($base_brl,&$user_data){
     $brl = $base_brl.$user_data[self::KEY_USER].'?'.Beak::M_SET;

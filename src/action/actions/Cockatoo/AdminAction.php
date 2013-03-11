@@ -52,10 +52,7 @@ class AdminAction extends Action {
       if ( isset($session[Def::SESSION_KEY_POST]) ) {
         $submit = $session[Def::SESSION_KEY_POST]['submit'];
         if (  $submit === 'add user' ) {
-          try{
-            $user_data = AccountUtil::get_account($this->BASE_BRL,$session[Def::SESSION_KEY_POST][AccountUtil::KEY_USER]);
-          }catch(\Exception $e){
-          }
+          $user_data = AccountUtil::get_account($this->BASE_BRL,$session[Def::SESSION_KEY_POST][AccountUtil::KEY_USER]);
           $user_data[AccountUtil::KEY_USER] = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_USER];
           if ( $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD] ) {
             $user_data[AccountUtil::KEY_PASSWD] = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD];

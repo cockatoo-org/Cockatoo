@@ -14,7 +14,7 @@ class AccountAction extends AuthAction {
         throw new \Exception('Invalid account !');
       } 
       $user_data = AccountUtil::get_account($this->BASE_BRL,$user);
-      if ( $user_data[AccountUtil::KEY_HASH] !== md5($user . $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]) ) {
+      if ( ! $user_data || $user_data[AccountUtil::KEY_HASH] !== md5($user . $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]) ) {
         throw new \Exception('Invalid account !');
       }
       return $user_data;
@@ -23,6 +23,9 @@ class AccountAction extends AuthAction {
       $passwd = AccountUtil::mkpasswd();
       $hash = md5($user.$passwd);
       $user_data = AccountUtil::get_account($this->BASE_BRL,$user);
+      if ( ! $user_data ) {
+        throw new \Exception('Invalid account !');
+      }
       $user_data[AccountUtil::KEY_HASH] = $hash;
       $user_data[AccountUtil::KEY_USER] = $user;
       AccountUtil::save_account($this->BASE_BRL,$user_data);

@@ -59,6 +59,9 @@ class GoogleOauthAction extends AccountAction {
 
       if ( $userInfo->email ) {
         $user_data = AccountUtil::get_account($this->BASE_BRL,$userInfo->email);
+        if ( ! $user_data ) {
+          $user_data['user'] = $userInfo->email;
+        }
         $this->setMovedTemporary($google['redirect']);
         $user_data['google'] = null;
         return $user_data;
