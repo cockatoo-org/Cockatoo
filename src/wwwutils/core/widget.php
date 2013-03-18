@@ -751,11 +751,11 @@ class Html5Widget extends Widget {
     $elem = $this->component['_u'];
     $clazz .= ' ' . $this->clazz;
     $clazz = trim($clazz);
-    $ret = '<'.$elem.($this->id?' id=" '.$this->id.'"':'').($clazz?' class="'.$clazz.'"':'').($style?' style="'.$style.'" ':'').'>';
+    $ret = '<'.$elem.'><div '.($this->id?'id=" '.$this->id.'"':'').($clazz?' class="'.$clazz.'"':'').($style?' style="'.$style.'" ':'').'>';
     foreach ( $this->children as $child ) {
       $ret .= $child->drawWalk();
     }
-    $ret .= '</'.$elem.'>';
+    $ret .= '</div></'.$elem.'>';
     return $ret;
   }
   public function cmsWalk($clazz='',$style=''){
