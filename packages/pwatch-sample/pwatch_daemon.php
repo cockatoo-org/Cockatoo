@@ -61,8 +61,12 @@ class PwatchDaemon {
               pclose($proc);
               $results = json_decode($json,true);
               foreach ( $results as $u => $d ) {
-                if ( preg_match('@\.@',$u,$matches ) === 0 ) {
+                if ( $u === '' ) {
+                  $data['(unknown)'] = $d;
+                  $data['(unknown)']['name'] = '(unknown)';
+                }else if ( preg_match('@\.@',$u,$matches ) === 0 ) {
                   $data[$u] = $d;
+                  $data[$u]['name'] = $u;
                 }else {
                   $eu= \Cockatoo\UrlUtil::urlencode($u);
                   $data[$eu] = $d;
