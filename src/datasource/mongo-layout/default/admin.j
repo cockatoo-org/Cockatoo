@@ -1,13 +1,14 @@
 {
-"@R":"1364285435",
+"@R":"1364291633",
 "eredirect":"",
 "redirect":"",
-"pre_action":"",
+"pre_action":"action:\/\/mongo-action\/wiki\/AdminAction",
 "post_action":"",
 "session_exp":"2147483647",
-"expires":"0",
+"expires":"",
 "header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
+"bottom":"",
 "layout":{
 "type":"HorizontalWidget",
 "class":"",
@@ -21,13 +22,12 @@
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/login\/login",
+"component":"component:\/\/core-component\/default\/utils\/admin",
 "children":[
 
 ]
 }
 ]
 },
-"_u":"login",
-"bottom":""
+"_u":"admin"
 }

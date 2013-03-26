@@ -14,9 +14,7 @@ namespace Cockatoo;
  *
  *  Wigit HTML format:
  *    <div class="co-Widget">
- *      <div class="co-Wbody">
  *        <!-- children wigit -->
- *      </div>
  *    </div>
  *
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
@@ -165,12 +163,12 @@ class  Widget {
       $style .= 'min-width:'.$this->prop[Def::K_LAYOUT_MIN_WIDTH].';';
     }
 
-    $ret = '<div '.($this->id?'id="'.$this->id.'"':'').' class="' . $clazz . ' ' . $this->clazz .'" extra="'.$this->prop[Def::K_LAYOUT_EXTRA].($style?'" style="'.$style:'').'">' .
-      '<div class="co-Wbody">' . $this->component[Def::K_COMPONENT_BODY];
+    $ret = '<div '.($this->id?'id="'.$this->id.'"':'').' class="' . $clazz . ' ' . $this->clazz .
+      '" extra="'.$this->prop[Def::K_LAYOUT_EXTRA].($style?'" style="'.$style:'').'">' .$this->component[Def::K_COMPONENT_BODY];
     foreach ( $this->children as $child ) {
       $ret .= $child->drawWalk();
     }
-    $ret .= '</div></div>';
+    $ret .= '</div>';
     return $ret;
   }
 
@@ -528,8 +526,8 @@ class VerticalWidget extends Widget {
       $style .= 'min-width:'.$this->prop[Def::K_LAYOUT_MIN_WIDTH].';';
     }
 
-    $ret = '<div '.($this->id?'id="'.$this->id.'"':'').' class="' . $clazz . ' ' . $this->clazz .'" extra="'.$this->prop[Def::K_LAYOUT_EXTRA].($style?'" style="'.$style:'').'">' .
-      '<div class="co-Wbody">' . $this->component[Def::K_COMPONENT_BODY];
+    $ret = '<div '.($this->id?'id="'.$this->id.'"':'').' class="' . $clazz . ' ' . $this->clazz .
+      '" extra="'.$this->prop[Def::K_LAYOUT_EXTRA].($style?'" style="'.$style:'').'">' .$this->component[Def::K_COMPONENT_BODY];
 
     $c = count($this->children);
     if ( $c > 0 ) {
@@ -538,7 +536,7 @@ class VerticalWidget extends Widget {
     if ( $c > 1 ) {
       $ret .= $this->children[1]->drawWalk('','float:none;width:auto;margin-'.$this->prop[Def::K_LAYOUT_VPOS].':'.$this->prop[Def::K_LAYOUT_SWIDTH]);
     }
-    $ret .= '</div></div>';
+    $ret .= '</div>';
     return $ret;
   }
   /**

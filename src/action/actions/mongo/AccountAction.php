@@ -19,22 +19,22 @@ class AccountAction extends \Cockatoo\AccountAction {
   protected $EREDIRECT = 'main';
 
   protected function login_hook(&$user_data) {
-    return array(
-      'user' => 'admin',
-      'root' => '1',
-      'writable' => '1'
-      );
-//    return array(
+    $session = $this->getSession();
+    if ( $this->submit === 'login' ) {
+      return array(
+        'user' => 'admin',
 //      'user' => 'crumb',
-//      'writable' => '1'
-//      );
-  }
-  protected function already_hook(&$user_data) {
-    return null;
+        'root' => '1',
+        'writable' => '1'
+        );
+    }
+    parent::login_hook($user_data);
   }
   protected function first_hook() {
     parent::first_hook();
     $session =& $this->getSession();
-    $session[\Cockatoo\Def::SESSION_KEY_POST]['r'] = $session[\Cockatoo\Def::SESSION_KEY_REQ]['Referer'];
+    if ( $session[\Cockatoo\Def::SESSION_KEY_POST] && ! $session[\Cockatoo\Def::SESSION_KEY_POST]['r'] ) {
+      $session[\Cockatoo\Def::SESSION_KEY_POST]['r'] = $session[\Cockatoo\Def::SESSION_KEY_REQ]['Referer'];
+    }
   }
 }

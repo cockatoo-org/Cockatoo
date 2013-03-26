@@ -1,13 +1,14 @@
 {
-"@R":"1364285435",
+"@R":"1364286633",
 "eredirect":"",
 "redirect":"",
-"pre_action":"",
+"pre_action":"action:\/\/mongo-action\/mongo\/AccountAction",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
 "header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
+"bottom":"",
 "layout":{
 "type":"HorizontalWidget",
 "class":"",
@@ -18,16 +19,8 @@
 "extra":"",
 "component":"component:\/\/core-component\/default\/horizontal#critical",
 "children":[
-{
-"type":"HorizontalWidget",
-"extra":"",
-"component":"component:\/\/mongo-component\/default\/login\/login",
-"children":[
 
 ]
-}
-]
 },
-"_u":"login",
-"bottom":""
+"_u":"loginadmin"
 }

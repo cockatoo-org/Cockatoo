@@ -1,9 +1,9 @@
 {
-"@R":"1363239444",
+"@R":"1364285688",
 "type":"HorizontalWidget",
 "subject":"login",
 "description":"login",
-"css":"#login form {\r\n  display:inline;\r\n}\r\n#login {\r\n  text-align:center;\r\n}\r\n#login div.input {\r\n    text-align: left;\r\n}\r\n#login div.input > h6 {\r\n    margin:0;\r\n    padding:0;\r\n    text-align: left;\r\n    width: 80px;\r\n}\r\n#login  div.user {\r\n\/*   float: right;  *\/\r\n}\r\n#login  div.user > span {\r\n\/*  color: blue; *\/\r\n}\r\n\r\n#login h5 {\r\n  margin: 0 0 0 0;\r\n  padding: 0 2px 0 2px;\r\n  font-size: 1.2em;\r\n}\r\n#login div.input > input[type=\"text\"],\r\n#login div.input > input[type=\"password\"] {\r\n    margin: 0 0 0 0;\r\n    padding: 0 0 0 0;\r\n    position: relative;\r\n    text-align: left;\r\n    width: 180px;\r\n }\r\n\r\n#login div.oauth  {\r\n  font-size: 0.8em;\r\n}\r\n#login div.oauth img {\r\n  height:16px;\r\n  width:16px;\r\n}\r\n",
+"css":"#login form {\r\n  display:inline;\r\n}\r\n#login {\r\n  text-align:center;\r\n}\r\n#login div.input {\r\n    text-align: left;\r\n}\r\n#login div.input > h6 {\r\n    margin:0;\r\n    padding:0;\r\n    text-align: left;\r\n    width: 80px;\r\n}\r\n#login  div.user {\r\n\/*   float: right;  *\/\r\n}\r\n#login  div.user > span {\r\n\/*  color: blue; *\/\r\n}\r\n\r\n#login h5 {\r\n  margin: 0 0 0 0;\r\n  padding: 0 2px 0 2px;\r\n  font-size: 1.2em;\r\n}\r\n#login div.input > input[type=\"text\"],\r\n#login div.input > input[type=\"password\"] {\r\n    margin: 0 0 0 0;\r\n    padding: 0 0 0 0;\r\n    position: relative;\r\n    text-align: left;\r\n    width: 180px;\r\n }\r\n\r\n#login div.oauth  {\r\n  font-size: 0.8em;\r\n}\r\n\r\n#login div.oauth img {\r\n  height:16px;\r\n  width:16px;\r\n}\r\n",
 "js":"",
 "id":"login",
 "class":"core",

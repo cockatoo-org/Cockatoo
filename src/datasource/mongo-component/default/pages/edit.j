@@ -3,7 +3,7 @@
 "type":"HorizontalWidget",
 "subject":"edit",
 "description":"edit",
-"css":"#editPage > div.co-Wbody {\r\n  text-align: center;\r\n  padding: 10px;\r\n}\r\n#editPage  textarea[name=\"origin\"] {\r\n  width: 800px;\r\n  height:600px;\r\n}\r\n",
+"css":"#editPage {\r\n  text-align: center;\r\n  padding: 10px;\r\n}\r\n#editPage  textarea[name=\"origin\"] {\r\n  width: 800px;\r\n  height:600px;\r\n}\r\n",
 "js":"",
 "id":"editPage",
 "class":"",

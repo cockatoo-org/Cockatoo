@@ -6,7 +6,7 @@
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"0",
-"header":"<style>\r\ndiv#show > div.co-Wbody > h1 {\r\n  display:none;\r\n}\r\n<\/style>\r\n",
+"header":"<style>\r\ndiv#show > h1 {\r\n  display:none;\r\n}\r\n<\/style>\r\n",
 "pheader":"",
 "bottom":"<script>\r\nvar maintab = 'resultstab';\r\nvar subtab  = 'periodicaltab';\r\nvar viewtab = null;\r\n<\/script>",
 "layout":{
