@@ -30,13 +30,16 @@ abstract class UserPostAction extends \Cockatoo\Action {
   }
 
   protected $user = '';
+  protected $isRoot = false;
+  protected $isWritable = false;
+
   function get_doc($docid){
     $session = $this->getSession();
     $docid = \Cockatoo\UrlUtil::urlencode($docid);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_GET,array(),array());
     $doc = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( $doc &&
-         ( Lib::isRoot($session) || (boolean)$doc['public'] || $doc['owner'] === $this->user ) ) {
+         ( $this->isRoot || (boolean)$doc['public'] || $doc['owner'] === $this->user ) ) {
       return $doc;
     }
     return $doc;
@@ -44,7 +47,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
   function get_docs(){
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(),array());
     $docs = \Cockatoo\BeakController::beakSimpleQuery($brl);
-    if ( ! Lib::isRoot($session) ) {
+    if ( ! $this->isRoot ) {
       $user = $this->user;
       $docs = array_filter($docs,function ($doc) use(&$user) {
           return (boolean)$doc['public'] || $doc['owner'] === $user;
@@ -75,7 +78,12 @@ abstract class UserPostAction extends \Cockatoo\Action {
     try{
       $this->setNamespace($this->NAMESPACE);
       $session     = $this->getSession();
-      $this->user  = Lib::user($session);
+      $qs = \Cockatoo\parse_brl_query($this->queries);
+      if ( ! isset($qs['user']) ) {
+        $this->user  = '';
+        $this->isRoot = Lib::isRoot($session);
+        $this->isWritable = Lib::isWritable($session);
+      }
       $docid          = $this->args['E'];
       $post = $session[\Cockatoo\Def::SESSION_KEY_POST];
       $op = $post['op'];
@@ -96,7 +104,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
         $docs = $this->get_docs();
         return array($this->DOCNAME.'s' => $docs);
       }elseif( $this->method === \Cockatoo\Beak::M_SET ) {
-        if ( ! Lib::isWritable($session) ) {
+        if ( ! $this->isWritable ) {
           throw new \Exception('You do not have write permission.');
         }
         if ( ! $op ) {

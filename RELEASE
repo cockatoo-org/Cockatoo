@@ -30,4 +30,8 @@
     - setMovedPermanently($location)
     - setMovedTemporary($location)
 
-  
+1.1.0
+   - Add layout template 
+   - Add html5 widget
+   - Redesign request parser
+   - Avolish div.co-Wbody element in production.

@@ -20,6 +20,7 @@ abstract class Action {
   public $BRL;
   public $method;
   public $queries;
+  public $comments;
   public $sessionID;
   public $service;
   public $args;
@@ -46,6 +47,7 @@ abstract class Action {
     list($P,$D,$C,$p,$m,$q,$c) = parse_brl($this->BRL);
     $this->method = $m;
     $this->queries = $q;
+    $this->comments = $c;
   }
   /**
    * Prepare process
