@@ -1,8 +1,8 @@
 {
-"@R":"1364291633",
+"@R":"1364375010",
 "eredirect":"",
 "redirect":"",
-"pre_action":"action:\/\/mongo-action\/wiki\/AdminAction",
+"pre_action":"action:\/\/mongo-action\/mongo\/AdminAction",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"",
