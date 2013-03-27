@@ -46,10 +46,16 @@ function parse_brl($brl) {
 /**
  * BRL query parser
  *
- *   ex > 
+ *  usage:
  *    list($S,$D,$C,$p,$m,$q,$c) = parse_brl($brl);
  *    $queries = parse_brl_query($q);
  *
+ *  array:
+ *    key-name[] means array field
+ *    e.g.
+ *      key[]=1&key[]=2&key[]=3
+ *      means:  key = [1,2,3]
+ *  
  * @param String $brl BRL string
  * @return Array queries hash ([key] => value)
  */
