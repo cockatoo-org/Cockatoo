@@ -1,5 +1,5 @@
 {
-"@R":"1364362782",
+"@R":"1364453715",
 "type":"HorizontalWidget",
 "subject":"events",
 "description":"",
@@ -7,9 +7,9 @@
 "js":"",
 "id":"cevents",
 "class":"cbox cevnets",
-"body":"<div class=\"box\">\r\n<h6><a href=\"\/mongo\/events\">\u30a4\u30d9\u30f3\u30c8\u60c5\u5831<\/a><\/h6>\r\n<ul>\r\n<?cs each: item=A.mongo.events ?>\r\n  <li><a href=\"\/mongo\/events\/<?cs var: item.docid ?>\"><?cs var: item.title ?><\/a><\/li>\r\n<?cs \/each ?>\r\n<\/ul>\r\n<\/div>\r\n",
+"body":"<div class=\"box\">\r\n<h6><a href=\"\/mongo\/events\">\u30a4\u30d9\u30f3\u30c8\u60c5\u5831<\/a><\/h6>\r\n<ul>\r\n<?cs each: item=A.mongo.events ?>\r\n  <?cs if: item.public ?>\r\n  <li><a href=\"\/mongo\/events\/<?cs var: item.docid ?>\"><?cs var: item.title ?><\/a><\/li>\r\n  <?cs \/if ?>\r\n<?cs \/each ?>\r\n<\/ul>\r\n<\/div>\r\n",
 "action":[
-"action:\/\/mongo-action\/mongo\/EventAction?getA&user="
+"action:\/\/mongo-action\/mongo\/EventAction?getA"
 ],
 "header":"",
 "bottom":"",

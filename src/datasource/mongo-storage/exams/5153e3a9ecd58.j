@@ -1,9 +1,9 @@
 {
 "public":null,
-"docid":"51370ad6b2a12",
-"qname":"\u66f8\u304d\u304b\u3051\u306f\u30aa\u30fc\u30ca\u3057\u304b\u8868\u793a\u3055\u308c\u306a\u3044",
+"docid":"5153e3a9ecd58",
+"qname":"Writable\u30e6\u30fc\u30b6\u30c6\u30b9\u30c8",
 "qnum":"5",
-"qsummary":"\u3053\u306e\u30c6\u30b9\u30c8\u306e\u6982\u8981\u306f\u30fb\u30fb\u30fb",
+"qsummary":"\u30ed\u30fc\u30eb\u30c6\u30b9\u30c8",
 "qs":[
 {
 "show":"",
@@ -876,9 +876,9 @@
 ]
 }
 ],
-"_owner":"admin",
-"_ownername":"admin",
-"_time":1364449504,
+"_owner":"crumbjp",
+"_ownername":"@crumbjp",
+"_time":1364452265,
 "_timestr":"2013-03-28",
-"_u":"51370ad6b2a12"
+"_u":"5153e3a9ecd58"
 }

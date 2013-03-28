@@ -20,8 +20,7 @@ class TipAction extends UserPostAction {
     return array(
       'docid' => 'new',
       'origin' => $origin,
-      'contents' => $contents,
-      'owner' => $this->user
+      'contents' => $contents
       );
   }
   function post_to_doc (&$post) {

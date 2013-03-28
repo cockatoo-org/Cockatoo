@@ -21,8 +21,7 @@ class EventAction extends UserPostAction {
     return array(
       'docid' => 'new',
       'origin' => $origin,
-      'contents' => $contents,
-      'owner' => $this->user
+      'contents' => $contents
       );
   }
   function post_to_doc (&$post) {
@@ -34,13 +33,14 @@ class EventAction extends UserPostAction {
     $doc['contents'] =  $parser->parse();
     return $doc;
   }
+  const SEPARATOR = '.';
   function update_docid(&$docid,&$doc) {
     if ( ! $docid || strcmp($docid,'new')===0 ) {
-        $docid = $doc['date'] . '-' . $doc['time'] . '-' . uniqid();
+        $docid = $doc['date'] . self::SEPARATOR . $doc['time'] . self::SEPARATOR . uniqid();
     }
-    $parsed_docid = explode('-',$docid);
+    $parsed_docid = explode(self::SEPARATOR,$docid);
     if ( ! ($doc['date'] === $parsed_docid[0] && $doc['time'] === $parsed_docid[1]) ) {
-      $docid = $doc['date'] . '-' . $doc['time'] . '-' . uniqid();
+      $docid = $doc['date'] . self::SEPARATOR . $doc['time'] . self::SEPARATOR . uniqid();
     }
     return $docid;
   }

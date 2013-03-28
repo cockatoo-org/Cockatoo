@@ -56,21 +56,19 @@ class GoogleOauthAction extends AccountAction {
       if ( ! $response ) {
         throw new \Exception('Unexpected UserInfo !!');
       }
-
       if ( $userInfo->email ) {
         $user_data = AccountUtil::get_account($this->BASE_BRL,$userInfo->email);
         if ( ! $user_data ) {
           $user_data['user'] = $userInfo->email;
         }
         $this->setMovedTemporary($google['redirect']);
-        $user_data['google'] = null;
         return $user_data;
       }
       throw new \Exception('Login failed !!');
     }
     $baseURL = 'https://accounts.google.com/o/oauth2/auth?';
     $scope = array(
-//          'https://www.googleapis.com/auth/userinfo.profile',
+//      'https://www.googleapis.com/auth/userinfo.profile',
       'https://www.googleapis.com/auth/userinfo.email'
       );
     $authURL = $baseURL . 'scope=' . urlencode(implode(' ', $scope)) .

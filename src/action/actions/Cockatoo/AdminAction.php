@@ -54,6 +54,7 @@ class AdminAction extends Action {
         if (  $submit === 'add user' ) {
           $user_data = AccountUtil::get_account($this->BASE_BRL,$session[Def::SESSION_KEY_POST][AccountUtil::KEY_USER]);
           $user_data[AccountUtil::KEY_USER] = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_USER];
+          $user_data[AccountUtil::KEY_NAME] = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_NAME];
           if ( $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD] ) {
             $user_data[AccountUtil::KEY_PASSWD] = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD];
             $user_data[AccountUtil::KEY_HASH]   = md5($session[Def::SESSION_KEY_POST][AccountUtil::KEY_USER] . $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD]);

@@ -39,7 +39,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_GET,array(),array());
     $doc = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( $doc &&
-         ( $this->isRoot || (boolean)$doc['public'] || $doc['owner'] === $this->user ) ) {
+         ( $this->isRoot || (boolean)$doc['public'] || $doc['_owner'] === $this->user ) ) {
       return $doc;
     }
     return $doc;
@@ -50,7 +50,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
     if ( ! $this->isRoot ) {
       $user = $this->user;
       $docs = array_filter($docs,function ($doc) use(&$user) {
-          return (boolean)$doc['public'] || $doc['owner'] === $user;
+          return (boolean)$doc['public'] || $doc['_owner'] === $user;
         });
     }
     return $docs;
@@ -78,12 +78,9 @@ abstract class UserPostAction extends \Cockatoo\Action {
     try{
       $this->setNamespace($this->NAMESPACE);
       $session     = $this->getSession();
-      $qs = \Cockatoo\parse_brl_query($this->queries);
-      if ( ! isset($qs['user']) ) {
-        $this->user  = '';
-        $this->isRoot = Lib::isRoot($session);
-        $this->isWritable = Lib::isWritable($session);
-      }
+      $this->user  = Lib::user($session);
+      $this->isRoot = Lib::isRoot($session);
+      $this->isWritable = Lib::isWritable($session);
       $docid          = $this->args['E'];
       $post = $session[\Cockatoo\Def::SESSION_KEY_POST];
       $op = $post['op'];
@@ -121,11 +118,16 @@ abstract class UserPostAction extends \Cockatoo\Action {
           $this->set_hook($doc);
           return array( $this->DOCNAME => $doc );
         }elseif( $op === 'save' ) {
+          $old_docid = $docid;
           $new_docid = $this->update_docid($docid,$doc);
           $doc['docid'] = $new_docid;
+          $doc['_owner'] = $this->user;
+          $doc['_ownername'] = Lib::name($session);
+          $doc['_time'] = time();
+          $doc['_timestr'] = date('Y-m-d',$doc['_time']);
           $this->save_doc($new_docid,$doc);
-          if ( $new_docid !== $docid ) {
-            $this->remove_doc($docid);
+          if ( $new_docid !== $old_docid ) {
+            $this->remove_doc($old_docid);
           }
           $this->setMovedTemporary($this->REDIRECT.'/'.$new_docid);
           return array();

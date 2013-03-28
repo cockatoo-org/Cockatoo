@@ -48,10 +48,9 @@ class TwitterOauthAction extends AccountAction {
       if ( $user_id && $screen_name ) {
         $user_data = AccountUtil::get_account($this->BASE_BRL,$screen_name);
         if ( ! $user_data ) {
-          $user_data['user'] = $screen_name;
+          $user_data[AccountUtil::KEY_USER] = $screen_name;
         }
         $this->setMovedTemporary($twitter['redirect']);
-        $user_data['twitter'] = null;
         return $user_data;
       }
       throw new \Exception('Login failed !!');

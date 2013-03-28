@@ -2,6 +2,7 @@
 namespace Cockatoo;
 class AccountUtil {
   const KEY_USER    ='user';
+  const KEY_NAME    ='name';
   const KEY_PASSWD  ='passwd';
   const KEY_CONFIRM ='confirm';
   const KEY_HASH    ='hash';
@@ -21,6 +22,7 @@ class AccountUtil {
     return null;
   }
   public static function save_account($base_brl,&$user_data){
+    $user_data[self::KEY_NAME] = ($user_data[self::KEY_NAME])?$user_data[self::KEY_NAME]:$user_data[self::KEY_USER];
     $brl = $base_brl.$user_data[self::KEY_USER].'?'.Beak::M_SET;
     $ret = BeakController::beakSimpleQuery($brl,$user_data);
     if ( $ret ) {

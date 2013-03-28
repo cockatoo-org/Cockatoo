@@ -1,7 +1,9 @@
 {
 "user":"admin",
+"name":"admin",
 "hash":"f6fdffe48c908deb0f4c3bd36c032e72",
-"email":"admin@mail.crumb.jp",
+"email":"",
+"writable":"1",
 "root":"1",
 "_u":"admin"
 }

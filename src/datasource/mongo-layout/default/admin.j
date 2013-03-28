@@ -17,16 +17,9 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/horizontal#critical",
-"children":[
-{
-"type":"HorizontalWidget",
-"extra":"",
 "component":"component:\/\/core-component\/default\/utils\/admin",
 "children":[
 
-]
-}
 ]
 },
 "_u":"admin"

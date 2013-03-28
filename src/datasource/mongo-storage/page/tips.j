@@ -196,6 +196,9 @@
 ]
 }
 ],
-"author":"admin",
+"_owner":"admin",
+"_ownername":"admin",
+"_time":1364445107,
+"_timestr":"2013-03-28",
 "_u":"tips"
 }

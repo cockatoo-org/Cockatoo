@@ -1,26 +1,21 @@
 {
-"@R":"1364286633",
+"@R":"1364451132",
 "eredirect":"",
 "redirect":"",
 "pre_action":"action:\/\/mongo-action\/mongo\/AccountAction",
 "post_action":"",
 "session_exp":"2147483647",
-"expires":"0",
+"expires":"",
 "header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
 "bottom":"",
 "layout":{
 "type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/horizontal#critical",
+"component":"component:\/\/core-component\/default\/utils\/profile",
 "children":[
 
 ]
 },
-"_u":"loginadmin"
+"_u":"profile"
 }

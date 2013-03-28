@@ -35,8 +35,7 @@ class ExamAction extends UserPostAction {
       'public' => '',
       'qname' => $qname,
       'qnum' => 5,
-      'qs' => $qs,
-      'owner' => $user
+      'qs' => $qs
       );
   }
   function post_to_doc (&$post) {
@@ -45,7 +44,6 @@ class ExamAction extends UserPostAction {
     $qnum    = $post['qnum'];
     $qsummary= $post['qsummary'];
     $docid  =  $post['docid'];
-    $owner   = $post['owner'];
     $qs = null;
     for( $i = 0 ; $i < self::$NUM_QUESTION ; $i++ ) {
       $origin   = $post['q'.$i];
@@ -78,8 +76,7 @@ class ExamAction extends UserPostAction {
       'qname' => $qname,
       'qnum' => $qnum,
       'qsummary' => $qsummary,
-      'qs' => $qs,
-      'owner' => $owner);
+      'qs' => $qs);
   }
   function update_docid(&$docid,&$doc) {
     if ( ! $docid || strcmp($docid,'new')===0 ) {

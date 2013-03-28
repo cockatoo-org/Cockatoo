@@ -62,6 +62,10 @@ class PageAction extends \Cockatoo\Action {
                            $origin,
                            $parser->parse(),
                            $user);
+        $pdata['_owner'] = $user;
+        $pdata['_ownername'] = Lib::name($session);
+        $pdata['_time'] = time();
+        $pdata['_timestr'] = date('Y-m-d',$pdata['_time']);
         Lib::save_page($page,$pdata);
         $this->setMovedTemporary('/mongo/'.$page);
         return array();

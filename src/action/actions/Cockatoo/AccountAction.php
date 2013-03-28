@@ -41,6 +41,9 @@ class AccountAction extends AuthAction {
     if ( $this->submit === 'logout' ) {
       return null;
     }elseif ( $this->submit === 'update profile' ) {
+      if ( $session[Def::SESSION_KEY_POST][AccountUtil::KEY_NAME] ) {
+        $user_data[AccountUtil::KEY_NAME] = $session[Def::SESSION_KEY_POST][AccountUtil::KEY_NAME];
+      }
       if ( $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD] ){
         if ( $session[Def::SESSION_KEY_POST][AccountUtil::KEY_PASSWD] !== $session[Def::SESSION_KEY_POST][AccountUtil::KEY_CONFIRM] ){
           throw new \Exception('Unmatch password !');
