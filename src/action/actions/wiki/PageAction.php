@@ -369,6 +369,9 @@ class WikiParser {
         if ( preg_match('@^https?://@', $matches[1] , $matchdummy ) !== 0 ) {
           $attr['src'] = $matches[1];
           $body [] = self::tag('a',array('href' => $matches[1]),array(self::tag('img',$attr)));
+        }else if ( preg_match('@^/@', $matches[1] , $matchdummy ) !== 0 ) {
+          $attr['src'] = $matches[1];
+          $body [] = self::tag('a',array('href' => $matches[1]),array(self::tag('img',$attr)));
         }else {
           $attr['src'] = '/wiki/img/'.$this->page.'?n='.$matches[1];
           $body [] = self::tag('a',array('href' => '/wiki/img/'.$this->page.'?n='.$matches[1]),array(self::tag('img',$attr)));
