@@ -1,6 +1,6 @@
 <?php
 /**
- * config.php - Wiki config
+ * config.php - Sample config
  *  
  * @access public
  * @package cockatoo
@@ -17,16 +17,23 @@ class Config extends DefaultConfig {
   const Mode           = Def::MODE_DEBUG;
 
   /**
-   * The redirect path that when unhandled error occured.
+   * The default redirect path that when unhandled error occured.
    */
   const ErrorRedirect  = '/wiki/view';
 
   /**
    * Request analizer
    */
-  const RequestParser     = 'Cockatoo\SampleRequestParser';
-  const TemplateSelector    = 'Cockatoo\SampleTemplateSelector'; 
+  static $DefaultRequestParser;
+  static $RequestParser;
 
+//  const RequestParser     = 'Cockatoo\SampleRequestParser';
+//  const TemplateSelector    = 'Cockatoo\SampleTemplateSelector'; 
+
+  /**
+   * CMS acl
+   */
+  const CMSAuth       = 'Cockatoo\DefaultCmsAuth';
   /**
    * Timeout
    */
@@ -70,9 +77,6 @@ class Config extends DefaultConfig {
 
     /**
      * Static locations.
-     *
-     *  @@@ Todo:
-     *    $BeakLocation should be merged with $BEAK but have to consider zookeeper ...
      */
     self::$BeakLocation = array (
       'cms://services-cms/'           => array(''),
@@ -86,5 +90,12 @@ class Config extends DefaultConfig {
 //    self::$UseZookeeper        = array('127.0.0.1:2181');
 //    self::$ZookeeperCacheFile  = self::COCKATOO_ROOT.'daemon/etc/zoo.json';
       //
+
+    self::$RequestParser = array (
+      '/core' => 'Cockatoo\CoreRequestParser',
+      '/wiki' => 'wiki\WikiRequestParser',
+      '/mongo' => 'mongo\MongoRequestParser'
+      );
+    self::$DefaultRequestParser = 'Cockatoo\DefaultRequestParser';
   }
 }

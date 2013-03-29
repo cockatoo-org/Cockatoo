@@ -96,7 +96,7 @@ class BeakCacheTest extends \PHPUnit_Framework_TestCase
     $actual  = json_encode($datas);
     $this->assertEquals($expects,$actual);
     // Update document
-    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array(),array(Beak::COMMENT_KIND_PARTIAL));
+    $brl  = brlgen(Def::BP_LAYOUT,'unittest','device','path/to',Beak::M_SET,array(),array(Beak::COMMENT_KIND_OP_SET));
     $data = array('add' => 'ADD');
     $datas = BeakController::beakQuery(array(array($brl,$data)));
     // Get from cache

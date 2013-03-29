@@ -57,7 +57,7 @@ class PwatchAction extends \Cockatoo\Action {
           $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch',$eurl,'',\Cockatoo\Beak::M_CREATE_COL,array(),array());
           $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
           // Save 
-          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_PARTIAL));
+          $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS',$eurl,\Cockatoo\Beak::M_SET,array(),array(\Cockatoo\Beak::COMMENT_KIND_OP_SET));
           $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,array('_u' => $eurl,'url' => $url,'interval' => $interval,'style' => $style));
           if ( ! $ret ) {
             throw new \Exception('Cannot save it ! Probably storage error...');

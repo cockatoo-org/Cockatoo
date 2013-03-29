@@ -183,23 +183,36 @@ class BeakMongo extends Beak {
   }
 
   private function setDoc(&$mongocollection,&$path,&$arg){
-    $arg[Beak::Q_UNIQUE_INDEX] = &$path;
     $cond = array(
       Beak::Q_UNIQUE_INDEX => $path
       );
-    if ( $this->rev ) {
-      if ( $arg[Beak::ATTR_REV] ) {
-        $cond[Beak::ATTR_REV] = $arg[Beak::ATTR_REV];
+    if ( ! $this->op || strcmp($this->op,Beak::COMMENT_KIND_OP_SET)===0 ) {
+      if ( $this->rev ) {
+        if ( $arg[Beak::ATTR_REV] ) {
+          $cond[Beak::ATTR_REV] = $arg[Beak::ATTR_REV];
+        }
+        $arg[Beak::ATTR_REV] = (String)time();
       }
-      $arg[Beak::ATTR_REV] = (String)time();
+      if ( isset($arg[Beak::ATTR_BIN]) ) {
+        self::encode($arg);
+      }
     }
-    if ( isset($arg[Beak::ATTR_BIN]) ) {
-      self::encode($arg);
-    }
-    if ( $this->partial) {
-      unset($arg[Beak::Q_UNIQUE_INDEX]);
-      return $mongocollection->update($cond,array('$set' => $arg),array('upsert' => true , 'safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'multiple' => false));
+    if ( $this->op ) {
+      if       ( strcmp($this->op,Beak::COMMENT_KIND_OP_INC)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_SET)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_UNSET)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PUSH)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PUSHALL)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_ADDTOSET)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_POP)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULL)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULLALL)===0 ) {
+      }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_RENAME)===0 ) {
+      }else{
+      }
+      return $mongocollection->update($cond,array($this->op => $arg),array('upsert' => true , 'safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'multiple' => false));
     }else {
+      $arg[Beak::Q_UNIQUE_INDEX] = &$path;
       return $mongocollection->update($cond,$arg,array('upsert' => true , 'safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'multiple' => false));
     }
   }

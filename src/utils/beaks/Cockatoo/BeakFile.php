@@ -432,20 +432,73 @@ class BeakFile extends Beak {
    * Set impl
    */
   private function setDoc($file,$path,&$arg) {
-    if ( ! $this->judgeRev($file,$arg) ){
-      return false;
-    }
-    self::mkDir(dirname($file));
-    $arg[Beak::Q_UNIQUE_INDEX] = $path;
-    if ( $this->partial) {
+    if ( ! $this->op || strcmp($this->op,Beak::COMMENT_KIND_OP_SET)===0 ) {
+      if ( ! $this->judgeRev($file,$arg) ){
+        return false;
+      }
       if ( is_file($file)) {
         $json=file_get_contents($file);
         $prev = self::decode($json);
-        if ( $prev ) {
-          $arg = array_merge($prev,$arg);
-        }
+      }
+      if ( $prev && strcmp($this->op,Beak::COMMENT_KIND_OP_SET)===0 ) {
+        $arg = array_merge($prev,$arg);
+      }else{
+        $prev = $arg;
+      }
+      self::mkDir(dirname($file));
+    }else{
+      if ( is_file($file)) {
+        $json=file_get_contents($file);
+        $prev = self::decode($json);
       }
     }
+    if ( $prev === null ) {
+      return false;
+    }
+    if       ( strcmp($this->op,Beak::COMMENT_KIND_OP_INC)===0 ) {
+      foreach ( $arg as $k => $v ) {
+        $prev[$k] += $v;
+      }
+      $arg = $prev;
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_SET)===0 ) {
+      // Nothing to do.
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_UNSET)===0 ) {
+      foreach ( $arg as $k => $v ) {
+        unset($prev[$k]);
+      }
+      $arg = $prev;
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PUSH)===0 ) {
+      foreach ( $arg as $k => $v ) {
+        $prev[$k] []= $v;
+      }
+      $arg = $prev;
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PUSHALL)===0 ) {
+      foreach ( $arg as $k => $v ) {
+        $prev[$k] = array_merge($prev[$k],$v);
+      }
+      $arg = $prev;
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_POP)===0 ) {
+      foreach ( $arg as $k => $v ) {
+        if ( $v === 1 ) {
+          array_pop($prev[$k]);
+        }else if ( $v === -1 ) {
+          array_shift($prev[$k]);
+        }
+      }
+      $arg = $prev;
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_RENAME)===0 ) {
+      foreach ( $arg as $k => $v ) {
+        $prev[$v] = $prev[$k];
+        unset($prev[$k]);
+      }
+      $arg = $prev;
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_ADDTOSET)===0 ) {
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULL)===0 ) {
+    }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULLALL)===0 ) {
+    }else{
+      $arg[Beak::Q_UNIQUE_INDEX] = $path;
+    }
+
     foreach($this->getIndex() as $index_key ){
       $this->setIndex($index_key,$arg);
     }

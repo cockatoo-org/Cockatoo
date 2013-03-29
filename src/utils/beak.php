@@ -478,8 +478,20 @@ abstract class Beak {
    * Beak comment definition
    *
    *   Replace document when 'set' method.
+   * @Deplicated use OP_SET
    */
-  const COMMENT_KIND_PARTIAL    = 'partial';
+  const COMMENT_KIND_OP_SET      = '$set';
+  const COMMENT_KIND_OP_UNSET    = '$unset';
+  const COMMENT_KIND_OP_INC      = '$inc';
+  const COMMENT_KIND_OP_PUSH     = '$push';
+  const COMMENT_KIND_OP_PUSHALL  = '$pushAll';
+  const COMMENT_KIND_OP_POP      = '$pop';
+  const COMMENT_KIND_OP_RENAME   = '$rename';
+  // unsupported operation
+  const COMMENT_KIND_OP_PULL     = '$pull';
+  const COMMENT_KIND_OP_PULLALL  = '$pullAll';
+  const COMMENT_KIND_OP_ADDTOSET = '$addToSet';
+  const COMMENT_KIND_OP_SETONINSERT = '$setOnInsert';
   /**
    * Beak comment definition
    */
@@ -554,9 +566,17 @@ abstract class Beak {
     $this->cacheable = in_array(self::COMMENT_KIND_CACHE,$comments);
 
     $this->cache_hit = null;
-    $this->partial   = in_array(self::COMMENT_KIND_PARTIAL,$comments);
-    $this->nsync     = in_array(self::COMMENT_KIND_NSYNC,$comments);
-    $this->fresh     = in_array(self::COMMENT_KIND_FRESH,$comments);
+
+    $this->op = in_array(self::COMMENT_KIND_OP_INC,$comments)?self::COMMENT_KIND_OP_INC:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_SET,$comments)?self::COMMENT_KIND_OP_SET:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_UNSET,$comments)?self::COMMENT_KIND_OP_UNSET:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_PUSH,$comments)?self::COMMENT_KIND_OP_PUSH:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_PUSHALL,$comments)?self::COMMENT_KIND_OP_PUSHALL:$this->op;
+//    $this->op = in_array(self::COMMENT_KIND_OP_ADDTOSET,$comments)?self::COMMENT_KIND_OP_ADDTOSET:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_POP,$comments)?self::COMMENT_KIND_OP_POP:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_PULL,$comments)?self::COMMENT_KIND_OP_PULL:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_PULLALL,$comments)?self::COMMENT_KIND_OP_PULLALL:$this->op;
+    $this->op = in_array(self::COMMENT_KIND_OP_RENAME,$comments)?self::COMMENT_KIND_OP_RENAME:$this->op;
   }
   /**
    * craete collection
@@ -586,8 +606,18 @@ abstract class Beak {
    *
    *    Updating only difference of column is default.
    *    
-   *    'partial'
+   *    '$set'
    *       You can use option. when you want to replace partial of document.
+   *    '$inc'
+   *    '$set'
+   *    '$unset'
+   *    '$push'
+   *    '$pushAll'
+   *    '$addToSet'
+   *    '$pop'
+   *    '$pull'
+   *    '$pullAll'
+   *    '$rename'
    *  
    *    return Array keys ( call result() to get this)
    */

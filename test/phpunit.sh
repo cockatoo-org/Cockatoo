@@ -11,9 +11,7 @@ rm testcase/beak/BeakMemcachedTest.php
 bash testcase/beak/BeakFileTest.template   > testcase/beak/BeakFileTest.php
 bash testcase/beak/BeakMongoTest.template  > testcase/beak/BeakMongoTest.php
 bash testcase/beak/BeakMemcachedTest.template  > testcase/beak/BeakMemcachedTest.php
-
 phpunit --process-isolation --coverage-html `pwd`/report `pwd`/testcase/beak 
-phpunit --process-isolation --coverage-html `pwd`/report `pwd`/testcase/urlparse
-phpunit --process-isolation --coverage-html `pwd`/report `pwd`/testcase/www
-
+#phpunit --process-isolation --coverage-html `pwd`/report `pwd`/testcase/urlparse
+#phpunit --process-isolation --coverage-html `pwd`/report `pwd`/testcase/www
 #phpunit --process-isolation --coverage-html `pwd`/report `pwd`/testcase
