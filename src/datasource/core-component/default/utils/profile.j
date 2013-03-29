@@ -1,5 +1,5 @@
 {
-"@R":"1364451235",
+"@R":"1364526552",
 "type":"HorizontalWidget",
 "subject":"profile",
 "description":"profile",
@@ -7,7 +7,7 @@
 "js":"",
 "id":"profile",
 "class":"core",
-"body":"<h5>Update profile<\/h5>\r\n<div class=\"window\">\r\n<form class=\"setuser\" method=\"POST\" action=\"<?cs var:C._base ?>\/profile\">\r\n<div class=\"input\"> <h6>User<\/h6> <input name=\"passwd\" type=\"text\" value=\"<?cs var:S.login.user ?>\" readonly=\"readonly\" \/><\/div>\r\n<div class=\"input\"> <h6>Nick name<\/h6> <input name=\"name\" type=\"text\" value=\"<?cs var:S.login.name?>\" \/><\/div>\r\n<div class=\"input\"> <h6>Password<\/h6> <input name=\"passwd\" type=\"password\" value=\"\" \/><\/div>\r\n<div class=\"input\"> <h6>Confirm<\/h6> <input name=\"confirm\" type=\"password\" value=\"\" \/><\/div>\r\n<div class=\"input\"> <h6>Email<\/h6> <input name=\"email\" type=\"text\" value=\"<?cs var:S.login.email ?>\" \/><\/div>\r\n   <?cs if:?S._g.r ?>\r\n   <input name=\"r\" type=\"hidden\" value=\"<?cs var:S._g.r ?>\" \/>\r\n   <?cs \/if ?> \r\n<div class=\"input\">\r\n<input name=\"submit\" type=\"submit\" value=\"update profile\" \/>\r\n<\/div>\r\n",
+"body":"<h5>Update profile<\/h5>\r\n<br>You don't need to fill out fields provided that you want to change it.\r\n<div class=\"window\">\r\n<form class=\"setuser\" method=\"POST\" action=\"<?cs var:C._base ?>\/profile\">\r\n<div class=\"input\"> <h6>User<\/h6> <input name=\"passwd\" type=\"text\" value=\"<?cs var:S.login.user ?>\" readonly=\"readonly\" \/><\/div>\r\n<div class=\"input\"> <h6>Nick name<\/h6> <input name=\"name\" type=\"text\" value=\"<?cs var:S.login.name?>\" \/><\/div>\r\n<div class=\"input\"> <h6>Password<\/h6> <input name=\"passwd\" type=\"password\" value=\"\" \/><\/div>\r\n<div class=\"input\"> <h6>Confirm<\/h6> <input name=\"confirm\" type=\"password\" value=\"\" \/><\/div>\r\n<div class=\"input\"> <h6>Email<\/h6> <input name=\"email\" type=\"text\" value=\"<?cs var:S.login.email ?>\" \/><\/div>\r\n   <?cs if:?S._g.r ?>\r\n   <input name=\"r\" type=\"hidden\" value=\"<?cs var:S._g.r ?>\" \/>\r\n   <?cs \/if ?> \r\n<div class=\"input\">\r\n<input name=\"submit\" type=\"submit\" value=\"update profile\" \/>\r\n<\/div>\r\n",
 "action":[
 ""
 ],
