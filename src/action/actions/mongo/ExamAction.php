@@ -87,6 +87,7 @@ class ExamAction extends UserPostAction {
   function begin_hook(&$op,&$docid,&$post){
     if ( $this->method === \Cockatoo\Beak::M_GET ) {
       if ( $op === 'eval' ) {
+        // Eval score
         $session     = $this->getSession();
         $doc = $session['exam'];
         $qs =& $doc['qs'];
@@ -101,6 +102,12 @@ class ExamAction extends UserPostAction {
           });
         $doc['score'] = floor(100*$correct/$all);
         $doc['done'] = '1';
+        // Save user data
+        $user_data = $session[\Cockatoo\AccountUtil::SESSION_LOGIN];
+        $user_data['exam'] = array($docid => array('score' => $doc['score']));
+        \Cockatoo\AccountUtil::save_account(MongoConfig::USER_COLLECTION,$user_data);
+        // Update session
+        $s[\Cockatoo\AccountUtil::SESSION_LOGIN] = $user_data;
         $s['exam'] = null;
         $this->updateSession($s);
         return $doc;
