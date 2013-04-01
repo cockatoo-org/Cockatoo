@@ -54,7 +54,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
     return null;
   }
   function get_docs(){
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'contents,attenders,waiters,cancelers'),array());
     $docs = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( ! $this->isRoot ) {
       $user = $this->user;
@@ -126,9 +126,13 @@ abstract class UserPostAction extends \Cockatoo\Action {
             return array( $this->DOCNAME => $doc);
           }
           $doc = $this->new_doc();
+          $doc['writable'] = true;
+          return array( $this->DOCNAME => $doc);
+        }
+        if ( !$doc ) {
           $doc['_owner'] = $this->user;
           $doc['_ownername'] = $this->username;
-          return array( $this->DOCNAME => $doc);
+          $doc['writable'] = true;
         }
         $this->post_to_doc($post,$doc);
         if( $op === 'preview' ) {
@@ -150,12 +154,11 @@ abstract class UserPostAction extends \Cockatoo\Action {
         }
       }
     }catch ( \Exception $e ) {
-      // $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
-      // $this->updateSession($s);
-      // $this->setMovedTemporary($this->REDIRECT);
-       \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
-       $this->setNamespace('error');
-       return array('_err' => $e->getMessage());
+      $s[\Cockatoo\Def::SESSION_KEY_ERROR] = $e->getMessage();
+      $this->updateSession($s);
+      $this->setMovedTemporary($this->REDIRECT);
+      \Cockatoo\Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
+      return null;
     }
   }
   public function postProc(){

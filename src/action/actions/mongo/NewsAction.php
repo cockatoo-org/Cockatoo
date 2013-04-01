@@ -1,7 +1,7 @@
 <?php
 namespace mongo;
 /**
- * TipAction.php - ????
+ * NewsAction.php - ????
  *  
  * @package ????
  * @access public
@@ -10,10 +10,10 @@ namespace mongo;
  * @version $Id$
  * @copyright Copyright (C) 2011, rakuten 
  */
-class TipAction extends UserPostAction {
-  protected $REDIRECT = '/mongo/tips';
-  protected $COLLECTION = 'tips';
-  protected $DOCNAME    = 'tip';
+class NewsAction extends UserPostAction {
+  protected $REDIRECT = '/mongo/news';
+  protected $COLLECTION = 'news';
+  protected $DOCNAME    = 'news';
   function new_doc(){
     $origin = '*New';
     $contents = array(array('tag' => 'h2','attr'=>array(),'children' => array(array('tag'=>'text' , 'text' => 'New'))));

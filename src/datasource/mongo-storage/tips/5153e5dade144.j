@@ -1,5 +1,5 @@
 {
-"title":"\u30ed\u30fc\u30eb\u30c6\u30b9\u30c8",
+"title":"\u30ed\u30fc\u30eb\u30c6\u30b9\u30c811",
 "origin":"*\u308d\u30fc\u308b\u3066\u3059\u3068\r\n\u306a\u3044\u3088\u3046",
 "docid":"5153e5dade144",
 "op":"save",
@@ -80,7 +80,8 @@
 ],
 "_owner":"crumbjp",
 "_ownername":"@crumbjp",
-"_time":1364452826,
-"_timestr":"2013-03-28",
-"_u":"5153e5dade144"
+"_time":1364807291,
+"_timestr":"2013-04-01",
+"_u":"5153e5dade144",
+"writable":true
 }

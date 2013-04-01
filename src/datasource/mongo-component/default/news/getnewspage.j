@@ -1,0 +1,17 @@
+{
+"@R":"1364807401",
+"type":"HorizontalWidget",
+"subject":"getnewspage",
+"description":"",
+"css":"",
+"js":"",
+"id":"",
+"class":"",
+"body":"",
+"action":[
+"action:\/\/mongo-action\/mongo\/NewsAction?get"
+],
+"header":"",
+"bottom":"",
+"_u":"news\/getnewspage"
+}

@@ -1,5 +1,5 @@
 {
-"@R":"1364801648",
+"@R":"1364803074",
 "type":"HorizontalWidget",
 "subject":"errmsg",
 "description":"errmsg",
@@ -9,7 +9,7 @@
 "class":"core",
 "body":"<div class=\"emsg\"><?cs var:A.error._err?><\/div>\r\n\r\n",
 "action":[
-""
+"action:\/\/core-action\/Cockatoo\/ErrorAction"
 ],
 "_u":"utils\/errmsg",
 "header":"",

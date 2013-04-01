@@ -39,6 +39,11 @@
 },
 {
 "type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
 "extra":"",
 "component":"component:\/\/core-component\/default\/utils\/errmsg",
 "children":[
@@ -86,19 +91,6 @@
 "min_width":"",
 "extra":"",
 "component":"component:\/\/mongo-component\/default\/c\/events",
-"children":[
-
-]
-},
-{
-"type":"HorizontalWidget",
-"class":"",
-"height":"",
-"width":"",
-"min_height":"",
-"min_width":"",
-"extra":"",
-"component":"component:\/\/mongo-component\/default\/c\/releases",
 "children":[
 
 ]

@@ -70,13 +70,13 @@ class ExamAction extends UserPostAction {
         's' => array_merge(array($answer),$candidates)
         );
     }
-    $doc = array(
+    $doc = array_merge($doc,array(
       'public' => $public,
       'docid' => $docid,
       'qname' => $qname,
       'qnum' => $qnum,
       'qsummary' => $qsummary,
-      'qs' => $qs);
+      'qs' => $qs));
   }
   function update_docid(&$docid,&$doc) {
     if ( ! $docid || strcmp($docid,'new')===0 ) {

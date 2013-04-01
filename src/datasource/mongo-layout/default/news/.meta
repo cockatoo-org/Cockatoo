@@ -1,12 +1,12 @@
 {
-"@R":"1361862153",
+"@R":"1364807626",
 "eredirect":"",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
 "session_exp":"2147483647",
 "expires":"",
-"header":"<title>MongoDB JP : <?cs var:A.mongo.page.title?><\/title>\r\n",
+"header":"<meta name=\"description\" content=\"\">\r\n",
 "pheader":"",
 "bottom":"",
 "layout":{
@@ -27,12 +27,28 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/news\/news",
+"component":"component:\/\/mongo-component\/default\/utils\/page",
+"children":[
+
+]
+},
+{
+"type":"HorizontalWidget",
+"extra":"",
+"component":"component:\/\/mongo-component\/default\/news\/getnewspage",
+"children":[
+
+]
+},
+{
+"type":"HorizontalWidget",
+"extra":"",
+"component":"component:\/\/mongo-component\/default\/news\/newspage",
 "children":[
 
 ]
 }
 ]
 },
-"_u":"news"
+"_u":"news\/"
 }

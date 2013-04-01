@@ -3,7 +3,7 @@
 "docid":"5153e3a9ecd58",
 "qname":"Writable\u30e6\u30fc\u30b6\u30c6\u30b9\u30c8",
 "qnum":"5",
-"qsummary":"\u30ed\u30fc\u30eb\u30c6\u30b9\u30c8",
+"qsummary":"\u30ed\u30fc\u30eb\u30c6\u30b9\u30c812",
 "qs":[
 {
 "show":"",
@@ -878,7 +878,8 @@
 ],
 "_owner":"crumbjp",
 "_ownername":"@crumbjp",
-"_time":1364452265,
-"_timestr":"2013-03-28",
-"_u":"5153e3a9ecd58"
+"_time":1364807219,
+"_timestr":"2013-04-01",
+"_u":"5153e3a9ecd58",
+"writable":true
 }
