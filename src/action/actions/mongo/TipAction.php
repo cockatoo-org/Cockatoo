@@ -23,14 +23,13 @@ class TipAction extends UserPostAction {
       'contents' => $contents
       );
   }
-  function post_to_doc (&$post) {
+  function post_to_doc (&$post,&$doc) {
     $doc = $post;
     unset($doc['submit']);
     $origin   = $doc['origin'];
     $lines = preg_split("@\r?\n@",$origin);
     $parser = new PageParser($doc['title'],$lines);
     $doc['contents'] =  $parser->parse();
-    return $doc;
   }
   function update_docid(&$docid,&$doc) {
     if ( ! $docid || strcmp($docid,'new')===0 ) {

@@ -34,8 +34,38 @@
 },
 {
 "type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
 "extra":"",
 "component":"component:\/\/mongo-component\/default\/events\/geteventpage",
+"children":[
+
+]
+},
+{
+"type":"VerticalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"vpos":"right",
+"swidth":"200px;",
+"extra":"",
+"component":"component:\/\/core-component\/default\/vertical",
+"children":[
+{
+"type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component:\/\/mongo-component\/default\/events\/attender",
 "children":[
 
 ]
@@ -51,6 +81,8 @@
 "component":"component:\/\/mongo-component\/default\/events\/eventpage",
 "children":[
 
+]
+}
 ]
 }
 ]

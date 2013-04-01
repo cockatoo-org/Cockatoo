@@ -38,7 +38,7 @@ class ExamAction extends UserPostAction {
       'qs' => $qs
       );
   }
-  function post_to_doc (&$post) {
+  function post_to_doc (&$post,&$doc) {
     $public  = $post['public'];
     $qname   = $post['qname'];
     $qnum    = $post['qnum'];
@@ -70,7 +70,7 @@ class ExamAction extends UserPostAction {
         's' => array_merge(array($answer),$candidates)
         );
     }
-    return array(
+    $doc = array(
       'public' => $public,
       'docid' => $docid,
       'qname' => $qname,
@@ -84,13 +84,13 @@ class ExamAction extends UserPostAction {
     }
     return $docid;
   }
-  function begin_hook(&$op,&$docid,&$post){
+  function begin_hook(&$op,&$docid,&$doc,&$post){
     if ( $this->method === \Cockatoo\Beak::M_GET ) {
       if ( $op === 'eval' ) {
         // Eval score
         $session     = $this->getSession();
-        $doc = $session['exam'];
-        $qs =& $doc['qs'];
+        $ret = $session['exam'];
+        $qs =& $ret['qs'];
         $all = sizeof($qs);
         $correct = 0;
         array_walk($qs,function(&$e,$i) use ($session,$post,$all,&$correct){
@@ -100,17 +100,17 @@ class ExamAction extends UserPostAction {
             $e['checked'] = $post['q'.$i.'a'];
             $e['show'] = 'show';
           });
-        $doc['score'] = floor(100*$correct/$all);
-        $doc['done'] = '1';
+        $ret['score'] = floor(100*$correct/$all);
+        $ret['done'] = '1';
         // Save user data
         $user_data = $session[\Cockatoo\AccountUtil::SESSION_LOGIN];
-        $user_data['exam'] = array($docid => array('score' => $doc['score']));
+        $user_data['exam'] = array($retid => array('score' => $ret['score']));
         \Cockatoo\AccountUtil::save_account(MongoConfig::USER_COLLECTION,$user_data);
         // Update session
         $s[\Cockatoo\AccountUtil::SESSION_LOGIN] = $user_data;
         $s['exam'] = null;
         $this->updateSession($s);
-        return $doc;
+        return $ret;
       }
     }
     return null;
@@ -138,6 +138,9 @@ class ExamAction extends UserPostAction {
     return $doc;
   }
   function set_hook(&$doc){
+    $doc['done'] = '1';
+  }
+  function preview_hook(&$doc){
     $doc['done'] = '1';
   }
 }

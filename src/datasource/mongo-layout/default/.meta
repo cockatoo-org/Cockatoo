@@ -38,6 +38,14 @@
 ]
 },
 {
+"type":"HorizontalWidget",
+"extra":"",
+"component":"component:\/\/core-component\/default\/utils\/errmsg",
+"children":[
+
+]
+},
+{
 "type":"VerticalWidget",
 "class":"",
 "height":"",
