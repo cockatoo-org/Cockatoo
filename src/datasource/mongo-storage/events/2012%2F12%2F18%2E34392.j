@@ -2,15 +2,15 @@
 "_owner":"crumbjp",
 "_ownername":"@crumbjp",
 "public":"on",
-"event_url":"http:\/\/atnd.org\/events\/33485",
-"event_id":"33485",
-"title":"\u4e38\u306e\u5185MongoDB\u52c9\u5f37\u4f1a #4",
-"subtitle":"\u7b2c4\u56de \u300cMongoDB\u3067Web\u30a2\u30d7\u30ea\u3092\u3064\u304f\u308d\u3046\u300d\u3068\u300cConfig\u30d1\u30e9\u30e1\u30fc\u30bf\u89e3\u8aac\u300d",
-"date":"2012\/11\/6",
+"event_url":"http:\/\/atnd.org\/events\/34392",
+"event_id":"34392",
+"title":"\u4e38\u306e\u5185MongoDB\u52c9\u5f37\u4f1a #5",
+"subtitle":"\u7b2c5\u56de\u3000\u300c\u30bd\u30fc\u30b9\u30b3\u30fc\u30c9\u30ea\u30fc\u30c7\u30a3\u30f3\u30b0\u5165\u9580\u300d\u3068\u300cMongoDB\u3092\u30ab\u30b9\u30bf\u30e0\u30d3\u30eb\u30c9\u3057\u3066\u307f\u3088\u3046\u300d\u3068\u300c\u904b\u7528\u306b\u3064\u3044\u3066\u300d",
+"date":"2012\/12\/18",
 "address":"\u5343\u4ee3\u7530\u533a\u4e38\u306e\u51851-6-5",
 "place":"\u4e38\u306e\u5185\u5317\u53e3\u30d3\u30eb8F\uff08\u91ce\u6751\u7dcf\u5408\u7814\u7a76\u6240\uff09 \u4f1a\u8b70\u5ba4 83",
 "limit":"30",
-"docid":"2012\/11\/6..33485",
+"docid":"2012\/12\/18.34392",
 "op":"save",
 "contents":[
 {
@@ -46,7 +46,7 @@
 ]
 }
 ],
-"_time":1364879196,
+"_time":1364879208,
 "_timestr":"2013-04-02",
 "attenders":[
 
@@ -57,5 +57,5 @@
 "waiters":[
 
 ],
-"_u":"2012%2F11%2F6%2E%2E33485"
+"_u":"2012%2F12%2F18%2E34392"
 }

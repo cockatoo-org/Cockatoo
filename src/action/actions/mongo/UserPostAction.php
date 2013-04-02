@@ -40,12 +40,15 @@ abstract class UserPostAction extends \Cockatoo\Action {
   protected $isRoot = false;
   protected $isWritable = false;
 
-  function get_doc($docid){
+  function get_doc($docid,$force = false){
     $session = $this->getSession();
     $docid = \Cockatoo\UrlUtil::urlencode($docid);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_GET,array(),array());
     $doc = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( $doc ) {
+      if ( $force ) {
+        return $doc;
+      }
       if ( $this->isRoot || $doc['_owner'] === $this->user ) {
         $doc['writable'] = true;
         return $doc;
@@ -142,11 +145,19 @@ abstract class UserPostAction extends \Cockatoo\Action {
           $doc['writable'] = true;
           return array( $this->DOCNAME => $doc);
         }
-        if ( !$doc ) {
-          $doc['_owner'] = $this->user;
-          $doc['_ownername'] = $this->username;
+        if ($doc){
+          $doc['public'] = false;
         }
         $this->post_to_doc($post,$doc);
+        if ( !$doc['_owner'] ) {
+          $doc['_owner'] = $this->user;
+          $doc['_ownername'] = $this->username;
+          $doc['docid'] = $this->update_docid($docid,$doc);
+          $prev = $this->get_doc($doc['docid'],true);
+          if ( $prev && $prev['_owner'] !== $doc['_owner'] ) {
+            throw new \Exception('You do not have permission or the event is already registed.');
+          }
+        }
         if( $op === 'preview' ) {
           $this->preview_hook($doc);
           $doc['writable'] = true;

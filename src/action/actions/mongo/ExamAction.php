@@ -80,7 +80,7 @@ class ExamAction extends UserPostAction {
   }
   function update_docid(&$docid,&$doc) {
     if ( ! $docid || strcmp($docid,'new')===0 ) {
-      $docid = uniqid();
+      $docid = $doc['_time'] . uniqid();
     }
     return $docid;
   }
