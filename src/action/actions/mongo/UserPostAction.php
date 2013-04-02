@@ -29,6 +29,9 @@ abstract class UserPostAction extends \Cockatoo\Action {
   }
   function save_hook(&$doc){
   }
+  function post_save_hook(&$doc){
+    return false;
+  }
   function begin_hook(&$op,&$docid,&$doc,&$post){
     return null; // continue
   }
@@ -54,19 +57,29 @@ abstract class UserPostAction extends \Cockatoo\Action {
     return null;
   }
   function get_docs(){
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'contents,attenders,waiters,cancelers'),array());
-    $docs = \Cockatoo\BeakController::beakSimpleQuery($brl);
-    if ( ! $this->isRoot ) {
-      $user = $this->user;
-      $docs = array_filter($docs,function ($doc) use(&$user) {
-          return (boolean)$doc['public'] || $doc['_owner'] === $user;
-        });
+    $limit = 1000;
+    $qs = \Cockatoo\parse_brl_query($this->queries);
+    if ( isset($qs[\Cockatoo\Beak::Q_LIMIT]) ) {
+      $limit = $qs[\Cockatoo\Beak::Q_LIMIT];
     }
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'contents,attenders,waiters,cancelers',\Cockatoo\Beak::Q_SORT => '_u:-1',\Cockatoo\Beak::Q_LIMIT => $limit),array());
+    $docs = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    $isRoot = $this->isRoot;
+    $user = $this->user;
+    $docs = array_filter($docs,function ($doc) use(&$user,&$isRoot) {
+        return (boolean)$doc['public'] || $isRoot || $doc['_owner'] === $user;
+      });
+    array_walk($docs,function (&$doc) use(&$user,&$isRoot) {
+        if ( $isRoot || $doc['_owner'] === $user ) {
+          $doc['writable'] = true;
+        }
+      });
     return $docs;
   }
   function save_doc($docid,&$doc,$force = false){
     if ( $doc && 
          ( $force || $this->isRoot || $doc['_owner'] === $this->user )) {
+      unset($doc['writable']);
       $docid = \Cockatoo\UrlUtil::urlencode($docid);
       $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_SET,array(),array());
       $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$doc);
@@ -132,11 +145,11 @@ abstract class UserPostAction extends \Cockatoo\Action {
         if ( !$doc ) {
           $doc['_owner'] = $this->user;
           $doc['_ownername'] = $this->username;
-          $doc['writable'] = true;
         }
         $this->post_to_doc($post,$doc);
         if( $op === 'preview' ) {
           $this->preview_hook($doc);
+          $doc['writable'] = true;
           return array( $this->DOCNAME => $doc );
         }elseif( $op === 'save' ) {
           $old_docid = $docid;
@@ -149,7 +162,11 @@ abstract class UserPostAction extends \Cockatoo\Action {
           if ( $new_docid !== $old_docid ) {
             $this->remove_doc($old_docid);
           }
-          $this->setMovedTemporary($this->REDIRECT.'/'.$new_docid);
+          $redirect = $this->post_save_hook($doc);
+          if ( ! $redirect ) {
+            $redirect = $this->REDIRECT.'/'.$new_docid;
+          }
+          $this->setMovedTemporary($redirect);
           return array();
         }
       }

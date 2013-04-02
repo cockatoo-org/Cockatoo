@@ -78,6 +78,9 @@ class EventAction extends UserPostAction {
       $doc['waiters'] = array();
     }
   }
+  function post_save_hook(&$doc){
+    return $this->REDIRECT;
+  }
   function begin_hook(&$op,&$docid,&$doc,&$post){
     if ( $this->method === \Cockatoo\Beak::M_GET ) {
       if ( ! $this->user ) { // Is login
@@ -160,11 +163,11 @@ class EventAction extends UserPostAction {
   const SEPARATOR = '.';
   function update_docid(&$docid,&$doc) {
     if ( ! $docid || strcmp($docid,'new')===0 ) {
-        $docid = $doc['date'] . self::SEPARATOR . $doc['time'] . self::SEPARATOR . uniqid();
+      $docid = $doc['date'] . self::SEPARATOR . $doc['time'] . self::SEPARATOR . $doc['event_id'];
     }
     $parsed_docid = explode(self::SEPARATOR,$docid);
     if ( ! ($doc['date'] === $parsed_docid[0] && $doc['time'] === $parsed_docid[1]) ) {
-      $docid = $doc['date'] . self::SEPARATOR . $doc['time'] . self::SEPARATOR . uniqid();
+      $docid = $doc['date'] . self::SEPARATOR . $doc['time'] . self::SEPARATOR . $doc['event_id'];
     }
     return $docid;
   }
