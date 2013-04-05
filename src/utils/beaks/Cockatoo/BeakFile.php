@@ -131,7 +131,7 @@ class BeakFile extends Beak {
       $ifile = $dir . $key;
       if ( is_file($ifile)) {
         $json = file_get_contents($ifile);
-        return self::decode($json);
+        return JParser::decode($json);
       }
       return array();
     }
@@ -141,7 +141,7 @@ class BeakFile extends Beak {
     if ( isset($data[$index_key])){
       $index[$data[$index_key]] []= $data[Beak::Q_UNIQUE_INDEX];
       $index[$data[$index_key]] = array_unique($index[$data[$index_key]]);
-      $json = self::encode($index);
+      $json = JParser::encode($index);
       $ifile = $this->collection_path . self::DIR_INDEX.$index_key;
       file_put_contents($ifile,$json);
     }
@@ -195,7 +195,7 @@ class BeakFile extends Beak {
   private function getDoc($file) {
     if ( is_file($file)) {
       $json=file_get_contents($file);
-      $data=self::decode($json);
+      $data=JParser::decode($json);
       if ( $this->filters ) {
         $ret;
         foreach($this->filters as $c){
@@ -416,7 +416,7 @@ class BeakFile extends Beak {
     if ( $this->rev ) {
       if ( is_file($file)) {
         $json=file_get_contents($file);
-        $prev = self::decode($json);
+        $prev = JParser::decode($json);
         if ( $prev[Beak::ATTR_REV] and $arg[Beak::ATTR_REV] and
                $arg[Beak::ATTR_REV] !== $prev[Beak::ATTR_REV] ){
           Log::debug(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'revision judge failure : ' . $arg[Beak::ATTR_REV] .' !== ' . $prev[Beak::ATTR_REV]);
@@ -438,7 +438,7 @@ class BeakFile extends Beak {
       }
       if ( is_file($file)) {
         $json=file_get_contents($file);
-        $prev = self::decode($json);
+        $prev = JParser::decode($json);
       }
       if ( $prev && strcmp($this->op,Beak::COMMENT_KIND_OP_SET)===0 ) {
         $arg = array_merge($prev,$arg);
@@ -449,7 +449,7 @@ class BeakFile extends Beak {
     }else{
       if ( is_file($file)) {
         $json=file_get_contents($file);
-        $prev = self::decode($json);
+        $prev = JParser::decode($json);
       }
     }
     if ( $prev === null ) {
@@ -503,7 +503,7 @@ class BeakFile extends Beak {
       $this->setIndex($index_key,$arg);
     }
 
-    $data = self::encode($arg);
+    $data = JParser::encode($arg);
     return file_put_contents($file,$data)?true:false;
   }
   /**
@@ -587,9 +587,8 @@ class BeakFile extends Beak {
   public function result() {
     return $this->ret;
   }
-
+/*
   static private function decode(&$str){
-//     return json_decode($str,true);
     $data = json_decode($str,true);
     self::decode_unpack($data);
     return $data;
@@ -604,7 +603,6 @@ class BeakFile extends Beak {
     }else {
     }
   }
-
   static private function is_hash(&$array){
     foreach( $array as $k => $v  ){
       if ( is_string($k) ) {
@@ -670,7 +668,9 @@ class BeakFile extends Beak {
         $ret .= "\n]";
       }
     } elseif( is_string($data)) {
+      // @@@ $s = str_replace('\n',"\n",json_encode($data));
       $s = json_encode($data);
+      
       if ( $data and $s === 'null' ) {
         $s = '"@BIN@'.join(unpack('H*',$data)).'"';
       }
@@ -680,4 +680,242 @@ class BeakFile extends Beak {
     }
     return $ret;
   }
+*/
 }
+
+
+class JParser {
+  static function encode(&$d){
+    if ( Config::Mode !== Def::MODE_DEBUG ) {
+      self::$ELEMENT_N = '';
+      self::$STRING_N = true;
+    }
+    return self::_jencode($d);
+  }
+  static function decode($j){
+    return self::_jdecode($j);
+  }
+
+
+  static $ELEMENT_N = "\n";
+  static $STRING_N = false;
+  static function is_hash($d){
+    if ( is_array($d)) {
+      foreach ( $d as $k => $v ) {
+        if ( is_string($k) ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  static function _escape(&$str) {
+    $ret = '"';
+    for ( $i = 0 ; $i < strlen($str);$i++){
+      if ( $str[$i] === '\\' ) {
+        $ret .= '\\\\';
+        continue;
+      }else if ( $str[$i] === "\f" ) {
+        $ret .= '\\f';
+        continue;
+      }else if ( $str[$i] === "\b" ) {
+        $ret .= '\\b';
+        continue;
+      }else if ( $str[$i] === "\t" ) {
+        $ret .= '\\t';
+        continue;
+      }else if ( $str[$i] === "\r" ) {
+        $ret .= '\\r';
+        continue;
+      }else if ( $str[$i] === "\n" ) {
+        if ( self::$STRING_N ) {
+          $ret .= '\\n';
+        }else{
+          $ret .= "\n";
+        }
+        continue;
+      }else if ( $str[$i] === '"' ) {
+        $ret .= '\\"';
+        continue;
+      }else {
+        $bytes = $str[$i] . $str[$i+1] . $str[$i+2];
+        if ( preg_match('@^([^\x09\x0A\x0D\x20-\x7E]{3})$@',$bytes,$matches) ){
+          $enc = mb_convert_encoding($bytes,'UTF-16','UTF-8');
+          $ret .= sprintf('\\u%02x%02x',ord($enc[0]),ord($enc[1]));
+          $i += 2;
+          continue;
+        }else if ( ord($str[$i]) <= 0x1F || ord($str[$i]) >= 0x7F  ) {
+          return '"@BIN@'.join(unpack('H*',$str)).'"';
+        }
+      }
+      $ret .= $str[$i];
+    }
+    return $ret.'"';
+    $str = preg_replace_callback('@((?:[^\x09\x0A\x0D\x20-\x7E]{3})+)@',
+                                 function ($matches){
+                                   $enc = mb_convert_encoding($matches[1],'UTF-16','UTF-8');
+                                   $ret = '';
+                                   for ( $i = 0; $i < strlen($enc); ){
+                                     $ret .= sprintf('\\u%02x%02x',ord($enc[$i++]),ord($enc[$i++]));
+                                   }
+                                   return $ret;
+                                 },
+                                 $str);
+    return '"' . $str . '"';
+  }
+  static function _unescape(&$j) {
+    $j = substr($j,1);
+    if ( strncmp('@BIN@',$j,5) === 0 ) {
+      $pos = strpos($j,'"');
+      $elem = substr($j,0,$pos);
+      $ret = pack('H*',substr($elem,5));
+      $j = substr($j,$pos+1);
+      return $ret;
+    }
+    $escape = false;
+    $ret = '';
+    for ( $i = 0 ; $i < strlen($j);$i++){
+      if( $escape ) {
+        if ( $j[$i] === '\\' ) {
+          $ret .= '\\';
+        }else if ( $j[$i] === 'f' ) {
+          $ret .= "\f";
+        }else if ( $j[$i] === 'b' ) {
+          $ret .= "\b";
+        }else if ( $j[$i] === 't' ) {
+          $ret .= "\t";
+        }else if ( $j[$i] === 'r' ) {
+          $ret .= "\r";
+        }else if ( $j[$i] === 'n' ) {
+          $ret .= "\n";
+        }else if ( $j[$i] === '"' ) {
+          $ret .= '"';
+        }else if ( $j[$i] === 'u' ) {
+          $ret .= mb_convert_encoding(pack('H*',$j[++$i].$j[++$i].$j[++$i].$j[++$i] ),'UTF-8','UTF-16');
+        }else {
+        }
+        $escape = false;
+        continue;
+      }
+      if ( $j[$i] === '\\' ){
+        $escape = true;
+        continue;
+      }
+      if ( $j[$i] === '"' ){
+        break;
+      }
+      $ret .= $j[$i];
+    }
+    $str = substr($j,0,$i);
+    $j = substr($j,$i+1);
+    return $ret;
+  }
+
+  static function _jencode(&$d){
+    if  ( is_null($d) ) {
+      $ret = 'null';
+    }elseif( self::is_hash($d) ) {
+      $ret = '{'.self::$ELEMENT_N;
+      $flg = false;
+      foreach( $d as $k => $v ) {
+        $ret .= ($flg?','.self::$ELEMENT_N:'').'"'.$k.'":'.self::_jencode($v);
+        $flg = true;
+      }
+      $ret .= self::$ELEMENT_N.'}';
+    }elseif( is_array($d) ) {
+      $ret = "[".self::$ELEMENT_N;
+      $flg = false;
+      foreach ( $d as $v ) {
+        $ret .= ($flg?','.self::$ELEMENT_N:'').self::_jencode($v);
+        $flg = true;
+      }
+      $ret .= self::$ELEMENT_N.']';
+    }elseif( is_string($d) ) {
+      $ret = self::_escape($d);
+    }elseif( is_bool($d) ) {
+      $ret = $d?'true':'false';
+    }elseif( is_numeric($d) ) {
+      $ret = $d;
+    }else{
+      throw new \Exception('Could not jencode');
+    }
+    return $ret;
+  }
+  static function _jdecode(&$str){
+    $str = ltrim($str); // @@@
+    if ( $str[0] === '{' ) {
+      $str = substr($str,1);
+      $str = ltrim($str," \t\r\n");
+      while ( $str[0] !== '}' ) {
+        if ( $str[0] !== '"' ) {
+          throw new \Exception('Could not jdecode. expects ["] : actual [' .$str[0] .']' );
+        }
+        // key
+        $k = self::_unescape($str);
+        // value
+        $str = ltrim($str,": \t\r\n");
+        $v = self::_jdecode($str);
+        // add
+        $ret[$k] = $v;
+      }
+      $str = substr($str,1);
+    }elseif ( $str[0] === '[' ) {
+      $str = substr($str,1);
+      $str = ltrim($str," \t\r\n");
+      while ( $str[0] !== ']' ) {
+        $v = self::_jdecode($str);
+        $ret[] = $v;
+      }
+      $str = substr($str,1);
+    }elseif ( $str[0] === '"' ) {
+      $ret = self::_unescape($str);
+    }else{
+      // $pos = strpos($str,',]}');
+      $elem = strtok($str,',]}');
+      $pos = strlen($elem);
+      $elem = substr($str,0,$pos);
+      $str = substr($str,$pos);
+      $elem = trim($elem," \t\r\n");
+      if ( $elem === 'null' ) {
+        $ret = NULL;
+      }elseif ( $elem === 'true' ) {
+        $ret = true;
+      }elseif ( $elem === 'false' ) {
+        $ret = false;
+      }else{
+        $ret = floatval($elem);
+     }
+    }
+    $str = ltrim($str,", \t\r\n");
+    return $ret;
+  }
+}
+
+
+
+#ini_set('error_reporting',2039); # E_ALL & ^E_NOTICE
+#ini_set('log_errors','On');
+#ini_set('display_errors','On');
+#
+#$a = array( 'foo' => "東京\t<bar>\r\naa=\"aa\"\\nあい<baz>\r\nbbううううう",
+#            'FOO' => 11,
+#            'Bt' => true,
+#            'Bf' => false,
+#            'N' => NULL,
+#            'AR' => array ( 'AA','BB','CC' ),
+#            'AR2' => array ( array( 'aa'=>'AA','bb'=>'BB'),array('cc'=>'CC') ),
+#            'AR3' => array ( array('AA','BB'),array('CC') ),
+#            'HS' => array ( 'xx' => 'XX' , 'yy' => 'YY' , 'foo' ),
+#            'END' => 99.9,
+#            'BIN' => "\0aaa\1\255\254aaa"
+#
+#  );
+#print json_encode($a) . "\n";
+#$E = JParser::encode($a);
+#print $E;
+#$D = JParser::decode($E);
+#var_dump($D);
+#$R = JParser::encode($D);
+#var_dump($E);
+#var_dump($R);
+
