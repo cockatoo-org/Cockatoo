@@ -23,6 +23,10 @@ class BeakFile extends Beak {
    */
   protected $ret = null;
   /**
+   * parser obj
+   */
+  protected $jparser = null;
+  /**
    * Directory data file
    *   Data filename : <path>/.meta
    */
@@ -49,6 +53,12 @@ class BeakFile extends Beak {
    */
   public function __construct(&$brl,&$scheme,&$domain,&$collection,&$path,&$method,&$queries,&$comments,&$arg,&$hide) {
     parent::__construct($brl,$scheme,$domain,$collection,$path,$method,$queries,$comments,$arg,$hide);
+
+    if ( Config::Mode === Def::MODE_DEBUG ) {
+      $this->jparser = new JParser("\n",true);
+    }else{
+      $this->jparser = new JParser();
+    }
 
     if ( isset($this->queries[Beak::Q_FILTERS]) ) {
       $this->filters = explode(',',$this->queries[Beak::Q_FILTERS]);
@@ -131,7 +141,7 @@ class BeakFile extends Beak {
       $ifile = $dir . $key;
       if ( is_file($ifile)) {
         $json = file_get_contents($ifile);
-        return JParser::decode($json);
+        return $this->jparser->decode($json);
       }
       return array();
     }
@@ -141,7 +151,7 @@ class BeakFile extends Beak {
     if ( isset($data[$index_key])){
       $index[$data[$index_key]] []= $data[Beak::Q_UNIQUE_INDEX];
       $index[$data[$index_key]] = array_unique($index[$data[$index_key]]);
-      $json = JParser::encode($index);
+      $json = $this->jparser->encode($index);
       $ifile = $this->collection_path . self::DIR_INDEX.$index_key;
       file_put_contents($ifile,$json);
     }
@@ -195,7 +205,7 @@ class BeakFile extends Beak {
   private function getDoc($file) {
     if ( is_file($file)) {
       $json=file_get_contents($file);
-      $data=JParser::decode($json);
+      $data=$this->jparser->decode($json);
       if ( $this->filters ) {
         $ret;
         foreach($this->filters as $c){
@@ -416,7 +426,7 @@ class BeakFile extends Beak {
     if ( $this->rev ) {
       if ( is_file($file)) {
         $json=file_get_contents($file);
-        $prev = JParser::decode($json);
+        $prev = $this->jparser->decode($json);
         if ( $prev[Beak::ATTR_REV] and $arg[Beak::ATTR_REV] and
                $arg[Beak::ATTR_REV] !== $prev[Beak::ATTR_REV] ){
           Log::debug(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'revision judge failure : ' . $arg[Beak::ATTR_REV] .' !== ' . $prev[Beak::ATTR_REV]);
@@ -438,7 +448,7 @@ class BeakFile extends Beak {
       }
       if ( is_file($file)) {
         $json=file_get_contents($file);
-        $prev = JParser::decode($json);
+        $prev = $this->jparser->decode($json);
       }
       if ( $prev && strcmp($this->op,Beak::COMMENT_KIND_OP_SET)===0 ) {
         $arg = array_merge($prev,$arg);
@@ -449,7 +459,7 @@ class BeakFile extends Beak {
     }else{
       if ( is_file($file)) {
         $json=file_get_contents($file);
-        $prev = JParser::decode($json);
+        $prev = $this->jparser->decode($json);
       }
     }
     if ( $prev === null ) {
@@ -503,7 +513,7 @@ class BeakFile extends Beak {
       $this->setIndex($index_key,$arg);
     }
 
-    $data = JParser::encode($arg);
+    $data = $this->jparser->encode($arg);
     return file_put_contents($file,$data)?true:false;
   }
   /**
@@ -685,20 +695,18 @@ class BeakFile extends Beak {
 
 
 class JParser {
-  static function encode(&$d){
-    if ( Config::Mode !== Def::MODE_DEBUG ) {
-      self::$ELEMENT_N = '';
-      self::$STRING_N = true;
-    }
-    return self::_jencode($d);
+  public function __construct($esep="",$strn=false) {
+    $this->ELEMENT_SEPARATOR = $esep;
+    $this->IS_STRING_NLINE   = $strn;
   }
-  static function decode($j){
-    return self::_jdecode($j);
+  public function encode(&$d){
+    return $this->jencode($d);
+  }
+  public function decode(&$j){
+    $cpj = $j;
+    return $this->_jdecode($cpj);
   }
 
-
-  static $ELEMENT_N = "\n";
-  static $STRING_N = false;
   static function is_hash($d){
     if ( is_array($d)) {
       foreach ( $d as $k => $v ) {
@@ -709,7 +717,8 @@ class JParser {
     }
     return false;
   }
-  static function _escape(&$str) {
+
+  private function _escape(&$str) {
     $ret = '"';
     for ( $i = 0 ; $i < strlen($str);$i++){
       if ( $str[$i] === '\\' ) {
@@ -728,7 +737,7 @@ class JParser {
         $ret .= '\\r';
         continue;
       }else if ( $str[$i] === "\n" ) {
-        if ( self::$STRING_N ) {
+        if ( ! $this->IS_STRING_NLINE ) {
           $ret .= '\\n';
         }else{
           $ret .= "\n";
@@ -763,7 +772,7 @@ class JParser {
                                  $str);
     return '"' . $str . '"';
   }
-  static function _unescape(&$j) {
+  private function _unescape(&$j) {
     $j = substr($j,1);
     if ( strncmp('@BIN@',$j,5) === 0 ) {
       $pos = strpos($j,'"');
@@ -811,27 +820,27 @@ class JParser {
     return $ret;
   }
 
-  static function _jencode(&$d){
+  private function jencode(&$d){
     if  ( is_null($d) ) {
       $ret = 'null';
     }elseif( self::is_hash($d) ) {
-      $ret = '{'.self::$ELEMENT_N;
+      $ret = '{'.$this->ELEMENT_SEPARATOR;
       $flg = false;
       foreach( $d as $k => $v ) {
-        $ret .= ($flg?','.self::$ELEMENT_N:'').'"'.$k.'":'.self::_jencode($v);
+        $ret .= ($flg?','.$this->ELEMENT_SEPARATOR:'').'"'.$k.'":'.$this->jencode($v);
         $flg = true;
       }
-      $ret .= self::$ELEMENT_N.'}';
+      $ret .= $this->ELEMENT_SEPARATOR.'}';
     }elseif( is_array($d) ) {
-      $ret = "[".self::$ELEMENT_N;
+      $ret = "[".$this->ELEMENT_SEPARATOR;
       $flg = false;
       foreach ( $d as $v ) {
-        $ret .= ($flg?','.self::$ELEMENT_N:'').self::_jencode($v);
+        $ret .= ($flg?','.$this->ELEMENT_SEPARATOR:'').$this->jencode($v);
         $flg = true;
       }
-      $ret .= self::$ELEMENT_N.']';
+      $ret .= $this->ELEMENT_SEPARATOR.']';
     }elseif( is_string($d) ) {
-      $ret = self::_escape($d);
+      $ret = $this->_escape($d);
     }elseif( is_bool($d) ) {
       $ret = $d?'true':'false';
     }elseif( is_numeric($d) ) {
@@ -841,8 +850,8 @@ class JParser {
     }
     return $ret;
   }
-  static function _jdecode(&$str){
-    $str = ltrim($str); // @@@
+  private function _jdecode(&$str){
+    $str = ltrim($str);
     if ( $str[0] === '{' ) {
       $str = substr($str,1);
       $str = ltrim($str," \t\r\n");
@@ -851,10 +860,10 @@ class JParser {
           throw new \Exception('Could not jdecode. expects ["] : actual [' .$str[0] .']' );
         }
         // key
-        $k = self::_unescape($str);
+        $k = $this->_unescape($str);
         // value
         $str = ltrim($str,": \t\r\n");
-        $v = self::_jdecode($str);
+        $v = $this->_jdecode($str);
         // add
         $ret[$k] = $v;
       }
@@ -863,12 +872,12 @@ class JParser {
       $str = substr($str,1);
       $str = ltrim($str," \t\r\n");
       while ( $str[0] !== ']' ) {
-        $v = self::_jdecode($str);
+        $v = $this->_jdecode($str);
         $ret[] = $v;
       }
       $str = substr($str,1);
     }elseif ( $str[0] === '"' ) {
-      $ret = self::_unescape($str);
+      $ret = $this->_unescape($str);
     }else{
       // $pos = strpos($str,',]}');
       $elem = strtok($str,',]}');
@@ -890,32 +899,3 @@ class JParser {
     return $ret;
   }
 }
-
-
-
-#ini_set('error_reporting',2039); # E_ALL & ^E_NOTICE
-#ini_set('log_errors','On');
-#ini_set('display_errors','On');
-#
-#$a = array( 'foo' => "東京\t<bar>\r\naa=\"aa\"\\nあい<baz>\r\nbbううううう",
-#            'FOO' => 11,
-#            'Bt' => true,
-#            'Bf' => false,
-#            'N' => NULL,
-#            'AR' => array ( 'AA','BB','CC' ),
-#            'AR2' => array ( array( 'aa'=>'AA','bb'=>'BB'),array('cc'=>'CC') ),
-#            'AR3' => array ( array('AA','BB'),array('CC') ),
-#            'HS' => array ( 'xx' => 'XX' , 'yy' => 'YY' , 'foo' ),
-#            'END' => 99.9,
-#            'BIN' => "\0aaa\1\255\254aaa"
-#
-#  );
-#print json_encode($a) . "\n";
-#$E = JParser::encode($a);
-#print $E;
-#$D = JParser::decode($E);
-#var_dump($D);
-#$R = JParser::encode($D);
-#var_dump($E);
-#var_dump($R);
-
