@@ -1,3 +1,4 @@
+unittest-*
 *-storage
 !wiki-storage
 wiki-storage/toc
