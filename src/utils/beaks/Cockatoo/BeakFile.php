@@ -787,6 +787,8 @@ class JParser {
       if( $escape ) {
         if ( $j[$i] === '\\' ) {
           $ret .= '\\';
+        }else if ( $j[$i] === '/' ) {
+          $ret .= '/';
         }else if ( $j[$i] === 'f' ) {
           $ret .= "\f";
         }else if ( $j[$i] === 'b' ) {
@@ -869,6 +871,7 @@ class JParser {
       }
       $str = substr($str,1);
     }elseif ( $str[0] === '[' ) {
+      $ret = array();
       $str = substr($str,1);
       $str = ltrim($str," \t\r\n");
       while ( $str[0] !== ']' ) {
