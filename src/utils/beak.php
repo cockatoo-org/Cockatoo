@@ -774,7 +774,7 @@ class BeakController {
    * @param Array $classes Be able to specifiy the Beak-drivers @see config.php
    */
   public static function beakSimpleQuery($brl,$data=null,$classes=array()) {
-    $ret = self::beakQuery(array(array($brl,$data)));
+    $ret = self::beakQuery(array(array($brl,$data)),$classes);
     return $ret[$brl];
   }
   /**
