@@ -149,7 +149,7 @@ class BeakTransfer {
     $this->from_location=$from_location?array($from_location):Config::$BeakLocation[$this->base_brl];
     $this->to_location  =$to_location?array($to_location):Config::$BeakLocation[$this->base_brl];
     Log::info('transfer from [' . $from_driver . '('.$this->from_location[0].')] to [' . $to_driver . '(' . $this->to_location[0] . ')');
-    print('transfer from [' . $from_driver . '('.$this->from_location[0].')] to [' . $to_driver . '(' . $this->to_location[0] . ')' . "\n");
+    print    ('transfer from [' . $from_driver . '('.$this->from_location[0].')] to [' . $to_driver . '(' . $this->to_location[0] . ')' . "\n");
   }
   /**
    * Transfer all collections
@@ -175,7 +175,7 @@ class BeakTransfer {
    */
   function transfer_collection($collection,$renew = true,$callback=null){
     Log::info('transfer_collection : ' . $this->scheme . ' : ' . $this->prefix . ' : ' . $collection);
-    print('transfer_collection : ' . $this->scheme . ' : ' . $this->prefix . ' : ' . $collection . "\n");
+    print    ('transfer_collection : ' . $this->scheme . ' : ' . $this->prefix . ' : ' . $collection . "\n");
     $original = $collection;
     // Get collection info
     $brl   = brlgen($this->scheme,$this->prefix,$original,'',Beak::M_SYSTEM,array(Beak::Q_SYS=>'idxs'));
