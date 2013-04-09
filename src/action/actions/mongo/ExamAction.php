@@ -104,7 +104,7 @@ class ExamAction extends UserPostAction {
         $ret['done'] = '1';
         // Save user data
         $user_data = $session[\Cockatoo\AccountUtil::SESSION_LOGIN];
-        $user_data['exam'] = array($retid => array('score' => $ret['score']));
+        $user_data['exam'] = array($docid => array('score' => $ret['score']));
         \Cockatoo\AccountUtil::save_account(MongoConfig::USER_COLLECTION,$user_data);
         // Update session
         $s[\Cockatoo\AccountUtil::SESSION_LOGIN] = $user_data;
