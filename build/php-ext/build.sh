@@ -29,7 +29,7 @@ echo uuid        $OPT_UUID
 echo memcached   $OPT_MEMCACHED
 
 
-PHP_VERSION='5.4.7'
+PHP_VERSION='5.4.11'
 PHP_NAME='php-'${PHP_VERSION}
 
 function build_php_ext3 {

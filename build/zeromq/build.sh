@@ -4,7 +4,8 @@ cd ${ROOT}
 ROOT=`pwd`
 source ${ROOT}/../build.env
 
-VERSION='2.1.11'
+#VERSION='2.1.11'
+VERSION='3.2.2'
 ARCHIVE=http://download.zeromq.org/zeromq-%s.tar.gz
 ARCHIVE=`printf ${ARCHIVE} ${VERSION}`
 download ${ARCHIVE}

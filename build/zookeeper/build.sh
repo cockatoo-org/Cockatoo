@@ -4,7 +4,7 @@ cd ${ROOT}
 ROOT=`pwd`
 source ${ROOT}/../build.env
 
-VERSION='3.3.4'
+VERSION='3.4.5'
 ARCHIVE=http://mirror.metrocast.net/apache//zookeeper/zookeeper-%s/zookeeper-%s.tar.gz
 ARCHIVE=`printf ${ARCHIVE} ${VERSION} ${VERSION}`
 download ${ARCHIVE}
