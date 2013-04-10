@@ -52,7 +52,7 @@ class MongoAccess {
    *
    * @param int $arg Argument.....
    */
-  public function __construct($hosts,$dbname,$collection,$slaveOk=true,$user=null,$password=null){
+  public function __construct($location,$dbname,$collection,$slaveOk=true,$user=null,$password=null){
     $this->slaveOk     = $slaveOk;
     $this->dbname      = $dbname;
     $this->collection  = $collection;
@@ -64,9 +64,12 @@ class MongoAccess {
     // Connect string
     $this->server = 'mongodb://';
     $flg = false;
-    foreach ( $hosts as $host ) {
+    foreach ( $location as $host => $info ) {
       $this->server .= ($flg?',':'') . $host;
       $flg = true;
+      if ( isset($info['replicaSet']) ) {
+        $this->options['replicaSet'] = $info['replicaSet'];
+      }
     }
     try {
       $this->initMongo(false);

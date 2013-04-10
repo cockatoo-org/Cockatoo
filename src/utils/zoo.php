@@ -78,8 +78,16 @@ class Zoo {
     $list = &self::$zoo->getChildren($groupdir);
     return $list;
   }
+  public static function getData($group,$node,$zoo=null) {
+    if ( ! self::state($zoo) ) {
+      throw new \Exception('Cannot access to  zookeeper');
+    }
+    $nodepath = self::nodepath($group,$node);
+    $data = &self::$zoo->get($nodepath);
+    return $data;
+  }
 
-  public static function regist($group,$hostport) {
+  public static function regist($group,$hostport,$data) {
     if ( ! self::state() ) {
       throw new \Exception('Cannot access to  zookeeper');
     }
@@ -92,7 +100,7 @@ class Zoo {
     }
     $procnode = $groupdir . '/' . $hostport;
     if (!self::$zoo->exists($procnode)) {
-      $res = self::$zoo->create($procnode, '', self::$DEF_ACL, \Zookeeper::EPHEMERAL);
+      $res = self::$zoo->create($procnode, $data, self::$DEF_ACL, \Zookeeper::EPHEMERAL);
     }
   }
   public static function delete($group, $hostport) {
@@ -135,6 +143,9 @@ class Zoo {
     $zoo = new \Zookeeper($host, null, self::$timeout);
     $zoo->setDebugLevel(\Zookeeper::LOG_LEVEL_ERROR);
     self::$zooMap[$host] = $zoo;
+  }
+  private static function nodepath(&$group,&$node){
+    return self::PREFIX . '/' . self::escape($group) . '/' . $node;
   }
   private static function groupdir(&$group){
     return self::PREFIX . '/' . self::escape($group);

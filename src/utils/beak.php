@@ -176,9 +176,13 @@ class BeakLocationSetter {
    * @param String $brl BRL => $scheme://$domain/
    * @param String $ipport Location => $ip:$port
    */
-  public function regist($brl,$ipport){
+  public function regist($brl,$ipport,$data){
     if ( Config::$UseZookeeper ) {
-      Zoo::regist($brl,$ipport);
+      if ( $data === null ) {
+        $data = array();
+      }
+      $str = json_encode($data);
+      Zoo::regist($brl,$ipport,$str);
     }    
   }
   /**
@@ -240,8 +244,12 @@ class BeakLocationGetter {
     foreach (Config::$BeakLocation as $group => $nodes ) {
       foreach ($targetGroups as $g  ) {
         if ( strncmp($group,$g,strlen($g))===0 ) {
-          foreach ( $nodes as $node ) {
-            $ret[$group] []= $prefix . $node;
+          foreach ( $nodes as $node => $info ) {
+            if ( is_integer($node) ) {
+              $ret[$group][$prefix.$info] = array();
+            }else{
+              $ret[$group][$prefix.$node] = $nodes[$node];
+            }
           }
         }
       }
@@ -263,8 +271,12 @@ class BeakLocationGetter {
           foreach ($targetGroups as $g  ) {
             if ( strncmp($group,$g,strlen($g))===0 ) {
               if ( count($nodes) > 0 ){
-                foreach ( $nodes as $node ) {
-                  $ret[$group] []= $prefix . $node;
+                foreach ( $nodes as $node => $info ) {
+                  if ( is_string($node) ) {
+                    $ret[$group][$prefix.$node] = array();
+                  }else{
+                    $ret[$group][$prefix.$node] = $nodes[$node];
+                  }
                 }
               }
               break;

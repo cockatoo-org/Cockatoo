@@ -96,6 +96,7 @@ class GatewayController {
       $this->healthCheck();
 
       $beakinfo = $this->getBeakInfo();
+
       // Merge
       // Deleted location
       $diff = array_diff_key($beakinfo,$this->beakinfo);
@@ -190,7 +191,7 @@ class GatewayController {
       try {
         $pid = posix_getpid();
         $frontDSN = brl2ipc(Def::IPC_GW_SEGMENT,$brl)  . '.' . $pid;
-        $args = $locations;
+        $args = array_keys($locations);
         array_unshift($args,$frontDSN);
         pcntl_exec(self::GatewayDaemon,$args);
         Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : Cannot execute : ' . self::GatewayDaemon , $args);

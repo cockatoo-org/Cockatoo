@@ -52,7 +52,7 @@ class BeakMongo extends Beak {
       return ;
     }
     $this->fsync = $this->nsync?false:true;
-    $this->mongoAcc = new MongoAccess($locations[$base_brl],$this->domain,$this->collection,(!$this->fresh));
+    $this->mongoAcc = new MongoAccess($locations[$base_brl],$this->domain,$this->collection,(!$this->fresh),null,null);
     // @@@ Todo: user , password
     // $this->mongoAcc = new MongoAccess($locations[$base_brl],$this->domain,$this->collection,(!$this->fresh),$user,$passwd);
   }
@@ -103,8 +103,10 @@ class BeakMongo extends Beak {
     if ( $mongocollection ) {
       $ret = array();
       $query = array();
-      foreach ( $this->arg as $key => $cond ) {
-        $query[$key] = $cond;
+      if ( is_array($this->arg )) {
+        foreach ( $this->arg as $key => $cond ) {
+          $query[$key] = $cond;
+        }
       }
 
       $this->mongocursor = $mongocollection->find($query,$this->columns);
@@ -131,8 +133,10 @@ class BeakMongo extends Beak {
   public function getaQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
       $ret = array();
-      foreach ( $this->arg as $key => $cond ) {
-        $query[$key]['$in'] = $cond;
+      if ( is_array($this->arg )) {
+        foreach ( $this->arg as $key => $cond ) {
+          $query[$key]['$in'] = $cond;
+        }
       }
 
       $this->mongocursor = $mongocollection->find($query,$this->columns);
@@ -226,10 +230,12 @@ class BeakMongo extends Beak {
   public function setaQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
       $ret = array();
-      foreach ( $this->arg as $arg ) {
-        $path = &$arg[Beak::Q_UNIQUE_INDEX];
-        $ret = $this->setDoc($mongocollection,$path,$arg);
-        $ret[$path] = $ret['ok']==1.0?true:false;
+      if ( is_array($this->arg )) {
+        foreach ( $this->arg as $arg ) {
+          $path = &$arg[Beak::Q_UNIQUE_INDEX];
+          $ret = $this->setDoc($mongocollection,$path,$arg);
+          $ret[$path] = $ret['ok']==1.0?true:false;
+        }
       }
       return $ret;
     }
@@ -252,10 +258,12 @@ class BeakMongo extends Beak {
   }
   public function delaQueryImpl($mongo,$mongodb,$mongocollection) {
     if ( $mongocollection ) {
-      foreach ( $this->arg[Beak::Q_UNIQUE_INDEX] as $cond ) {
-        $query[Beak::Q_UNIQUE_INDEX]['$in'] []= $cond;
+      if ( is_array($this->arg ) && is_array($this->arg[Beak::Q_UNIQUE_INDEX]) ) {
+        foreach ( $this->arg[Beak::Q_UNIQUE_INDEX] as $cond ) {
+          $query[Beak::Q_UNIQUE_INDEX]['$in'] []= $cond;
+        }
+        $ret = $mongocollection->remove($query,array('safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'justOne' => false));
       }
-      $ret = $mongocollection->remove($query,array('safe' => true , 'fsync' => $this->fsync , 'timeout' => $this->timeout,'justOne' => false));
       return $ret['ok']==1.0?true:false;
     }
     return null;

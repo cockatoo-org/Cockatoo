@@ -67,7 +67,6 @@ class ActionController {
    * Beak location setter
    */
   protected $beakLocation;
-
   /**
    * zeroMQ
    */
@@ -199,7 +198,7 @@ class ActionController {
       }
       usleep(self::LOOP_SLEEP);
       try {
-        $this->beakLocation->regist($this->brl,$this->external);
+        $this->beakLocation->regist($this->brl,$this->external,'');
       }catch ( \Exception $e ) {
         Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : Unexpect exception : ' . $e->getMessage(),$e);
       }

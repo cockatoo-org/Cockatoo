@@ -80,7 +80,13 @@ class ZookeeperWatch {
             if ( $nodes === null  ) {
               throw new \Exception('Unable get nodes ('.$group.')');
             }
-            $data[$group] = $nodes;
+            foreach ( $nodes as $node ) {
+              $info = Zoo::getData($group,$node);
+              if ( $info === null ) {
+                $info = array();
+              }
+              $data[$group][$node] = json_decode($info,1);
+            }
           }
           $json = json_encode($data);
           clearstatcache(Config::$ZookeeperCacheFile);

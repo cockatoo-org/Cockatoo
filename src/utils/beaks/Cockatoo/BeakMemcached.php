@@ -43,16 +43,16 @@ class BeakMemcached extends Beak {
 
     $this->prefix  = $domain . '/' . (($collection)?$collection.'/':'');
     $token = $base_brl;
-    foreach ( $locations[$base_brl] as $location ) {
-      $token .= $location . ',';
+    foreach ( $locations[$base_brl] as $host => $info ) {
+      $token .= $host . ',';
     }
     $persistant_id = md5($token);
     $this->memcached = new \Memcached($persistant_id);
     
     if ( ! $this->memcached->getServerList() ) {
       $servers = array();
-      foreach ( $locations[$base_brl] as $location ) {
-        $servers []= explode(':',$location);
+      foreach ( $locations[$base_brl] as $host => $info ) {
+        $servers []= explode(':',$host);
       }
       $this->memcached->addServers($servers);
     }
