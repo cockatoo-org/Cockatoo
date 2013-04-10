@@ -579,16 +579,22 @@ class VerticalWidget extends Widget {
       '</form>'.
       '<div class="co-Wbody">';
     $c = count($this->children);
-    $i = 0;
-    foreach ( $this->children as $child ) {
-      $i++;
-      if ( $i === $c ) {
-        // last
-        $ret .= $child->cmsWalk('co-VMain','float:none;width:auto;margin-'.$this->prop[Def::K_LAYOUT_VPOS].':'.$this->prop[Def::K_LAYOUT_SWIDTH]);
-      }else {
-        $ret .= $child->cmsWalk('co-VSub','float:'.$this->prop[Def::K_LAYOUT_VPOS]);
-      }
+    if ( $c > 0 ) {
+      $ret .= $this->children[0]->cmsWalk('','float:'.$this->prop[Def::K_LAYOUT_VPOS].';width:'.$this->prop[Def::K_LAYOUT_SWIDTH]);
     }
+    if ( $c > 1 ) {
+      $ret .= $this->children[1]->cmsWalk('','float:none;width:auto;margin-'.$this->prop[Def::K_LAYOUT_VPOS].':'.$this->prop[Def::K_LAYOUT_SWIDTH]);
+    }
+//    $i = 0;
+//    foreach ( $this->children as $child ) {
+//      $i++;
+//      if ( $i === $c ) {
+//        // last
+//        $ret .= $child->cmsWalk('co-VMain','float:none;width:auto;margin-'.$this->prop[Def::K_LAYOUT_VPOS].':'.$this->prop[Def::K_LAYOUT_SWIDTH]);
+//      }else {
+//        $ret .= $child->cmsWalk('co-VSub','float:'.$this->prop[Def::K_LAYOUT_VPOS]);
+//      }
+//    }
     $ret .= '<br clear="both"/></div></div>';
     return $ret;
   }

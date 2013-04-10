@@ -1,7 +1,7 @@
 {
 "@R":"1363594708",
-"eredirect":"\/mongo\/main",
-"redirect":"\/mongo\/main",
+"eredirect":"/mongo/main",
+"redirect":"/mongo/main",
 "layout":{
 "type":"HorizontalWidget",
 "class":"",
@@ -10,7 +10,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/horizontal#critical",
+"component":"component://core-component/default/horizontal#critical",
 "children":[
 {
 "type":"Html5Widget",
@@ -20,7 +20,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/header",
+"component":"component://core-component/default/header",
 "children":[
 {
 "type":"HorizontalWidget",
@@ -30,7 +30,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/header",
+"component":"component://mongo-component/default/header",
 "children":[
 
 ]
@@ -45,7 +45,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/utils\/errmsg",
+"component":"component://core-component/default/utils/errmsg",
 "children":[
 
 ]
@@ -60,17 +60,17 @@
 "vpos":"left",
 "swidth":"150px",
 "extra":"",
-"component":"component:\/\/core-component\/default\/vertical",
+"component":"component://core-component/default/vertical",
 "children":[
 {
 "type":"HorizontalWidget",
 "class":"side",
 "height":"",
-"width":"150px",
+"width":"",
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/horizontal",
+"component":"component://core-component/default/horizontal",
 "children":[
 {
 "type":"Html5Widget",
@@ -80,7 +80,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/aside",
+"component":"component://core-component/default/aside",
 "children":[
 {
 "type":"HorizontalWidget",
@@ -90,7 +90,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/c\/events",
+"component":"component://mongo-component/default/c/events",
 "children":[
 
 ]
@@ -103,7 +103,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/c\/news",
+"component":"component://mongo-component/default/c/news",
 "children":[
 
 ]
@@ -120,7 +120,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/horizontal",
+"component":"component://core-component/default/horizontal",
 "children":[
 {
 "type":"Html5Widget",
@@ -130,7 +130,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/article",
+"component":"component://core-component/default/article",
 "children":[
 {
 "type":"PageLayout",
@@ -140,7 +140,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/pagelayout",
+"component":"component://core-component/default/pagelayout",
 "children":[
 
 ]
@@ -159,7 +159,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/footer",
+"component":"component://core-component/default/footer",
 "children":[
 {
 "type":"HorizontalWidget",
@@ -169,7 +169,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/mongo-component\/default\/footer",
+"component":"component://mongo-component/default/footer",
 "children":[
 
 ]
@@ -178,9 +178,14 @@
 }
 ]
 },
-"header":"<meta http-equiv=\"content-type\" content=\"text\/html; charset=utf-8\">\r\n<meta http-equiv=\"content-style-type\" content=\"text\/css\">\r\n<meta http-equiv=\"content-script-type\" content=\"text\/javascript\">\r\n<link rel=\"stylesheet\" type=\"text\/css\" media=\"all\" href=\"\/_s_\/mongo\/default\/css\/page.css\" \/>\r\n<link rel=\"stylesheet\" type=\"text\/css\" media=\"all\" href=\"\/_s_\/mongo\/default\/css\/cbox.css\" \/>\r\n<link rel=\"shortcut icon\" href=\"\/_s_\/mongo\/default\/favicon.ico\">",
+"header":"<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\r
+<meta http-equiv=\"content-style-type\" content=\"text/css\">\r
+<meta http-equiv=\"content-script-type\" content=\"text/javascript\">\r
+<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"/_s_/mongo/default/css/page.css\" />\r
+<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"/_s_/mongo/default/css/cbox.css\" />\r
+<link rel=\"shortcut icon\" href=\"/_s_/mongo/default/favicon.ico\">",
 "pheader":"",
-"bottom":"<script src=\"\/_s_\/core\/default\/js\/jquery-1.7.2.min.js\"><\/script>",
+"bottom":"<script src=\"/_s_/core/default/js/jquery-1.7.2.min.js\"></script>",
 "session_exp":"3600",
 "expires":"0",
 "_u":""

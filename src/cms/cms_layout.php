@@ -114,6 +114,7 @@ try {
   // preview
   if ( $_POST['layout'] ) { 
     $page_layout[Def::K_LAYOUT_LAYOUT] = json_decode($_POST['layout'],true);
+    $trash = $_POST['trash'];
   }
   $CONTENT_DRAWER->layout($page_layout);
   $CONTENT_DRAWER->components(true);

@@ -458,10 +458,10 @@
 		      }
 		    });
 		}else {
-		  $(this).trigger('notice');
-		  $(this).dialog('destroy');
 		  t.settings.target.children('form').remove();
 		  $(this).appendTo(t.settings.target);
+		  $(this).trigger('notice');
+		  $(this).dialog('destroy');
 		}
 	      },
 	      'SYNC' : function () {

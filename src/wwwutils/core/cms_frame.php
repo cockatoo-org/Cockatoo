@@ -367,9 +367,9 @@ $(function () {
  	fix(OP,ret);
       });
     });
-    $("#preview").click(function (ev) {
- 	preview();
-    });
+//    $("#preview").click(function (ev) {
+// 	preview();
+//    });
     $("#co-toolbar > h3").click(function (ev) {
       $(this).next().slideToggle();
     });
@@ -440,6 +440,7 @@ $(function () {
         ui.draggable.css('left',0);
         ui.draggable.css('top',0);
         ui.draggable.appendTo($(this));
+        preview();
       }
     });
     widget.not('.co-Template').not('.co-Pagelayout').children('h3').droppable({
@@ -488,7 +489,8 @@ $(function () {
 	} else {
             $(this).parent().before(ui.draggable);
 	}
-        verticalProc( $(this).parent().parent().parent() );
+        // verticalProc( $(this).parent().parent().parent() );
+        preview();
       },
       over: function(ev, ui) {
       },
@@ -542,7 +544,8 @@ $(function () {
           ui.draggable.appendTo($(this));
 	}
 	$(this).removeAttr('over');
-        verticalProc( $(this).parent() );
+//        verticalProc( $(this).parent() );
+        preview();
       },
       over: function(e, ui) {
 	$(this).attr('over',true);
@@ -551,23 +554,23 @@ $(function () {
 	$(this).removeAttr('over');
       }
     });
-    function verticalProc( t , f ) {
-      if ( ! f ) {
-	f = t.children('form');
-      }
-      if ( f.find('select[name=vpos]') ) {
-        t.find('> div.co-Wbody > div.co-Widget').css('margin','0 0 0 0');
-        t.find('> div.co-Wbody > div.co-Widget').removeClass('co-VMain');
-        t.find('> div.co-Wbody > div.co-Widget').addClass('co-VSub');
-        t.find('> div.co-Wbody > div.co-Widget:last-child').removeClass('co-VSub');
-        t.find('> div.co-Wbody > div.co-Widget:last-child').addClass('co-VMain');
-        t.find('> div.co-Wbody > div.co-VMain').css('float','none');
-        t.find('> div.co-Wbody > div.co-VMain').css('width','auto');
-        t.find('> div.co-Wbody > div.co-VMain').css('margin-'+f.find('select[name=vpos]').val(),f.find('input[name=swidth]').val());
-        t.find('> div.co-Wbody > div.co-VSub').not('.co-VMain').css('float',f.find('select[name=vpos]').val());
-        t.find('> div.co-Wbody > div.co-VSub').css('width',f.find('input[name=swidth]').val());
-      }
-    }
+//    function verticalProc( t , f ) {
+//      if ( ! f ) {
+//	f = t.children('form');
+//      }
+//      if ( f.find('select[name=vpos]') ) {
+//        t.find('> div.co-Wbody > div.co-Widget').css('margin','0 0 0 0');
+//        t.find('> div.co-Wbody > div.co-Widget').removeClass('co-VMain');
+//        t.find('> div.co-Wbody > div.co-Widget').addClass('co-VSub');
+//        t.find('> div.co-Wbody > div.co-Widget:last-child').removeClass('co-VSub');
+//        t.find('> div.co-Wbody > div.co-Widget:last-child').addClass('co-VMain');
+//        t.find('> div.co-Wbody > div.co-VMain').css('float','none');
+//        t.find('> div.co-Wbody > div.co-VMain').css('width','auto');
+//        t.find('> div.co-Wbody > div.co-VMain').css('margin-'+f.find('select[name=vpos]').val(),f.find('input[name=swidth]').val());
+//        t.find('> div.co-Wbody > div.co-VSub').not('.co-VMain').css('float',f.find('select[name=vpos]').val());
+//        t.find('> div.co-Wbody > div.co-VSub').css('width',f.find('input[name=swidth]').val());
+//      }
+//    }
     function auto_size(v){
       if ( /\S/.test(v) ) {
 	return v;
@@ -579,11 +582,12 @@ $(function () {
 	form = $(this).children('form').clone();
 	var t = $(this);
 	form.bind('notice',function (ev) {
-	  t.css('height'    ,auto_size($(this).find('input[name=height]').val()));
-	  t.css('width'     ,auto_size($(this).find('input[name=width]').val()));
-	  t.css('min-height',auto_size($(this).find('input[name=min_height]').val()));
-	  t.css('min-width' ,auto_size($(this).find('input[name=min_width]').val()));
-          verticalProc(t,$(this));
+//	  t.css('height'    ,auto_size($(this).find('input[name=height]').val()));
+//	  t.css('width'     ,auto_size($(this).find('input[name=width]').val()));
+//	  t.css('min-height',auto_size($(this).find('input[name=min_height]').val()));
+//	  t.css('min-width' ,auto_size($(this).find('input[name=min_width]').val()));
+//            verticalProc(t,$(this));
+            preview();
 	});
 	form.children('div.label').click( function (e){
 	  if ( $(this).next().is(':hidden') ) {
@@ -650,8 +654,13 @@ $(function () {
     $("#co-main").children("div.co-Widget").each(function (){
  	var ret = widget_json($(this));
         $('#pform > input[name="layout"]').val($.toJSON(ret));
-        $('#pform').submit();
+        
       });
+    $("#co-toolbar > div.co-Trash").children("div.co-Wbody").each(function (){
+ 	var ret = $(this).html();
+        $('#pform > input[name="trash"]').val(ret);
+      });
+    $('#pform').submit();
   }
   function fix(op,data){
     $.ajax({
@@ -697,7 +706,9 @@ print "$TEMPLATE<br>";
 ?>
   <div>
    <input id="fix" type="submit" value="fix" />
+   <!-- 
    <input id="preview" type="submit" value="preview" />
+   -->
   </div>
 <!--
   <div>
@@ -708,7 +719,13 @@ print "$TEMPLATE<br>";
   <h3>Trash</h3>
   <div class="co-Widget co-Horizontal co-Trash co-Template">
     <h3>ごみ箱</h3>
-    <div class="co-Wbody"></div>
+    <div class="co-Wbody">
+<?php
+  if ( $trash ) {
+    print $trash;
+  }
+?>
+    </div>
   </div>
   <h3>Widgets</h3>
   <div class="co-WidgetTree"><h4 class="name"></h4>
@@ -730,6 +747,7 @@ $CONTENT_DRAWER->drawCMS();
  </div>
  <form id="pform" method="POST" action="">
   <input type="hidden" name="layout" value="" />
+  <input type="hidden" name="trash" value="" />
  </form>
 </body>
 </html>
