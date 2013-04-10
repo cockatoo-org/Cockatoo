@@ -24,13 +24,17 @@ class Config extends DefaultConfig {
   /**
    * Request analizer
    */
-  const RequestParser     = 'Cockatoo\SampleRequestParser';
-  const DeviceSelector    = 'Cockatoo\SampleDeviceSelector'; 
+  static $DefaultRequestParser;
+  static $RequestParser;
 
+  /**
+   * CMS acl
+   */
+  const CMSAuth       = 'Cockatoo\DefaultCmsAuth';
   /**
    * Timeout
    */
-  const ActionTimeout  = 10000;  // This means 10 sec.
+  const ActionTimeout  = 5000;  // This means 5 sec.
 
   public static function init () {
     //--------------------
@@ -52,7 +56,6 @@ class Config extends DefaultConfig {
     /**
      * BEAK Driver switch
      */
-    // Local mode
     self::$BEAKS = array (
       Def::BP_CMS      => 'Cockatoo\BeakFile'   ,
       Def::BP_SESSION  => 'Cockatoo\BeakMemcached'   ,
@@ -66,9 +69,6 @@ class Config extends DefaultConfig {
 
     /**
      * Static locations.
-     *
-     *  @@@ Todo:
-     *    $BeakLocation should be merged with $BEAK but have to consider zookeeper ...
      */
     self::$BeakLocation = array (
       'cms://services-cms/'           => array(''),
@@ -87,5 +87,12 @@ class Config extends DefaultConfig {
     //--------------------
     self::$UseZookeeper        = array('127.0.0.1:2181');
     self::$ZookeeperCacheFile  = self::COCKATOO_ROOT.'daemon/etc/zoo.json';
+
+    self::$RequestParser = array (
+      '/core' => 'Cockatoo\CoreRequestParser',
+      '/wiki' => 'wiki\WikiRequestParser',
+      '/mongo' => 'mongo\MongoRequestParser'
+      );
+    self::$DefaultRequestParser = 'Cockatoo\DefaultRequestParser';
   }
 }
