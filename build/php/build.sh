@@ -59,6 +59,7 @@ function build_php(){
     run mkdir -p ${ROOT}/root_php/usr/local/${NAME}/lib
     run mkdir -p ${ROOT}/root_php/usr/local/${NAME}/lib/conf.d
     run cp ${ROOT}/php.ini ${ROOT}/root_php/usr/local/${NAME}/lib
+    run cp ${ROOT}/php-fpm.conf ${ROOT}/root_php/usr/local/${NAME}/etc/
     # php-httpd
     run mkdir -p ${ROOT}/root_httpd/usr/local/${NAME}
     run ln -sfT  ${NAME} ${ROOT}/root_httpd/usr/local/php
