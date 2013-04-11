@@ -40,6 +40,7 @@ function build_php(){
 	--enable-sockets \
 	--with-zlib=/usr \
 	--with-curl=/usr \
+	--enable-fpm
 #	--with-openssl=/usr/local/ssl \
 #	--with-mcrypt=/usr/local \
 #	--with-curl=/usr/local \
