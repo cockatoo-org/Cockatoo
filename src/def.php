@@ -9,6 +9,21 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
 namespace Cockatoo;
+if (!function_exists('getallheaders')){
+  function getallheaders()
+  {
+    $headers = '';
+    foreach ($_SERVER as $name => $value)
+    {
+      if (substr($name, 0, 5) == 'HTTP_')
+      {
+        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+      }
+    }
+    return $headers;
+  }
+} 
+
 class Def {
   const  PATH_STATIC_PREFIX       = '/_s_'; // Associate with rewrite
 
@@ -337,3 +352,4 @@ require_once(Config::COCKATOO_ROOT.'utils/ClassLoader.php');
 \ClassLoader::addClassPath(Config::COCKATOO_ROOT.'libs');
 
 require_once(Config::COCKATOO_ROOT.'utils/log.php');
+
