@@ -179,6 +179,10 @@ abstract class UserPostAction extends \Cockatoo\Action {
           }
           $this->setMovedTemporary($redirect);
           return array();
+        }elseif( $op === 'remove' ) {
+          $this->remove_doc($docid);
+          $this->setMovedTemporary($this->REDIRECT);
+          return array();
         }
       }
     }catch ( \Exception $e ) {
