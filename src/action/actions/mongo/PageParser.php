@@ -107,10 +107,10 @@ class PageParser {
       }else{
         if ( preg_match('@^ (.*)@', $line , $matches ) !== 0 ) {
           //PRE
-          $text = $matches[0] . "\n";
+          $text = $matches[1] . "\n";
           while ( ($line = $this->pop_line()) !== null ) {
             if ( preg_match('@^ (.*)@', $line , $matches ) !== 0 ) {
-              $text .= $matches[0] . "\n";
+              $text .= $matches[1] . "\n";
             }else{
               $this->push_line($line);
               break;
