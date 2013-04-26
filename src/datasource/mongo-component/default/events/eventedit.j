@@ -1,5 +1,5 @@
 {
-"@R":"1365744439",
+"@R":"1366011157",
 "type":"HorizontalWidget",
 "subject":"eventedit",
 "description":"",
@@ -33,6 +33,11 @@
 }\r
 ",
 "js":"$(function() {\r
+  if ( $('form input[name=\"event_id\"]').val() ) {\r
+    $('form input[type=\"submit\"]').removeAttr(\"disabled\");\r
+  }else{\r
+    $('form input[type=\"submit\"]').attr(\"disabled\",\"disabled\");\r
+  }\r
   function setfield(event){\r
       $('form input[name=\"event_id\"]').val(event.event_id);\r
       $('form input[name=\"event_url\"]').val(event.event_url);\r
@@ -229,6 +234,6 @@ var N_ATTENDERS=<?cs var:a ?>;\r
 ""
 ],
 "header":"<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"/_s_/core/default/css/smoothness/jquery-ui-1.8.21.custom.css\"></link>",
-"bottom":"<script src=\"http://hirkubota:30080/_s_/core/default/js/jquery-ui-1.8.21.custom.min.js\"></script>",
+"bottom":"<script src=\"/_s_/core/default/js/jquery-ui-1.8.21.custom.min.js\"></script>",
 "_u":"events/eventedit"
 }
