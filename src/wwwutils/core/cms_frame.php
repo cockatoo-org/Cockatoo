@@ -362,11 +362,14 @@ $(function () {
 	$(this).parent().children('div').toggle();
     });
     $("#fix").click(function (ev) {
-      $("#co-main").children("div.co-Widget").each(function (){
- 	var ret = widget_json($(this));
- 	fix(OP,ret);
+        if ( $("#co-main").children("div.co-Widget").size() !== 1 ) {
+          return;
+        }
+        $("#co-main").children("div.co-Widget").each(function (){
+            var ret = widget_json($(this));
+            fix(OP,ret);
+          });
       });
-    });
 //    $("#preview").click(function (ev) {
 // 	preview();
 //    });
@@ -651,6 +654,9 @@ $(function () {
 ?>
   set_dd($('div.co-Widget'));
   function preview(){
+    if ( $("#co-main").children("div.co-Widget").size() !== 1 ) {
+      return;
+    }
     $("#co-main").children("div.co-Widget").each(function (){
  	var ret = widget_json($(this));
         $('#pform > input[name="layout"]').val($.toJSON(ret));

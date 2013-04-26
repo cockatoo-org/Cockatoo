@@ -112,7 +112,7 @@ try {
     $OP = 'setPL';
   }
   // preview
-  if ( $_POST['layout'] ) { 
+  if ( isset($_POST['layout']) ) { 
     $page_layout[Def::K_LAYOUT_LAYOUT] = json_decode($_POST['layout'],true);
     $trash = $_POST['trash'];
   }
