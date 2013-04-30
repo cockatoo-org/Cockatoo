@@ -15,6 +15,15 @@ class MongoRequestParser extends \Cockatoo\DefaultRequestParser {
   public $session_path = '/mongo';
   public $template = 'default';
   public function parseImpl(){
+    if ( $this->reqpath && 
+         preg_match('@^/noryo1(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
+      $this->template = 'sp';
+      $reqpath = $matches[1];
+      $this->path = $reqpath;
+      $this->args['P'] = $reqpath;
+      return;
+    }
+
     if ( ! $this->reqpath ||
          preg_match('@^/(.*)?$@', $this->reqpath , $matches ) !== 0 ) {
       $reqpath = $matches[1];

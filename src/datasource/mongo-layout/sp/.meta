@@ -1,0 +1,29 @@
+{
+"@R":"1367304825",
+"eredirect":"/mongo/noryo1/top",
+"redirect":"/mongo/noryo1/top",
+"layout":{
+"type":"HorizontalWidget",
+"component":"component://core-component/default/horizontal#critical",
+"extra":null,
+"children":[
+{
+"type":"PageLayout",
+"component":"component://core-component/default/pagelayout",
+"extra":null,
+"children":[
+
+]
+}
+]
+},
+"header":"<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\r
+<meta http-equiv=\"content-style-type\" content=\"text/css\">\r
+<meta http-equiv=\"content-script-type\" content=\"text/javascript\">\r
+",
+"pheader":"",
+"bottom":"<script src=\"/_s_/core/default/js/jquery-1.7.2.min.js\"></script>",
+"session_exp":"",
+"expires":"",
+"_u":""
+}
