@@ -60,8 +60,8 @@
 ],
 "_owner":"crumbjp",
 "_ownername":"@crumbjp",
-"_time":1367317857,
+"_time":1367319286,
 "_timestr":"2013-04-30",
 "_u":"12%3A00%2E517f9d6112dec",
-"public":false
+"public":"on"
 }
