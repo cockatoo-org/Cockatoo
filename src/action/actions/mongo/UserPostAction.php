@@ -197,4 +197,3 @@ abstract class UserPostAction extends \Cockatoo\Action {
   public function postProc(){
   }
 }
-
