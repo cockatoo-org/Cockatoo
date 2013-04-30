@@ -113,8 +113,8 @@ class Config extends DefaultConfig {
     //--------------------
     // Zookeeper ( dynamic locations )
     //--------------------
-    self::$UseZookeeper        = array('127.0.0.1:2181');
-    self::$ZookeeperCacheFile  = self::COCKATOO_ROOT.'daemon/etc/zoo.json';
+//    self::$UseZookeeper        = array('127.0.0.1:2181');
+//    self::$ZookeeperCacheFile  = self::COCKATOO_ROOT.'daemon/etc/zoo.json';
 
     self::$RequestParser = array (
       '/core' => 'Cockatoo\CoreRequestParser',

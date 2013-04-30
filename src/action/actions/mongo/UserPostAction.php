@@ -17,6 +17,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
   protected $COLLECTION = 'docs';
   protected $NAMESPACE  = 'mongo';
   protected $DOCNAME    = 'doc';
+  protected $ORDER      = '-1';
 
   abstract function new_doc();
   abstract function post_to_doc (&$post,&$doc); 
@@ -65,7 +66,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
     if ( isset($qs[\Cockatoo\Beak::Q_LIMIT]) ) {
       $limit = $qs[\Cockatoo\Beak::Q_LIMIT];
     }
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'contents,attenders,waiters,cancelers',\Cockatoo\Beak::Q_SORT => '_u:-1',\Cockatoo\Beak::Q_LIMIT => $limit),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'contents,attenders,waiters,cancelers',\Cockatoo\Beak::Q_SORT => '_u:'.$this->ORDER ,\Cockatoo\Beak::Q_LIMIT => $limit),array());
     $docs = \Cockatoo\BeakController::beakSimpleQuery($brl);
     $isRoot = $this->isRoot;
     $user = $this->user;

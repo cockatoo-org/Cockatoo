@@ -1,0 +1,17 @@
+{
+"@R":"1367313911",
+"type":"HorizontalWidget",
+"subject":"gettimetablepage",
+"description":"",
+"css":"",
+"js":"",
+"id":"",
+"class":"",
+"body":"",
+"action":[
+"action://mongo-action/mongo/TimetableAction?get"
+],
+"header":"",
+"bottom":"",
+"_u":"noryo1/timetable/gettimetablepage"
+}

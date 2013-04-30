@@ -1,14 +1,17 @@
 {
-"@R":"1367306474",
+"@R":"1367314727",
 "type":"HorizontalWidget",
 "subject":"noryo1_top",
 "description":"",
-"css":"#noryo1_top > #main {\r
+"css":"#main {\r
   margin: 0 auto;\r
-  height : 1200px;\r
-  width: 800px;\r
+  width: 960px;\r
+  background-image: url(\"/_s_/mongo/sp/noryo1/top.png\");\r
+  background-origin: padding-box;\r
+  background-position: center center;\r
+  background-repeat: no-repeat;\r
   background-size: contain;\r
-  background-image: url(\"/_s_/mongo/sp/noryo1/top.png\")\r
+  height: 1000px;\r
 }\r
 #noryo1_top ul.links {\r
   list-style:none;\r
@@ -36,8 +39,8 @@
 "body":"<div id=\"main\">\r
   <ul class=\"links\">\r
     <li><a href=\"#\">\u6848\u5185</a></li>\r
-    <li><a href=\"#\">\u30bf\u30a4\u30e0\u30c6\u30fc\u30d6\u30eb</a></li>\r
-    <li><a href=\"#\">\u5354\u8cdb\u4f01\u696d</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/noryo1/timetable\">\u30bf\u30a4\u30e0\u30c6\u30fc\u30d6\u30eb</a></li>\r
+    <li><a href=\"#\">\u5354\u8cdb\u4f01\u696d\u69d8</a></li>\r
   </ul>\r
 </div>\r
 ",
