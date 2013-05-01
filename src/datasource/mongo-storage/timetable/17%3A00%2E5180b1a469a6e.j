@@ -1,4 +1,5 @@
 {
+"public":"on",
 "_u":"17%3A00%2E5180b1a469a6e",
 "title":"\u751f\u7269\u5b66\u60c5\u5831\u3068MongoDB",
 "state_of_title":"temporary",
@@ -17,7 +18,6 @@
 "notes":[
 "\u30b9\u30dd\u30f3\u30b5\u30fc\u3067\u3042\u308bIPAB\u306e\u767a\u8868\u67a0\u3067\u3059"
 ],
-"public":false,
 "start":"17:00",
 "end":"17:45",
 "type":"",
@@ -61,6 +61,6 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1367388580,
+"_time":1367389241,
 "_timestr":"2013-05-01"
 }

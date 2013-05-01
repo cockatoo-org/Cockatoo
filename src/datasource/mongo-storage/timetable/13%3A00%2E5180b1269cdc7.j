@@ -1,4 +1,5 @@
 {
+"public":"on",
 "_u":"13%3A00%2E5180b1269cdc7",
 "title":"MongoDB\uff0bPHP\u3067Web\u5236\u4f5c\u5185\u8077",
 "state_of_title":"temporary",
@@ -18,7 +19,6 @@
 "notes":[
 
 ],
-"public":false,
 "start":"13:00",
 "end":"13:45",
 "type":"",
@@ -62,6 +62,6 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1367388454,
+"_time":1367389190,
 "_timestr":"2013-05-01"
 }

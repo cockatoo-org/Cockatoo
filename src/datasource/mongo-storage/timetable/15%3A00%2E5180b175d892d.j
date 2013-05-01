@@ -1,4 +1,5 @@
 {
+"public":"on",
 "_u":"15%3A00%2E5180b175d892d",
 "title":"\u30f4\u30a1\u30fc\u30c1\u30e3\u30eb\u7d0d\u6dbc\u3082\u3093\u3054\u796d\u308a",
 "state_of_title":"temporary",
@@ -18,7 +19,6 @@
 "notes":[
 "\u30aa\u30f3\u30e9\u30a4\u30f3\u3078\u306e\u30d7\u30ec\u30bc\u30f3\u3068\u3001Mongo\u306e\u67d4\u8edf\u6027\u306e\u30a2\u30d4\u30fc\u30eb\u3092\u304b\u306d\u308b"
 ],
-"public":false,
 "start":"15:00",
 "end":"15:45",
 "type":"",
@@ -62,6 +62,6 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1367388533,
+"_time":1367389208,
 "_timestr":"2013-05-01"
 }

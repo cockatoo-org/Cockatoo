@@ -17,7 +17,7 @@
 "notes":[
 "\u7686\u3067\u4e00\u7dd2\u306b\u3084\u3089\u305b\u308b\u3053\u3068\u3067\u3001\u3053\u306e\u624b\u306e\u30aa\u30f3\u30e9\u30a4\u30f3\u5b66\u7fd2\u3067\u3046\u307e\u304f\u59cb\u3081\u3089\u308c\u306a\u3044\u4eba\u306e\u80cc\u4e2d\u3092\u62bc\u3059\u3002"
 ],
-"public":false,
+"public":"on",
 "start":"14:00",
 "end":"14:45",
 "type":"",
@@ -61,6 +61,6 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1367388512,
+"_time":1367389198,
 "_timestr":"2013-05-01"
 }

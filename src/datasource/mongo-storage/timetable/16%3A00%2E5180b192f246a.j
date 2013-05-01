@@ -1,4 +1,5 @@
 {
+"public":"on",
 "_u":"16%3A00%2E5180b192f246a",
 "title":"\u81ea\u8ee2\u8eca\u8d70\u884c\u30ed\u30b0withMongoDB\u958b\u767a\u4f53\u9a13",
 "state_of_title":"temporary",
@@ -17,7 +18,6 @@
 "notes":[
 "\u5c11\u3057\u3070\u304b\u308a\u3067\u3059\u304cRDBMS\u2192MongoDB\u306b\u79fb\u3063\u305f\u7d4c\u7def\u3001\u30cf\u30de\u3063\u305f\u904e\u7a0b\u306a\u3069\u30cd\u30bf\u306f\u3042\u308b\u306e\u3067\u3001\u6642\u671f\u7684\u306b\u5408\u3048\u3070\u8cc7\u6599\u4f5c\u3063\u3066\u558b\u308a\u305f\u3044\u3068\u601d\u3044\u307e\u3059\u3002"
 ],
-"public":false,
 "start":"16:00",
 "end":"16:45",
 "type":"",
@@ -61,6 +61,6 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1367388562,
+"_time":1367389228,
 "_timestr":"2013-05-01"
 }

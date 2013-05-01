@@ -15,7 +15,7 @@
 
 ],
 "notes":"\u3053\u308c\u306bIPAB\u95a2\u4fc2\u8005\u306b\u3088\u308b\u751f\u7269\u5b66DB\u306a\u3069\u306e\u30cd\u30bf\u304c\u7d61\u3081\u3089\u308c\u308b\u3068\u7406\u60f3\u7684",
-"public":false,
+"public":"on",
 "start":"12:00",
 "end":"12:45",
 "type":"",
@@ -59,6 +59,6 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1367388268,
+"_time":1367389048,
 "_timestr":"2013-05-01"
 }
