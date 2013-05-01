@@ -422,7 +422,7 @@ abstract class Beak {
   /**
    * Beak object's unique-key column
    */
-  const Q_UNIQUE_INDEX  = '_u';
+  // const Q_UNIQUE_INDEX  = '_u';
   /**
    * Beak index columns
    */
@@ -737,7 +737,7 @@ class BeakController {
       $D = explode(Def::BD_SEPARATOR,$D);
       $baseBrl = brlgen($S,$D[0],$C,'',Beak::M_GET_ARRAY);
       $p = ltrim($p,'/');
-      $getsQuery[$baseBrl][Beak::Q_UNIQUE_INDEX] [] = $p;
+      $getsQuery[$baseBrl]['_u'] [] = $p;
 
       $orgQuery[$baseBrl][$brl] = array( 'P' => $p , 'C' => $c);
     }

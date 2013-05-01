@@ -140,7 +140,7 @@ class BeakMemcached extends Beak {
   public function getaQuery() {
     $keyMap = array();
     $keys = array();
-    foreach( $this->arg[Beak::Q_UNIQUE_INDEX] as $path ) {
+    foreach( $this->arg['_u'] as $path ) {
       $key = $this->genKey($path);
       $keys []= $key;
       $keyMap[$key] = $path;
@@ -151,7 +151,7 @@ class BeakMemcached extends Beak {
       $this->ret[$keyMap[$k]] = $this->filterData($d);
     }
 //    if ( $ret ) {
-//      $this->ret = array_combine($this->arg[Beak::Q_UNIQUE_INDEX],$ret);
+//      $this->ret = array_combine($this->arg['_u'],$ret);
 //    }
   }
   public function getQuery() {
@@ -243,7 +243,7 @@ class BeakMemcached extends Beak {
     }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULL)===0 ) {
     }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULLALL)===0 ) {
     }else{
-      $arg[Beak::Q_UNIQUE_INDEX] = $path;
+      $arg['_u'] = $path;
     }
     return $arg;
   }
@@ -261,7 +261,7 @@ class BeakMemcached extends Beak {
     $args=array();
     $paths=array();
     foreach ( $this->arg as $arg ) {
-      $path = $arg[Beak::Q_UNIQUE_INDEX];
+      $path = $arg['_u'];
       $paths []= $path;
       $arg = $this->setDoc($path,$arg);
       if ( $arg ) {
@@ -282,7 +282,7 @@ class BeakMemcached extends Beak {
   }
   public function delaQuery() {
     $paths=array();
-    foreach ( $this->arg[Beak::Q_UNIQUE_INDEX] as $path ) {
+    foreach ( $this->arg['_u'] as $path ) {
       $paths[$path]= false;
       $key = $this->genKey($path);
       $prev = $this->judgeRev($key,$this->arg);

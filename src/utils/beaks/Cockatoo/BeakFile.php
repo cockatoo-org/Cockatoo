@@ -131,7 +131,7 @@ class BeakFile extends Beak {
         return $ret;
       }
       return array();
-    }elseif ( $key === Beak::Q_UNIQUE_INDEX ) {
+    }elseif ( $key === '_u' ) {
       $l = $this->listDir($this->collection_path,'',true);
       if ( count($l) ){
         return array_combine($l,array_map(function($n){return array($n);},$l));
@@ -149,7 +149,7 @@ class BeakFile extends Beak {
   private function setIndex($index_key,$data){
     $index = $this->getIndex($index_key);
     if ( isset($data[$index_key])){
-      $index[$data[$index_key]] []= $data[Beak::Q_UNIQUE_INDEX];
+      $index[$data[$index_key]] []= $data['_u'];
       $index[$data[$index_key]] = array_unique($index[$data[$index_key]]);
       $json = $this->jparser->encode($index);
       $ifile = $this->collection_path . self::DIR_INDEX.$index_key;
@@ -170,13 +170,15 @@ class BeakFile extends Beak {
     self::mkdir($this->collection_path . self::DIR_INDEX);
     if ( isset($this->queries[Beak::Q_INDEXES]) ){
       foreach(explode(',',$this->queries[Beak::Q_INDEXES]) as $index_key){
-        $ifile = $this->collection_path . self::DIR_INDEX.$index_key;
-        if ( $this->renew ) {
-          file_put_contents($ifile,'{"":[]}');
-        }
-        foreach($this->listDir($this->collection_path,'',true) as $path){
-          $data = $this->getDoc($this->path_gen($path));
-          $this->setIndex($index_key,$data);
+        if ( $index_key ) {
+          $ifile = $this->collection_path . self::DIR_INDEX.$index_key;
+          if ( $this->renew ) {
+            file_put_contents($ifile,'{"":[]}');
+          }
+          foreach($this->listDir($this->collection_path,'',true) as $path){
+            $data = $this->getDoc($this->path_gen($path));
+            $this->setIndex($index_key,$data);
+          }
         }
       }
     }
@@ -245,7 +247,7 @@ class BeakFile extends Beak {
     if ( ! $key ) { 
       // Default index-key is the '_u'.
       // When sorting, Adopt SORT-KEY as the index-key for performance.
-      $key = $this->sort?$sort_key:Beak::Q_UNIQUE_INDEX;
+      $key = $this->sort?$sort_key:'_u';
       $conds = array('$' => null);
     }
     $index = $this->getIndex($key);
@@ -346,7 +348,7 @@ class BeakFile extends Beak {
     $this->ret  = null;
     $unique_keys = array();
     foreach ( $this->arg as $key => $cond ) {
-      if ( $key === Beak::Q_UNIQUE_INDEX ) {
+      if ( $key === '_u' ) {
         $unique_keys = $cond;
         break;
       }
@@ -506,7 +508,7 @@ class BeakFile extends Beak {
     }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULL)===0 ) {
     }else if ( strcmp($this->op,Beak::COMMENT_KIND_OP_PULLALL)===0 ) {
     }else{
-      $arg[Beak::Q_UNIQUE_INDEX] = $path;
+      $arg['_u'] = $path;
     }
 
     foreach($this->getIndex() as $index_key ){
@@ -532,7 +534,7 @@ class BeakFile extends Beak {
   public function setaQuery() {
     $this->ret  = array();
     foreach ( $this->arg as $arg ) {
-      $path = $arg[Beak::Q_UNIQUE_INDEX];
+      $path = $arg['_u'];
       $this->ret[$path] = $this->setDoc($this->path_gen($path),$path,$arg);
     }
   }
@@ -564,7 +566,7 @@ class BeakFile extends Beak {
    */
   public function delaQuery() {
     $this->ret  = array();
-    foreach ( $this->arg[Beak::Q_UNIQUE_INDEX] as $cond ) {
+    foreach ( $this->arg['_u'] as $cond ) {
       $path = &$cond;
       $this->ret[$path] = $this->delDoc($this->path_gen($path),null);
     }
