@@ -43,14 +43,14 @@
   <h2>NEWS\u5185\u5bb9</h2>\r
 </div>\r
 <div class=\"hd2\">\r
-<form method=\"POST\" action=\"<?cs var:C._base ?>/news/edit/<?cs var:A.mongo.news.docid ?>\">\r
+<form method=\"POST\" action=\"<?cs var:C._base ?>/news/edit/<?cs var:A.mongo.news._u ?>\">\r
   <h5>\u516c\u958b<input type=\"checkbox\" name=\"public\" <?cs if:A.mongo.news.public ?>checked<?cs /if ?>></input></h5>\r
   <h5>NEWS\u30bf\u30a4\u30c8\u30eb</h5>\r
   <input type=\"text\" name=\"title\" value=\"<?cs var:A.mongo.news.title ?>\"></input>\r
   <h5>\u5185\u5bb9</h5>\r
   <textarea name=\"origin\" ><?cs var:A.mongo.news.origin ?></textarea>\r
   <br>\r
-  <input type=\"hidden\" name=\"docid\" value=\"<?cs var:A.mongo.news.docid ?>\"></input>\r
+  <input type=\"hidden\" name=\"_u\" value=\"<?cs var:A.mongo.news._u ?>\"></input>\r
   <input type=\"submit\" name=\"op\" value=\"save\"></input>\r
   <input type=\"submit\" name=\"op\" value=\"preview\"></input>\r
   <a target=\"_blank\" href=\"<?cs var:C._base ?>/notation\">notation</a>\r

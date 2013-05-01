@@ -11,7 +11,7 @@ namespace mongo;
  * @copyright Copyright (C) 2011, rakuten 
  */
 class TimetableAction extends UserPostAction {
-  protected $REDIRECT = '/mongo/noryo1/timetable';
+  protected $REDIRECT = '/mongo/noryo2013/timetable';
   protected $COLLECTION = 'timetable';
   protected $DOCNAME    = 'timebox';
   protected $ORDER      = '1';
@@ -19,10 +19,13 @@ class TimetableAction extends UserPostAction {
     $origin = '*New';
     $contents = array(array('tag' => 'h2','attr'=>array(),'children' => array(array('tag'=>'text' , 'text' => 'New'))));
     return array(
-      'docid' => 'new',
+      '_u' => 'new',
       'origin' => $origin,
       'contents' => $contents
       );
+  }
+  function post_save_hook(&$doc){
+    return $this->REDIRECT;
   }
   function post_to_doc (&$post,&$doc) {
     if ( ! $doc ) {

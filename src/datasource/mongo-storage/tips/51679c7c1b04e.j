@@ -1,8 +1,7 @@
 {
 "title":"\u30ed\u30fc\u30eb\u30c6\u30b9\u30c8",
 "origin":"*New\r
-\u5185\u5bb9\u304c\u306a\u3044\u3088\u30fc",
-"docid":"51679c7c1b04e",
+\u5185\u5bb9\u304c\u306a\u3044\u3088\u30fca",
 "op":"save",
 "contents":[
 {
@@ -64,7 +63,7 @@
 "children":[
 {
 "tag":"text",
-"text":"\u5185\u5bb9\u304c\u306a\u3044\u3088\u30fc"
+"text":"\u5185\u5bb9\u304c\u306a\u3044\u3088\u30fca"
 }
 ]
 },
@@ -81,7 +80,8 @@
 ],
 "_owner":"crumbjp",
 "_ownername":"@crumbjp",
-"_time":1365744764,
-"_timestr":"2013-04-12",
-"_u":"51679c7c1b04e"
+"_time":1367387642,
+"_timestr":"2013-05-01",
+"_u":"51679c7c1b04e",
+"public":false
 }

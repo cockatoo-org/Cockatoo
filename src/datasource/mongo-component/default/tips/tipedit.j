@@ -42,14 +42,14 @@
   <h2>TIP\u5185\u5bb9</h2>\r
 </div>\r
 <div class=\"hd2\">\r
-<form method=\"POST\" action=\"<?cs var:C._base ?>/tips/edit/<?cs var:A.mongo.tip.docid ?>\">\r
+<form method=\"POST\" action=\"<?cs var:C._base ?>/tips/edit/<?cs var:A.mongo.tip._u ?>\">\r
   <h5>\u516c\u958b<input type=\"checkbox\" name=\"public\" <?cs if:A.mongo.tip.public ?>checked<?cs /if ?>></input></h5>\r
   <h5>TIP\u30bf\u30a4\u30c8\u30eb</h5>\r
   <input type=\"text\" name=\"title\" value=\"<?cs var:A.mongo.tip.title ?>\"></input>\r
   <h5>\u5185\u5bb9</h5>\r
   <textarea name=\"origin\" ><?cs var:A.mongo.tip.origin ?></textarea>\r
   <br>\r
-  <input type=\"hidden\" name=\"docid\" value=\"<?cs var:A.mongo.tip.docid ?>\"></input>\r
+  <input type=\"hidden\" name=\"_u\" value=\"<?cs var:A.mongo.tip._u ?>\"></input>\r
   <input type=\"submit\" name=\"op\" value=\"save\"></input>\r
   <input type=\"submit\" name=\"op\" value=\"preview\"></input>\r
   <a target=\"_blank\" href=\"<?cs var:C._base ?>/notation\">notation</a>\r

@@ -41,7 +41,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component://mongo-component/default/noryo1/timetable/gettimetablepage",
+"component":"component://mongo-component/default/noryo2013/timetable/gettimetablepage",
 "children":[
 
 ]
@@ -54,7 +54,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component://mongo-component/default/noryo1/timetable/timetablepage",
+"component":"component://mongo-component/default/noryo2013/timetable/timetablepage",
 "children":[
 
 ]

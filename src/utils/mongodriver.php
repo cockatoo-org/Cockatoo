@@ -56,7 +56,7 @@ class MongoAccess {
     $this->slaveOk     = $slaveOk;
     $this->dbname      = $dbname;
     $this->collection  = $collection;
-    $this->options     = array('replicaSet' => true,'persist' => $uuid,'connect' => false);
+    $this->options     = array('replicaSet' => false,'persist' => $uuid,'connect' => false);
     if ( $user ) {
       $this->options['username'] = $user;
       $this->options['password'] = $password;

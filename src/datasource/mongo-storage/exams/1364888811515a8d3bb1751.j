@@ -1,6 +1,5 @@
 {
 "public":null,
-"docid":"1364888811515a8d3bb1751",
 "qname":"Writable\u30e6\u30fc\u30b6\u30c6\u30b9\u30c8",
 "qnum":"5",
 "qsummary":"\u30ed\u30fc\u30eb\u30c6\u30b9\u30c812",

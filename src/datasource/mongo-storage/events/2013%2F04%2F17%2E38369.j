@@ -8,7 +8,6 @@
 "address":"\u6771\u4eac\u90fd\u54c1\u5ddd\u533a\u6771\u54c1\u5ddd4-13-9",
 "place":"\u697d\u5929",
 "limit":"30",
-"docid":"2013/04/17.38369",
 "op":"save",
 "contents":[
 {

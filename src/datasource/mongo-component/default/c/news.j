@@ -7,7 +7,7 @@
 "js":"",
 "id":"cnews",
 "class":"cbox news",
-"body":"<div class=\"box\">\r\n<h6><a href=\"<?cs var:C._base ?>\/news\">\u30cb\u30e5\u30fc\u30b9<\/a><\/h6>\r\n<ul>\r\n<?cs each: item=A.mongo.newss?>\r\n  <?cs if: item.public ?>\r\n  <li><a href=\"<?cs var:C._base ?>\/news\/<?cs var: item.docid ?>\"><?cs var: item.title ?><\/a><\/li>\r\n  <?cs \/if ?>\r\n<?cs \/each ?>\r\n<\/ul>\r\n<\/div>\r\n",
+"body":"<div class=\"box\">\r\n<h6><a href=\"<?cs var:C._base ?>\/news\">\u30cb\u30e5\u30fc\u30b9<\/a><\/h6>\r\n<ul>\r\n<?cs each: item=A.mongo.newss?>\r\n  <?cs if: item.public ?>\r\n  <li><a href=\"<?cs var:C._base ?>\/news\/<?cs var: item._u ?>\"><?cs var: item.title ?><\/a><\/li>\r\n  <?cs \/if ?>\r\n<?cs \/each ?>\r\n<\/ul>\r\n<\/div>\r\n",
 "action":[
 "action:\/\/mongo-action\/mongo\/NewsAction?getA"
 ],

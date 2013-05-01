@@ -1,0 +1,92 @@
+{
+"@R":"1367377818",
+"eredirect":"/mongo/noryo2013/top",
+"redirect":"/mongo/noryo2013/top",
+"layout":{
+"type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component://core-component/default/horizontal#critical",
+"children":[
+{
+"type":"Html5Widget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component://core-component/default/header",
+"children":[
+{
+"type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component://mongo-component/default/header",
+"children":[
+
+]
+}
+]
+},
+{
+"type":"PageLayout",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component://core-component/default/pagelayout",
+"children":[
+
+]
+},
+{
+"type":"Html5Widget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component://core-component/default/footer",
+"children":[
+{
+"type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component://mongo-component/default/footer",
+"children":[
+
+]
+}
+]
+}
+]
+},
+"header":"<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\r
+<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\r
+<meta http-equiv=\"content-style-type\" content=\"text/css\">\r
+<meta http-equiv=\"content-script-type\" content=\"text/javascript\">\r
+<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"/_s_/mongo/default/css/page.css\" />\r
+<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"/_s_/mongo/default/css/cbox.css\" />\r
+<link rel=\"shortcut icon\" href=\"/_s_/mongo/default/favicon.ico\">",
+"pheader":"",
+"bottom":"<script src=\"/_s_/core/default/js/jquery-1.7.2.min.js\"></script>",
+"session_exp":"3600",
+"expires":"0",
+"_u":""
+}

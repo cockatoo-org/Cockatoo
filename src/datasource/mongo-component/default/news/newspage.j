@@ -25,7 +25,7 @@
     </div>\r
   </div>\r
 <?cs if:A.mongo.news.writable ?>\r
-  <div class=\"edit\"><a href=\"<?cs var:C._base ?>/news/edit/<?cs var:A.mongo.news.docid ?>\">\u7de8\u96c6</a></div>\r
+  <div class=\"edit\"><a href=\"<?cs var:C._base ?>/news/edit/<?cs var:A.mongo.news._u ?>\">\u7de8\u96c6</a></div>\r
 <?cs /if ?>\r
 </div>\r
 ",

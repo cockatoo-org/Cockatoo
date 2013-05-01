@@ -1,6 +1,6 @@
 {
 "@R":"1367313250",
-"eredirect":"/mongo/noryo1/timetable",
+"eredirect":"/mongo/noryo2013/timetable",
 "redirect":"",
 "pre_action":"",
 "post_action":"action://mongo-action/mongo/TimetableAction?set",
@@ -41,7 +41,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component://mongo-component/default/noryo1/timetable/timetablepage",
+"component":"component://mongo-component/default/noryo2013/timetable/timetablepage",
 "children":[
 
 ]
@@ -54,7 +54,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component://mongo-component/default/noryo1/timetable/timetableedit",
+"component":"component://mongo-component/default/noryo2013/timetable/timetableedit",
 "children":[
 
 ]

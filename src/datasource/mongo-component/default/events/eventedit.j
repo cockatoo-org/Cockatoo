@@ -152,7 +152,7 @@ $(function() {\r
   <h2>ATND (ATND beta) information</h2>\r
 </div>\r
 <div class=\"hd2\">\r
-<form method=\"POST\" action=\"<?cs var:C._base ?>/events/edit/<?cs var:A.mongo.event.docid ?>\">\r
+<form method=\"POST\" action=\"<?cs var:C._base ?>/events/edit/<?cs var:A.mongo.event._u ?>\">\r
   <table><tbody>\r
     <tr>\r
     <th class=\"public\">\u516c\u958b</th>\r
@@ -211,7 +211,7 @@ $(function() {\r
 -->\r
     <th></th>\r
     <td>\r
-    <input type=\"hidden\" name=\"docid\" value=\"<?cs var:A.mongo.event.docid ?>\"></input>\r
+    <input type=\"hidden\" name=\"_u\" value=\"<?cs var:A.mongo.event._u ?>\"></input>\r
     <input type=\"submit\" name=\"op\" value=\"preview\"></input>\r
     <input type=\"submit\" name=\"op\" value=\"save\"></input>\r
     <a target=\"_blank\" href=\"<?cs var:C._base ?>/notation\">notation</a>\r

@@ -13,5 +13,5 @@
 ],
 "header":"",
 "bottom":"",
-"_u":"noryo1/timetable/gettimetablepage"
+"_u":"noryo2013/timetable/gettimetablepage"
 }

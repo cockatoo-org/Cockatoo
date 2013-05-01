@@ -31,7 +31,7 @@ class ExamAction extends UserPostAction {
     }
     return array(
       'done' => 1,
-      'docid' => 'new',
+      '_u' => 'new',
       'public' => '',
       'qname' => $qname,
       'qnum' => 5,
@@ -43,7 +43,7 @@ class ExamAction extends UserPostAction {
     $qname   = $post['qname'];
     $qnum    = $post['qnum'];
     $qsummary= $post['qsummary'];
-    $docid  =  $post['docid'];
+    $docid  =  $post['_u'];
     $qs = null;
     for( $i = 0 ; $i < self::$NUM_QUESTION ; $i++ ) {
       $origin   = $post['q'.$i];
@@ -73,7 +73,7 @@ class ExamAction extends UserPostAction {
 
     $exam = array(
       'public' => $public,
-      'docid' => $docid,
+      '_u' => $docid,
       'qname' => $qname,
       'qnum' => $qnum,
       'qsummary' => $qsummary,

@@ -153,8 +153,8 @@ abstract class UserPostAction extends \Cockatoo\Action {
         if ( !$doc['_owner'] ) {
           $doc['_owner'] = $this->user;
           $doc['_ownername'] = $this->username;
-          $doc['docid'] = $this->update_docid($docid,$doc);
-          $prev = $this->get_doc($doc['docid'],true);
+          $doc['_u'] = $this->update_docid($docid,$doc);
+          $prev = $this->get_doc($doc['_u'],true);
           if ( $prev && $prev['_owner'] !== $doc['_owner'] ) {
             throw new \Exception('You do not have permission or the event is already registed.');
           }
@@ -166,7 +166,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
         }elseif( $op === 'save' ) {
           $old_docid = $docid;
           $new_docid = $this->update_docid($docid,$doc);
-          $doc['docid'] = $new_docid;
+          $doc['_u'] = $new_docid;
           $doc['_time'] = time();
           $doc['_timestr'] = date('Y-m-d',$doc['_time']);
           $this->save_hook($doc);

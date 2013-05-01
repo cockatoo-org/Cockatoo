@@ -28,7 +28,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component://mongo-component/default/noryo1/top",
+"component":"component://mongo-component/default/noryo2013/top",
 "children":[
 
 ]

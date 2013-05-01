@@ -1,6 +1,6 @@
 {
-"@R":"1367313372",
-"eredirect":"",
+"@R":"1367379415",
+"eredirect":"/mongo/noryo2013",
 "redirect":"",
 "pre_action":"",
 "post_action":"",
@@ -28,7 +28,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component://mongo-component/default/noryo1/timetable/timetable",
+"component":"component://mongo-component/default/noryo2013/timetable/timetable",
 "children":[
 
 ]

@@ -10,7 +10,6 @@
 "address":"\u5343\u4ee3\u7530\u533a\u4e38\u306e\u51851-6-5",
 "place":"\u4e38\u306e\u5185\u5317\u53e3\u30d3\u30eb9F\uff08\u91ce\u6751\u7dcf\u5408\u7814\u7a76\u6240\uff09 \u5927\u4f1a\u8b70\u5ba4 01",
 "limit":"50",
-"docid":"2013\/02\/19.36467",
 "op":"save",
 "contents":[
 {

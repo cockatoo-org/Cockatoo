@@ -9,7 +9,6 @@
 "address":"\u6771\u4eac\u90fd\u4e2d\u592e\u533a\u65b0\u5ddd1-22-12 \u30cb\u30c3\u30c6\u30a4\u30d3\u30eb1005",
 "place":"Centimani \uff08\u682a\uff09\u3000\u4e8b\u52d9\u6240",
 "limit":"100",
-"docid":"2013\/04\/19.14400\/0",
 "op":"save",
 "contents":[
 {

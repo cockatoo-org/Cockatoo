@@ -18,7 +18,7 @@ class TipAction extends UserPostAction {
     $origin = '*New';
     $contents = array(array('tag' => 'h2','attr'=>array(),'children' => array(array('tag'=>'text' , 'text' => 'New'))));
     return array(
-      'docid' => 'new',
+      '_u' => 'new',
       'origin' => $origin,
       'contents' => $contents
       );

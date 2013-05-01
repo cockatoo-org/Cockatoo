@@ -10,7 +10,6 @@
 "address":"\u6771\u4eac\u90fd\u5343\u4ee3\u7530\u533a\u4e38\u306e\u51851-6-5 ",
 "place":"",
 "limit":"50",
-"docid":"2013\/02\/20.13075\/0",
 "op":"save",
 "contents":[
 {

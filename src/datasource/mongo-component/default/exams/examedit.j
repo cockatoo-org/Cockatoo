@@ -55,7 +55,7 @@
   <h2>\u7de8\u96c6</h2>\r
 </div>\r
 <div class=\"hd2\">\r
-<form id=\"questions\" method=\"POST\" action=\"<?cs var:C._base ?>/exams/edit/<?cs var:A.mongo.exam.docid ?>\">\r
+<form id=\"questions\" method=\"POST\" action=\"<?cs var:C._base ?>/exams/edit/<?cs var:A.mongo.exam._u ?>\">\r
 <h5>\u516c\u958b<input type=\"checkbox\" name=\"public\" <?cs if:A.mongo.exam.public ?>checked<?cs /if ?>></input></h5>\r
 \r
 <h5>\u554f\u984c\u30bf\u30a4\u30c8\u30eb</h5>\r
@@ -88,7 +88,7 @@
 </div>\r
 <?cs /each ?>\r
 \r
-<input type=\"hidden\" name=\"docid\" value=\"<?cs var:A.mongo.exam.docid ?>\"></input>\r
+<input type=\"hidden\" name=\"_u\" value=\"<?cs var:A.mongo.exam._u ?>\"></input>\r
 <input type=\"submit\" name=\"op\" value=\"save\"></input>\r
 <input type=\"submit\" name=\"op\" value=\"preview\"></input>\r
 <input type=\"submit\" name=\"op\" value=\"remove\"></input>\r

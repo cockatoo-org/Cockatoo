@@ -23,7 +23,7 @@
 <div class=\"hd2\">\r
   <ul>\r
   <?cs each: item = A.mongo.newss ?>\r
-    <li class=\"<?cs if:!item.public ?>private<?cs /if?>\" ><a href=\"<?cs var:C._base ?>/news/<?cs var:item.docid ?>\"><?cs var:item.title ?></a> (by <?cs var:item._ownername ?> <time><?cs var:item._timestr ?></time>)</li>\r
+    <li class=\"<?cs if:!item.public ?>private<?cs /if?>\" ><a href=\"<?cs var:C._base ?>/news/<?cs var:item._u ?>\"><?cs var:item.title ?></a> (by <?cs var:item._ownername ?> <time><?cs var:item._timestr ?></time>)</li>\r
   <?cs /each ?>\r
   </ul>\r
 </div>\r

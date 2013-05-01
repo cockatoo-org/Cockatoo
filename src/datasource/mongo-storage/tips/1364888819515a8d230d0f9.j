@@ -3,7 +3,6 @@
 "origin":"*New\r\n\u304b\u304d\u304b\u3051\u30fc",
 "_owner":"admin",
 "_ownername":"admin",
-"docid":"1364888819515a8d230d0f9",
 "op":"save",
 "contents":[
 {

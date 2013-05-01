@@ -1,6 +1,5 @@
 {
 "public":null,
-"docid":"1364449504515a8d4a5d9cf",
 "qname":"\u66f8\u304d\u304b\u3051\u306f\u30aa\u30fc\u30ca\u3057\u304b\u8868\u793a\u3055\u308c\u306a\u3044",
 "qnum":"5",
 "qsummary":"\u3053\u306e\u30c6\u30b9\u30c8\u306e\u6982\u8981\u306f\u30fb\u30fb\u30fb",
