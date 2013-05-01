@@ -4,7 +4,7 @@ cd ${ROOT}
 ROOT=`pwd`
 source ${ROOT}/../build.env
 
-VERSION='0.8.1'
+VERSION='0.10.5'
 ARCHIVE=http://nodejs.org/dist/v%s/node-v%s.tar.gz
 ARCHIVE=`printf ${ARCHIVE} ${VERSION} ${VERSION}`
 download ${ARCHIVE}
