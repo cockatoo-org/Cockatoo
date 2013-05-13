@@ -1,5 +1,5 @@
 {
-"@R":"1367385407",
+"@R":"1367896405",
 "type":"HorizontalWidget",
 "subject":"noryo2013_timetable",
 "description":"",
@@ -15,7 +15,7 @@
 <th class=\"good\">\u307f\u3093\u306a\u306e\u8a55\u4fa1</th>\r
 </tr>\r
 <?cs each: item = A.mongo.timeboxs ?>\r
-  <tr class=\"<?cs if:!item.public ?>private<?cs /if?>\">\r
+  <tr class=\"session <?cs if:!item.public ?>private<?cs /if?>\">\r
     <td class=\"timebox\"><time><?cs var:item.start ?></time> \u301c <time><?cs var:item.end ?></time></td>\r
     <td class=\"field\"><div><a href=\"<?cs var:C._base ?>/noryo2013/timetable/<?cs var:item._u ?>\"><pre>{\r
   <span class=\"field title\">title</span>\r

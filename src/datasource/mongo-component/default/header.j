@@ -1,13 +1,138 @@
 {
-"@R":"1364805946",
+"@R":"1367899463",
 "type":"HorizontalWidget",
 "subject":"header",
 "description":"header",
-"css":"#header div.nav.top {\r\n  background-color: #402817;\r\n  color: #AA814D;\r\n  width:100%;\r\n  height: 93px;\r\n  display:block;\r\n  float:left;\r\n}\r\n#header #logo {\r\n  float:left;\r\n}\r\n#header #title {\r\n  font-size: 2em;\r\n  margin: 30px;\r\n  color: #f0f0f0;\r\n  float:left;\r\n}\r\n#header #identity {\r\n  min-width:100px;\r\n  text-align: center;\r\n  margin: 2px 8px;\r\n  float:right;\r\n}\r\n#header #identity a {\r\n  color: #AA814D;\r\n  cursor: pointer;\r\n}\r\n#header #identity > div{\r\n  margin: 5px 0 0 0;\r\n  padding: 3px;\r\n  border-style: solid;\r\n  border-width: 1px;\r\n  background-color: #cccccc;\r\n  opacity: 0.5;\r\n  display: none;\r\n}\r\n#header #identity:hover > div{\r\n  display: block;\r\n}\r\n#header #identity > div > form {\r\n  display:none;\r\n}\r\n\r\n#header div.nav.main {\r\n  line-height: 1.31;\r\n  background-color: #f6f4cd;\r\n  border-top: 1px solid #f6f4cd;\r\n  color: #4c3a2c;\r\n  width:100%;\r\n  float:right;\r\n}\r\n#header div.nav.main ul {\r\n  list-style: none;\r\n  padding: 0;\r\n  margin: 0 5px;\r\n}\r\n#header div.nav.main ul > li {\r\n  font-size: 0.7em;\r\n  float: right;\r\n  padding: 2px 4px;\r\n}\r\n#header div.nav.main ul > li.selected {\r\n  background-color: #F0F0F0;\r\n}\r\n#header div.nav.main ul > li:hover {\r\n  background-color: #f8f8f8;\r\n}\r\n#header div.nav.main a {\r\n  color: #4c3a2c;\r\n}\r\n\r\n",
-"js":"$( function (){\r\n  mainNavs = $('#header nav.main > ul > li');\r\n  mainNavs.each( function () {\r\n    $(this).removeClass('selected');\r\n    link = $(this).find('> a').attr('href');\r\n    if ( link == window.location.pathname) {\r\n      $(this).addClass('selected');\r\n    }\r\n  });\r\n  $('#header #identity div.logout a.logout').click(function(ev){\r\n    $(this).next('form').find('input[type=\"submit\"]').click();\r\n  });\r\n})\r\n",
+"css":"#header div.nav.top {\r
+  background-color: #402817;\r
+  color: #AA814D;\r
+  width:100%;\r
+  height: 93px;\r
+  display:block;\r
+  float:left;\r
+}\r
+#header div.nav.top img {\r
+  height: 93px;\r
+}\r
+#header #logo {\r
+  float:left;\r
+}\r
+#header #title {\r
+  font-size: 2em;\r
+  margin: 30px;\r
+  color: #f0f0f0;\r
+  float:left;\r
+}\r
+#header #identity {\r
+  min-width:100px;\r
+  text-align: center;\r
+  margin: 2px 8px;\r
+  float:right;\r
+}\r
+#header #identity a {\r
+  color: #AA814D;\r
+  cursor: pointer;\r
+}\r
+#header #identity > div{\r
+  margin: 5px 0 0 0;\r
+  padding: 3px;\r
+  border-style: solid;\r
+  border-width: 1px;\r
+  background-color: #cccccc;\r
+  opacity: 0.5;\r
+  display: none;\r
+}\r
+#header #identity:hover > div{\r
+  display: block;\r
+}\r
+#header #identity > div > form {\r
+  display:none;\r
+}\r
+\r
+#header div.nav.main {\r
+  line-height: 1.31;\r
+  background-color: #f6f4cd;\r
+  border-top: 1px solid #f6f4cd;\r
+  color: #4c3a2c;\r
+  width:100%;\r
+  float:right;\r
+}\r
+#header div.nav.main ul {\r
+  list-style: none;\r
+  padding: 0;\r
+  margin: 0 5px;\r
+}\r
+#header div.nav.main ul > li {\r
+  font-size: 0.7em;\r
+  float: right;\r
+  padding: 2px 4px;\r
+}\r
+#header div.nav.main ul > li.selected {\r
+  background-color: #F0F0F0;\r
+}\r
+#header div.nav.main ul > li:hover {\r
+  background-color: #f8f8f8;\r
+}\r
+#header div.nav.main a {\r
+  color: #4c3a2c;\r
+}\r
+\r
+",
+"js":"$( function (){\r
+  mainNavs = $('#header nav.main > ul > li');\r
+  mainNavs.each( function () {\r
+    $(this).removeClass('selected');\r
+    link = $(this).find('> a').attr('href');\r
+    if ( link == window.location.pathname) {\r
+      $(this).addClass('selected');\r
+    }\r
+  });\r
+  $('#header #identity div.logout a.logout').click(function(ev){\r
+    $(this).next('form').find('input[type=\"submit\"]').click();\r
+  });\r
+})\r
+",
 "id":"header",
 "class":"",
-"body":"<nav><div class=\"nav top\" role=\"navigation\">\r\n  <div id=\"logo\"><img alt=\"MongoDB JP User Group \" src=\"\/_s_\/mongo\/default\/img\/mongojp-logo.png\"><\/img><\/div>\r\n  <div id=\"title\">\u65e5\u672cMongoDB\u30e6\u30fc\u30b6\u30fc\u4f1a<\/div>\r\n<?cs if:! S.login.user ?>\r\n  <div id=\"identity\"><a href=\"<?cs var:C._base ?>\/login?r=<?cs if:S._g.r ?><?cs var:S._g.r ?><?cs else ?><?cs var:S._r._eurl ?><?cs \/if ?>\">login<\/a><\/div>\r\n<?cs else ?>\r\n  <div id=\"identity\"><a user=\"<?cs var:S.login.user ?>\"><?cs var:S.login.name ?><\/a>\r\n   <div class=\"logout\">\r\n    <a class=\"logout\">logout<\/a>\r\n    <form method=\"post\" action=\"<?cs var:C._base ?>\/profile\">\r\n     <input type=\"submit\" name=\"submit\" value=\"logout\" \/>\r\n    <\/form>\r\n   <\/div>\r\n   <?cs if: S.login.root ?>\r\n   <div class=\"admin\">\r\n    <a href=\"<?cs var:C._base ?>\/admin\">admin tool<\/a>\r\n   <\/div>\r\n   <?cs else ?>\r\n   <div class=\"profile\">\r\n    <a href=\"<?cs var:C._base ?>\/profile\">edit profile<\/a>\r\n   <\/div>\r\n   <?cs \/if ?>\r\n  <\/div>\r\n<?cs \/if ?>\r\n<\/div><\/nav>\r\n<nav><div class=\"nav main\" role=\"navigation\">\r\n  <ul>\r\n    <li><a href=\"<?cs var:C._base ?>\/licence\">\u30e9\u30a4\u30bb\u30f3\u30b9<\/a><\/li>\r\n    <li><a href=\"<?cs var:C._base ?>\/links\">\u30ea\u30f3\u30af<\/a><\/li>\r\n    <li><a href=\"<?cs var:C._base ?>\/news\">\u30cb\u30e5\u30fc\u30b9<\/a><\/li>\r\n    <li><a href=\"<?cs var:C._base ?>\/events\">\u30a4\u30d9\u30f3\u30c8<\/a><\/li>\r\n    <li><a href=\"<?cs var:C._base ?>\/exams\">\u554f\u984c\u96c6<\/a><\/li>\r\n    <li><a href=\"<?cs var:C._base ?>\/tips\">TIPS<\/a><\/li>\r\n    <li><a href=\"<?cs var:C._base ?>\/docs\">\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8<\/a><\/li>\r\n    <li><a href=\"<?cs var:C._base ?>\/main\">\u30e1\u30a4\u30f3<\/a><\/li>\r\n  <\/ul>\r\n<\/div><\/nav>\r\n<br clear=\"both\" \/>\r\n",
+"body":"<nav><div class=\"nav top\" role=\"navigation\">\r
+  <div id=\"logo\"><img alt=\"MongoDB JP User Group \" src=\"/_s_/mongo/default/img/mongojp-logo.png\"></img><img alt=\"\u3086\u308b\u30ad\u30e3\u30e9\" src=\"/_s_/mongo/default/img/mongo-squid-mini.png\"></img></div>\r
+  <div id=\"title\">\u65e5\u672cMongoDB\u30e6\u30fc\u30b6\u30fc\u4f1a</div>\r
+<?cs if:! S.login.user ?>\r
+  <div id=\"identity\"><a href=\"<?cs var:C._base ?>/login?r=<?cs if:S._g.r ?><?cs var:S._g.r ?><?cs else ?><?cs var:S._r._eurl ?><?cs /if ?>\">login</a></div>\r
+<?cs else ?>\r
+  <div id=\"identity\"><a user=\"<?cs var:S.login.user ?>\"><?cs var:S.login.name ?></a>\r
+   <div class=\"logout\">\r
+    <a class=\"logout\">logout</a>\r
+    <form method=\"post\" action=\"<?cs var:C._base ?>/profile\">\r
+     <input type=\"submit\" name=\"submit\" value=\"logout\" />\r
+    </form>\r
+   </div>\r
+   <?cs if: S.login.root ?>\r
+   <div class=\"admin\">\r
+    <a href=\"<?cs var:C._base ?>/admin\">admin tool</a>\r
+   </div>\r
+   <?cs else ?>\r
+   <div class=\"profile\">\r
+    <a href=\"<?cs var:C._base ?>/profile\">edit profile</a>\r
+   </div>\r
+   <?cs /if ?>\r
+  </div>\r
+<?cs /if ?>\r
+</div></nav>\r
+<nav><div class=\"nav main\" role=\"navigation\">\r
+  <ul>\r
+    <li><a href=\"<?cs var:C._base ?>/licence\">\u30e9\u30a4\u30bb\u30f3\u30b9</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/links\">\u30ea\u30f3\u30af</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/news\">\u30cb\u30e5\u30fc\u30b9</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/events\">\u30a4\u30d9\u30f3\u30c8</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/exams\">\u554f\u984c\u96c6</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/tips\">TIPS</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/docs\">\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8</a></li>\r
+    <li><a href=\"<?cs var:C._base ?>/main\">\u30e1\u30a4\u30f3</a></li>\r
+  </ul>\r
+</div></nav>\r
+<br clear=\"both\" />\r
+",
 "action":[
 ""
 ],
