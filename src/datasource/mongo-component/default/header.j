@@ -1,5 +1,5 @@
 {
-"@R":"1367899463",
+"@R":"1368434650",
 "type":"HorizontalWidget",
 "subject":"header",
 "description":"header",
@@ -63,10 +63,21 @@
   margin: 0 5px;\r
 }\r
 #header div.nav.main ul > li {\r
-  font-size: 0.7em;\r
+  font-size: 0.9em;\r
   float: right;\r
-  padding: 2px 4px;\r
+  padding: 2px 6px;\r
+  font-weight:600;\r
 }\r
+#header div.nav.main ul > li.emp {\r
+  background-color: #f05500;\r
+}\r
+#header div.nav.main ul > li.emp:hover a {\r
+  color: #4c3a2c;\r
+}\r
+#header div.nav.main ul > li.emp a {\r
+  color: #ffffff;\r
+}\r
+\r
 #header div.nav.main ul > li.selected {\r
   background-color: #F0F0F0;\r
 }\r
@@ -76,7 +87,6 @@
 #header div.nav.main a {\r
   color: #4c3a2c;\r
 }\r
-\r
 ",
 "js":"$( function (){\r
   mainNavs = $('#header nav.main > ul > li');\r
@@ -128,6 +138,7 @@
     <li><a href=\"<?cs var:C._base ?>/exams\">\u554f\u984c\u96c6</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/tips\">TIPS</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/docs\">\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8</a></li>\r
+    <li class=\"emp\"><a href=\"<?cs var:C._base ?>/noryo2013\">\u7d0d\u6dbcMongo\u796d\u308a2013</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/main\">\u30e1\u30a4\u30f3</a></li>\r
   </ul>\r
 </div></nav>\r
