@@ -22,7 +22,7 @@
 "start":"18:00",
 "end":"18:45",
 "type":"",
-"incharge":"",
+"incharge":"\u7aaa\u7530\u535a\u662d",
 "origin":"",
 "point":"",
 "op":"save",
@@ -62,6 +62,6 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1367389249,
-"_timestr":"2013-05-01"
+"_time":1368443810,
+"_timestr":"2013-05-13"
 }

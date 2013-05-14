@@ -1,5 +1,5 @@
 {
-"@R":"1368434650",
+"@R":"1368444622",
 "type":"HorizontalWidget",
 "subject":"header",
 "description":"header",
@@ -61,6 +61,9 @@
   list-style: none;\r
   padding: 0;\r
   margin: 0 5px;\r
+}\r
+#header div.nav.main ul.left > li {\r
+  float: left;\r
 }\r
 #header div.nav.main ul > li {\r
   font-size: 0.9em;\r
@@ -130,6 +133,9 @@
 <?cs /if ?>\r
 </div></nav>\r
 <nav><div class=\"nav main\" role=\"navigation\">\r
+  <ul class=\"left\"> \r
+    <li class=\"emp\"><a href=\"<?cs var:C._base ?>/noryo2013\">\u7d0d\u6dbcMongo\u796d\u308a2013</a></li>\r
+  </ul>\r
   <ul>\r
     <li><a href=\"<?cs var:C._base ?>/licence\">\u30e9\u30a4\u30bb\u30f3\u30b9</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/links\">\u30ea\u30f3\u30af</a></li>\r
@@ -138,7 +144,6 @@
     <li><a href=\"<?cs var:C._base ?>/exams\">\u554f\u984c\u96c6</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/tips\">TIPS</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/docs\">\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8</a></li>\r
-    <li class=\"emp\"><a href=\"<?cs var:C._base ?>/noryo2013\">\u7d0d\u6dbcMongo\u796d\u308a2013</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/main\">\u30e1\u30a4\u30f3</a></li>\r
   </ul>\r
 </div></nav>\r
