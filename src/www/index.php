@@ -20,16 +20,16 @@ try {
   require_once(Config::COCKATOO_ROOT.'utils/beak.php');
   require_once(Config::COCKATOO_ROOT.'utils/stcontents.php');
 
+  $HTTPS           = $_SERVER['SSL_PROTOCOL'];
+
   $HTTP_URI        = $_SERVER['REQUEST_URI'];
   $HTTP_USER_AGENT = $_SERVER['HTTP_USER_AGENT'];
   $HTTP_REMOTE_ADDR= $_SERVER['REMOTE_ADDR'];
   $HTTP_PROTOCOL   = $_SERVER['SERVER_PROTOCOL'];
   $REMOTE_ADDR     = $_SERVER['REMOTE_ADDR'];
   $NAME = 'from ' . $REMOTE_ADDR . ' : ';
-
   $POST = getPost($_SERVER[REQUEST_METHOD]);
   $FILES= getFiles($POST);
-
   try {
     $per = Log::pre_performance();
     Log::info($NAME);

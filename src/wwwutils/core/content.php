@@ -194,7 +194,6 @@ class ContentDrawer {
     return null;
   }
 
-
   public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
     $scheme = (isset($SERVER['HTTPS'])?'https':'http');
     $port = '';
@@ -236,7 +235,7 @@ class ContentDrawer {
       // cookie
       // name , value , exp(sec) , path , domain , secure , httponly 
       Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Issue session cookie ' . $this->sessionID . ' , ' . $this->sessionExp);
-      setcookie(Config::SESSION_COOKIE,$this->sessionID,$exp,$this->session_path);
+      setcookie(Config::SESSION_COOKIE,$this->sessionID,$exp,$this->session_path,null,(Config::SESSION_COOKIE_SECURE && isset($SERVER['SSL_PROTOCOL'])),true);
     }
 
     foreach($FILES as $FILE){

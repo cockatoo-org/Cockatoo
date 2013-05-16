@@ -203,9 +203,11 @@ abstract class DefaultConfig {
   const CommonCSS      = 'css/cockatoo.css';
   const CommonJs       = 'js/cockatoo.js';
   /**
-   * Session cookie name
+   * Session cookie name & secure option 
    */
   const SESSION_COOKIE = 'ALB_SESID';
+  const SESSION_COOKIE_SECURE = true;
+  
   /**
    * Request analizer
    */
