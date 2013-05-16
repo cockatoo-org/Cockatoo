@@ -1,5 +1,5 @@
 {
-"@R":"1368444622",
+"@R":"1368690430",
 "type":"HorizontalWidget",
 "subject":"header",
 "description":"header",
@@ -62,14 +62,9 @@
   padding: 0;\r
   margin: 0 5px;\r
 }\r
+/*\r
 #header div.nav.main ul.left > li {\r
   float: left;\r
-}\r
-#header div.nav.main ul > li {\r
-  font-size: 0.9em;\r
-  float: right;\r
-  padding: 2px 6px;\r
-  font-weight:600;\r
 }\r
 #header div.nav.main ul > li.emp {\r
   background-color: #f05500;\r
@@ -79,6 +74,13 @@
 }\r
 #header div.nav.main ul > li.emp a {\r
   color: #ffffff;\r
+}\r
+*/\r
+#header div.nav.main ul > li {\r
+  font-size: 0.9em;\r
+  float: right;\r
+  padding: 2px 6px;\r
+  font-weight:600;\r
 }\r
 \r
 #header div.nav.main ul > li.selected {\r
@@ -133,9 +135,11 @@
 <?cs /if ?>\r
 </div></nav>\r
 <nav><div class=\"nav main\" role=\"navigation\">\r
+<!--\r
   <ul class=\"left\"> \r
     <li class=\"emp\"><a href=\"<?cs var:C._base ?>/noryo2013\">\u7d0d\u6dbcMongo\u796d\u308a2013</a></li>\r
   </ul>\r
+-->\r
   <ul>\r
     <li><a href=\"<?cs var:C._base ?>/licence\">\u30e9\u30a4\u30bb\u30f3\u30b9</a></li>\r
     <li><a href=\"<?cs var:C._base ?>/links\">\u30ea\u30f3\u30af</a></li>\r
