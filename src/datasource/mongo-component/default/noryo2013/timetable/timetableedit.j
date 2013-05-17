@@ -1,16 +1,9 @@
 {
-"@R":"1368786620",
+"@R":"1368787326",
 "type":"HorizontalWidget",
 "subject":"timetableedit",
 "description":"",
-"css":"\r
-\r
-",
-"js":"",
-"id":"noryo2013_timetable",
-"class":"",
-"body":"<style>\r
-#noryo2013_timetable {\r
+"css":"#noryo2013_timetable {\r
   padding-top: 80px;\r
 }\r
 #noryo2013_timetable table.timetable{\r
@@ -54,6 +47,9 @@
   padding: 2px 0 4px 0;\r
   cursor : pointer;\r
 }\r
+#noryo2013_timetable table.timetable tr.view.private td {\r
+  background-color: #cccccc;\r
+}\r
 #noryo2013_timetable table.timetable tr.view td.title{\r
   font-weight:600;\r
 }\r
@@ -77,10 +73,18 @@
 }\r
 #noryo2013_timetable table.timetable input[name=\"targets\"] {\r
   width: 600px;\r
-}\r
-</style>\r
-\r
-<?cs if: S.login.writable ?>\r
+}",
+"js":"<script>\r
+$(function(){\r
+  $('#noryo2013_timetable table.timetable tr.view').click(function(){\r
+   $(this).next().slideToggle();\r
+  });\r
+});\r
+</script>\r
+",
+"id":"noryo2013_timetable",
+"class":"",
+"body":"<?cs if: S.login.writable ?>\r
 <table class=\"timetable\">\r
 <tbody>\r
  <tr>\r
@@ -92,6 +96,7 @@
  <th class=\"overview\">\u6982\u8981</th>\u3000\u3000\r
  </tr>\r
  <tr class=\"view\">\r
+ <td class=\"public\"   ></td>\r
  <td class=\"place\"   ></td>\r
  <td class=\"start\"   ></td>\r
  <td class=\"end\"     ></td>\r
@@ -108,6 +113,7 @@
    <input type=\"hidden\" name=\"_u\" value=\"new\"></input>\r
 <table>\r
 <tbody>\r
+<tr class=\"public\"  ><td class=\"key\">\u516c\u958b</td>   <td><input type=\"checkbox\" name=\"public\"></input></td></tr>\r
 <tr class=\"place\"   ><td class=\"key\">\u4f1a\u5834</td>   <td><input type=\"text\" name=\"place\" value=\"\"></input></td></tr>\r
 <tr class=\"start\"   ><td class=\"key\">\u958b\u59cb\u6642\u523b</td><td><input type=\"text\" name=\"start\" value=\"\"></input></td></tr>\r
 <tr class=\"end\"     ><td class=\"key\">\u7d42\u4e86\u6642\u523b</td><td><input type=\"text\" name=\"end\"   value=\"\"></input></td></tr>\r
@@ -124,7 +130,7 @@
   </td>\r
  </tr>\r
 <?cs each: item = A.mongo.timeboxs.raw ?>\r
- <tr class=\"view\">\r
+ <tr class=\"view <?cs if:! item.public ?>private<?cs /if ?>\">\r
  <td class=\"place\"   ><?cs var:item.place ?></td>   \r
  <td class=\"start\"   ><?cs var:item.start ?></td>   \r
  <td class=\"end\"     ><?cs var:item.end ?></td>\t    \r
@@ -141,6 +147,7 @@
    <input type=\"hidden\" name=\"_u\" value=\"<?cs var:item._u ?>\"></input>\r
 <table>\r
 <tbody>\r
+<tr class=\"public\"  ><td class=\"key\">\u516c\u958b</td>   <td><input type=\"checkbox\" name=\"public\" <?cs if:item.public ?>checked<?cs /if ?>></input></td></tr>\r
 <tr class=\"place\"   ><td class=\"key\">\u4f1a\u5834</td>   <td><input type=\"text\" name=\"place\" value=\"<?cs var:item.place ?>\"></input></td></tr>\r
 <tr class=\"start\"   ><td class=\"key\">\u958b\u59cb\u6642\u523b</td><td><input type=\"text\" name=\"start\" value=\"<?cs var:item.start ?>\"></input></td></tr>\r
 <tr class=\"end\"     ><td class=\"key\">\u7d42\u4e86\u6642\u523b</td><td><input type=\"text\" name=\"end\"   value=\"<?cs var:item.end ?>\"  ></input></td></tr>\r
@@ -161,15 +168,6 @@
 </table>\r
 \r
 <?cs /if ?>\r
-\r
-<script src=\"/_s_/core/default/js/jquery-1.7.2.min.js\"></script>\r
-<script>\r
-$(function(){\r
-  $('#noryo2013_timetable table.timetable tr.view').click(function(){\r
-   $(this).next().slideToggle();\r
-  });\r
-});\r
-</script>\r
 \r
 \r
 \r

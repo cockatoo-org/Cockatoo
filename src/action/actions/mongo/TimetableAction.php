@@ -58,7 +58,7 @@ class TimetableAction extends UserPostAction {
       return $doc['place'] . self::SEPARATOR .$doc['start'] . self::SEPARATOR . uniqid();
     }
     $parsed_docid = explode(self::SEPARATOR,$docid);
-    if ( ! ($doc['place'] === $parsed_docid[1]) || ! ($doc['start'] === $parsed_docid[1]) ) {
+    if ( ! ($doc['place'] === $parsed_docid[0]) || ! ($doc['start'] === $parsed_docid[1]) ) {
       return $doc['place'] . self::SEPARATOR . $doc['start'] . self::SEPARATOR . uniqid();
     }
     return $docid;
