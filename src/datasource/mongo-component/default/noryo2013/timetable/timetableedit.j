@@ -1,5 +1,5 @@
 {
-"@R":"1368784422",
+"@R":"1368786620",
 "type":"HorizontalWidget",
 "subject":"timetableedit",
 "description":"",
@@ -90,6 +90,38 @@
  <th class=\"title\"   >\u30bf\u30a4\u30c8\u30eb</th>\r
  <th class=\"incharge\">\u767a\u8868\u8005</th>\u3000\r
  <th class=\"overview\">\u6982\u8981</th>\u3000\u3000\r
+ </tr>\r
+ <tr class=\"view\">\r
+ <td class=\"place\"   ></td>\r
+ <td class=\"start\"   ></td>\r
+ <td class=\"end\"     ></td>\r
+ <td class=\"title\"   >*new*</td>\r
+ <td class=\"incharge\"></td>\r
+ <td class=\"overview\"></td>\r
+ </tr>\r
+ <tr class=\"form\">\r
+  <td colspan=\"6\">\r
+<div>\r
+  <form method=\"POST\" action=\"<?cs var:C._base ?>/noryo2013/timetable/edit\">\r
+   <input type=\"submit\" name=\"op\" value=\"save\"></input>\r
+   <input type=\"submit\" name=\"op\" value=\"remove\"></input>\r
+   <input type=\"hidden\" name=\"_u\" value=\"new\"></input>\r
+<table>\r
+<tbody>\r
+<tr class=\"place\"   ><td class=\"key\">\u4f1a\u5834</td>   <td><input type=\"text\" name=\"place\" value=\"\"></input></td></tr>\r
+<tr class=\"start\"   ><td class=\"key\">\u958b\u59cb\u6642\u523b</td><td><input type=\"text\" name=\"start\" value=\"\"></input></td></tr>\r
+<tr class=\"end\"     ><td class=\"key\">\u7d42\u4e86\u6642\u523b</td><td><input type=\"text\" name=\"end\"   value=\"\"></input></td></tr>\r
+<tr class=\"title\"   ><td class=\"key\">\u30bf\u30a4\u30c8\u30eb</td><td><input type=\"text\" name=\"title\" value=\"*new*\"></input></td></tr>\r
+<tr class=\"incharge\"><td class=\"key\">\u8b1b\u6f14\u8005</td>  <td><input type=\"text\" name=\"incharge\" value=\"\"></input></td></tr>\r
+<tr class=\"overview\"><td class=\"key\">\u6982\u8981</td>   <td><textarea name=\"overview\" ></textarea></td></tr>\r
+<tr class=\"targets\" ><td class=\"key\">\u5bfe\u8c61</td>   <td><input type=\"text\" name=\"targets\" value=\"\"></input></td></tr>\r
+<tr class=\"types\" >  <td class=\"key\">\u5f62\u5f0f</td>   <td><input type=\"text\" name=\"types\" value=\"\"></input></td></tr>\r
+<tr class=\"origin\"  ><td class=\"key\">\u5185\u5bb9</td>   <td><textarea name=\"origin\" ></textarea></td></tr>\r
+</tbody>\r
+</table>\r
+  </form>\r
+</div>\r
+  </td>\r
  </tr>\r
 <?cs each: item = A.mongo.timeboxs.raw ?>\r
  <tr class=\"view\">\r

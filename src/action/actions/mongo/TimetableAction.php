@@ -11,7 +11,7 @@ namespace mongo;
  * @copyright Copyright (C) 2011, rakuten 
  */
 class TimetableAction extends UserPostAction {
-  protected $REDIRECT = '/mongo/noryo2013/timetable/edit';
+  protected $REDIRECT = '/mongo/noryo2013/timetable';
   protected $COLLECTION = 'timetable';
   protected $DOCNAME    = 'timebox';
   protected $ORDER      = '1';
@@ -33,7 +33,10 @@ class TimetableAction extends UserPostAction {
     return array('raw' => $ret , '@json' => json_encode($ret));
   }
   function post_save_hook(&$doc){
-    return $this->REDIRECT;
+    return $this->REDIRECT . '/edit';
+  }
+  function post_remove_hook(){
+    return $this->REDIRECT . '/edit';
   }
   function post_to_doc (&$post,&$doc) {
     if ( ! $doc ) {

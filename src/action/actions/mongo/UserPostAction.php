@@ -41,6 +41,9 @@ abstract class UserPostAction extends \Cockatoo\Action {
   function post_save_hook(&$doc){
     return false;
   }
+  function post_remove_hook(){
+    return false;
+  }
   function begin_hook(&$op,&$docid,&$doc,&$post){
     return null; // continue
   }
@@ -189,7 +192,11 @@ abstract class UserPostAction extends \Cockatoo\Action {
           return array();
         }elseif( $op === 'remove' ) {
           $this->remove_doc($docid);
-          $this->setMovedTemporary($this->REDIRECT);
+          $redirect = $this->post_remove_hook();
+          if ( ! $redirect ) {
+            $redirect = $this->REDIRECT;
+          }
+          $this->setMovedTemporary($redirect);
           return array();
         }
       }
