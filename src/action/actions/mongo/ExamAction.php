@@ -84,12 +84,6 @@ class ExamAction extends UserPostAction {
       $doc = array_merge($doc,$exam);
     }
   }
-  function update_docid(&$docid,&$doc) {
-    if ( ! $docid || strcmp($docid,'new')===0 ) {
-      $docid = $doc['_time'] . uniqid();
-    }
-    return $docid;
-  }
   function begin_hook(&$op,&$docid,&$doc,&$post){
     if ( $this->method === \Cockatoo\Beak::M_GET ) {
       if ( $op === 'eval' ) {

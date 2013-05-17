@@ -1,9 +1,10 @@
 {
-"etag":"\"3c886524-f434-c245-2267760544cd1a2d\"",
+"etag":"\"a77969ff-5f8b-4eb1-86eec6cc64196e9f\"",
 "type":"text/css",
 "exp":"",
 "desc":"",
-"data":"#noryo2013_timetable {\r
+"data":"/*\r
+#noryo2013_timetable {\r
   padding-top: 80px;\r
 }\r
 #noryo2013_timetable table{\r
@@ -99,6 +100,6 @@
   font-weight:600;\r
   cursor: pointer;\r
 }\r
-",
+*/",
 "_u":"css/noryo2013_timetable.css"
 }

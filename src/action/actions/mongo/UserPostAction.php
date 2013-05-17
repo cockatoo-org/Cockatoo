@@ -19,9 +19,17 @@ abstract class UserPostAction extends \Cockatoo\Action {
   protected $DOCNAME    = 'doc';
   protected $ORDER      = '-1';
 
+  public function docid(){
+    return $this->args['E'];
+  }
   abstract function new_doc();
   abstract function post_to_doc (&$post,&$doc); 
-  abstract function update_docid(&$docid,&$doc);
+  function update_docid(&$docid,&$doc) {
+    if ( ! $docid || strcmp($docid,'new')===0 ) {
+      return $doc['_time'] . uniqid();
+    }
+    return $docid;
+  }
   function get_hook(&$doc){
   }
   function set_hook(&$doc){
@@ -102,7 +110,6 @@ abstract class UserPostAction extends \Cockatoo\Action {
     }
     throw new \Exception('Cannot save it ! Probably storage error...');
   }
-
   public function proc(){
     try{
       $this->setNamespace($this->NAMESPACE);
@@ -111,7 +118,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
       $this->username = Lib::name($session);
       $this->isRoot = Lib::isRoot($session);
       $this->isWritable = Lib::isWritable($session);
-      $docid          = $this->args['E'];
+      $docid          = $this->docid();
       $doc = null;
       if ( $docid ) {
         $doc = $this->get_doc($docid);

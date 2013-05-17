@@ -35,10 +35,4 @@ class NewsAction extends UserPostAction {
     $parser = new PageParser($doc['title'],$lines);
     $doc['contents'] =  $parser->parse();
   }
-  function update_docid(&$docid,&$doc) {
-    if ( ! $docid || strcmp($docid,'new')===0 ) {
-      $docid = $doc['_time'] . uniqid();
-    }
-    return $docid;
-  }
 }
