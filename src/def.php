@@ -132,7 +132,7 @@ class Def {
   const  SESSION_KEY_TEMPLATE       = '_d';
   const  SESSION_KEY_COOKIE       = '_c';
   const  SESSION_KEY_EXP          = '_e';
-  const  SESSION_KEY_FILES        = '_f';
+//  const  SESSION_KEY_FILES        = '_f';
   const  SESSION_KEY_ERROR        = '_err';
 
   const  F_TYPE                   = 't';

@@ -7,9 +7,9 @@
 ],
 "targets":[
 "SIer",
-"  \u30e6\u30fc\u30b6\u4f01\u696d\u5019\u88dc",
-"  MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
-"  \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
+"     \u30e6\u30fc\u30b6\u4f01\u696d\u5019\u88dc",
+"     MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
+"     \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -32,7 +32,7 @@
 "\u4e0a\u306e\uff12\u3064\u306fMUST\u3001\u4e0b\u306e\u306f\u53c2\u8003\u3067\u3059\u3002\u3042\u307e\u308a\u30c7\u30fc\u30bf\u306e\u69cb\u9020\u306a\u3069\u306f\u6c17\u306b\u3057\u3066\u307e\u305b\u3093\u3002",
 "\u307e\u3042\u6628\u4eca\u306e\u30b7\u30b9\u30c6\u30e0\u3067\u306f\u6b86\u3069\uff08\u91d1\u878d\u4ee5\u5916\u306f\uff09\u3042\u3066\u306f\u307e\u308a\u307e\u3059\u3051\u3069\u306d\u3002"
 ],
-"public":"on",
+"public":true,
 "op":"save",
 "place":"place2",
 "start":"16:15",
@@ -75,6 +75,10 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368787223,
-"_timestr":"2013-05-17"
+"_time":1368877044,
+"_timestr":"2013-05-18",
+"_share":true,
+"images":[
+
+]
 }

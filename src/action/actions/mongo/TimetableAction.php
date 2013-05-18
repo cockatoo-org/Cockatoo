@@ -15,9 +15,11 @@ class TimetableAction extends UserPostAction {
   protected $COLLECTION = 'timetable';
   protected $DOCNAME    = 'timebox';
   protected $ORDER      = '1';
+  protected $DOCS_EXCEPTS = '';
+  protected $IMAGE_PATH = 'timetable';
   public function docid(){
-    $session     = $this->getSession();
-    return isset($session[\Cockatoo\Def::SESSION_KEY_POST])?\Cockatoo\UrlUtil::urldecode($session[\Cockatoo\Def::SESSION_KEY_POST]['_u']):null;
+    $session = $this->getSession();
+    return $session[\Cockatoo\Def::SESSION_KEY_POST]['_u'];
   }
   function new_doc(){
     $origin = '*New';
@@ -30,7 +32,11 @@ class TimetableAction extends UserPostAction {
   }
   function get_docs(){
     $ret = parent::get_docs();
-    return array('raw' => $ret , '@json' => json_encode($ret));
+    $view = array_filter($ret,function ($doc) {
+        return (boolean)$doc['public'];
+      });
+    array_unshift($ret,array('title' => '*new*'));
+    return array('raw' => $ret , '@json' => json_encode($view));
   }
   function post_save_hook(&$doc){
     return $this->REDIRECT . '/edit';
@@ -51,6 +57,11 @@ class TimetableAction extends UserPostAction {
     $lines = preg_split("@\r?\n@",$origin);
     $parser = new PageParser($doc['title'],$lines);
     $doc['contents'] =  $parser->parse();
+    $doc['_share'] = true;
+    if ( is_array($post['logo']) ) {
+      $doc['images']['logo'] = $post['logo'];
+      $doc['logo'] = $image[\Cockatoo\Def::F_NAME];
+    }
   }
   const SEPARATOR = '.';
   function update_docid(&$docid,&$doc) {

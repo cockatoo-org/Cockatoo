@@ -1,5 +1,5 @@
 {
-"public":"on",
+"public":true,
 "_u":"place1%2E15%3A00%2E5196087334cdf",
 "title":"\u30f4\u30a1\u30fc\u30c1\u30e3\u30eb\u7d0d\u6dbc\u3082\u3093\u3054\u796d\u308a",
 "state_of_title":"temporary",
@@ -64,7 +64,11 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368787059,
-"_timestr":"2013-05-17",
-"place":"place1"
+"_time":1368877086,
+"_timestr":"2013-05-18",
+"place":"place1",
+"_share":true,
+"images":[
+
+]
 }

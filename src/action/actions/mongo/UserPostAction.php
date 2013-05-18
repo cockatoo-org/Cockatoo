@@ -18,6 +18,8 @@ abstract class UserPostAction extends \Cockatoo\Action {
   protected $NAMESPACE  = 'mongo';
   protected $DOCNAME    = 'doc';
   protected $ORDER      = '-1';
+  protected $DOCS_EXCEPTS = 'contents';
+  protected $IMAGE_PATH = 'default';
 
   public function docid(){
     return $this->args['E'];
@@ -58,6 +60,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_GET,array(),array());
     $doc = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( $doc ) {
+      $doc['_u'] = \Cockatoo\UrlUtil::urldecode($doc['_u']);
       if ( $force ) {
         return $doc;
       }
@@ -77,14 +80,16 @@ abstract class UserPostAction extends \Cockatoo\Action {
     if ( isset($qs[\Cockatoo\Beak::Q_LIMIT]) ) {
       $limit = $qs[\Cockatoo\Beak::Q_LIMIT];
     }
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => 'contents,attenders,waiters,cancelers',\Cockatoo\Beak::Q_SORT => '_u:'.$this->ORDER ,\Cockatoo\Beak::Q_LIMIT => $limit),array());
+
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => $this->DOCS_EXCEPTS,\Cockatoo\Beak::Q_SORT => '_u:'.$this->ORDER ,\Cockatoo\Beak::Q_LIMIT => $limit),array());
     $docs = \Cockatoo\BeakController::beakSimpleQuery($brl);
     $isRoot = $this->isRoot;
     $user = $this->user;
     $docs = array_filter($docs,function ($doc) use(&$user,&$isRoot) {
-        return (boolean)$doc['public'] || $isRoot || $doc['_owner'] === $user;
+        return (boolean)$doc['public'] || $isRoot || $doc['_share'] || $doc['_owner'] === $user;
       });
     array_walk($docs,function (&$doc) use(&$user,&$isRoot) {
+        $doc['_u'] = \Cockatoo\UrlUtil::urldecode($doc['_u']);
         if ( $isRoot || $doc['_owner'] === $user ) {
           $doc['writable'] = true;
         }
@@ -93,19 +98,41 @@ abstract class UserPostAction extends \Cockatoo\Action {
   }
   function save_doc($docid,&$doc,$force = false){
     if ( $doc && 
-         ( $force || $this->isRoot || $doc['_owner'] === $this->user )) {
+         ( $force || $this->isRoot || $doc['_share'] || $doc['_owner'] === $this->user )) {
       unset($doc['writable']);
+      if ( $doc['images'] ) {
+        foreach ( $doc['images']  as $name => $image ) {
+          if ( is_array($image) ){
+            $fname = $docid .'/logo';
+            $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $fname, null);
+            $type = $image[\Cockatoo\Def::F_TYPE];
+            $content = &$image[\Cockatoo\Def::F_CONTENT];
+            \Cockatoo\StaticContent::save($brl,$type,$this->user,$content);
+            $doc['images'][$name]= $fname;
+          }
+        }
+      }
       $docid = \Cockatoo\UrlUtil::urlencode($docid);
+      $doc['public'] =  ($doc['public'])?true:false;
       $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_SET,array(),array());
       $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$doc);
       if ( $ret ) {
         return $ret;
       }
-      throw new \Exception('Cannot save it ! Probably storage error...');
     }
+    throw new \Exception('Cannot save it ! Probably storage error...');
   }
   function remove_doc($docid){
     $docid = \Cockatoo\UrlUtil::urlencode($docid);
+
+    $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $docid, \Cockatoo\Beak::M_KEY_LIST);
+    $images = \Cockatoo\BeakController::beakSimpleQuery($brl);
+    foreach ( $images as $name ) {
+      $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $name, \Cockatoo\Beak::M_DEL);
+      \Cockatoo\BeakController::beakSimpleQuery($brl);
+    }
+
+
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_DEL,array(),array());
     $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( $ret ) {
@@ -160,38 +187,39 @@ abstract class UserPostAction extends \Cockatoo\Action {
           $doc['public'] = false;
         }
         $this->post_to_doc($post,$doc);
+        // Set owner to new document
         if ( !$doc['_owner'] ) {
           $doc['_owner'] = $this->user;
           $doc['_ownername'] = $this->username;
-          $doc['_u'] = $this->update_docid($docid,$doc);
-          $prev = $this->get_doc($doc['_u'],true);
-          if ( $prev && $prev['_owner'] !== $doc['_owner'] ) {
-            throw new \Exception('You do not have permission or the event is already registed.');
-          }
         }
+        $old_docid = $docid;
+        $doc['_u'] = $this->update_docid($docid,$doc);
+        // Check permission
+        $prev = $this->get_doc($doc['_u'],true);
+        if ( ! $doc['_share'] && $prev && $prev['_owner'] !== $this->user ) {
+          throw new \Exception('You do not have permission or the event is already registed.');
+        }
+        // 
         if( $op === 'preview' ) {
           $this->preview_hook($doc);
           $doc['writable'] = true;
           return array( $this->DOCNAME => $doc );
         }elseif( $op === 'save' ) {
-          $old_docid = $docid;
-          $new_docid = $this->update_docid($docid,$doc);
-          $doc['_u'] = $new_docid;
           $doc['_time'] = time();
           $doc['_timestr'] = date('Y-m-d',$doc['_time']);
           $this->save_hook($doc);
-          $this->save_doc($new_docid,$doc);
-          if ( $new_docid !== $old_docid ) {
+          $this->save_doc($doc['_u'],$doc);
+          if ( $old_docid && $doc['_u'] !== $old_docid ) {
             $this->remove_doc($old_docid);
           }
           $redirect = $this->post_save_hook($doc);
           if ( ! $redirect ) {
-            $redirect = $this->REDIRECT.'/'.$new_docid;
+            $redirect = $this->REDIRECT.'/'.$doc['_u'];
           }
           $this->setMovedTemporary($redirect);
           return array();
         }elseif( $op === 'remove' ) {
-          $this->remove_doc($docid);
+          $this->remove_doc($doc['_u']);
           $redirect = $this->post_remove_hook();
           if ( ! $redirect ) {
             $redirect = $this->REDIRECT;

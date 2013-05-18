@@ -1,5 +1,5 @@
 {
-"@R":"1368787326",
+"@R":"1368884482",
 "type":"HorizontalWidget",
 "subject":"timetableedit",
 "description":"",
@@ -74,16 +74,14 @@
 #noryo2013_timetable table.timetable input[name=\"targets\"] {\r
   width: 600px;\r
 }",
-"js":"<script>\r
-$(function(){\r
+"js":"$(function(){\r
   $('#noryo2013_timetable table.timetable tr.view').click(function(){\r
    $(this).next().slideToggle();\r
   });\r
 });\r
-</script>\r
 ",
 "id":"noryo2013_timetable",
-"class":"",
+"class":"mongo",
 "body":"<?cs if: S.login.writable ?>\r
 <table class=\"timetable\">\r
 <tbody>\r
@@ -94,40 +92,6 @@ $(function(){\r
  <th class=\"title\"   >\u30bf\u30a4\u30c8\u30eb</th>\r
  <th class=\"incharge\">\u767a\u8868\u8005</th>\u3000\r
  <th class=\"overview\">\u6982\u8981</th>\u3000\u3000\r
- </tr>\r
- <tr class=\"view\">\r
- <td class=\"public\"   ></td>\r
- <td class=\"place\"   ></td>\r
- <td class=\"start\"   ></td>\r
- <td class=\"end\"     ></td>\r
- <td class=\"title\"   >*new*</td>\r
- <td class=\"incharge\"></td>\r
- <td class=\"overview\"></td>\r
- </tr>\r
- <tr class=\"form\">\r
-  <td colspan=\"6\">\r
-<div>\r
-  <form method=\"POST\" action=\"<?cs var:C._base ?>/noryo2013/timetable/edit\">\r
-   <input type=\"submit\" name=\"op\" value=\"save\"></input>\r
-   <input type=\"submit\" name=\"op\" value=\"remove\"></input>\r
-   <input type=\"hidden\" name=\"_u\" value=\"new\"></input>\r
-<table>\r
-<tbody>\r
-<tr class=\"public\"  ><td class=\"key\">\u516c\u958b</td>   <td><input type=\"checkbox\" name=\"public\"></input></td></tr>\r
-<tr class=\"place\"   ><td class=\"key\">\u4f1a\u5834</td>   <td><input type=\"text\" name=\"place\" value=\"\"></input></td></tr>\r
-<tr class=\"start\"   ><td class=\"key\">\u958b\u59cb\u6642\u523b</td><td><input type=\"text\" name=\"start\" value=\"\"></input></td></tr>\r
-<tr class=\"end\"     ><td class=\"key\">\u7d42\u4e86\u6642\u523b</td><td><input type=\"text\" name=\"end\"   value=\"\"></input></td></tr>\r
-<tr class=\"title\"   ><td class=\"key\">\u30bf\u30a4\u30c8\u30eb</td><td><input type=\"text\" name=\"title\" value=\"*new*\"></input></td></tr>\r
-<tr class=\"incharge\"><td class=\"key\">\u8b1b\u6f14\u8005</td>  <td><input type=\"text\" name=\"incharge\" value=\"\"></input></td></tr>\r
-<tr class=\"overview\"><td class=\"key\">\u6982\u8981</td>   <td><textarea name=\"overview\" ></textarea></td></tr>\r
-<tr class=\"targets\" ><td class=\"key\">\u5bfe\u8c61</td>   <td><input type=\"text\" name=\"targets\" value=\"\"></input></td></tr>\r
-<tr class=\"types\" >  <td class=\"key\">\u5f62\u5f0f</td>   <td><input type=\"text\" name=\"types\" value=\"\"></input></td></tr>\r
-<tr class=\"origin\"  ><td class=\"key\">\u5185\u5bb9</td>   <td><textarea name=\"origin\" ></textarea></td></tr>\r
-</tbody>\r
-</table>\r
-  </form>\r
-</div>\r
-  </td>\r
  </tr>\r
 <?cs each: item = A.mongo.timeboxs.raw ?>\r
  <tr class=\"view <?cs if:! item.public ?>private<?cs /if ?>\">\r
@@ -141,7 +105,7 @@ $(function(){\r
  <tr class=\"form\">\r
   <td colspan=\"6\">\r
 <div>\r
-  <form method=\"POST\" action=\"<?cs var:C._base ?>/noryo2013/timetable/edit\">\r
+  <form method=\"POST\" enctype=\"multipart/form-data\" action=\"<?cs var:C._base ?>/noryo2013/timetable/edit\">\r
    <input type=\"submit\" name=\"op\" value=\"save\"></input>\r
    <input type=\"submit\" name=\"op\" value=\"remove\"></input>\r
    <input type=\"hidden\" name=\"_u\" value=\"<?cs var:item._u ?>\"></input>\r
@@ -151,6 +115,7 @@ $(function(){\r
 <tr class=\"place\"   ><td class=\"key\">\u4f1a\u5834</td>   <td><input type=\"text\" name=\"place\" value=\"<?cs var:item.place ?>\"></input></td></tr>\r
 <tr class=\"start\"   ><td class=\"key\">\u958b\u59cb\u6642\u523b</td><td><input type=\"text\" name=\"start\" value=\"<?cs var:item.start ?>\"></input></td></tr>\r
 <tr class=\"end\"     ><td class=\"key\">\u7d42\u4e86\u6642\u523b</td><td><input type=\"text\" name=\"end\"   value=\"<?cs var:item.end ?>\"  ></input></td></tr>\r
+<tr class=\"logo\"><td class=\"key\">\u30a4\u30e1\u30fc\u30b8</td>  <td><?cs var:item.logo ?><br><img src=\"/_s_/mongo/timetable/<?cs var:item.images.logo ?>\"></img><br><input type=\"file\" name=\"logo\" value=\"\"></input></td></tr>\r
 <tr class=\"title\"   ><td class=\"key\">\u30bf\u30a4\u30c8\u30eb</td><td><input type=\"text\" name=\"title\" value=\"<?cs var:item.title ?>\"></input></td></tr>\r
 <tr class=\"incharge\"><td class=\"key\">\u8b1b\u6f14\u8005</td>  <td><input type=\"text\" name=\"incharge\" value=\"<?cs var:item.incharge ?>\"></input></td></tr>\r
 <tr class=\"overview\"><td class=\"key\">\u6982\u8981</td>   <td><textarea name=\"overview\" ><?cs var:item.overview ?></textarea></td></tr>\r

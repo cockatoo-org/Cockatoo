@@ -7,7 +7,7 @@
 ],
 "targets":[
 "\u30aa\u30f3\u30e9\u30a4\u30f3\u53c2\u52a0\u8005",
-"   \u7dcf\u96c6\u7de8\u306e\u7d20\u6750"
+"     \u7dcf\u96c6\u7de8\u306e\u7d20\u6750"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -23,7 +23,7 @@
 "\u4e2d\u7d99\u3092\u3057\u3064\u3064\u3001\u7dcf\u96c6\u7de8\u306e\u305f\u3081\u306b\u9332\u753b\u3082\u3059\u308b",
 "\u56fa\u5b9a\u30ab\u30e1\u30e9\u3067\u6d41\u3057\u3063\u3071\u306a\u3057\u3067\u306f\u306a\u304f\u3001\u968f\u6240\u3067\u30b9\u30a4\u30c3\u30c1\u3084\u89e3\u8aac\u306a\u3069\u304c\u5165\u308b\u3068\u898b\u3066\u308b\u5074\u7684\u306b\u306f\u6c17\u6301\u3061\u3088\u3044"
 ],
-"public":"on",
+"public":true,
 "op":"save",
 "place":"place2",
 "start":"16:45",
@@ -66,6 +66,10 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368787244,
-"_timestr":"2013-05-17"
+"_time":1368877051,
+"_timestr":"2013-05-18",
+"_share":true,
+"images":[
+
+]
 }

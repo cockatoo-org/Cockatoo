@@ -7,9 +7,9 @@
 ],
 "targets":[
 "SIer",
-"  \u30e6\u30fc\u30b6\u4f01\u696d\u5019\u88dc",
-"  MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
-"  \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
+"    \u30e6\u30fc\u30b6\u4f01\u696d\u5019\u88dc",
+"    MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
+"    \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -22,7 +22,7 @@
 "notes":[
 
 ],
-"public":"on",
+"public":true,
 "op":"save",
 "place":"place2",
 "start":"15:00",
@@ -65,6 +65,10 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368787226,
-"_timestr":"2013-05-17"
+"_time":1368877038,
+"_timestr":"2013-05-18",
+"_share":true,
+"images":[
+
+]
 }

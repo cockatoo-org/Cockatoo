@@ -510,7 +510,6 @@ class BeakFile extends Beak {
     }else{
       $arg['_u'] = $path;
     }
-
     foreach($this->getIndex() as $index_key ){
       $this->setIndex($index_key,$arg);
     }

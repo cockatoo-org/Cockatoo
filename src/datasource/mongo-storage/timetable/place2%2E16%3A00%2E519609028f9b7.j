@@ -8,8 +8,8 @@
 ],
 "targets":[
 "SIer",
-"   MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
-"   \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
+"        MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
+"        \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -25,7 +25,7 @@
 "\u305d\u308c\u3068\u3082AWS\u304bAzure\u3067\u30b9\u30dd\u30f3\u30b5\u30fc\u304b\u3089\u63d0\u4f9b\u3044\u305f\u3060\u304f\u3068\u304b\u30fb\u30fb\u30fbNTTCom\u3001IIJ\u306b\u3082\u58f0\u3092\u304b\u3051\u3066Cloudn\u3084GIO\u3082\u30fb\u30fb\u30fb\u30fb",
 "\u30b5\u30fc\u30d0\u306b\u95a2\u3057\u3066\u306f\u3001mongodbJP\u3067\u4f7f\u3046\u30b5\u30fc\u30d0\u3092\u6d41\u7528\u3057\u3066\u3057\u307e\u3044\u307e\u3057\u3087\u3046\u3002"
 ],
-"public":"on",
+"public":true,
 "op":"save",
 "place":"place2",
 "start":"16:00",
@@ -68,6 +68,12 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368787202,
-"_timestr":"2013-05-17"
+"_time":1368878250,
+"_timestr":"2013-05-18",
+"_share":true,
+"image":"mongo-squid-mini.png",
+"images":[
+"place2.16:00.519609028f9b7/my.jpg"
+],
+"logo":"my.jpg"
 }

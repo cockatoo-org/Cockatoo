@@ -1,5 +1,5 @@
 {
-"public":"on",
+"public":true,
 "_u":"place1%2E17%3A00%2E5196092faf3c0",
 "title":"\u751f\u7269\u5b66\u60c5\u5831\u3068MongoDB",
 "state_of_title":"temporary",
@@ -63,7 +63,11 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368787247,
-"_timestr":"2013-05-17",
-"place":"place1"
+"_time":1368877093,
+"_timestr":"2013-05-18",
+"place":"place1",
+"_share":true,
+"images":[
+
+]
 }

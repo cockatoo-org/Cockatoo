@@ -7,8 +7,8 @@
 ],
 "targets":[
 "10gen",
-"    \u6d77\u5916\u306e\u30b9\u30dd\u30f3\u30b5\u30fc",
-"    \u6d77\u5916\u306eMongoDBUser\u4f1a"
+"      \u6d77\u5916\u306e\u30b9\u30dd\u30f3\u30b5\u30fc",
+"      \u6d77\u5916\u306eMongoDBUser\u4f1a"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -27,7 +27,7 @@
 "\u30fb\u671f\u5f85\u611f\uff08\u53c2\u52a0\u8005\u304c\u4e00\u676f\u3044\u3066\u7686\u304c\u697d\u3057\u3093\u3067\u3044\u308b\uff09",
 "\u30fb\u5b9f\u884c\u529b\uff08MongoDB-JP\u306f\u304b\u306a\u308a\u30e4\u30eb\uff01\uff09"
 ],
-"public":"on",
+"public":true,
 "op":"save",
 "place":"place2",
 "start":"12:30",
@@ -70,6 +70,10 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368787250,
-"_timestr":"2013-05-17"
+"_time":1368877030,
+"_timestr":"2013-05-18",
+"_share":true,
+"images":[
+
+]
 }

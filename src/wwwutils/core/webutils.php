@@ -15,6 +15,14 @@ namespace Cockatoo;
  */
 function getPost(&$method){
   if ( $method === 'POST' ) {
+    $POST = $_POST;
+    foreach($_FILES as $name => $file){
+      if ( ! $file['error'] > 0.0 ) {
+        $POST[$name] = array(Def::F_ERROR=>$file['error'],Def::F_NAME=>$file['name'],Def::F_TYPE=>FileContentType::get($file['name']),Def::F_SIZE=>$file['size'],Def::F_CONTENT=>file_get_contents($file['tmp_name']));
+      }
+    }
+    return $POST;
+    /*
     $STR = file_get_contents('php://input');
     if ( preg_match('@^(?:[^=&]*=[^=&]*(?:&[^=&]*=[^=&]*)*)?$@',$STR,$matches) !== 0 ) {
       Log::trace($NAME,'Query format');
@@ -24,10 +32,8 @@ function getPost(&$method){
       Log::trace($NAME,'Not Query format');
       return $STR;
     }
+    */
   }
-}
-function getFiles(&$POST){
-  return $_FILES;
 }
 /*
  *

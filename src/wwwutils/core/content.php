@@ -194,7 +194,7 @@ class ContentDrawer {
     return null;
   }
 
-  public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE,&$FILES) {
+  public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE) {
     $scheme = (isset($SERVER['HTTPS'])?'https':'http');
     $port = '';
     if ( $scheme === 'https' && $SERVER['SERVER_PORT'] !== '443' ){
@@ -237,18 +237,13 @@ class ContentDrawer {
       Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Issue session cookie ' . $this->sessionID . ' , ' . $this->sessionExp);
       setcookie(Config::SESSION_COOKIE,$this->sessionID,$exp,$this->session_path,null,(Config::SESSION_COOKIE_SECURE && isset($SERVER['SSL_PROTOCOL'])),true);
     }
-
-    foreach($FILES as $FILE){
-      $files []= array(Def::F_ERROR=>$FILE['error'],Def::F_NAME=>$FILE['name'],Def::F_TYPE=>FileContentType::get($FILE['name']),Def::F_SIZE=>$FILE['size'],Def::F_CONTENT=>file_get_contents($FILE['tmp_name']));
-      $data = array(file_get_contents($FILE['tmp_name']));
-    }
     // Set current session
     $this->session[Def::SESSION_KEY_REQ]    = $HEADER;
     $this->session[Def::SESSION_KEY_SERVER] = $SERVER;
     $this->session[Def::SESSION_KEY_POST]   = $POST;
     $this->session[Def::SESSION_KEY_GET]    = $GET;
     $this->session[Def::SESSION_KEY_COOKIE] = $COOKIE;
-    $this->session[Def::SESSION_KEY_FILES]  = $files;
+    // $this->session[Def::SESSION_KEY_FILES]  = $files;
     $this->session[Def::SESSION_KEY_TEMPLATE] = $this->template;
     $this->session[Def::SESSION_KEY_EXP]    = $exp;
 
@@ -594,7 +589,7 @@ class ContentDrawer {
         $this->session[Def::SESSION_KEY_POST]   = null;
         $this->session[Def::SESSION_KEY_GET]    = null;
         $this->session[Def::SESSION_KEY_COOKIE] = null;
-        $this->session[Def::SESSION_KEY_FILES]  = null;
+        //$this->session[Def::SESSION_KEY_FILES]  = null;
         setSession($this->sessionID,$this->service,$this->session);
      }
     }

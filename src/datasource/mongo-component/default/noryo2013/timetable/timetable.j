@@ -1,5 +1,5 @@
 {
-"@R":"1368785871",
+"@R":"1368886684",
 "type":"HorizontalWidget",
 "subject":"noryo2013_timetable",
 "description":"",
@@ -71,11 +71,15 @@
   background-color: #fFf8e0;\r
   border: 1px solid  #402817;\r
   opacity: 0.9;\r
-  float: left;\r
+/*  float: left; */\r
   overflow:hidden;\r
 /*  z-index: 9999; */\r
 }\r
 #noryo2013_timetable table.timetable div.session a{\r
+}\r
+#noryo2013_timetable table.timetable div.session img.logo{\r
+ float:left;\r
+ height:60px;\r
 }\r
 \r
 #noryo2013_timetable table.timetable div.session:hover {\r
@@ -86,7 +90,6 @@
 #noryo2013_timetable table.timetable div.session:hover a {\r
   color: #FFFFFF;\r
 }\r
-\r
 \r
 #noryo2013_timetable table.timetable div.session div.title{\r
   font-weight: 600;\r
@@ -104,6 +107,7 @@
 #noryo2013_timetable div.details {\r
   display:none;\r
 }\r
+\r
 #noryo2013_timetable div.detail {\r
   padding: 5px;\r
   font-size: 1.5em;\r
@@ -118,6 +122,7 @@
   color: #cc5500;\r
   width: 120px;\r
   vertical-align:top;\r
+  padding-left: 10px;\r
 }\r
 #noryo2013_timetable div.detail td.sep {\r
   font-weight:600;\r
@@ -131,6 +136,13 @@
   font-weight:600;\r
   font-size: 1.5em;\r
 }\r
+#noryo2013_timetable div.detail hr.sep {\r
+  border-color: #4c3a2c;\r
+}\r
+#noryo2013_timetable div.detail img.logo {\r
+  height: 60px;\r
+}\r
+\r
 ",
 "js":"$(function(){\r
   function time2date(str){\r
@@ -148,12 +160,14 @@
     var start = time2date(session.start);\r
     var end   = time2date(session.end);\r
     session.during = (end.getTime() - start.getTime()) / 60000;\r
-    //session.place = 'place1';\r
       $('<div class=\"session\" u=\"'+session._u+'\">'+\r
+       ((session.images.logo)?('<img class=\"logo\" src=\"/_s_/mongo/timetable/'+session.images.logo+'\"></img>'):'') +\r
 \t'<div class=\"title\">'+session.title+'</div>'+\r
 \t'<div class=\"incharge\">'+session.incharge+\"</div>\"+\r
 \t'<div class=\"overview\">'+session.overview+'</div>'+\r
 \t'</div>')\r
+//      .css('background','url(\"/_s_/mongo/timetable/'+session.images.logo+'\") no-repeat')\r
+//      .css('background-size','30px')\r
       .css('height',(session.during*2) + 'px')\r
       .appendTo('#noryo2013_timetable td.' + session.place + '> div.t'+session.start.replace(/:/,''));\r
   }\r
@@ -170,21 +184,28 @@
       .css('opacity',0.3)\r
       .appendTo('body');\r
 \r
-      $('div.detail[u=\"'+u+'\"]').clone()\r
+     var origin_height = $('#noryo2013_timetable').height();\r
+\r
+     $('div.detail[u=\"'+u+'\"]').clone()\r
       .attr('id','detail')\r
       .css('position','absolute')\r
       .css('z-index',9999)\r
       .css('top','150px')\r
       .css('left',0)\r
-      .appendTo('#noryo2013_timetable').slideDown();\r
+      .appendTo('#noryo2013_timetable')\r
+      .slideDown('normal', function(){ \r
+         $('#noryo2013_timetable').height($(this).height()+150 );\r
+         });\r
 \r
       $('#mordal').click(function(){\r
 \t$(this).remove();\r
 \t$('#detail').slideUp('normal',function(){$(this).remove();});\r
+        $('#noryo2013_timetable').height(origin_height);\r
       });\r
       $('#detail > div.close').click(function(){\r
 \t  $(this).parent().slideUp('normal',function(){$(this).remove();});\r
 \t$('#mordal').remove();\r
+        $('#noryo2013_timetable').height(origin_height);\r
       });\r
   });\r
 });",
@@ -309,7 +330,10 @@
 <div class=\"details\">\r
 <?cs each: item = A.mongo.timeboxs.raw ?>\r
  <div class=\"detail\" u=\"<?cs var:item._u ?>\">\r
- <div class=\"close\" style=\"border:5px solid #000000;float:right;width:20px;height:20px;\"></div>\r
+ <div class=\"close\" style=\"border:1px solid #000000;background-color:#000000;float:right;width:20px;height:20px;\"></div>\r
+ <?cs if:item.images.logo ?>\r
+   <img class=\"logo\" src=\"/_s_/mongo/timetable/<?cs var:item.images.logo ?>\"></img><br>\r
+  <?cs /if ?>\r
 {\r
   <table>\r
   <tbody>\r
@@ -331,6 +355,12 @@
  </tbody>\r
  </table>\r
 }\r
+<hr class=\"sep\" />\r
+<div class=\"page\">\r
+<?cs each: content = item.contents ?>\r
+ <?cs call:drawTags(content)?>\r
+<?cs /each ?>\r
+</div>\r
 </div>\r
 <?cs /each ?>\r
 </div>\r
