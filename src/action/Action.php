@@ -17,10 +17,12 @@ require_once(Config::COCKATOO_ROOT.'utils/session.php');
  * @author hiroaki.kubota <hiroaki.kubota@mail.rakuten.com> 
  */
 abstract class Action {
+  private $namespace = null;
+  private $method = null;
+  private $queries = null;
+  private $comments = null;
+
   public $BRL;
-  public $method;
-  public $queries;
-  public $comments;
   public $sessionID;
   public $service;
   public $args;
@@ -28,10 +30,10 @@ abstract class Action {
   public $updateSession = array();
   public $moved_temporary  = null;
   public $moved_permanently= null;
-  public $namespace = null;
   public $updateCookie = array();
   public $header = '';
   public $updateArgs = null;
+
 //   public $templateName;
 //   public $requestURL;
   /**
@@ -43,11 +45,28 @@ abstract class Action {
    */
   public function __construct($brl){
     $this->BRL = $brl;
-    $this->namespace = str_replace('\\','.',get_class($this));
+  }
+
+  private function parse_brl(){
     list($P,$D,$C,$p,$m,$q,$c) = parse_brl($this->BRL);
     $this->method = $m;
     $this->queries = $q;
     $this->comments = $c;
+  }
+  public function get_method(){
+    if ( $this->method === null ) {
+      $this->parse_brl();
+    }
+    return $this->method;
+  }
+  public function get_queries(){
+    if ( $this->queries === null ) {
+      $this->parse_brl();
+    }
+    if ( is_string($this->queries) ) {
+      $this->queries = parse_brl_query($this->queries);
+    }
+    return $this->queries;
   }
   /**
    * Prepare process
@@ -182,7 +201,7 @@ abstract class Action {
       $ret = $this->proc();
       Log::performance1($per,'Action::run : ' . $this->BRL);
       return array(Def::ActionSuccess,
-                   $this->namespace,
+                   ($this->namespace!==null)?$this->namespace:str_replace('\\','.',get_class($this)),
                    $ret,
                    $this->updateSession,
                    $this->moved_permanently,
