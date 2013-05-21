@@ -28,7 +28,7 @@ try {
   $content = StaticContent::get($brl);
   StaticContent::http($content,$HEADER);
 }catch ( \Exception $e ) {
-  Log::error($NAME . '404 Not found ' . $e->getMessage(),$e);
+//  Log::error($NAME . '404 Not found ' . $e->getMessage(),$e);
   http_404();
 }
 
