@@ -1,5 +1,5 @@
 {
-"@R":"1369112078",
+"@R":"1369113985",
 "type":"HorizontalWidget",
 "subject":"timetableedit",
 "description":"",
@@ -124,7 +124,8 @@ div.noryo2013_timetable div.tab table.timetable input[name=\"targets\"] {\r
 <tr class=\"overview\"><td class=\"key\">\u6982\u8981</td>    <td><textarea name=\"overview\" ><?cs var:item.overview ?></textarea></td></tr>\r
 <tr class=\"targets\" ><td class=\"key\">\u5bfe\u8c61</td>    <td><input type=\"text\" name=\"targets\" value=\"<?cs each: target = item.targets ?><?cs var:target ?><?cs if:!last(target) ?>, <?cs /if ?><?cs /each ?>\"></input></td></tr>\r
 <tr class=\"types\"   ><td class=\"key\">\u5f62\u5f0f</td>    <td><input type=\"text\" name=\"types\" value=\"<?cs each: type = item.types ?><?cs var:type ?><?cs if:!last(type) ?>,<?cs /if ?><?cs /each ?>\"></input></td></tr>\r
-<tr class=\"origin\"  ><td class=\"key\">\u5185\u5bb9</td>    <td><textarea name=\"origin\" ><?cs var:item.origin ?></textarea></td></tr>\r
+<tr class=\"origin\"  ><td class=\"key\">\u5185\u5bb9<br>   <a target=\"_blank\" href=\"<?cs var:C._base ?>/notation\">notation</a>\r
+</td>    <td><textarea name=\"origin\" ><?cs var:item.origin ?></textarea></td></tr>\r
 </tbody>\r
 </table>\r
   </form>\r
