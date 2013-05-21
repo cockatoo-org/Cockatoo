@@ -76,11 +76,10 @@ abstract class UserPostAction extends \Cockatoo\Action {
   }
   function get_docs(){
     $limit = 1000;
-    $qs = \Cockatoo\parse_brl_query($this->queries);
+    $qs = $this->get_queries();
     if ( isset($qs[\Cockatoo\Beak::Q_LIMIT]) ) {
       $limit = $qs[\Cockatoo\Beak::Q_LIMIT];
     }
-
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'',\Cockatoo\Beak::M_GET_RANGE,array(\Cockatoo\Beak::Q_EXCEPTS => $this->DOCS_EXCEPTS,\Cockatoo\Beak::Q_SORT => '_u:'.$this->ORDER ,\Cockatoo\Beak::Q_LIMIT => $limit),array());
     $docs = \Cockatoo\BeakController::beakSimpleQuery($brl);
     $isRoot = $this->isRoot;
@@ -103,7 +102,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
       if ( $doc['images'] ) {
         foreach ( $doc['images']  as $name => $image ) {
           if ( is_array($image) ){
-            $fname = $docid .'/logo';
+            $fname = $docid .'/'.$name;
             $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $fname, null);
             $type = $image[\Cockatoo\Def::F_TYPE];
             $content = &$image[\Cockatoo\Def::F_CONTENT];
@@ -123,7 +122,6 @@ abstract class UserPostAction extends \Cockatoo\Action {
     throw new \Exception('Cannot save it ! Probably storage error...');
   }
   function remove_doc($docid){
-    $docid = \Cockatoo\UrlUtil::urlencode($docid);
 
     $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $docid, \Cockatoo\Beak::M_KEY_LIST);
     $images = \Cockatoo\BeakController::beakSimpleQuery($brl);
@@ -132,7 +130,7 @@ abstract class UserPostAction extends \Cockatoo\Action {
       \Cockatoo\BeakController::beakSimpleQuery($brl);
     }
 
-
+    $docid = \Cockatoo\UrlUtil::urlencode($docid);
     $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->SERVICE,$this->COLLECTION,'/'.$docid,\Cockatoo\Beak::M_DEL,array(),array());
     $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( $ret ) {
@@ -140,6 +138,35 @@ abstract class UserPostAction extends \Cockatoo\Action {
     }
     throw new \Exception('Cannot save it ! Probably storage error...');
   }
+  function move_doc($docid,&$doc,$old_docid){
+    if ( $doc && 
+         ( $this->isRoot || $doc['_share'] || $doc['_owner'] === $this->user )) {
+      $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $old_docid, \Cockatoo\Beak::M_KEY_LIST);
+      $images = \Cockatoo\BeakController::beakSimpleQuery($brl);
+
+      if ( $doc['images'] ) {
+        foreach ( $doc['images']  as $name => $image ) {
+          if ( ! is_array($image) ){
+            unset($doc['images'][$image]);
+          }
+        }
+      }
+      foreach ( $images as $old_fname ) {
+        if ( preg_match('@/([^/]+)$@',$old_fname,$matches) !== 0 ) {
+          $name  = $matches[1];
+          $fname = $docid . '/' . $name;
+          $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $old_fname, \Cockatoo\Beak::M_GET);
+          $img = \Cockatoo\BeakController::beakSimpleQuery($brl);
+          $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'mongo', $this->IMAGE_PATH, $fname, \Cockatoo\Beak::M_SET);
+          $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$img);
+          $doc['images'][$name]= $fname;
+        }
+      }
+      $this->save_doc($docid,$doc);
+      $this->remove_doc($old_docid);
+    }
+  }
+
   public function proc(){
     try{
       $this->setNamespace($this->NAMESPACE);
@@ -160,17 +187,18 @@ abstract class UserPostAction extends \Cockatoo\Action {
       if ( $retdoc ) {
         return array( $this->DOCNAME => $retdoc);
       }
-      if ( $this->method === \Cockatoo\Beak::M_GET ) {
+      $method  = $this->get_method();
+      if ( $method === \Cockatoo\Beak::M_GET ) {
         if ( $doc ) {
           $this->get_hook($doc);
           return array( $this->DOCNAME => $doc);
         }
         $this->setMovedTemporary($this->REDIRECT);
         return null;
-      }elseif( $this->method === \Cockatoo\Beak::M_GET_ARRAY ) {
+      }elseif( $method === \Cockatoo\Beak::M_GET_ARRAY ) {
         $docs = $this->get_docs();
         return array($this->DOCNAME.'s' => $docs);
-      }elseif( $this->method === \Cockatoo\Beak::M_SET ) {
+      }elseif( $method === \Cockatoo\Beak::M_SET ) {
         if ( ! $this->isWritable ) {
           throw new \Exception('You do not have write permission.');
         }
@@ -208,9 +236,10 @@ abstract class UserPostAction extends \Cockatoo\Action {
           $doc['_time'] = time();
           $doc['_timestr'] = date('Y-m-d',$doc['_time']);
           $this->save_hook($doc);
-          $this->save_doc($doc['_u'],$doc);
           if ( $old_docid && $doc['_u'] !== $old_docid ) {
-            $this->remove_doc($old_docid);
+            $this->move_doc($doc['_u'],$doc,$old_docid);
+          }else{
+            $this->save_doc($doc['_u'],$doc);
           }
           $redirect = $this->post_save_hook($doc);
           if ( ! $redirect ) {

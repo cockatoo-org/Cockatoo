@@ -1,5 +1,5 @@
 {
-"@R":"1368690430",
+"@R":"1369100202",
 "type":"HorizontalWidget",
 "subject":"header",
 "description":"header",
@@ -94,7 +94,7 @@
 }\r
 ",
 "js":"$( function (){\r
-  mainNavs = $('#header nav.main > ul > li');\r
+  mainNavs = $('#header div.nav.main > ul > li');\r
   mainNavs.each( function () {\r
     $(this).removeClass('selected');\r
     link = $(this).find('> a').attr('href');\r

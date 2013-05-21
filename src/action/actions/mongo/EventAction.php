@@ -82,7 +82,8 @@ class EventAction extends UserPostAction {
     return $this->REDIRECT;
   }
   function begin_hook(&$op,&$docid,&$doc,&$post){
-    if ( $this->method === \Cockatoo\Beak::M_GET ) {
+    $method  = $this->get_method();
+    if ( $method === \Cockatoo\Beak::M_GET ) {
       if ( ! $this->user ) { // Is login
         return null;
       }

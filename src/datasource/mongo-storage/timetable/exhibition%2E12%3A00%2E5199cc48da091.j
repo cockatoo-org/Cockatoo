@@ -1,5 +1,5 @@
 {
-"_u":"place2%2E12%3A00%2E519608fd75a07",
+"_u":"exhibition%2E12%3A00%2E5199cc48da091",
 "title":"\u5354\u529b\u8005\u30cf\u30c3\u30d4",
 "state_of_title":"fix",
 "types":[
@@ -7,9 +7,9 @@
 ],
 "targets":[
 "\u5171\u50ac\u8005",
-"     \u5354\u8cdb\u8005",
-"     \u51fa\u5c55\u8005",
-"     \u904b\u55b6\u30b9\u30bf\u30c3\u30d5"
+"       \u5354\u8cdb\u8005",
+"       \u51fa\u5c55\u8005",
+"       \u904b\u55b6\u30b9\u30bf\u30c3\u30d5"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -24,7 +24,7 @@
 ],
 "public":true,
 "op":"save",
-"place":"place2",
+"place":"exhibition",
 "start":"12:00",
 "end":"12:30",
 "incharge":"",
@@ -65,10 +65,11 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368877028,
-"_timestr":"2013-05-18",
+"_time":1369033962,
+"_timestr":"2013-05-20",
 "_share":true,
 "images":[
 
-]
+],
+"booth":"A08"
 }

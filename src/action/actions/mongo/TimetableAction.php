@@ -11,7 +11,7 @@ namespace mongo;
  * @copyright Copyright (C) 2011, rakuten 
  */
 class TimetableAction extends UserPostAction {
-  protected $REDIRECT = '/mongo/noryo2013/timetable';
+  protected $REDIRECT = '/mongo/noryo2013';
   protected $COLLECTION = 'timetable';
   protected $DOCNAME    = 'timebox';
   protected $ORDER      = '1';
@@ -31,8 +31,12 @@ class TimetableAction extends UserPostAction {
       );
   }
   function get_docs(){
+    $qs = $this->get_queries();
     $ret = parent::get_docs();
-    $view = array_filter($ret,function ($doc) {
+    $view = array_filter($ret,function ($doc) use($qs) {
+        if ( isset($qs['exhibition']) ){
+          return (boolean)$doc['public'] && $doc['place'] === 'exhibition';
+        }
         return (boolean)$doc['public'];
       });
     array_unshift($ret,array('title' => '*new*'));

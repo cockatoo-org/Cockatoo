@@ -1,8 +1,9 @@
 {
 "op":"save",
-"_u":"place3%2E17%3A00%2E51960915592a3",
+"_u":"place3%2E17%3A00%2E519afa73dde4f",
 "public":true,
 "place":"place3",
+"booth":"11",
 "start":"17:00",
 "end":"18:00",
 "title":"\u5b9f\u6f14\uff01MongoDB\u904b\u752824\u6642\uff01\u301c\u969c\u5bb3\u306f\u4f1a\u8b70\u5ba4\u3067\u8d77\u3053\u3063\u3066\u3044\u308b\u3093\u3058\u3083\u306a\u3044\uff01\u73fe\u5834\u3067\u8d77\u3053\u3063\u3066\u3044\u308b\u3093\u3060\uff01\uff01\u301c",
@@ -152,12 +153,10 @@ MongoDB\u306e\u72b6\u614b\u3084\u5fa9\u65e7\u4f5c\u696d\u3092\u30ea\u30a2\u30eb\
 "_share":true,
 "_owner":"crumbjp",
 "_ownername":"@crumbjp",
-"_time":1368884953,
-"_timestr":"2013-05-18",
-"image":"place3%2E17%3A00%2E51960915592a3/mongo-squid-mini.png",
+"_time":1369111155,
+"_timestr":"2013-05-21",
 "images":{
-"0":"place3.17:00.51960915592a3/my.jpg",
-"logo":"place3.17:00.51960915592a3/logo"
+"logo":"place3.17:00.519afa73dde4f/logo"
 },
 "logo":null
 }

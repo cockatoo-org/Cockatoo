@@ -85,7 +85,8 @@ class ExamAction extends UserPostAction {
     }
   }
   function begin_hook(&$op,&$docid,&$doc,&$post){
-    if ( $this->method === \Cockatoo\Beak::M_GET ) {
+    $method  = $this->get_method();
+    if ( $method === \Cockatoo\Beak::M_GET ) {
       if ( $op === 'eval' ) {
         // Eval score
         $session     = $this->getSession();

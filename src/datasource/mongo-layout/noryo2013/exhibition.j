@@ -1,12 +1,12 @@
 {
-"@R":"1367313250",
-"eredirect":"/mongo/noryo2013/timetable",
+"@R":"1369027171",
+"eredirect":"/mongo/noryo2013",
 "redirect":"",
 "pre_action":"",
-"post_action":"action://mongo-action/mongo/TimetableAction?set",
+"post_action":"",
 "session_exp":"2147483647",
 "expires":"",
-"header":"<meta name=\"description\" content=\"\">\r
+"header":"<title>MongoDB JP : <?cs var:A.mongo.page.title?></title>\r
 ",
 "pheader":"",
 "bottom":"",
@@ -41,12 +41,25 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component://mongo-component/default/noryo2013/timetable/timetableedit",
+"component":"component://mongo-component/default/noryo2013/timetable/header",
+"children":[
+
+]
+},
+{
+"type":"HorizontalWidget",
+"class":"",
+"height":"",
+"width":"",
+"min_height":"",
+"min_width":"",
+"extra":"",
+"component":"component://mongo-component/default/noryo2013/timetable/exhibition",
 "children":[
 
 ]
 }
 ]
 },
-"_u":"timetable/edit"
+"_u":"exhibition"
 }

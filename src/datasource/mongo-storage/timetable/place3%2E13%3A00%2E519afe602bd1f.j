@@ -1,5 +1,5 @@
 {
-"_u":"place2%2E16%3A00%2E519609028f9b7",
+"_u":"place3%2E13%3A00%2E519afe602bd1f",
 "title":"\u53c2\u52a0\u8005\u53d7\u4ed8\u30b7\u30b9\u30c6\u30e0\u3001\u30a2\u30f3\u30b1\u30fc\u30c8\u30b7\u30b9\u30c6\u30e0byMongoDB",
 "state_of_title":"temporary",
 "types":[
@@ -8,8 +8,8 @@
 ],
 "targets":[
 "SIer",
-"        MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
-"        \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
+"          MongoDB\u30a8\u30f3\u30b8\u30cb\u30a2",
+"          \u4e00\u822c\u30a8\u30f3\u30b8\u30cb\u30a2"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -27,9 +27,9 @@
 ],
 "public":true,
 "op":"save",
-"place":"place2",
-"start":"16:00",
-"end":"16:15",
+"place":"place3",
+"start":"13:00",
+"end":"14:00",
 "incharge":"",
 "origin":"",
 "contents":[
@@ -68,12 +68,14 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368878250,
-"_timestr":"2013-05-18",
+"_time":1369112160,
+"_timestr":"2013-05-21",
 "_share":true,
 "image":"mongo-squid-mini.png",
-"images":[
-"place2.16:00.519609028f9b7/my.jpg"
-],
-"logo":"my.jpg"
+"images":{
+"0":"place2.16:00.519609028f9b7/my.jpg",
+"logo":"place3.13:00.519afe602bd1f/logo"
+},
+"logo":null,
+"booth":""
 }

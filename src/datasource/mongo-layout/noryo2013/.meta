@@ -1,5 +1,5 @@
 {
-"@R":"1367389921",
+"@R":"1369043207",
 "eredirect":"/mongo/noryo2013/top",
 "redirect":"/mongo/noryo2013/top",
 "layout":{
@@ -39,7 +39,7 @@
 },
 {
 "type":"PageLayout",
-"class":"",
+"class":"noryo2013",
 "height":"",
 "width":"",
 "min_height":"",

@@ -7,8 +7,8 @@
 ],
 "targets":[
 "10gen",
-"      \u6d77\u5916\u306e\u30b9\u30dd\u30f3\u30b5\u30fc",
-"      \u6d77\u5916\u306eMongoDBUser\u4f1a"
+"       \u6d77\u5916\u306e\u30b9\u30dd\u30f3\u30b5\u30fc",
+"       \u6d77\u5916\u306eMongoDBUser\u4f1a"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -31,7 +31,7 @@
 "op":"save",
 "place":"place2",
 "start":"12:30",
-"end":"12:30",
+"end":"13:30",
 "incharge":"",
 "origin":"",
 "contents":[
@@ -70,10 +70,11 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368877030,
-"_timestr":"2013-05-18",
+"_time":1369034292,
+"_timestr":"2013-05-20",
 "_share":true,
 "images":[
 
-]
+],
+"booth":""
 }

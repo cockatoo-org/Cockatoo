@@ -1,5 +1,5 @@
 {
-"etag":"\"241f7d86-b71d-67e7-fe97abef5a71bc71\"",
+"etag":"\"da860b01-5769-5986-25b89eae107e9d69\"",
 "type":"text/css",
 "exp":"0",
 "desc":"",
@@ -23,7 +23,7 @@ div.box {\r
   border : 1px solid #BBBBBB;\r
 }\r
 \r
-div.mongo {\r
+div.noryo2013 {\r
   margin: 0 auto;\r
   background-image: url(\"/_s_/mongo/noryo2013/top.png\");\r
   background-origin: padding-box;\r

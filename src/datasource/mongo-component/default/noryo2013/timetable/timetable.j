@@ -1,220 +1,20 @@
 {
-"@R":"1368886684",
+"@R":"1369111638",
 "type":"HorizontalWidget",
 "subject":"noryo2013_timetable",
 "description":"",
-"css":"#noryo2013_timetable div.edit {\r
-  float: right;\r
-}\r
-#noryo2013_timetable div.edit a{\r
-  color:#ffffff;\r
-}\r
-\r
-#noryo2013_timetable {\r
-  padding-top: 80px;\r
-}\r
-#noryo2013_timetable table.timetable{\r
-  margin: 0 auto;\r
-  opacity: 0.9;\r
-  background-color: #f6f4cd;\r
-  color : #885500;\r
-  text-align: left;\r
-  border: 2px solid #402817;\r
-  border-radius: 8px;\r
-  line-height: 1.2em;\r
-  border-spacing: 0;\r
-}\r
-#noryo2013_timetable table.timetable th {\r
-  padding : 5px;\r
-  border-bottom: 2px solid #402817;\r
-  background-color: #402817;\r
-  color: #FFFFFF;\r
-}\r
-#noryo2013_timetable table.timetable th.timebox{\r
-  width: 80px;\r
-}\r
-#noryo2013_timetable table.timetable th.place {\r
-  width: 299px;\r
-  padding : 0 0 0 1px;\r
-  border-left: 2px solid  #402817;\r
-  border-bottom: 1px dashed  #402817;\r
-  text-align: center;\r
-}\r
-\r
-#noryo2013_timetable table.timetable td {\r
-}\r
-#noryo2013_timetable table.timetable td.timebox {\r
-  height: 98px;\r
-  vertical-align:10px;\r
-  text-decoration: underline;\r
-  font-weight:600;\r
-  border-bottom: 1px dashed  #402817;\r
-}\r
-#noryo2013_timetable table.timetable td div.t.t00 {\r
-  border-top: 1px solid  #402817;\r
-}\r
-#noryo2013_timetable table.timetable td div.t.t30 {\r
-  border-top: 1px dashed  #402817;\r
-}\r
-#noryo2013_timetable table.timetable td div.t {\r
-  height:30px;\r
-}\r
-\r
-#noryo2013_timetable table.timetable td.place {\r
-  border-left: 2px solid  #402817;\r
-  border-bottom: 1px dashed  #402817;\r
-}\r
-\r
-#noryo2013_timetable table.timetable div.session{\r
-  width:296px;\r
-  border-radius: 8px;\r
-  background-color: #fFf8e0;\r
-  border: 1px solid  #402817;\r
-  opacity: 0.9;\r
-/*  float: left; */\r
-  overflow:hidden;\r
-/*  z-index: 9999; */\r
-}\r
-#noryo2013_timetable table.timetable div.session a{\r
-}\r
-#noryo2013_timetable table.timetable div.session img.logo{\r
- float:left;\r
- height:60px;\r
-}\r
-\r
-#noryo2013_timetable table.timetable div.session:hover {\r
-  cursor: pointer;\r
-  background-color: #cc5500;\r
-  color: #FFFFFF;\r
-}\r
-#noryo2013_timetable table.timetable div.session:hover a {\r
-  color: #FFFFFF;\r
-}\r
-\r
-#noryo2013_timetable table.timetable div.session div.title{\r
-  font-weight: 600;\r
-  text-decoration: underline;\r
-}\r
-#noryo2013_timetable table.timetable div.session div.incharge{\r
-  float:right;\r
-  text-decoration: underline;\r
-}\r
-#noryo2013_timetable table.timetable div.session div.overview{\r
-  float:left;\r
-  margin-left:10px;\r
-}\r
-\r
-#noryo2013_timetable div.details {\r
-  display:none;\r
-}\r
-\r
-#noryo2013_timetable div.detail {\r
-  padding: 5px;\r
-  font-size: 1.5em;\r
-  line-height: 1.5em;\r
-  background-color: #f6f4cd;\r
-  border-radius: 16px;\r
-  border: 2px solid  #402817;\r
-  display:none;\r
-}\r
-#noryo2013_timetable div.detail td.key {\r
-  font-weight:600;\r
-  color: #cc5500;\r
-  width: 120px;\r
-  vertical-align:top;\r
-  padding-left: 10px;\r
-}\r
-#noryo2013_timetable div.detail td.sep {\r
-  font-weight:600;\r
-  vertical-align:top;\r
-}\r
-#noryo2013_timetable div.detail td.comma {\r
-  font-weight:600;\r
-  vertical-align: bottom;\r
-}\r
-#noryo2013_timetable div.detail td.title {\r
-  font-weight:600;\r
-  font-size: 1.5em;\r
-}\r
-#noryo2013_timetable div.detail hr.sep {\r
-  border-color: #4c3a2c;\r
-}\r
-#noryo2013_timetable div.detail img.logo {\r
-  height: 60px;\r
-}\r
-\r
+"css":"\r
 ",
 "js":"$(function(){\r
-  function time2date(str){\r
-    var t = str.split(':');\r
-    var d = new Date(0,0,0,0,0,0);\r
-    d.setHours(t[0]);\r
-    d.setMinutes(t[1]);\r
-    return d;\r
-  }\r
-  for ( var i in timetable ) {\r
-    var session = timetable[i];\r
-    if ( ! session.start || ! session.end ) {\r
-      continue;\r
-    }\r
-    var start = time2date(session.start);\r
-    var end   = time2date(session.end);\r
-    session.during = (end.getTime() - start.getTime()) / 60000;\r
-      $('<div class=\"session\" u=\"'+session._u+'\">'+\r
-       ((session.images.logo)?('<img class=\"logo\" src=\"/_s_/mongo/timetable/'+session.images.logo+'\"></img>'):'') +\r
-\t'<div class=\"title\">'+session.title+'</div>'+\r
-\t'<div class=\"incharge\">'+session.incharge+\"</div>\"+\r
-\t'<div class=\"overview\">'+session.overview+'</div>'+\r
-\t'</div>')\r
-//      .css('background','url(\"/_s_/mongo/timetable/'+session.images.logo+'\") no-repeat')\r
-//      .css('background-size','30px')\r
-      .css('height',(session.during*2) + 'px')\r
-      .appendTo('#noryo2013_timetable td.' + session.place + '> div.t'+session.start.replace(/:/,''));\r
-  }\r
-  $('#noryo2013_timetable div.session').click(function(){\r
-    var u = $(this).attr('u');\r
-      $('<div id=\"mordal\"></div>')\r
-      .css('position','absolute')\r
-      .css('top',0)\r
-      .css('left',0)\r
-      .css('height','10000')\r
-      .css('width','10000')\r
-      .css('z-index',1000)\r
-      .css('background-color','#000000')\r
-      .css('opacity',0.3)\r
-      .appendTo('body');\r
-\r
-     var origin_height = $('#noryo2013_timetable').height();\r
-\r
-     $('div.detail[u=\"'+u+'\"]').clone()\r
-      .attr('id','detail')\r
-      .css('position','absolute')\r
-      .css('z-index',9999)\r
-      .css('top','150px')\r
-      .css('left',0)\r
-      .appendTo('#noryo2013_timetable')\r
-      .slideDown('normal', function(){ \r
-         $('#noryo2013_timetable').height($(this).height()+150 );\r
-         });\r
-\r
-      $('#mordal').click(function(){\r
-\t$(this).remove();\r
-\t$('#detail').slideUp('normal',function(){$(this).remove();});\r
-        $('#noryo2013_timetable').height(origin_height);\r
-      });\r
-      $('#detail > div.close').click(function(){\r
-\t  $(this).parent().slideUp('normal',function(){$(this).remove();});\r
-\t$('#mordal').remove();\r
-        $('#noryo2013_timetable').height(origin_height);\r
-      });\r
-  });\r
+  draw_timetable(null,function(session){return 'div.noryo2013_timetable div.tab table td.' + session.place + '> div.t'+session.start.replace(/:/,'')});\r
 });",
-"id":"noryo2013_timetable",
-"class":"mongo",
-"body":"<table class=\"timetable\">\r
+"id":"",
+"class":"noryo2013_timetable",
+"body":"<div class=\"tab\">\r
+<table class=\"timetable\">\r
 <tbody>\r
 <tr>\r
-<th class=\"timebox\">Time box</th>\r
+<th class=\"timebox\"></th>\r
 <th class=\"place place1\">\u4f1a\u5834\uff11</th>\r
 <th class=\"place place2\">\u4f1a\u5834\uff12</th>\r
 <th class=\"place place3\">\u4f1a\u5834\uff13</th>\r
@@ -327,6 +127,8 @@
 </tr>\r
 </tbody>\r
 </table>\r
+</div>\r
+<?cs call:draw_details(A.mongo.timeboxs.raw) ?>\r
 <div class=\"details\">\r
 <?cs each: item = A.mongo.timeboxs.raw ?>\r
  <div class=\"detail\" u=\"<?cs var:item._u ?>\">\r
@@ -367,10 +169,6 @@
 <script>\r
   var timetable = <?cs var:A.mongo.timeboxs.@json ?>;\r
 </script>\r
-\r
-<?cs if:S.login.writable ?>\r
-  <div class=\"edit\"><a href=\"<?cs var:C._base ?>/noryo2013/timetable/edit\">\u7de8\u96c6</a></div>\r
-<?cs /if ?>\r
 ",
 "action":[
 "action://mongo-action/mongo/TimetableAction?getA"

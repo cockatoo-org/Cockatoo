@@ -1,5 +1,5 @@
 {
-"_u":"place1%2E12%3A00%2E5196082c87baf",
+"_u":"exhibition%2E12%3A00%2E5199cc571d4b2",
 "title":"MongoDB\u3092\u3082\u3063\u3068\u77e5\u308a\u305f\u3044\uff01\u3000\u66f8\u7c4d\u30b3\u30fc\u30ca\u30fc",
 "state_of_title":"temporary",
 "types":[
@@ -23,7 +23,7 @@
 ],
 "public":true,
 "op":"save",
-"place":"place1",
+"place":"exhibition",
 "start":"12:00",
 "end":"13:00",
 "incharge":"",
@@ -64,10 +64,11 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368877003,
-"_timestr":"2013-05-18",
+"_time":1369033952,
+"_timestr":"2013-05-20",
 "_share":true,
 "images":[
 
-]
+],
+"booth":"A09"
 }
