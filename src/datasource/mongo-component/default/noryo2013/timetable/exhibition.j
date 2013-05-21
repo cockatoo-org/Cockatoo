@@ -1,10 +1,10 @@
 {
-"@R":"1369110145",
+"@R":"1369113135",
 "type":"HorizontalWidget",
 "subject":"noryo2013_exhibition",
 "description":"",
-"css":"\r
-",
+"css":"div.noryo2013_timetable div.tab div.session {\r
+  margin: 5px 10px;",
 "js":"$( function (){\r
   draw_timetable(180,function(s){ return 'div.noryo2013_timetable div.tab' } );\r
 })\r
