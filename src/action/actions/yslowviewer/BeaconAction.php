@@ -19,13 +19,14 @@ abstract class BeaconAction extends \Cockatoo\Action {
   abstract function form_detail($beacon);
 
   function other_methods(){
-    throw new \Exception('Unexpected method ! : ' . $this->method);
+    throw new \Exception('Unexpected method ! : ' . $this->get_method());
   }
 
   public function proc(){
     try{
       $this->setNamespace('yslowviewer');
-      if ( $this->method === \Cockatoo\Beak::M_SET ) {
+      $method = $this->get_method();
+      if ( $method === \Cockatoo\Beak::M_SET ) {
         $session = $this->getSession();
         $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
         if ( ! $user and YslowviewerConfig::ACL ) {
@@ -51,7 +52,7 @@ abstract class BeaconAction extends \Cockatoo\Action {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,'URLS',$beacon['u'],\Cockatoo\Beak::M_SET,array(),array());
         $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$beacon);
 
-      }elseif ( $this->method === \Cockatoo\Beak::M_COL_LIST ) {
+      }elseif ( $method === \Cockatoo\Beak::M_COL_LIST ) {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,'URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
         $eurls = \Cockatoo\BeakController::beakSimpleQuery($brl,array());
 
@@ -69,7 +70,7 @@ abstract class BeaconAction extends \Cockatoo\Action {
             return;
           },$eurls);
         return array('domains' => $urls);
-      }elseif ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
+      }elseif ( $method === \Cockatoo\Beak::M_KEY_LIST ) {
         $session = $this->getSession();
         $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
         list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);
@@ -84,7 +85,7 @@ abstract class BeaconAction extends \Cockatoo\Action {
           }
         }
         return array('times' => $times,'u' => $url,'date' => $str_date);
-      }elseif ( $this->method === \Cockatoo\Beak::M_GET ) {
+      }elseif ( $method === \Cockatoo\Beak::M_GET ) {
         $session = $this->getSession();
         $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
         list($date,$str_date) = \Cockatoo\UtilDselector::select($session,86400);

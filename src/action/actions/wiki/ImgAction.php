@@ -22,7 +22,8 @@ class ImgAction extends \Cockatoo\Action {
     $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
     $page   = $this->args['P'];
     $name   = $this->args['N'];
-    if ( $this->method === \Cockatoo\Beak::M_SET and isset($session[\Cockatoo\Def::SESSION_KEY_FILES])) {
+    $method  = $this->get_method();
+    if ( $method === \Cockatoo\Beak::M_SET and isset($session[\Cockatoo\Def::SESSION_KEY_FILES])) {
       if ( ! $user ) {
         $s[\Cockatoo\Def::SESSION_KEY_ERROR] = 'You have to login before update wiki !!';
         $this->updateSession($s);
@@ -39,14 +40,14 @@ class ImgAction extends \Cockatoo\Action {
       }
       $this->setMovedTemporary('/wiki/uploaded/'.$page);
       return;
-    }else if ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
+    }else if ( $method === \Cockatoo\Beak::M_KEY_LIST ) {
       $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, '', \Cockatoo\Beak::M_KEY_LIST);
       $images = \Cockatoo\BeakController::beakSimpleQuery($brl);
       foreach ( $images as $name ) {
         $names []= $name;
       }
       return array('names'=>$names);
-    }else if ( $this->method === \Cockatoo\Beak::M_GET ) {
+    }else if ( $method === \Cockatoo\Beak::M_GET ) {
       $brl =  \Cockatoo\brlgen(\Cockatoo\Def::BP_STATIC, 'wiki', $page, $name, \Cockatoo\Beak::M_GET);
       $image = \Cockatoo\BeakController::beakSimpleQuery($brl);
       if ( $image ) {

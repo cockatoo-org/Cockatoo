@@ -16,8 +16,9 @@ class PwatchAction extends \Cockatoo\Action {
     try{
       $this->setNamespace('pwatch');
       $session = $this->getSession();
+      $method  = $this->get_method();
       $user  = $session[\Cockatoo\AccountUtil::SESSION_LOGIN][\Cockatoo\AccountUtil::KEY_USER];
-      if ( $this->method === \Cockatoo\Beak::M_GET ) {
+      if ( $method === \Cockatoo\Beak::M_GET ) {
         $url = $session[\Cockatoo\Def::SESSION_KEY_GET]['u'];
         $LIMIT = $session[\Cockatoo\Def::SESSION_KEY_GET]['limit'];
         $LIMIT = $LIMIT?(int)$LIMIT:100;
@@ -37,7 +38,7 @@ class PwatchAction extends \Cockatoo\Action {
           'datas' => $datas,
           '@json' => json_encode(array_reverse($datas)),
           );
-      }elseif ( $this->method === \Cockatoo\Beak::M_SET ) {
+      }elseif ( $method === \Cockatoo\Beak::M_SET ) {
         $submit = $session[\Cockatoo\Def::SESSION_KEY_POST]['submit'];
         $url = $session[\Cockatoo\Def::SESSION_KEY_POST]['u'];
         $eurl = \Cockatoo\UrlUtil::urlencode($url);
@@ -73,7 +74,7 @@ class PwatchAction extends \Cockatoo\Action {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
         $urls = \Cockatoo\BeakController::beakSimpleQuery($brl,array());
         return array('urls' => $urls);
-      }elseif ( $this->method === \Cockatoo\Beak::M_KEY_LIST ) {
+      }elseif ( $method === \Cockatoo\Beak::M_KEY_LIST ) {
         $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,'pwatch','URLS','',\Cockatoo\Beak::M_GET_RANGE,array(),array());
         $urls = \Cockatoo\BeakController::beakSimpleQuery($brl,array());
         return array('urls' => $urls);
