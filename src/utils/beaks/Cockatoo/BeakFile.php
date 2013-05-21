@@ -190,6 +190,10 @@ class BeakFile extends Beak {
    */
   public function listKeyQuery() {
     $this->ret =  $this->listDir($this->collection_path,'',true);
+    $path = $this->path;
+    $this->ret = array_filter($this->ret,function ($p) use($path) {
+        return strncmp($p,$path,strlen($path)) == 0;
+      });
   }
 
   /**
