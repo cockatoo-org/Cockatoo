@@ -7,10 +7,10 @@
 ],
 "targets":[
 "\u5168\u30b9\u30dd\u30f3\u30b5\u30fc",
-"     \u5c06\u6765\u306e\u30b9\u30dd\u30f3\u30b5\u30fc",
-"     \u5168\u51fa\u5c55\u8005",
-"     \u5c06\u6765\u306e\u51fa\u5c55\u8005",
-"     \u5c06\u6765\u306eMongo\u30e6\u30fc\u30b6\u30fc"
+"      \u5c06\u6765\u306e\u30b9\u30dd\u30f3\u30b5\u30fc",
+"      \u5168\u51fa\u5c55\u8005",
+"      \u5c06\u6765\u306e\u51fa\u5c55\u8005",
+"      \u5c06\u6765\u306eMongo\u30e6\u30fc\u30b6\u30fc"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -31,7 +31,7 @@
 "start":"17:00",
 "end":"18:00",
 "incharge":"",
-"origin":"",
+"origin":"\u30e1\u30a4\u30ad\u30f3\u30b0\u6620\u50cf\u3092\u4e2d\u5fc3\u306b\u3002",
 "contents":[
 {
 "tag":"div",
@@ -53,7 +53,7 @@
 "children":[
 {
 "tag":"text",
-"text":""
+"text":"\u30e1\u30a4\u30ad\u30f3\u30b0\u6620\u50cf\u3092\u4e2d\u5fc3\u306b\u3002"
 }
 ]
 },
@@ -68,11 +68,12 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1368885699,
-"_timestr":"2013-05-18",
+"_time":1369177623,
+"_timestr":"2013-05-22",
 "_share":true,
 "images":{
 "logo":"place2.17:00.51960929cbfcf/logo"
 },
-"logo":null
+"logo":null,
+"booth":""
 }
