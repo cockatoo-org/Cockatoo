@@ -7,7 +7,7 @@
 ],
 "targets":[
 "\u30aa\u30f3\u30e9\u30a4\u30f3\u53c2\u52a0\u8005",
-"       \u7dcf\u96c6\u7de8\u306e\u7d20\u6750"
+"         \u7dcf\u96c6\u7de8\u306e\u7d20\u6750"
 ],
 "state_of_content":"onplanning",
 "person_in_charge":[
@@ -66,12 +66,12 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1369112096,
-"_timestr":"2013-05-21",
+"_time":1369188998,
+"_timestr":"2013-05-22",
 "_share":true,
 "images":{
 "logo":"exhibition.16:45.5199eb9c47b5c/logo"
 },
-"booth":"A02",
+"booth":"C2",
 "logo":null
 }

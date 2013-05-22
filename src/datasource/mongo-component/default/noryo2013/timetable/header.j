@@ -1,5 +1,5 @@
 {
-"@R":"1369113014",
+"@R":"1369192630",
 "type":"HorizontalWidget",
 "subject":"noryo2013_timetable_header",
 "description":"",
@@ -91,17 +91,42 @@ div.noryo2013_timetable div.details {\r
 }\r
 \r
 div.noryo2013_timetable div.detail {\r
+  top:15px;\r
+  left: 15px;\r
+  position: absolute;\r
+  z-index: 9999;\r
+  width: 960px;\r
   padding: 5px;\r
   font-size: 1.5em;\r
   line-height: 1.5em;\r
-  background-color: #f6f4cd;\r
+  background-color: #000000;\r
+  background-image: url(\"/_s_/mongo/noryo2013/event.png\");\r
+  background-repeat: repeat-x;\r
   border-radius: 16px;\r
   border: 2px solid  #402817;\r
   display:none;\r
+  color: #ffff22;\r
+}\r
+div.noryo2013_timetable div.detail div.close:hover {\r
+  background-image:url(\"/_s_/mongo/noryo2013/ui-icons_469bdd_256x240.png\");\r
+}\r
+div.noryo2013_timetable div.detail div.close {\r
+  background-image:url(\"/_s_/mongo/noryo2013/ui-icons_d8e7f3_256x240.png\");\r
+  background-position: -96px -128px;\r
+  position: absolute;\r
+  right: .3em;\r
+  width:16px;\r
+  height:16px;\r
+  display: block;\r
+  margin: 1px;\r
+}\r
+div.noryo2013_timetable div.detail span.c,\r
+div.noryo2013_timetable div.detail span.b,\r
+div.noryo2013_timetable div.detail span.q {\r
+  color:#888888;\r
 }\r
 div.noryo2013_timetable div.detail td.key {\r
   font-weight:600;\r
-  color: #cc5500;\r
   width: 120px;\r
   vertical-align:top;\r
   padding-left: 10px;\r
@@ -111,17 +136,24 @@ div.noryo2013_timetable div.detail td.sep {\r
   vertical-align:top;\r
 }\r
 div.noryo2013_timetable div.detail td.comma {\r
+  color:#888888;\r
   font-weight:600;\r
   vertical-align: bottom;\r
 }\r
+  color: #ff2222;\r
 div.noryo2013_timetable div.detail td.title {\r
   font-weight:600;\r
   font-size: 1.5em;\r
+}\r
+div.noryo2013_timetable div.detail td.start,\r
+div.noryo2013_timetable div.detail td.end {\r
+  color: #ff4444;\r
 }\r
 div.noryo2013_timetable div.detail hr.sep {\r
   border-color: #4c3a2c;\r
 }\r
 div.noryo2013_timetable div.detail img.logo {\r
+  /* float:left; */\r
   height: 60px;\r
 }\r
 \r
@@ -131,16 +163,16 @@ div.noryo2013_timetable div.tab table.timetable{\r
   border-spacing: 0;\r
 }\r
 div.noryo2013_timetable div.tab table.timetable th {\r
-  padding : 2px 5px 1px 5px;\r
+  padding : 2px 0 1px 0;\r
   border-bottom: 2px solid #402817;\r
   background-color: #402817;\r
   color: #FFFFFF;\r
   font-size: 1.2em;\r
 }\r
-div.noryo2013_timetable div.tab table.timetable th.timebox{\r
-  width: 80px;\r
+div.noryo2013_timetable div.tab table.timetable th.first {\r
+  width: 100px;\r
 }\r
-div.noryo2013_timetable div.tab table.timetable th.place {\r
+div.noryo2013_timetable div.tab table.timetable th.cols {\r
   width: 299px;\r
   border-left: 2px solid  #402817;\r
   border-bottom: 1px dashed  #402817;\r
@@ -149,66 +181,20 @@ div.noryo2013_timetable div.tab table.timetable th.place {\r
 \r
 div.noryo2013_timetable div.tab table.timetable td {\r
 }\r
-div.noryo2013_timetable div.tab table.timetable td.timebox {\r
+div.noryo2013_timetable div.tab table.timetable td.first {\r
   height: 98px;\r
   vertical-align:10px;\r
   text-decoration: underline;\r
   font-weight:600;\r
   border-bottom: 1px dashed  #402817;\r
 }\r
-div.noryo2013_timetable div.tab table.timetable td div.t.t00 {\r
-  border-top: 1px solid  #402817;\r
-}\r
-div.noryo2013_timetable div.tab table.timetable td div.t.t30 {\r
-  border-top: 1px dashed  #402817;\r
-}\r
-div.noryo2013_timetable div.tab table.timetable td div.t {\r
-  height:30px;\r
-}\r
 \r
-div.noryo2013_timetable div.tab table.timetable td.place {\r
+div.noryo2013_timetable div.tab table.timetable td.cols {\r
+  width: 299px;\r
   border-left: 2px solid  #402817;\r
   border-bottom: 1px dashed  #402817;\r
 }\r
 \r
-div.noryo2013_timetable div.tab table.timetable div.session{\r
-  width:296px;\r
-  border-radius: 8px;\r
-  background-color: #fFf8e0;\r
-  border: 1px solid  #402817;\r
-  opacity: 0.9;\r
-/*  float: left; */\r
-  overflow:hidden;\r
-/*  z-index: 9999; */\r
-}\r
-div.noryo2013_timetable div.tab table.timetable div.session a{\r
-}\r
-div.noryo2013_timetable div.tab table.timetable div.session img.logo{\r
- float:left;\r
- height:60px;\r
-}\r
-\r
-div.noryo2013_timetable div.tab table.timetable div.session:hover {\r
-  cursor: pointer;\r
-  background-color: #cc5500;\r
-  color: #FFFFFF;\r
-}\r
-div.noryo2013_timetable div.tab table.timetable div.session:hover a {\r
-  color: #FFFFFF;\r
-}\r
-\r
-div.noryo2013_timetable div.tab table.timetable div.session div.title{\r
-  font-weight: 600;\r
-  text-decoration: underline;\r
-}\r
-div.noryo2013_timetable div.tab table.timetable div.session div.incharge{\r
-  float:right;\r
-  text-decoration: underline;\r
-}\r
-div.noryo2013_timetable div.tab table.timetable div.session div.overview{\r
-  float:left;\r
-  margin-left:10px;\r
-}\r
 ",
 "js":"$( function (){\r
   timetableNavs = $('#noryo2013_timetable_header div.nav > ul > li');\r
@@ -269,24 +255,27 @@ function draw_timetable(h,cb_appendTo){\r
       \r
 \t$('div.detail[u=\"'+u+'\"]').clone()\r
 \t.attr('id','detail')\r
-\t.css('position','absolute')\r
-\t.css('z-index',9999)\r
-\t.css('top','0px')\r
-\t.css('left',0)\r
+//\t.css('position','absolute')\r
+//\t.css('z-index',9999)\r
+//\t.css('top','0px')\r
+//\t.css('left',0)\r
 \t.appendTo('div.noryo2013_timetable')\r
 \t.slideDown('normal', function(){ \r
-            $('div.noryo2013_timetable').height($(this).height()+150 );\r
+\t  var new_height = $(this).height()+150;\r
+\t  if ( new_height > origin_height ) {\r
+\t      $('div.noryo2013_timetable').height(new_height);\r
+\t  }\r
         });\r
       \r
 \t$('#mordal').click(function(){\r
-\t    $(this).remove();\r
-\t    $('#detail').slideUp('normal',function(){$(this).remove();});\r
-            $('div.noryo2013_timetable').height(origin_height);\r
+\t  $('#detail > div.close').click();\r
 \t});\r
 \t$('#detail > div.close').click(function(){\r
-\t    $(this).parent().slideUp('normal',function(){$(this).remove();});\r
-\t    $('#mordal').remove();\r
-            $('div.noryo2013_timetable').height(origin_height);\r
+\t    $(this).parent().slideUp('normal',function(){\r
+\t\t$(this).remove();\r
+\t\t$('#mordal').remove();\r
+\t\t$('div.noryo2013_timetable').height(origin_height);\r
+\t    });\r
 \t});\r
     });\r
 }",
@@ -308,7 +297,7 @@ function draw_timetable(h,cb_appendTo){\r
 <div class=\"details\">\r
 <?cs each: item = A.mongo.timeboxs.raw ?>\r
  <div class=\"detail\" u=\"<?cs var:item._u ?>\">\r
- <div class=\"close\" style=\"border:1px solid #000000;background-color:#000000;float:right;width:20px;height:20px;\"></div>\r
+ <div class=\"close\"></div>\r
  <?cs if:item.images.logo ?>\r
    <img class=\"logo\" src=\"/_s_/mongo/timetable/<?cs var:item.images.logo ?>\"></img><br>\r
   <?cs /if ?>\r
@@ -316,19 +305,19 @@ function draw_timetable(h,cb_appendTo){\r
   <table>\r
   <tbody>\r
    <tr>\r
-    <td class=\"key\">\"\u30bf\u30a4\u30c8\u30eb\"</td><td class=\"sep\">:</td><td class=\"value title\">\"<?cs var:item.title ?>\"</td><td class=\"comma\">,</td>\r
+    <td class=\"key\"><span class=\"q\">\"</span>\u30bf\u30a4\u30c8\u30eb<span class=\"q\">\"</span></td><td class=\"sep\">:</td><td class=\"value title\"><span class=\"q\">\"</span><?cs var:item.title ?><span class=\"q\">\"</span></td><td class=\"comma\">,</td>\r
    </tr><tr>\r
-    <td class=\"key\">\"\u767a\u8868\u8005\"</td>\u3000<td class=\"sep\">:</td><td class=\"value\">\"<?cs var:item.incharge ?>\"</td>   <td class=\"comma\">,</td>\r
+    <td class=\"key\"><span class=\"q\">\"</span>\u767a\u8868\u8005<span class=\"q\">\"</span></td>\u3000<td class=\"sep\">:</td><td class=\"value\"><span class=\"q\">\"</span><?cs var:item.incharge ?><span class=\"q\">\"</span></td>   <td class=\"comma\">,</td>\r
    </tr><tr>\r
-    <td class=\"key\">\"\u958b\u59cb\u6642\u523b\"</td><td class=\"sep\">:</td><td class=\"value\">\"<?cs var:item.start ?>\"</td><td class=\"comma\">,</td>\r
+    <td class=\"key\"><span class=\"q\">\"</span>\u958b\u59cb\u6642\u523b<span class=\"q\">\"</span></td><td class=\"sep\">:</td><td class=\"value start\"><span class=\"q\">\"</span><?cs var:item.start ?><span class=\"q\">\"</span></td><td class=\"comma\">,</td>\r
    </tr><tr>\r
-    <td class=\"key\">\"\u7d42\u4e86\u6642\u523b\"</td><td class=\"sep\">:</td><td class=\"value\">\"<?cs var:item.end ?>\"</td><td class=\"comma\">,</td>\r
+    <td class=\"key\"><span class=\"q\">\"</span>\u7d42\u4e86\u6642\u523b<span class=\"q\">\"</span></td><td class=\"sep\">:</td><td class=\"value end\"><span class=\"q\">\"</span><?cs var:item.end ?><span class=\"q\">\"</span></td><td class=\"comma\">,</td>\r
    </tr><tr>\r
-    <td class=\"key\">\"\u6982\u8981\"</td>\u3000\u3000<td class=\"sep\">:</td><td class=\"value\">\"<?cs var:item.overview ?>\"</td><td class=\"comma\">,</td>\r
+    <td class=\"key\"><span class=\"q\">\"</span>\u6982\u8981<span class=\"q\">\"</span></td>\u3000\u3000<td class=\"sep\">:</td><td class=\"value\"><span class=\"q\">\"</span><?cs var:item.overview ?><span class=\"q\">\"</span></td><td class=\"comma\">,</td>\r
    </tr><tr>\r
-    <td class=\"key\">\"\u30bf\u30a4\u30d7\"</td>\u3000<td class=\"sep\">:</td><td class=\"value\">[<?cs each: type = item.types ?>\"<?cs var:type ?>\"<?cs if:!last(type) ?>,<?cs /if ?><?cs /each ?>]</td><td class=\"comma\">,</td>\r
+    <td class=\"key\"><span class=\"q\">\"</span>\u30bf\u30a4\u30d7<span class=\"q\">\"</span></td>\u3000<td class=\"sep\">:</td><td class=\"value\"><span class=\"b\">[</span><?cs each: type = item.types ?><span class=\"q\">\"</span><?cs var:type ?><span class=\"q\">\"</span><?cs if:!last(type) ?>,<?cs /if ?><?cs /each ?><span class=\"b\">]</span></td><td class=\"comma\">,</td>\r
    </tr><tr>\r
-    <td class=\"key\">\"\u5bfe\u8c61\"</td>\u3000\u3000<td class=\"sep\">:</td><td class=\"value\">[<?cs each: target = item.targets ?>\"<?cs var:target ?>\"<?cs if:!last(target) ?>, <?cs /if ?><?cs /each ?>]</td><td class=\"comma\">,</td>\r
+    <td class=\"key\"><span class=\"q\">\"</span>\u5bfe\u8c61<span class=\"q\">\"</span></td>\u3000\u3000<td class=\"sep\">:</td><td class=\"value\"><span class=\"b\">[</span><?cs each: target = item.targets ?><span class=\"q\">\"</span><?cs var:target ?><span class=\"q\">\"</span><?cs if:!last(target) ?><span class=\"c\">,</span> <?cs /if ?><?cs /each ?><span class=\"b\">]</span></td><td class=\"comma\">,</td>\r
    </tr>\r
  </tbody>\r
  </table>\r

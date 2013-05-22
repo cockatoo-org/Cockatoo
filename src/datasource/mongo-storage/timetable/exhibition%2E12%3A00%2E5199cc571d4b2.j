@@ -64,11 +64,11 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1369033952,
-"_timestr":"2013-05-20",
+"_time":1369188958,
+"_timestr":"2013-05-22",
 "_share":true,
 "images":[
 
 ],
-"booth":"A09"
+"booth":"A2"
 }

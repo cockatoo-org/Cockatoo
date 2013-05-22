@@ -51,13 +51,13 @@
 ],
 "_owner":"admin",
 "_ownername":"admin",
-"_time":1369041594,
-"_timestr":"2013-05-20",
+"_time":1369188993,
+"_timestr":"2013-05-22",
 "public":true,
 "_share":true,
 "images":{
 "logo":"exhibition.12:00.5199eabae3bb2/logo"
 },
 "logo":null,
-"booth":"A10"
+"booth":"B1"
 }

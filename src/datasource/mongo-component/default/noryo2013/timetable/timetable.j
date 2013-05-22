@@ -1,10 +1,18 @@
 {
-"@R":"1369113017",
+"@R":"1369189943",
 "type":"HorizontalWidget",
 "subject":"noryo2013_timetable",
 "description":"",
 "css":"\r
-",
+div.noryo2013_timetable div.tab table.timetable td div.t.t00 {\r
+  border-top: 1px solid  #402817;\r
+}\r
+div.noryo2013_timetable div.tab table.timetable td div.t.t30 {\r
+  border-top: 1px dashed  #402817;\r
+}\r
+div.noryo2013_timetable div.tab table.timetable td div.t {\r
+  height:30px;\r
+}",
 "js":"$(function(){\r
   draw_timetable(null,function(session){return 'div.noryo2013_timetable div.tab table td.' + session.place + '> div.t'+session.start.replace(/:/,'')});\r
 });",
@@ -14,13 +22,13 @@
 <table class=\"timetable\">\r
 <tbody>\r
 <tr>\r
-<th class=\"timebox\"></th>\r
-<th class=\"place place1\">\u4f1a\u5834\uff11</th>\r
-<th class=\"place place2\">\u4f1a\u5834\uff12</th>\r
-<th class=\"place place3\">\u4f1a\u5834\uff13</th>\r
+<th class=\"first\"></th>\r
+<th class=\"cols place1\">\u30e1\u30a4\u30f3\u30db\u30fc\u30eb</th>\r
+<th class=\"cols place2\">\u30bb\u30df\u30ca\u30fc\u30eb\u30fc\u30e0</th>\r
+<th class=\"cols place3\">\u30ed\u30d3\u30fc</th>\r
 </tr>\r
 <tr class=\"\">\r
-<td class=\"timebox\">\r
+<td class=\"first\">\r
 <div class=\"t t00 t1200\">12:00</div>\r
 <div class=\"t t15 t1215\"></div>\r
 <div class=\"t t30 t1230\"></div>\r
@@ -46,7 +54,7 @@
 <div class=\"t t30 t1730\"></div>\r
 <div class=\"t t45 t1745\"></div>\r
 </td>\r
-<td class=\"place place1\">\r
+<td class=\"cols place1\">\r
 <div class=\"t t00 t1200\"></div>\r
 <div class=\"t t15 t1215\"></div>\r
 <div class=\"t t30 t1230\"></div>\r
@@ -72,7 +80,7 @@
 <div class=\"t t30 t1730\"></div>\r
 <div class=\"t t45 t1745\"></div>\r
 </td>\r
-<td class=\"place place2\">\r
+<td class=\"cols place2\">\r
 <div class=\"t t00 t1200\"></div>\r
 <div class=\"t t15 t1215\"></div>\r
 <div class=\"t t30 t1230\"></div>\r
@@ -98,7 +106,7 @@
 <div class=\"t t30 t1730\"></div>\r
 <div class=\"t t45 t1745\"></div>\r
 </td>\r
-<td class=\"place place3\">\r
+<td class=\"cols place3\">\r
 <div class=\"t t00 t1200\"></div>\r
 <div class=\"t t15 t1215\"></div>\r
 <div class=\"t t30 t1230\"></div>\r
