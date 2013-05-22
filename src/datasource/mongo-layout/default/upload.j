@@ -1,1 +1,0 @@
-{"@R":"1331917751","eredirect":"","redirect":"","pre_action":"action:\/\/mongo-action\/mongo\/PreAction","post_action":"","session_exp":"2147483647","header":null,"pheader":"","layout":{"type":"JsonWidget","extra":"","component":"component:\/\/mongo-component\/default\/img\/upload?get","children":[]},"_u":"upload","expires":"0","bottom":""}
