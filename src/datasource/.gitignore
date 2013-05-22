@@ -1,7 +1,7 @@
-*-session
-!core-storage
-!core-static
-!core-layout
-!core-component
-*
-unittest-*
+/*
+!.gitignore
+!services-cms/
+!core-storage/
+!core-static/
+!core-layout/
+!core-component/
