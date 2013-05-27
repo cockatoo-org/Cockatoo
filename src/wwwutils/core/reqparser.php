@@ -193,6 +193,9 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
     $template = isset($get[Def::REQUEST_TEMPLATE])?$get[Def::REQUEST_TEMPLATE]:$template;
     $path   = isset($get[Def::REQUEST_PATH])?$get[Def::REQUEST_PATH]:$path;
     $args   = isset($get[Def::REQUEST_ARGS])?$get[Def::REQUEST_ARGS]:$args;
+
+    // Url encode (except for '/')
+    $path = path_urlencode($path);
     Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
     return array($service,$template,$path,$args);
   }
@@ -204,7 +207,6 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
   $path         = RequestParser::$instance->path;
   $args         = RequestParser::$instance->args;
   $session_path = RequestParser::$instance->session_path;
-  Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request preparsed : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
   
   if ( strcmp($service,Def::RESERVED_SERVICE_CORE) === 0 ) {
   }elseif ( strcmp($template,Def::RESERVED_TEMPLATE_STATIC) === 0 ) {
@@ -212,6 +214,8 @@ function parseRequest(&$header,&$server,&$get,&$cookie){
     $template = RequestParser::$instance->select($template);
   }
 
+  // Url encode (except for '/')
+  $path = path_urlencode($path);
   Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed    : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
   return array($service,$template,$path,$args,$session_path);
 }
@@ -231,6 +235,8 @@ function parseStaticRequest(&$header,&$server,&$get,&$cookie){
     $template = isset($get[Def::REQUEST_TEMPLATE])?$get[Def::REQUEST_TEMPLATE]:$template;
     $path   = isset($get[Def::REQUEST_PATH])?$get[Def::REQUEST_PATH]:$path;
     $args   = isset($get[Def::REQUEST_ARGS])?$get[Def::REQUEST_ARGS]:$args;
+    // Url encode (except for '/')
+    $path = path_urlencode($path);
     Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
     return array($service,$template,$path,$args,'/');
   }
@@ -243,6 +249,8 @@ function parseStaticRequest(&$header,&$server,&$get,&$cookie){
   $template= RequestParser::$instance->template;
   $path    = RequestParser::$instance->path;
  
+  // Url encode (except for '/')
+  $path = path_urlencode($path);
   Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Request parsed (debug)  : ' . $service . ' , ' . $template . ' , ' . $path . ' , ' . $args);
   return array($service,$template,$path);
 }

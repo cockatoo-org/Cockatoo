@@ -29,7 +29,9 @@ function diffutime($t1,$t2) {
   return (($t1[0]-$t2[0]) + ($t1[1]-$t2[1]))*1000000;
 }
 
-
+function path_urlencode ( $str ) {
+  return implode("/", array_map("rawurlencode", explode("/", $str)));
+}
 
 function http($url,$method = 'GET', $postfields = NULL) {
     $http_info = array();
