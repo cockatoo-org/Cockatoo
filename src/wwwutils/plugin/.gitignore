@@ -1,0 +1,6 @@
+/*
+*/
+!.gitignore
+./wwwutils/plugin/.gitignore
+!Cockatoo/
+
