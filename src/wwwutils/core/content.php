@@ -202,7 +202,7 @@ class ContentDrawer {
     }else if ( $scheme === 'http' && $SERVER['SERVER_PORT'] !== '80' ){
       $port = ':'.$SERVER['SERVER_PORT'];
     }
-    $url = $scheme.'://'.$SERVER['HTTP_HOST'].$port.$SERVER['REQUEST_URI'];
+    $url = $scheme.'://'.$SERVER['SERVER_NAME'].$port.$SERVER['REQUEST_URI'];
     $HEADER[Def::CS_CORE_FULLURL] = $url;
     $HEADER[Def::CS_CORE_FULLEURL] = urlencode($url);
     
