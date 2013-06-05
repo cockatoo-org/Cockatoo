@@ -38,11 +38,11 @@ class BeakMongo extends Beak {
     }else if ( isset($this->queries[Beak::Q_EXCEPTS]) ) {
       $this->columns = array_merge($this->columns,array_fill_keys(explode(',',$this->queries[Beak::Q_EXCEPTS]),0));
     }
+    unset($this->columns['']);
 
     $this->sort = isset($this->queries[Beak::Q_SORT])?$this->queries[Beak::Q_SORT]:'';
     $this->skip = isset($this->queries[Beak::Q_SKIP])?$this->queries[Beak::Q_SKIP]:0;
     $this->limit = isset($this->queries[Beak::Q_LIMIT])?$this->queries[Beak::Q_LIMIT]:Beak::DEFAULT_LIMIT;
-    
     
     $this->beakLocation = BeakLocationGetter::singleton();
     $base_brl = $scheme . '://' . $domain . '/';
@@ -89,7 +89,7 @@ class BeakMongo extends Beak {
       $ret = array();
       $this->mongocursor = $mongocollection->find(array('_u' => new \MongoRegex('/^'.$this->path.'.*/') ),array('_id' => 0, '_u' => 1));
       if ( $this->mongocursor ) {
-        $this->ret = array();
+        $ret = array();
         while ( $this->mongocursor->hasNext() ) {
           $doc = $this->mongocursor->getNext();
           $ret []= $doc['_u'];
@@ -109,15 +109,15 @@ class BeakMongo extends Beak {
           $query[$key] = $cond;
         }
       }
-
       $this->mongocursor = $mongocollection->find($query,$this->columns);
       if ( $this->mongocursor ) {
         if ( $this->sort and preg_match('@(^.+):([\-1]+)$@',$this->sort,$matches) !== 0) {
           $this->mongocursor->sort(array($matches[1]=>(int)$matches[2]));
         }
+
         $this->mongocursor->limit($this->limit);
         $this->mongocursor->skip($this->skip);
-        $this->ret = array();
+        $ret = array();
         while ( $this->mongocursor->hasNext() ) {
           $data = $this->mongocursor->getNext();
           if ( $data[Beak::ATTR_BIN] ) {
