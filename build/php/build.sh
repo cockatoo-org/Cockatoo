@@ -4,8 +4,8 @@ cd ${ROOT}
 ROOT=`pwd`
 source ${ROOT}/../build.env
 
-VERSION='5.4.11'
-HTTPD_VERSION='2.2.22'
+VERSION='5.4.15'
+HTTPD_VERSION='2.4.4'
         
 ARCHIVE=http://jp1.php.net/get/php-%s.tar.gz/from/jp2.php.net/mirror/
 FNAME=php-%s.tar.gz

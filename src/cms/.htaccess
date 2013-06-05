@@ -1,11 +1,13 @@
 <Limit GET POST OPTIONS>
-  Order allow,deny
-  Allow from all
+#  Order allow,deny
+#  Allow from all
+   Require all denied
 </Limit>
 <LimitExcept GET POST OPTIONS>
-  Order deny,allow
-  Deny from all
+#  Order deny,allow
+#  Deny from all
+   Require all denied
 </LimitExcept>
-Order allow,deny
-Allow from all
-
+#Order allow,deny
+#Allow from all
+Require all granted

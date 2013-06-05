@@ -29,7 +29,7 @@ echo uuid        $OPT_UUID
 echo memcached   $OPT_MEMCACHED
 
 
-PHP_VERSION='5.4.11'
+PHP_VERSION='5.4.15'
 PHP_NAME='php-'${PHP_VERSION}
 
 function build_php_ext3 {
@@ -68,7 +68,7 @@ function build_php_ext3 {
 
 # APC
 if [ "${OPT_APC}" = "1" ];then
-    VERSION='3.1.7'
+    VERSION='3.1.13'
     ARCHIVE=http://pecl.php.net/get/APC-%s.tgz
     ARCHIVE=`printf ${ARCHIVE} ${VERSION}`
     download ${ARCHIVE} 
