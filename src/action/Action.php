@@ -217,11 +217,112 @@ abstract class Action {
    * Implement action-process
    *
    */
-  abstract protected function proc();
+  protected function proc() {
+    $method  = $this->get_method();
+    if     ( strcmp($method,Beak::M_GET) === 0 ) {
+      return $this->getQuery();
+    }elseif( strcmp($method,Beak::M_GET_ARRAY) === 0 ) {
+      return $this->getaQuery();
+    }elseif( strcmp($method,Beak::M_GET_RANGE) === 0 ) {
+      return $this->getrQuery();
+    }elseif( strcmp($method,Beak::M_SET) === 0 ) {
+      return $this->setQuery();
+    }elseif( strcmp($method,Beak::M_SET_ARRAY) === 0 ) {
+      return $this->setaQuery();
+    }elseif( strcmp($method,Beak::M_COL_LIST) === 0 ) {
+      return $this->listColQuery();
+    }elseif( strcmp($method,Beak::M_KEY_LIST) === 0 ) {
+      return $this->listKeyQuery();
+    }elseif( strcmp($method,Beak::M_CREATE_COL) === 0 ) {
+      return $this->createColQuery();
+    }elseif( strcmp($method,Beak::M_DEL) === 0 ) {
+      return $this->delQuery();
+    }elseif( strcmp($method,Beak::M_DEL_ARRAY) === 0 ) {
+      return $this->delaQuery();
+    }elseif( strcmp($method,Beak::M_MV_COL) === 0 ) {
+      return $this->mvColQuery();
+    }elseif( strcmp($method,Beak::M_SYSTEM) === 0 ) {
+      return $this->sysQuery();
+    }
+    throw new \Exception('Unsupported BRL Method ! :' . $this->BRL);
+  }
   /**
    * Hookpoint after proc()
    *
    */
   public function postRun(){}
 
+
+  /**
+   * 
+   */
+  public function createColQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   * 
+   */
+  public function listKeyQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   * 
+   */
+  public function listColQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   * 
+   */
+  public function setQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   * 
+   */
+  public function setaQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   * 
+   */
+  public function getaQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   * 
+   */
+  public function getrQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   * 
+   */
+  public function getQuery(){
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   *
+   */
+  public function delQuery() {
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   *
+   */
+  public function delaQuery() {
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   *
+   */
+  public function mvColQuery() {
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
+  /**
+   *
+   */
+  public function sysQuery() {
+    throw new \Exception('Not implemented ! :' . $this->BRL);
+  }
 }

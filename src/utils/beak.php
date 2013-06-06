@@ -980,7 +980,7 @@ class BeakController {
     }elseif( strcmp($beak->method,Beak::M_SYSTEM) === 0 ) {
       $beak->sysQuery();
     }else {
-      throw new \Exception('Unsupported BRL Method ! :' . $beak->method);
+      throw new \Exception('Unsupported BRL Method ! :' . $beak->brl);
     }
   }
 
