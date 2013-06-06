@@ -84,9 +84,7 @@ class ContentDrawer {
     }
   }
 
-  private function mergeLayout($brl,&$baseLayout,&$pageLayout){
-
-
+  private function mergeLayout($brl,&$baseLayout,&$pageLayout,$callback=null){
     if ( strcmp($baseLayout[Def::K_LAYOUT_COMPONENT],$brl)===0 ){
       $pageLayout[Def::K_LAYOUT_CLASS]     .= $baseLayout[Def::K_LAYOUT_CLASS];
       $pageLayout[Def::K_LAYOUT_HEIGHT]    .= $pageLayout[Def::K_LAYOUT_HEIGHT]?$pageLayout[Def::K_LAYOUT_HEIGHT]:$baseLayout[Def::K_LAYOUT_HEIGHT];
@@ -94,12 +92,18 @@ class ContentDrawer {
       $pageLayout[Def::K_LAYOUT_MIN_HEIGHT].= $pageLayout[Def::K_LAYOUT_MIN_HEIGHT]?$pageLayout[Def::K_LAYOUT_MIN_HEIGHT]:$baseLayout[Def::K_LAYOUT_MIN_HEIGHT];
       $pageLayout[Def::K_LAYOUT_MIN_WIDTH] .= $pageLayout[Def::K_LAYOUT_MIN_WIDTH]?$pageLayout[Def::K_LAYOUT_MIN_WIDTH]:$baseLayout[Def::K_LAYOUT_MIN_WIDTH];
       $pageLayout[Def::K_LAYOUT_EXTRA]     .= ' ' . $pageLayout[Def::K_LAYOUT_EXTRA];
+      if ( $callback ) {
+        $this->$callback($baseLayout,$pageLayout);
+      }
       $baseLayout = $pageLayout;
-      return;
+      return true;
     }
     foreach ( array_keys($baseLayout[Def::K_LAYOUT_CHILDREN]) as $k ) {
-      $this->mergeLayout($brl,$baseLayout[Def::K_LAYOUT_CHILDREN][$k],$pageLayout);
+      if ( $this->mergeLayout($brl,$baseLayout[Def::K_LAYOUT_CHILDREN][$k],$pageLayout,$callback ) ) {
+        return true;
+      }
     }
+    return false;
   }
 
 
@@ -250,7 +254,12 @@ class ContentDrawer {
     // Save
     setSession($this->sessionID,$this->service,$this->session);
   }
-  
+
+  private function mergeLayoutCallback(&$baseLayout,&$pageLayout){
+    if ( sizeof($baseLayout[Def::K_LAYOUT_CHILDREN]) ) {
+      $this->mergeLayout(Def::PAGELAYOUT_BRL,$pageLayout,$baseLayout[Def::K_LAYOUT_CHILDREN][0]);
+    }
+  }
   public function components($nomerge = false) {
     $this->debug('== LAYOUTS(BRL) ==',$this->layoutBrls,Def::RenderingModeDEBUG3);
     if ( sizeof($this->layoutBrls) > 0 ) {
@@ -260,7 +269,7 @@ class ContentDrawer {
         $this->layoutDatas = BeakController::beakGetsQuery($this->layoutBrls);
         foreach ( $this->layoutDatas as $brl => $layout ) {
           $this->collectComponentBrls($layout[Def::K_LAYOUT_LAYOUT]);
-          $this->mergeLayout($brl,$this->layoutData[Def::K_LAYOUT_LAYOUT],$layout[Def::K_LAYOUT_LAYOUT]);
+          $this->mergeLayout($brl,$this->layoutData[Def::K_LAYOUT_LAYOUT],$layout[Def::K_LAYOUT_LAYOUT],'mergeLayoutCallback');
           $this->layout = $this->layoutData[Def::K_LAYOUT_LAYOUT];
         }
       }
