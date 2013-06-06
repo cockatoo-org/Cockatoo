@@ -347,20 +347,24 @@ try {
 
 
   } elseif( $op === 'getSC' ) {
-    $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,'',Beak::M_KEY_LIST);
-    $static_contents = BeakController::beakSimpleQuery($brl);
     $r = array();
-    foreach ( $static_contents as $static_id){
-      $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,'');
-      $r [] = array('service_id' => $service_id ,
-                    'static_id' => $static_id ,
-                    'name' => $static_id , 
-                    'brl'  => $brl
-        );
+    $template_ids = getD($service_id);
+    foreach ( $template_ids as $template_id){
+      $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,'',Beak::M_KEY_LIST);
+      $static_contents = BeakController::beakSimpleQuery($brl);
+      foreach ( $static_contents as $static_id){
+        $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,$static_id,'');
+        $r [] = array('service_id' => $service_id ,
+                      'template_id' => $template_id ,
+                      'static_id' => $static_id ,
+                      'name' => $static_id , 
+                      'brl'  => $brl
+          );
       }
+    }
   } elseif( $op === 'getSCC' ) {
     if ( is_readable($service_id) ){
-      $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,Beak::M_GET);
+      $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,$static_id,Beak::M_GET);
       $static_content = BeakController::beakSimpleQuery($brl);
       $r = array('type'        => $static_content[Def::K_STATIC_TYPE],
                  'etag'        => $static_content[Def::K_STATIC_ETAG],
@@ -373,13 +377,13 @@ try {
   } elseif( $op === 'addSC' ) {
     check_writable($service_id);
     $static_id = $_sP['name'];
-    setSC(false,$rev,$service_id,$static_id,$type,$expires,$bin,$body,$description);
+    setSC(false,$rev,$service_id,$template_id,$static_id,$type,$expires,$bin,$body,$description);
   } elseif( $op === 'setSC' ) {
     check_writable($service_id);
-    setSC(true,$rev,$service_id,$static_id,$type,$expires,$bin,$body,$description);
+    setSC(true,$rev,$service_id,$template_id,$static_id,$type,$expires,$bin,$body,$description);
   } elseif( $op === 'delSC' ) {
     check_writable($service_id);
-    $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,Beak::M_DEL);
+    $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,$static_id,Beak::M_DEL);
     BeakController::beakSimpleQuery($brl);
   } elseif( $op === 'setPL' ) {
     check_writable($service_id);
@@ -561,11 +565,11 @@ function setL($flg,$rev,$service_id,$layout_id,$type,$subject,$description,$layo
   }
 }
 
-function setSC($flg,$rev,$service_id,$static_id,$type,$expires,$bin,$data,$description) {
+function setSC($flg,$rev,$service_id,$template_id,$static_id,$type,$expires,$bin,$data,$description) {
   if ( preg_match('@\s@',$static_id,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as STATIC : ' . $static_id);
   }
-  $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,Beak::M_GET);
+  $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,$static_id,Beak::M_GET);
   $static_content = BeakController::beakSimpleQuery($brl);
   if ( ! $flg and $static_content ) {
     throw new \Exception('Static already exist ! : ' . $static_id);
@@ -573,7 +577,7 @@ function setSC($flg,$rev,$service_id,$static_id,$type,$expires,$bin,$data,$descr
   if ( $bin === 'true' ) {
     $data = $static_content[Def::K_STATIC_BIN];
   }
-  $brl = brlgen(Def::BP_STATIC,$service_id,Def::RESERVED_TEMPLATE_DEFAULT,$static_id,'');
+  $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,$static_id,'');
   $ret = StaticContent::save($brl,$type,$description,$data,null,$expires);
   if ( ! $ret ) {
     throw new \Exception('Fail to set : ' . $brl);

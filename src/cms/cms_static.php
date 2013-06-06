@@ -129,6 +129,7 @@ $(function () {
     }},
     form : {
       rev        : { label: '' , type : 'hidden' },
+      template_id: { label: '' , type : 'hidden' },
       static_id  : { label: '' , type : 'hidden' },
       brl        : { label: 'Brl' , type : 'text'},
       name       : { label: 'Name' , type : 'text'},
@@ -153,6 +154,7 @@ $(function () {
       var t = static_content;
       var args = {};
       args.service_id = data.service_id;
+      args.template_id = data.template_id;
       args.static_id = data.static_id;
       args.op = 'getSCC';
 	$.ajax({
