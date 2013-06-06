@@ -306,6 +306,7 @@
 	  var html = '';
 	  var ndata = {};
 	  var nkeys = [];
+	  var u = 1;
 	  for (d in t.data){
 	    var clazz = '';
 	    if ( $.isFunction(t.settings.list.clazz) ){
@@ -317,9 +318,12 @@
 	    var p = html_encode(t.data[d][t.settings.list.col]);
 	    var re = /(\S+\/)([^\/]+\/?)$/;
 	    for(;;){
+	      if ( p in ndata ) {
+		break;
+	      }
 	      if ( ! p || p.match(/:\/\/[^\/]+\/$/) ) {
 		nkeys.push(p);
-		ndata[p] = { dc : 'P /' , c : clazz , i : d , p : p};
+		ndata[p] = { dc : 'P /' , c : clazz , i : d , p : p };
 		break;
 	      }
 	      var m = p.match(re);
@@ -330,7 +334,8 @@
 //            $('html').append(p+'<br>');
 	      nkeys.push(p);
 	      if ( m ) {
-		ndata[p] = { dc : ((d==='-')?'P ':'') + m[1] , c : clazz , i : d , p : p};
+//		ndata[p] = { dc : ((d==='-')?'P ':'') + m[1] , c : clazz , i : d , p : p , u: m[1] };
+		ndata[p] = { dc : ((d==='-')?'P ':'') , c : clazz , i : d , p : p , u: m[1] };
 		clazz = "";
 		d = "-";
 		p = m[1];
@@ -343,30 +348,39 @@
 	    }
 	  }
 	  nkeys.sort();
-	  var id = 0;
+	  var idx = 0;
 	  for ( k in nkeys ) {
 	    n = nkeys[k];
-	    html += '<div class="'+ndata[n].dc+'" index="'+(id++)+'"><a class="'+ndata[n].c+'" index="'+ndata[n].i+'">'+ndata[n].p+'</a></div>';
+	    ndata[n].idx = idx;
+	    var pidx=(ndata[ndata[n].u]?ndata[ndata[n].u].idx:'');
+	    html += '<div class="'+ndata[n].dc+'" pidx="'+pidx+'" index="'+(idx++)+'"><a class="'+ndata[n].c+'" dindex="'+ndata[n].i+'">'+ndata[n].p+'</a></div>';
+
 	    //html += '<div class="'+ndata[n].dc+'" index="'+ndata[n].i+'"><a class="'+ndata[n].c+'" index="'+ndata[n].i+'">'+ndata[n].p+'</a></div>';
 	  }
 	  t.root.find('div.list').append(html);
 	  t.root.find('div.list > div.P').click( function (ev){
 	    if ( $(this).text() ) {
-	      selector = 'div.list > div.' + $(this).text().replaceAll('/','\\/').replaceAll(':','\\:').replaceAll('\.','\\\.');
-	      t.root.find(selector).show();
+	      target = t.root.find('div.list > div[pidx="' + $(this).attr('index')+'"]');
+	      if ( $(this).hasClass('open') ){
+		 $(this).removeClass('open');
+		target.hide();
+		target.addClass('open');
+		target.click();
+	      }else{
+		 $(this).addClass('open');
+		target.show();
+	      }
 	    }
 	  });
 
-	  t.root.find('div.list > div > a').not('[index="-"]').click(function(ev){
+	  t.root.find('div.list > div > a').not('[dindex="-"]').click(function(ev){
 	    if ( $(this).text() ) {
-//	    if ( !$(this).hasClass('selected')){
 	      t.root.find('div.list > div > a').removeClass('selected');
 		$(this).addClass('selected');
-	      t.index = $(this).attr('index');
+	      t.index = $(this).attr('dindex');
 	      t.cursor = $(this).parent().attr('index');
 	      t.view();
 	      t.settings.change(t.data[t.index]);
-//	    }
 	    }
 	  });
 	},

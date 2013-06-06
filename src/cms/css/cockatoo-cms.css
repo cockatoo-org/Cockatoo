@@ -56,7 +56,7 @@ div.list .yet {
   font-weight:bold;
   /* color: #E8C020; */
 }
-div.list > div > a[index] {
+div.list > div > a[dindex] {
   cursor: pointer; 
 }
 div.list > div > a[index].cursor,
