@@ -1,8 +1,112 @@
 {
 "etag":"\"6fbeecf5-2a08-c93c-e1b10aff7dfd0b2b\"",
-"type":"text\/css",
-"exp":"0",
+"type":"text/css",
+"exp":"3600",
 "desc":"",
-"data":"#co-frame {\r\n}\r\n#co-main {\r\n  overflow: hidden;\r\n  position: relative;\r\n  clear: both;\r\n}\r\nheader,\r\naside,\r\narticle,\r\nsection,\r\nfooter {\r\n  display:block;\r\n}\r\n\r\ndiv.co-Horizontal > div.co-Widget {\r\n  position:relative;\r\n  overflow: hidden;\r\n}\r\n\r\ndiv.co-Vertical {\r\n  overflow-y: hidden;\r\n  overflow-x: auto;\r\n}\r\n\r\ndiv.co-Vertical > div.co-Widget {\r\n}\r\n\/*\r\ndiv.co-Vertical > div.co-Widget {\r\nfloat:expression((this.__isLastChild=(this.parentNode.children.item(this.parentNode.children.length-1) == this))?\"none\":\"right\");\r\n}\r\n*\/\r\ndiv.co-Random > div.co-Widget {\r\n  position:relative;\r\n  overflow: hidden;\r\n}\r\n\r\ndiv.co-Tile > div.co-Widget {\r\n  float: left;\r\n  overflow: hidden;\r\n}\r\n\r\ndiv.co-Tab {\r\n}\r\n\r\ndiv.co-Tab > div.co-Widget {\r\n  clear: left;\r\n  position:relative;\r\n  overflow: hidden;\r\n}\r\n\r\ndiv.co-Tab > div.co-Widget.co-TabChild {\r\n  clear: none;\r\n  float:left;\r\n  white-space:nowrap;\r\n}\r\n\r\ndiv.co-Tab > div.co-Widget.co-TabChild:hover {\r\n}\r\ndiv.co-Tab > div.co-Widget.co-TabChild:last-child {\r\n  position:relative;\r\n  float:left;\r\n  overflow: hidden;\r\n}\r\ndiv.co-Tab > div.co-Widget.co-TabChild.selected {\r\n}\r\n\r\n\r\ndiv.co-Tab > div.co-Widget.co-TabChild a {\r\n}\r\ndiv.co-Tab > div.co-Widget.co-TabChild.selected a{\r\n}\r\ndiv.co-Tab > div.co-Widget.co-TabChild a:hover {\r\n}\r\n\r\n\r\n\r\n\/*  border-color: #4040E0; *\/\r\n\r\ndiv.co-Widget.core {\r\n  color: #888888;\r\n}\r\ndiv.co-Widget.core table,\r\ndiv.co-Widget.core table th,\r\ndiv.co-Widget.core table td {\r\n  border-color: #C0C8C2;\r\n}\r\ndiv.co-Widget.core table tr.selectable:hover {\r\n  background-color: #FFD0D0;\r\n}\r\ndiv.co-Widget.core div.window {\r\n  border-color: #C0C8C2;\r\n}\r\n\r\ndiv.co-Widget.core div.user > span {\r\n  color: #0000FF;\r\n}\r\n\r\ndiv.co-Widget.core  div.window {\r\n  border-width: 1px;\r\n  border-style: solid;\r\n  width: 198px;\r\n  margin: 0 auto 0 0;\r\n}\r\n",
-"_u":"css\/cockatoo.css"
+"data":"#co-frame {\r
+}\r
+#co-main {\r
+  overflow: hidden;\r
+  position: relative;\r
+  clear: both;\r
+}\r
+header,\r
+aside,\r
+article,\r
+section,\r
+footer {\r
+  display:block;\r
+}\r
+\r
+div.co-Horizontal > div.co-Widget {\r
+  position:relative;\r
+  overflow: hidden;\r
+}\r
+\r
+div.co-Vertical {\r
+  overflow-y: hidden;\r
+  overflow-x: auto;\r
+}\r
+\r
+div.co-Vertical > div.co-Widget {\r
+}\r
+/*\r
+div.co-Vertical > div.co-Widget {\r
+float:expression((this.__isLastChild=(this.parentNode.children.item(this.parentNode.children.length-1) == this))?\"none\":\"right\");\r
+}\r
+*/\r
+div.co-Random > div.co-Widget {\r
+  position:relative;\r
+  overflow: hidden;\r
+}\r
+\r
+div.co-Tile > div.co-Widget {\r
+  float: left;\r
+  overflow: hidden;\r
+}\r
+\r
+div.co-Tab {\r
+}\r
+\r
+div.co-Tab > div.co-Widget {\r
+  clear: left;\r
+  position:relative;\r
+  overflow: hidden;\r
+}\r
+\r
+div.co-Tab > div.co-Widget.co-TabChild {\r
+  clear: none;\r
+  float:left;\r
+  white-space:nowrap;\r
+}\r
+\r
+div.co-Tab > div.co-Widget.co-TabChild:hover {\r
+}\r
+div.co-Tab > div.co-Widget.co-TabChild:last-child {\r
+  position:relative;\r
+  float:left;\r
+  overflow: hidden;\r
+}\r
+div.co-Tab > div.co-Widget.co-TabChild.selected {\r
+}\r
+\r
+\r
+div.co-Tab > div.co-Widget.co-TabChild a {\r
+}\r
+div.co-Tab > div.co-Widget.co-TabChild.selected a{\r
+}\r
+div.co-Tab > div.co-Widget.co-TabChild a:hover {\r
+}\r
+\r
+\r
+\r
+/*  border-color: #4040E0; */\r
+\r
+div.co-Widget.core {\r
+  color: #888888;\r
+}\r
+div.co-Widget.core table,\r
+div.co-Widget.core table th,\r
+div.co-Widget.core table td {\r
+  border-color: #C0C8C2;\r
+}\r
+div.co-Widget.core table tr.selectable:hover {\r
+  background-color: #FFD0D0;\r
+}\r
+div.co-Widget.core div.window {\r
+  border-color: #C0C8C2;\r
+}\r
+\r
+div.co-Widget.core div.user > span {\r
+  color: #0000FF;\r
+}\r
+\r
+div.co-Widget.core  div.window {\r
+  border-width: 1px;\r
+  border-style: solid;\r
+  width: 198px;\r
+  margin: 0 auto 0 0;\r
+}\r
+",
+"_u":"css/cockatoo.css"
 }
