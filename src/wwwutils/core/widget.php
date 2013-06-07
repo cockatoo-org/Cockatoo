@@ -195,7 +195,7 @@ class  Widget {
     }
 
     $ret = '<div class="' . $clazz . ' ' . $this->clazz .'" ' . Def::K_COMPONENT_TYPE . '="' . $this->component[Def::K_COMPONENT_TYPE] . '" ' . Def::K_LAYOUT_COMPONENT . '="' . $this->prop[Def::K_LAYOUT_COMPONENT] . '" ' . Def::K_LAYOUT_EXTRA . '="'.$this->prop[Def::K_LAYOUT_EXTRA].'" style="'. $style .'">'.
-      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<spawn class="del">x</spawn><spawn class="down">v</spawn><spawn class="up">^</spawn></h3>'.
+      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del">x</span><span class="down">v</span><span class="up">^</span><span class="next">&gt;</span><span class="prev">&lt;</span></h3>'.
       '<form style="display:none;">'.
       '<div class="label">Class</div><div class="value"><input type="text" name="class" value="'.$this->prop[Def::K_LAYOUT_CLASS].'"></input></div>' .
       '<div class="label">Width</div><div class="value"><input type="text" name="width" value="'.$this->prop[Def::K_LAYOUT_WIDTH].'"></input></div>' .
@@ -218,7 +218,7 @@ class  Widget {
    */
   public function templateWalk(){
     return '<div class="' . $this->clazz .' co-Template" ' . Def::K_COMPONENT_TYPE . '="' . $this->component[Def::K_COMPONENT_TYPE] .'" '. Def::K_LAYOUT_COMPONENT . '="' . $this->prop[Def::K_LAYOUT_COMPONENT] . '" ' . Def::K_LAYOUT_EXTRA . '="'.$this->prop[Def::K_LAYOUT_EXTRA].'">'.
-      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<spawn class="del">x</spawn><spawn class="down">v</spawn><spawn class="up">^</spawn></h3>'.
+      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del">x</span><span class="down">v</span><span class="up">^</span></h3>'.
       '<div class="co-Wbody">' . $this->component[Def::K_COMPONENT_DESCRIPTION] . '</div></div>';
   }
 
@@ -562,7 +562,7 @@ class VerticalWidget extends Widget {
     }
 
     $ret = '<div class="' . $clazz . ' ' . $this->clazz .'" ' . Def::K_COMPONENT_TYPE . '="' . $this->component[Def::K_COMPONENT_TYPE] . '" ' . Def::K_LAYOUT_COMPONENT . '="' . $this->prop[Def::K_LAYOUT_COMPONENT] . '" ' . Def::K_LAYOUT_EXTRA . '="'.$this->prop[Def::K_LAYOUT_EXTRA].'" style="'. $style .'">'.
-      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<spawn class="del">x</spawn><spawn class="down">v</spawn><spawn class="up">^</spawn></h3>'.
+      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del">x</span><span class="down">v</span><span class="up">^</span></h3>'.
       '<form style="display:none;">'.
       '<div class="label">Class</div><div class="value"><input type="text" name="class" value="'.$this->prop[Def::K_LAYOUT_CLASS].'"></input></div>' .
       '<div class="label">Width</div><div class="value"><input type="text" name="width" value="'.$this->prop[Def::K_LAYOUT_WIDTH].'"></input></div>' .
