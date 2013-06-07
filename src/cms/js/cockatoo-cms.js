@@ -565,7 +565,7 @@
       .append('<tr><th>Ctrl-[RIGHT]</th><td>Move list forcus to right</td></tr>')
       .append('<tr><th>Ctrl-[SPACE]</th><td>Click current cursor</td></tr>')
       .append('<tr><th>Ctrl-a</th><td>Click Add</td></tr>')
-      .append('<tr><th>Ctrl-a</th><td>Click Update</td></tr>');
+      .append('<tr><th>Ctrl-u</th><td>Click Update</td></tr>');
     node.hover(null,function(){
 //	$(this).empty();
     });
