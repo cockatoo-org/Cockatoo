@@ -33,13 +33,14 @@ td {
 #services div.label { 
   width: 50px;
 }
+/*
 #components div.value[name=css] { 
   display: none;
 }
 #components div.value[name=js] { 
   display: none;
 }
-
+*/
 form.Services div.label { 
   width: 50px;
 }

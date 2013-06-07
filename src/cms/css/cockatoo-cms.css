@@ -56,12 +56,9 @@ div.list .yet {
   font-weight:bold;
   /* color: #E8C020; */
 }
-div.list > div > a[dindex] {
-  cursor: pointer; 
-}
-div.list > div > a[index].cursor,
-div.list > div > a[index]:hover,
-div.list > div > a[index].selected:hover {
+div.list > div > a[dindex].cursor,
+div.list > div > a[dindex]:hover,
+div.list > div > a[dindex].selected:hover {
   cursor: pointer; 
   background-color: #C0FFC0;
 }
