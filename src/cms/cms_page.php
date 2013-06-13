@@ -94,6 +94,7 @@ form.Actions div.value > textarea {
 <script type="text/javascript" src="js/jquery-ui-1.8.22.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-json/jquery.json-2.2.js"></script>
 <script type="text/javascript" src="js/jquery-validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/cockatoo-dialog.js"></script>
 <script type="text/javascript" src="js/cockatoo-cms.js"></script>
 <script type="text/javascript" src="js/cockatoo-validator.js"></script>
 <script type="text/javascript">
