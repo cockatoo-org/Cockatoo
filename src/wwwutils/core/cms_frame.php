@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="css/redmond/jquery-ui-1.8.22.custom.css" type="text/css" media="all" />
 <link rel="stylesheet" href="css/cockatoo-cms.css" type="text/css" media="all" />
 
-<style type="text/css"><!--
+<style type="text/css">
 #co-frame {
   font-size: 12px;
   color:#808080;
@@ -56,7 +56,7 @@ div.co-Widget > h3 {
   color : #808080;
 }
 
-div.co-Widget > h3 > span {
+div.co-Widget > h3 > spawn {
   color: #FFFFFF;
   float:right;
   cursor: pointer;
@@ -282,7 +282,7 @@ div.co-Tab > div.co-Wbody > div.co-Widget.co-TabChild a:hover {
   min-height: 0px;
 }
 
-#co-toolbar div.co-Widget > h3 > span {
+#co-toolbar div.co-Widget > h3 > spawn {
   visibility: hidden;
 }
 
@@ -318,42 +318,14 @@ div.co-Wbody[over="true"] {
   border: 2px solid #A00000;
 }
 
-#ctrl  {
-  clear: both;
-}
-#shortcut-help  {
-  float : left;
-  vertical-align:bottom;
-  margin: 0 0 0 600px;
-}
-#shortcut-help > a  {
-  text-decoration: underline;
-  color: blue;
-}
-#shortcut-help > div.shortcut  {
-  display: none;
-}
-#shortcut-help:hover > div.shortcut  {
-  display: block;
-  position: fixed;
-  overflow: visible;
-  z-index:99999;
-  text-align: left;
-  border: solid 1px #4444FF;
-  border-radius: 4px;
-  background-color: #ffffff;
-}
-div.co-Widget.cursor {
-  border: 3px solid #EC0000;
-}
---></style>
+</style>
 
 <title>TITLE</title>
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.22.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-json/jquery.json-2.2.js"></script>
 <script type="text/javascript" src="js/jquery-validate/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/cockatoo-dialog.js"></script>
+<script type="text/javascript" src="js/cockatoo-cms.js"></script>
 <script type="text/javascript" src="js/cockatoo-validator.js"></script>
 
 <script language="javascript">
@@ -405,25 +377,14 @@ $(function () {
       $(this).next().slideToggle();
     });
   
-    $("span.del").click(function (ev) {
-      var my = $(this).parents('div.co-Widget:first');
-      my.appendTo($('#co-toolbar > div.co-Trash > div.co-Wbody'));
+    $("spawn.del").click(function (ev) {
+      $(this).parent().parent().appendTo($('#co-toolbar > div.co-Trash > div.co-Wbody'));
     });
-    $("span.up").click(function (ev) {
-      var my = $(this).parents('div.co-Widget:first');
-      my.insertBefore(my.prev());
+    $("spawn.up").click(function (ev) {
+      $(this).parent().parent().insertBefore($(this).parent().parent().prev());
     });
-    $("span.down").click(function (ev) {
-      var my = $(this).parents('div.co-Widget:first');
-      my.insertAfter(my.next());
-    });
-    $("span.prev").click(function (ev) {
-      var my = $(this).parents('div.co-Widget:first');
-      my.insertBefore(my.parents('div.co-Widget:first'));
-    });
-    $("span.next").click(function (ev) {
-      var my = $(this).parents('div.co-Widget:first');
-      my.appendTo(my.next().find('div.co-Wbody:first'));
+    $("spawn.down").click(function (ev) {
+      $(this).parent().parent().insertAfter($(this).parent().parent().next());
     });
 
   function widget_json(widget){
@@ -733,129 +694,23 @@ $(function () {
     });
   }
 
-  function cur_select(cur,nxt){
-    if ( nxt.length == 1 ) {
-      cur.removeClass('cursor');
-      nxt.addClass('cursor');
-      return true;
-    }
-    return false;
-  }
-  function cur_down() {
-    var cur  = $('div.co-Widget.cursor');
-    var nxt = cur.nextAll('div.co-Widget:first');
-    return cur_select(cur,nxt);
-  }
-  function cur_up() {
-    var cur  = $('div.co-Widget.cursor');
-    var nxt = cur.prevAll('div.co-Widget:first');
-    return cur_select(cur,nxt);
-  }
-  function cur_prev() {
-    var cur  = $('div.co-Widget.cursor');
-    var nxt = cur.parents('div.co-Widget:first');
-    return cur_select(cur,nxt);
-  }
-  function cur_next() {
-    var cur  = $('div.co-Widget.cursor');
-    var nxt = cur.find('div.co-Widget:first');
-    return cur_select(cur,nxt);
-  }
-  function cur_space() {
-    var cur  = $('div.co-Widget.cursor').dblclick();
-  }
-  function cur_move_up() {
-    var cur  = $('div.co-Widget.cursor').find("span.up").click();
-  }
-  function cur_move_down() {
-    var cur  = $('div.co-Widget.cursor').find("span.down").click();
-  }
-  function cur_move_prev() {
-    var cur  = $('div.co-Widget.cursor').find("span.prev").click();
-  }
-  function cur_move_next() {
-    var cur  = $('div.co-Widget.cursor').find("span.next").click();
-  }
-  function cur_del() {
-    var cur  = $('div.co-Widget.cursor');
-    if ( cur_prev() ) {
-      cur.find("span.del").click();
-    }
-  }
-  function cur_update() {
-  }
-  $(window).keydown(function(e){
-      if ( e.ctrlKey == true ) {
-        if ( e.shiftKey == true ) {
-          if       ( e.which == 40 ) { // down
-            cur_move_down();
-          }else if ( e.which == 38 ) { // up
-            cur_move_up();
-          }else if ( e.which == 37 ) { // left
-            cur_move_prev();
-          }else if ( e.which == 39 ) { // right
-            cur_move_next();
-          }else if ( e.which == 68 ) { // d
-            cur_del();
-          }
-        }else{
-          if       ( e.which == 40 ) { // down
-            cur_down();
-          }else if ( e.which == 38 ) { // up
-            cur_up();
-          }else if ( e.which == 37 ) { // left
-            cur_prev();
-          }else if ( e.which == 39 ) { // right
-            cur_next();
-          }else if ( e.which == 32 ) { // space
-            cur_space();
-          }else if ( e.which == 65 ) { // a
-            cur_add();
-          }
-        }
-				return false;
-      }
-      return true;
-    });
-  function shortcut(){
-    node = $('<div class="shortcut"></div>');
-    node.append('<table><tbody></tbody></table>');
-    node.find('tbody').append('<tr><th>Shortcut</th><th>Effect</th></tr>')
-      .append('<tr><th>Ctrl-[SPACE]</th><td>Click current component</td></tr>')
-      .append('<tr><th>Ctrl-[UP]</th><td>Move CURSOR forcus to upward</td></tr>')
-      .append('<tr><th>Ctrl-[DOWN]</th><td>Move CURSOR forcus to downward</td></tr>')
-      .append('<tr><th>Ctrl-[RIGHT]</th><td>Move CURSOR forcus to child</td></tr>')
-      .append('<tr><th>Ctrl-[LEFT]</th><td>Move CURSOR forcus to parent</td></tr>')
-      .append('<tr><th>Ctrl-Shift-[DOWN]</th><td>Move COMPONENT to downward</td></tr>')
-      .append('<tr><th>Ctrl-Shift-[UP]</th><td>Move COMPONENT to upward</td></tr>')
-      .append('<tr><th>Ctrl-Shift-[RIGHT]</th><td>Move COMPONENT into next component</td></tr>')
-      .append('<tr><th>Ctrl-Shift-[LEFT]</th><td>Move COMPONENT to forward of parent component</td></tr>')
-      .append('<tr><th>Ctrl-Shift-d</th><td>Delete COMPONENT</td></tr>')
-    node.hover(null,function(){
-//	$(this).empty();
-      });
-    $('#shortcut-help').append(node);
-    $('#co-main > div.co-Widget').addClass('cursor');
-  }
-  shortcut();
-  });
+});
 -->
 </script>
 </head>
 
 <body id="co-frame">
-  <b class="message"></b><br>
-  <?php
-  if ( $LAYOUT ) {
-    print "$SERVICE/(layout)$LAYOUT<br>";
-  }else{
-    print "$SERVICE/$PATH<br>";
-  }
+<b class="message"></b><br>
+<?php
+if ( $LAYOUT ) {
+  print "$SERVICE/(layout)$LAYOUT<br>";
+}else{
+  print "$SERVICE/$PATH<br>";
+}
 print "$TEMPLATE<br>";
 
 ?>
-  <div id="shortcut-help"><a>shourtcut help</a></div>
-  <div id="ctrl">
+  <div>
    <input id="fix" type="submit" value="fix" />
    <!-- 
    <input id="preview" type="submit" value="preview" />
