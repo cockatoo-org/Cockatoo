@@ -250,7 +250,7 @@ class ContentDrawer {
     // $this->session[Def::SESSION_KEY_FILES]  = $files;
     $this->session[Def::SESSION_KEY_TEMPLATE] = $this->template;
     $this->session[Def::SESSION_KEY_EXP]    = $exp;
-
+    $this->session[Def::SESSION_KEY_CORE]    = $this->core;
     // Save
     setSession($this->sessionID,$this->service,$this->session);
   }
@@ -550,6 +550,14 @@ class ContentDrawer {
     }
     return $this->findKey($key,$len,$this->session,Def::CS_SESSION);
   }
+
+  protected function encodeResultsCB(&$a,&$b){
+    if ( strncmp('@',$b,1) === 0 ) {
+      // Do nothing
+    }else{
+      $a = htmlspecialchars($a,\ENT_QUOTES);
+    }
+  }
   public function drawJson() {
     $data = array();
     $template = $this->widget->drawWalk();
@@ -558,8 +566,11 @@ class ContentDrawer {
       if ( preg_match('@^\s*$@',$key,$matches) === 0 ) {
         if ( $name === null or $name === '' ){
           $data = $this->findResults($key,strlen($key));
+          array_walk_recursive($data,array($this,encodeResultsCB));
         } else {
           $data[$name] = $this->findResults($key,strlen($key));
+          array_walk_recursive($data[$name],array($this,encodeResultsCB));
+
         }
       }
     }

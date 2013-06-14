@@ -2,9 +2,11 @@
 namespace Cockatoo;
 
 class PageParser {
-  public function __construct(&$page,&$lines){
-    $this->page  = &$page;
-    $this->lines = &$lines;
+  public function __construct($basepath,$imgpath,$page,&$lines){
+    $this->basepath  = $basepath;
+    $this->imgpath  = $imgpath;
+    $this->page  = $page;
+    $this->lines = $lines;
     $this->headers;
   }
   public function parse() {
@@ -211,7 +213,7 @@ class PageParser {
     for(;;){
       if ( preg_match('@^([^\[]*)\[(#?)\[([^\]|]+)((?:\|[^\]]+)?)\]\](.*)@', $text , $matches ) !== 0 ) {
         // A   => [[<text>|<link or url>]]
-        $target = ($matches[2]==='#')?'_blank':'self';
+        $target = ($matches[2]==='#')?'_blank':'_self';
         $body = array_merge($body,$this->parse_inner($matches[1]));
         $text = (($matches[4])?ltrim($matches[4],'|'):$matches[3]);
         $children = $this->parse_inner($text);
@@ -220,7 +222,7 @@ class PageParser {
         }elseif(preg_match('@^#@', $matches[3] , $matchdummy ) !== 0 ) {
           $body [] = self::tag('a',array('target' => $target , 'href' => $matches[3]),$children);
         }else{
-          $body [] = self::tag('a',array('target' => $target , 'href' => '/mongo/' . $matches[3]),$children);
+          $body [] = self::tag('a',array('target' => $target , 'href' => $this->basepath . '/' . $matches[3]),$children);
         }
         $text = $matches[5];
         next;
@@ -248,7 +250,7 @@ class PageParser {
           }
           $body [] = self::tag('a',array('href' => $href),array(self::tag('img',$attr)));
         }else {
-          $attr['src'] = '/_s_/mongo/page/'.$this->page.'/'.$matches[1];
+          $attr['src'] = $this->imgpath.'/'.$this->page.'/'.$matches[1];
           if ( ! $href ) {
             $href = $attr['src'];
           }

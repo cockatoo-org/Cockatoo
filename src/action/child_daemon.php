@@ -90,7 +90,7 @@ class ActionDaemon {
             continue;
           }
           $context = beak_decode($req);
-          $this->currentAction->set($context[0],$context[1]);
+          $this->currentAction->prepare($context[0],$context[1]);
           $ret = $this->currentAction->run();
           $this->zmqSockData->send(beak_encode($ret));
           $this->currentAction->postRun();

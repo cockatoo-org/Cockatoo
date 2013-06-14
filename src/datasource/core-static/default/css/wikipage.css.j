@@ -1,5 +1,5 @@
 {
-"etag":"\"e18e351e-31d9-036a-dd1d47c284dd35fd\"",
+"etag":"\"efb8e391-19d0-7c8d-7d2d4326dbb3187d\"",
 "type":"text/css",
 "exp":"60",
 "desc":"",
@@ -238,6 +238,8 @@ div.wikipage b.b9 { \r
 \r
 div.wikipage a {\r
   text-decoration: underline;\r
+  font-weight:600;\r
+  padding: 0 3px;\r
 }\r
 div.wikipage a[name] {\r
    color: #4c3a2c;\r

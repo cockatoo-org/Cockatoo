@@ -134,6 +134,7 @@ class Def {
   const  SESSION_KEY_EXP          = '_e';
 //  const  SESSION_KEY_FILES        = '_f';
   const  SESSION_KEY_ERROR        = '_err';
+  const  SESSION_KEY_CORE         = '_C';
 
   const  F_TYPE                   = 't';
   const  F_ERROR                  = 'e';

@@ -13,8 +13,10 @@ require_once(Config::COCKATOO_ROOT.'action/Action.php');
  */
 
 abstract class PageAction extends Action {
+  protected $PAGEDATA = 'page';
   protected $NAMESPACE;
   protected $STORAGE;
+  protected $BASEPATH;
 
   abstract protected function user(&$session);
   abstract protected function name(&$session);
@@ -27,13 +29,13 @@ abstract class PageAction extends Action {
   }
   protected function get_page($page){
     $page = \Cockatoo\path_urlencode($page);
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,'page','/'.$page,\Cockatoo\Beak::M_GET,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$this->PAGEDATA,'/'.$page,\Cockatoo\Beak::M_GET,array(),array());
     $page_data = \Cockatoo\BeakController::beakSimpleQuery($brl);
     return $page_data;
   }
   protected function save_page($page,&$pdata){
     $page = \Cockatoo\path_urlencode($page);
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,'page','/'.$page,\Cockatoo\Beak::M_SET,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$this->PAGEDATA,'/'.$page,\Cockatoo\Beak::M_SET,array(),array());
     $ret = \Cockatoo\BeakController::beakSimpleQuery($brl,$pdata);
     if ( $ret ) {
       return $ret;
@@ -42,7 +44,7 @@ abstract class PageAction extends Action {
   }
   protected function remove_page($page){
     $page = \Cockatoo\path_urlencode($page);
-    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,'page','/'.$page,\Cockatoo\Beak::M_DEL,array(),array());
+    $brl = \Cockatoo\brlgen(\Cockatoo\Def::BP_STORAGE,$this->STORAGE,$this->PAGEDATA,'/'.$page,\Cockatoo\Beak::M_DEL,array(),array());
     $ret = \Cockatoo\BeakController::beakSimpleQuery($brl);
     if ( $ret ) {
       return $ret;
@@ -51,12 +53,10 @@ abstract class PageAction extends Action {
   }
 
   public function proc(){
+    $this->IMGPATH='/_s_/'.$this->STORAGE.'/page';
     try{
-      //list($P,$D,$C,$p,$m,$q,$c) = parse_brl($this->BRL);
-      // 
       $this->setNamespace($this->NAMESPACE);
       $session = $this->getSession();
-
       $user  = $this->user($session);
       $page  = $this->args['P'];
       $name  = $this->args['N'];
@@ -83,7 +83,7 @@ abstract class PageAction extends Action {
       if( $op === 'preview' ) {
         $origin   = $session[Def::SESSION_KEY_POST]['origin'];
         $lines = preg_split("@\r?\n@",$origin);
-        $parser = new PageParser($page,$lines);
+        $parser = new PageParser($this->BASEPATH,$this->IMGPATH,$page,$lines);
         return array( 'page' => 
                       $this->page($page,
                                 $origin,
@@ -95,7 +95,7 @@ abstract class PageAction extends Action {
         }
         $origin   = $session[Def::SESSION_KEY_POST]['origin'];
         $lines = preg_split("@\r?\n@",$origin);
-        $parser = new PageParser($page,$lines);
+        $parser = new PageParser($this->BASEPATH,$this->IMGPATH,$page,$lines);
         $pdata = $this->page($page,
                            $origin,
                            $parser->parse(),
@@ -117,7 +117,7 @@ abstract class PageAction extends Action {
           if ( $pdata ) {
             $pdata['title'] = $new;
             $lines = preg_split("@\r?\n@",$pdata['origin']);
-            $parser = new PageParser($page,$lines);
+            $parser = new PageParser($this->BASEPATH,$this->IMGPATH,$page,$lines);
             $pdata['contents'] = $parser->parse();
             $this->save_page($new,$pdata);
             $this->move_image($new,$page);
@@ -146,7 +146,7 @@ abstract class PageAction extends Action {
         $images = BeakController::beakSimpleQuery($brl);
         $ret = [];
         foreach ( $images as &$fname ) {
-          $ret[substr($fname,strlen($page)+1)] = '/_s_/'.$this->STORAGE.'/page/' . $fname;
+          $ret[substr($fname,strlen($page)+1)] = $this->IMGPATH.'/' . $fname;
         }
         return $ret;
       }elseif( $op === 'fdelete' ) {

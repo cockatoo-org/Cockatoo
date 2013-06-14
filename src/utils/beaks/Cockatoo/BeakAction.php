@@ -149,7 +149,7 @@ class BeakAction extends Beak {
    */
   private function runAction(){
     if ( $this->currentAction ) {
-      $this->currentAction->set($this->arg,$this->hide);
+      $this->currentAction->prepare($this->arg,$this->hide);
       $this->ret = $this->currentAction->run();
       $this->currentAction->postRun();
       $this->currentAction = null;

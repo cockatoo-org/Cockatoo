@@ -73,7 +73,7 @@ abstract class Action {
    *
    * @param String $context  Action context
    */
-  public function set($args,$hide) {
+  public function prepare($args,$hide) {
     $this->sessionID = $hide[Def::AC_SESSION_ID];
     $this->service   = $hide[Def::AC_SERVICE];
     $this->args      = $args;
@@ -220,29 +220,29 @@ abstract class Action {
   protected function proc() {
     $method  = $this->get_method();
     if     ( strcmp($method,Beak::M_GET) === 0 ) {
-      return $this->getQuery();
+      return $this->get();
     }elseif( strcmp($method,Beak::M_GET_ARRAY) === 0 ) {
-      return $this->getaQuery();
+      return $this->getA();
     }elseif( strcmp($method,Beak::M_GET_RANGE) === 0 ) {
-      return $this->getrQuery();
+      return $this->getR();
     }elseif( strcmp($method,Beak::M_SET) === 0 ) {
-      return $this->setQuery();
+      return $this->set();
     }elseif( strcmp($method,Beak::M_SET_ARRAY) === 0 ) {
-      return $this->setaQuery();
+      return $this->setA();
     }elseif( strcmp($method,Beak::M_COL_LIST) === 0 ) {
-      return $this->listColQuery();
+      return $this->cols();
     }elseif( strcmp($method,Beak::M_KEY_LIST) === 0 ) {
-      return $this->listKeyQuery();
+      return $this->keys();
     }elseif( strcmp($method,Beak::M_CREATE_COL) === 0 ) {
-      return $this->createColQuery();
+      return $this->ccol();
     }elseif( strcmp($method,Beak::M_DEL) === 0 ) {
-      return $this->delQuery();
+      return $this->del();
     }elseif( strcmp($method,Beak::M_DEL_ARRAY) === 0 ) {
-      return $this->delaQuery();
+      return $this->delA();
     }elseif( strcmp($method,Beak::M_MV_COL) === 0 ) {
-      return $this->mvColQuery();
+      return $this->mcol();
     }elseif( strcmp($method,Beak::M_SYSTEM) === 0 ) {
-      return $this->sysQuery();
+      return $this->sys();
     }
     throw new \Exception('Unsupported BRL Method ! :' . $this->BRL);
   }
@@ -256,73 +256,73 @@ abstract class Action {
   /**
    * 
    */
-  public function createColQuery(){
+  public function ccol(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    * 
    */
-  public function listKeyQuery(){
+  public function keys(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    * 
    */
-  public function listColQuery(){
+  public function cols(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    * 
    */
-  public function setQuery(){
+  public function set(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    * 
    */
-  public function setaQuery(){
+  public function setA(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    * 
    */
-  public function getaQuery(){
+  public function getA(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    * 
    */
-  public function getrQuery(){
+  public function getR(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    * 
    */
-  public function getQuery(){
+  public function get(){
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    *
    */
-  public function delQuery() {
+  public function del() {
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    *
    */
-  public function delaQuery() {
+  public function delA() {
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    *
    */
-  public function mvColQuery() {
+  public function mcol() {
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
   /**
    *
    */
-  public function sysQuery() {
+  public function sys() {
     throw new \Exception('Not implemented ! :' . $this->BRL);
   }
 }

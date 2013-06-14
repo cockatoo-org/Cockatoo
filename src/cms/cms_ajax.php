@@ -155,9 +155,11 @@ try {
       $contents .= " * $CONTENT_DRAWER->preAction\n";
       foreach ( $CONTENT_DRAWER->componentDatas as $b => $c ) {
         $contents .= " - $b\n";
-        foreach ( $c[Def::K_COMPONENT_ACTION] as $a ) {
-          if ( $a ) {
-            $contents .= "      $a\n";
+        if ( $c[Def::K_COMPONENT_ACTION] ){
+          foreach ( $c[Def::K_COMPONENT_ACTION] as $a ) {
+            if ( $a ) {
+              $contents .= "      $a\n";
+            }
           }
         }
       }
