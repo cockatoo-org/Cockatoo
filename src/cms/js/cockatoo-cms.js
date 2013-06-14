@@ -325,6 +325,7 @@
 						var re = /(\S+\/)([^\/]+\/?)$/;
 						for(;;){
 							if ( p in ndata ) {
+								ndata[p].dc += ' P';
 								break;
 							}
 							if ( ! p || p.match(/:\/\/[^\/]+\/$/) ) {
@@ -332,13 +333,13 @@
 								ndata[p] = { dc : 'P /' , c : clazz , i : d , p : p };
 								break;
 							}
-							var m = p.match(re);
 							if ( ndata[p] ) {
 								ndata[p].dc = ndata[p].dc + ' P';
 								break;
 							}
 //            $('html').append(p+'<br>');
 							nkeys.push(p);
+							var m = p.match(re);
 							if ( m ) {
 //		ndata[p] = { dc : ((d==='-')?'P ':'') + m[1] , c : clazz , i : d , p : p , u: m[1] };
 								ndata[p] = { dc : ((d==='-')?'P ':'') , c : clazz , i : d , p : p , u: m[1] };
@@ -348,6 +349,8 @@
 								continue;
 							}else{
 		// Reserve code... 
+								if ( ndata[p] ) {
+								}
 								ndata[p] = { dc : (d==='-')?'/ P':'/' , c : clazz , i : d , p : p};
 							}
 							break;

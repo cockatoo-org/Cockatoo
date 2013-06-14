@@ -570,6 +570,7 @@ function setSC($flg,$rev,$service_id,$template_id,$static_id,$type,$expires,$bin
     throw new \Exception('Cannot use blank-charactor as STATIC : ' . $static_id);
   }
   $brl = brlgen(Def::BP_STATIC,$service_id,$template_id,$static_id,Beak::M_GET);
+
   $static_content = BeakController::beakSimpleQuery($brl);
   if ( ! $flg and $static_content ) {
     throw new \Exception('Static already exist ! : ' . $static_id);

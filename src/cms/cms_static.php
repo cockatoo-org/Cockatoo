@@ -130,7 +130,7 @@ $(function () {
     }},
     form : {
       rev        : { label: '' , type : 'hidden' },
-      template_id: { label: '' , type : 'hidden' },
+      template_id: { label: '' , type : 'hidden' , def : 'default'},
       static_id  : { label: '' , type : 'hidden' },
       brl        : { label: 'Brl' , type : 'text'},
       name       : { label: 'Name' , type : 'text'},
