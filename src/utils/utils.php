@@ -32,6 +32,9 @@ function diffutime($t1,$t2) {
 function path_urlencode ( $str ) {
   return implode("/", array_map("rawurlencode", explode("/", $str)));
 }
+function path_urldecode ( $str ) {
+  return implode("/", array_map("rawurldecode", explode("/", $str)));
+}
 
 function http($url,$method = 'GET', $postfields = NULL) {
     $http_info = array();
