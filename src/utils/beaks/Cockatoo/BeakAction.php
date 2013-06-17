@@ -41,7 +41,8 @@ class BeakAction extends Beak {
     if ( Config::Mode === Def::MODE_DEBUG or count($locations) > 0 ) {
       try {
         $clazz = $this->collection.'\\'.$this->path;
-        $this->currentAction = new $clazz($this->brl);
+        $this->currentAction = new $clazz($brl,$scheme,$domain,$collection,$path,$method,$queries,$comments);
+
       }catch(\Exception $e){
         Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : ' . $this->brl . ' , ' . $e->getMessage(),$e);
       }

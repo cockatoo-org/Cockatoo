@@ -43,30 +43,24 @@ abstract class Action {
    *
    * @param String $brl  Action identifier
    */
-  public function __construct($brl){
+  public function __construct($brl,$P,$D,$C,$p,$m,$q,$c){
     $this->BRL = $brl;
-  }
-
-  private function parse_brl(){
-    list($P,$D,$C,$p,$m,$q,$c) = parse_brl($this->BRL);
     $this->method = $m;
     $this->queries = $q;
     $this->comments = $c;
   }
-  public function get_method(){
-    if ( $this->method === null ) {
-      $this->parse_brl();
-    }
+
+  public function getMethod(){
     return $this->method;
   }
-  public function get_queries(){
-    if ( $this->queries === null ) {
-      $this->parse_brl();
-    }
+  public function getQueries(){
     if ( is_string($this->queries) ) {
       $this->queries = parse_brl_query($this->queries);
     }
     return $this->queries;
+  }
+  protected function getArgs(){
+    return $this->args;
   }
   /**
    * Prepare process
@@ -218,7 +212,7 @@ abstract class Action {
    *
    */
   protected function proc() {
-    $method  = $this->get_method();
+    $method  = $this->getMethod();
     if     ( strcmp($method,Beak::M_GET) === 0 ) {
       return $this->get();
     }elseif( strcmp($method,Beak::M_GET_ARRAY) === 0 ) {

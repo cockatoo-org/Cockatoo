@@ -85,7 +85,7 @@ class ActionDaemon {
               list($P,$D,$C,$p,$m,$q,$c) = parse_brl($req);
               $clazz = $C.'\\'.ltrim($p,'/');
               Log::trace(__CLASS__ . '::' . __FUNCTION__ . ' : Instantiate ' . $clazz);
-              $this->currentAction = new $clazz($req);
+              $this->currentAction = new $clazz($req,$P,$D,$C,$p,$m,$q,$c);
             }
             continue;
           }
