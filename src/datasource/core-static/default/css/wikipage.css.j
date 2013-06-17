@@ -1,5 +1,5 @@
 {
-"etag":"\"efb8e391-19d0-7c8d-7d2d4326dbb3187d\"",
+"etag":"\"8ab9cc74-993b-f3e0-2665bee56cb4facc\"",
 "type":"text/css",
 "exp":"60",
 "desc":"",
@@ -266,9 +266,32 @@ div.wikiedit {\r
   display: none;\r
 }\r
 div.wikiedit textarea[name=\"origin\"] {\r
-  width: 800px;\r
+  width: 100%;\r
   height:600px;\r
 }\r
+div.wikiedit div.normal{\r
+  float:left;\r
+  margin-left: 100px;\r
+}\r
+div.wikiedit div.danger{\r
+  float:right;\r
+  margin-right: 50px;\r
+}\r
+div.wikiedit div.danger a.rename {\r
+  cursor:pointer;\r
+}\r
+div.wikiedit div.danger input[name=\"rename\"],\r
+div.wikiedit div.danger input[value=\"rename\"] {\r
+  display: none;\r
+}\r
+form.wikiimageaction {\r
+  clear: both;\r
+  padding: 5px;\r
+  margin: 5px;\r
+  border: 2px solid;\r
+  border-radius: 16px;\r
+}\r
+\r
 div.wikieditimages table {\r
   text-spacing: 0;\r
   text-align: left;\r

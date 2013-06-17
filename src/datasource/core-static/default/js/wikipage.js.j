@@ -1,5 +1,5 @@
 {
-"etag":"\"2eeca9af-2d39-a749-a0293c0f2e3b25b3\"",
+"etag":"\"70357f45-faba-56ab-23d81ba035814997\"",
 "type":"text/javascript",
 "exp":"60",
 "desc":"",
@@ -18,9 +18,7 @@
   // EDIT\r
   $('div.wikieditlink').click(function(){\r
     $(this).next('div.wikiedit').slideDown();\r
-    image_list();\r
   });\r
-\r
 \r
   function page(obj){\r
     var ret = '';\r
@@ -41,8 +39,17 @@
     }\r
     return ret;\r
   }\r
+  function error(target,msg) {\r
+        $('<span>'+msg+'</span>')\r
+            .css('color','red')\r
+            .css('font-weight','600')\r
+            .css('padding-right','50px')\r
+            .prependTo(target)\r
+            .fadeIn(2000,function(){$(this).fadeOut(5000)});\r
+  }\r
   $('form.wikieditaction').each(function(){\r
     var editAction = $(this);\r
+    var basePath = $(this).attr('base');\r
     var url = editAction.attr('action');\r
       // SAVE\r
     editAction.find('input[value=\"save\"]').click(function(){\r
@@ -56,6 +63,14 @@
 \t    origin: editAction.find('textarea[name=\"origin\"]').val()\r
 \t  },\r
 \t  success: function(ret,st,xhr){\r
+\t    if ( ret.e ) {\r
+\t      error(editAction.find('div.danger'),ret.e);\r
+\t      return;\r
+            }\r
+\t    if ( ret.r ) {\r
+\t      window.location=basePath + ret.r;\r
+\t      return;\r
+\t    }\r
 \t    window.location=window.location.pathname;\r
 \t  }\r
 \t});\r
@@ -73,7 +88,70 @@
 \t    origin: editAction.find('textarea[name=\"origin\"]').val()\r
 \t  },\r
 \t  success: function(ret,st,xhr){\r
+\t    if ( ret.e ) {\r
+\t      error(editAction.find('div.danger'),ret.e);\r
+\t      return;\r
+            }\r
+\t    if ( ret.r ) {\r
+\t      window.location=basePath + ret.r;\r
+\t      return;\r
+\t    }\r
 \t    $('#'+editAction.attr('for')).html(page(ret.page.contents));\r
+\t  }\r
+\t});\r
+    });\r
+    editAction.find('a.rename').click(function(){\r
+      editAction.find('input[name=\"rename\"],input[value=\"rename\"]').show();\r
+    });\r
+    editAction.find('input[value=\"rename\"]').click(function(){\r
+      var newpagename=$('input[name=\"rename\"]').val();\r
+      if ( ! newpagename ) {\r
+        error(editAction.find('div.danger'),'Input new pagename');\r
+        return;\r
+      }\r
+ \t$.ajax({\r
+\t  url: url,\r
+\t  type: 'POST',\r
+\t  dataType: 'JSON',\r
+\t  data: {\r
+\t    op: 'move',\r
+\t    page: editAction.attr('pagename'),\r
+            new: newpagename\r
+\t  },\r
+\t  success: function(ret,st,xhr){\r
+\t    if ( ret.e ) {\r
+\t      error(editAction.find('div.danger'),ret.e);\r
+\t      return;\r
+            }\r
+\t    if ( ret.r ) {\r
+\t      window.location=basePath + ret.r;\r
+\t      return;\r
+\t    }\r
+\t  }\r
+      });\r
+  });\r
+    // REMOVE\r
+    editAction.find('input[value=\"remove\"]').click(function(){\r
+\t$.ajax({\r
+\t  url: url,\r
+\t  type: 'POST',\r
+\t  dataType: 'JSON',\r
+\t  data: {\r
+\t    op: 'remove',\r
+\t    page: editAction.attr('pagename')\r
+\t  },\r
+\t  success: function(ret,st,xhr){\r
+\t    if ( ret.e ) {\r
+\t      error(editAction.find('div.danger'),ret.e);\r
+\t      return;\r
+            }\r
+console.log(ret);\r
+\t    if ( ret.r ) {\r
+\t      window.location=basePath + ret.r;\r
+\t      return;\r
+\t    }\r
+console.log(basePath);\r
+\t    window.location=basePath;\r
 \t  }\r
 \t});\r
     });  \r
@@ -84,7 +162,6 @@
     var images = imageAction.find('div.wikieditimages');\r
     var url = imageAction.attr('action');\r
     function image_list () {\r
-      \r
 \t$.ajax({\r
 \t  url: url,\r
 \t  type: 'POST',\r
@@ -124,6 +201,10 @@
 \t\t    filename: $(this).attr('name')\r
 \t\t  },\r
 \t\t  success: function(ret,st,xhr){\r
+\t\t    if ( ret.e ) {\r
+\t\t      error(editAction.find('div.danger'),ret.e);\r
+\t\t      return;\r
+\t\t    }\r
 \t\t    image_list();\r
 \t\t  }\r
 \t\t})\r
@@ -143,6 +224,7 @@
 \t\t\t\t\t\t\t  image_list();\r
 \t\t\t\t\t\t\t}, '');\r
     });\r
+    image_list ()\r
   });\r
 });",
 "_u":"js/wikipage.js"

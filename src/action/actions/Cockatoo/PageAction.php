@@ -52,6 +52,26 @@ abstract class PageAction extends Action {
     throw new \Exception('Cannot save it ! Probably storage error...');
   }
 
+  private function move_image($new,$page){
+    $olds = array();
+    $news = array();
+    $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, $page, '', Beak::M_KEY_LIST);
+    $images = BeakController::beakSimpleQuery($brl);
+    foreach ( $images as $name ) {
+      $old = brlgen(Def::BP_STATIC, $this->STORAGE, $page, $name, Beak::M_DEL);
+      $olds []= $old;
+      $obrl  = brlgen(Def::BP_STATIC, $this->STORAGE, $page, $name, Beak::M_GET);
+      $oret = BeakController::beakQuery(array($obrl));
+      if ( $oret[$obrl] ) {
+        $nset = brlgen(Def::BP_STATIC, $this->STORAGE, $new, $name, Beak::M_SET);
+        $news []= array($nset,$oret[$obrl]);
+      }
+    }
+    $ret = BeakController::beakQuery($news);
+    $ret = BeakController::beakQuery($olds);
+  }
+
+
   public function proc(){
     $this->IMGPATH='/_s_/'.$this->STORAGE.'/page';
     try{
@@ -79,7 +99,7 @@ abstract class PageAction extends Action {
                                 $contents,
                                 $user));
       }
-      $page  = path_urlencode($session[Def::SESSION_KEY_POST]['page']);
+      $page  = $session[Def::SESSION_KEY_POST]['page'];
       if( $op === 'preview' ) {
         $origin   = $session[Def::SESSION_KEY_POST]['origin'];
         $lines = preg_split("@\r?\n@",$origin);
@@ -105,82 +125,112 @@ abstract class PageAction extends Action {
         $pdata['_time'] = time();
         $pdata['_timestr'] = date('Y-m-d',$pdata['_time']);
         $ret = $this->save_page($page,$pdata);
-        // $this->setMovedTemporary('/mongo/'.$page);
-        return array('r' => $ret);
+        return array('s' => $ret);
+      }elseif( $op === 'remove' ) {
+        if ( ! $this->isWritable($session) ) {
+          throw new \Exception('You are not admin.');
+        }
+        $pdata = $this->get_page($page);
+        if ( ! $pdata ) {
+          return array('e' => 'Invalid origin page');
+        }
+        $this->remove_page($page);
+        $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $page, Beak::M_KEY_LIST);
+        $images = BeakController::beakSimpleQuery($brl);
+        foreach ( $images as $name ) {
+          $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $name, Beak::M_DEL);
+          BeakController::beakSimpleQuery($brl);
+        }
+        return array('s' => true);
       }elseif( $op === 'move' ) {
         if ( ! $this->isWritable($session) ) {
           throw new \Exception('You are not admin.');
         }
         $new = $session[Def::SESSION_KEY_POST]['new'];
-        if ( $new ) {
-          $pdata = $this->get_page($page);
-          if ( $pdata ) {
-            $pdata['title'] = $new;
-            $lines = preg_split("@\r?\n@",$pdata['origin']);
-            $parser = new PageParser($this->BASEPATH,$this->IMGPATH,$page,$lines);
-            $pdata['contents'] = $parser->parse();
-            $this->save_page($new,$pdata);
-            $this->move_image($new,$page);
-            $this->remove_page($page);
-//            $this->setMovedTemporary('/mongo/'.$new);
-            return array();
-          }
-//          $this->setMovedTemporary('/mongo/main');
-        }else{
-//          $this->setMovedTemporary('/mongo/'.$page);
+        if ( ! $new ) {
+          return array('e' => 'Not specified');
         }
-        return array();
+        if ( $new === $page ) {
+          return array('e' => 'Specified orgin name');
+        }
+        $newpage = $this->get_page($new);
+        if ( $newpage ) {
+          return array('e' => 'Specified page was exist');
+        }
+        $pdata = $this->get_page($page);
+        if ( ! $pdata ) {
+          return array('e' => 'Invalid origin page');
+        }
+        $pdata['title'] = $new;
+        $lines = preg_split("@\r?\n@",$pdata['origin']);
+        $parser = new PageParser($this->BASEPATH,$this->IMGPATH,$new,$lines);
+        $pdata['contents'] = $parser->parse();
+        $this->save_page($new,$pdata);
+        
+        $epage = path_urlencode($page);
+        $enew  = path_urlencode($new);
+        
+        $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $epage . '/', Beak::M_KEY_LIST);
+        $images = BeakController::beakSimpleQuery($brl);
+        if ( $images ) {
+          foreach ( $images as &$fname ) {
+            // GET image from old doc
+            $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $fname, Beak::M_GET);
+            $img = BeakController::beakSimpleQuery($brl);
+            // SET image to new doc
+            $newname = $enew .'/'.path_urlencode(substr($fname,strlen($epage)+1));
+            $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $newname, Beak::M_SET);
+            $ret = BeakController::beakSimpleQuery($brl,$img);
+            // DEL image from old doc
+            $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $fname, Beak::M_DEL);
+            $img = BeakController::beakSimpleQuery($brl);
+          }
+        }
+        $this->remove_page($page);
+        return array('r' => $new);
       }elseif( $op === 'fupload' ) {
+        if ( ! $this->isWritable($session) ) {
+          throw new \Exception('You are not admin.');
+        }
         $image = $session[Def::SESSION_KEY_POST]['filename'];
         if ( ! $image ) {
-          return array('r' => False);
+          return array('r' => 'Invalid image');
         }
-        $fname = $page .'/'.path_urlencode($image['n']);
+        $epage  = path_urlencode($page);
+        $fname = $epage .'/'.path_urlencode($image['n']);
         $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $fname, null);
         $type = $image[Def::F_TYPE];
         $content = &$image[Def::F_CONTENT];
         $ret = StaticContent::save($brl,$type,$this->user,$content);
-        return array('r' => $ret);
+        return array('s' => $ret);
       }elseif( $op === 'flist' ) {
-        $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $page, Beak::M_KEY_LIST);
+        if ( ! $this->isWritable($session) ) {
+          throw new \Exception('You are not admin.');
+        }
+        $epage  = path_urlencode($page);
+        $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $epage .'/', Beak::M_KEY_LIST);
         $images = BeakController::beakSimpleQuery($brl);
         $ret = [];
         foreach ( $images as &$fname ) {
-          $ret[substr($fname,strlen($page)+1)] = $this->IMGPATH.'/' . $fname;
+          $ret[substr($fname,strlen($epage)+1)] = $this->IMGPATH.'/' . $fname;
         }
         return $ret;
       }elseif( $op === 'fdelete' ) {
-        $fname = $page .'/'.$session[Def::SESSION_KEY_POST]['filename'];
+        if ( ! $this->isWritable($session) ) {
+          throw new \Exception('You are not admin.');
+        }
+        $epage  = path_urlencode($page);
+        $fname = $epage .'/'.$session[Def::SESSION_KEY_POST]['filename'];
         $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, 'page', $fname, Beak::M_DEL);
         $ret = BeakController::beakSimpleQuery($brl);
-        return array('r' => $ret);
+        return array('s' => $ret);
       }
     }catch ( \Exception $e ) {
       $s[Def::SESSION_KEY_ERROR] = $e->getMessage();
       $this->updateSession($s);
-//      $this->setMovedTemporary('/mongo/main');
        Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
       return null;
     }
-  }
-  // @@@
-  private function move_image($new,$page){
-    $olds = array();
-    $news = array();
-    $brl =  brlgen(Def::BP_STATIC, $this->STORAGE, $page, '', Beak::M_KEY_LIST);
-    $images = BeakController::beakSimpleQuery($brl);
-    foreach ( $images as $name ) {
-      $old = brlgen(Def::BP_STATIC, $this->STORAGE, $page, $name, Beak::M_DEL);
-      $olds []= $old;
-      $obrl  = brlgen(Def::BP_STATIC, $this->STORAGE, $page, $name, Beak::M_GET);
-      $oret = BeakController::beakQuery(array($obrl));
-      if ( $oret[$obrl] ) {
-        $nset = brlgen(Def::BP_STATIC, $this->STORAGE, $new, $name, Beak::M_SET);
-        $news []= array($nset,$oret[$obrl]);
-      }
-    }
-    $ret = BeakController::beakQuery($news);
-    $ret = BeakController::beakQuery($olds);
   }
 
   public function postProc(){
