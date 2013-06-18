@@ -100,7 +100,7 @@ class PageParser {
     return $body;
   }
   
-  private function parseContents($flg=0){
+  private function parseContents($subflg=0,$liflg=0){
     $body = array();
     while ( ($line = $this->pop_line()) !== null ) {
       if ( preg_match('@^(\*+)(.*)@', $line , $matches ) !== 0 ) {
@@ -140,28 +140,31 @@ class PageParser {
           // DL DT DD
           $dl = self::tag('dl',array(),array(
                             self::tag('dt',array(),$this->parse_inner($matches[1]))));
-          $dd = self::tag('dd',array(),$this->parse_inner($matches[2]));
-
+          $dd = $this->parse_inner($matches[2]);
           while ( ($line = $this->pop_line()) !== null ) {
             if ( ! $line ) {  // End of DL
-              $dl['children'] []= $dd;
+              $dl['children'] []= self::tag('dd',array(),$dd);
               break;
             }elseif ( preg_match('@^:(.*)@', $line , $matches ) !== 0 ) { // Next DD
-              $dl['children'] []= $dd;
-              $dd = self::tag('dd',array(),$this->parse_inner($matches[1]));
+              $dl['children'] []= self::tag('dd',array(),$dd);
+              $dd = $this->parse_inner($matches[1]);
             }else{
-              $dd['children'] = array_merge($dd['children'],array(self::tag('br')),$this->parse_inner($line));
+              // $dd []= self::tag('br');
+              // $dd = array_merge($dd,$this->parse_inner($line));
+              $this->push_line($line);
+              $dd []= self::tag('text',array(),$this->parseContents(1));
+              $this->pop_line(); // trim empty-line
             }
           }
           $body []= $dl;
         }elseif ( preg_match('@^(-+)(.*)@', $line , $matches ) !== 0 ) {
           //UL
           $n = strlen($matches[1]);
-          if ( $n > $flg ) {
+          if ( $n > $liflg ) {
             $this->push_line($line);
-            $body []= self::tag('ul',array('class'=>'ul'.$flg),$this->parseContents($flg+1));
-          }elseif ( $n === $flg ){
-            $body []= self::tag('li',array('class'=>'ul'.$flg),$this->parse_inner($matches[2]));
+            $body []= self::tag('ul',array('class'=>'ul'.$liflg),$this->parseContents(1,$liflg+1));
+          }elseif ( $n === $liflg ){
+            $body []= self::tag('li',array('class'=>'ul'.$liflg),$this->parse_inner($matches[2]));
           }else{
             $this->push_line($line);
             break;
@@ -169,20 +172,91 @@ class PageParser {
         }elseif ( preg_match('@^(\++)(.*)@', $line , $matches ) !== 0 ) {
           //OL
           $n = strlen($matches[1]);
-          if ( $n > $flg ) {
+          if ( $n > $liflg ) {
             $this->push_line($line);
-            $body []= self::tag('ol',array('class'=>'ol'.$flg),$this->parseContents($flg+1));
-          }elseif ( $n === $flg ){
-            $body []= self::tag('li',array('class'=>'ol'.$flg),$this->parse_inner($matches[2]));
+            $body []= self::tag('ol',array('class'=>'ol'.$liflg),$this->parseContents(1,$liflg+1));
+          }elseif ( $n === $liflg ){
+            $body []= self::tag('li',array('class'=>'ol'.$liflg),$this->parse_inner($matches[2]));
           }else{
             $this->push_line($line);
             break;
           }
-        }elseif ( $flg and ! $line ) {
+        }elseif ( preg_match('@^&tab\(([^\)]+)\)(.*)@', $line , $matches ) !== 0 ) {
+          $brackets = self::parse_brackets($matches[2]);
+          $tb = $matches[2];
+          while ( $brackets[1] ==='' && ($line = $this->pop_line()) !== null ) {
+            $tb .= $line;
+            $brackets = self::parse_brackets($tb);
+          }
+
+          $hs = explode('|',$matches[1]);
+          $bs = explode('|',$brackets[0]);
+          $ncol = sizeof($hs);
+          $nbs  = sizeof($bs);
+          $col = 0;
+          $tr = [];
+          $tbody = [];
+          for( $i = 0; $i < $nbs ; $i++ ) {
+            if ( $col == 0 ) {
+              $tr []= self::tag('th',array('style' => $hs[$i]),$this->parse_inner($bs[$i]));
+            }else{
+              $tr []= self::tag('td',array('style' => $hs[$i]),$this->parse_inner($bs[$i]));
+            }
+            $col++;
+            if ( $col >= $ncol ){
+              $tbody []= self::tag('tr', array(),$tr);              
+              $tr = [];
+              $col = 0;
+            }
+          }
+          $body []= self::tag('table',array('class'=>'tab'),array(self::tag('tbody', array(),$tbody)));
+          $body = array_merge($body,$this->parse_inner($brackets[1]));
+        }elseif ( preg_match('@^&table\(([^\)]+)\)(.*)@', $line , $matches ) !== 0 ) {
+          // TABLE => &table([<inner>],[style][|[<inner>],[px]..]){<inner>[|<inner>..]};
+          $brackets = self::parse_brackets($matches[2]);
+
+          $hs = explode('|',$matches[1]);
+          $ncol = sizeof($hs);
+
+          $th = [];
+          $col = 0;
+          foreach($hs as $h){
+            list($c,$s) = explode(',',$h);
+            $th []= self::tag('th',array('class' => 'th'.$col,'style' => $s),$this->parse_inner($c));
+            $col++;
+          }
+          $thead = self::tag('thead', array(),array(self::tag('tr', array(),$th)));
+
+          $tb = $matches[2];
+          while ( $brackets[1] ==='' && ($line = $this->pop_line()) !== null ) {
+            $tb .= $line;
+            $brackets = self::parse_brackets($tb);
+          }
+          $bs = explode('|',$brackets[0]);
+          $row = 0;
+          $col = 0;
+          $tbody = [];
+          $tr = [];
+          foreach($bs as $b){
+            $tr []= self::tag('td',array('class' => 'td'.$col),$this->parse_inner($b));
+            $col++;
+            if ( $col >= $ncol ){
+              $tbody []= self::tag('tr', array('class' => 'tr'.$row),$tr);              
+              $tr = [];
+              $col = 0;
+              $row++;
+            }
+          }
+          $tbody = self::tag('tbody', array(),$tbody);
+
+          $body []= self::tag('table',array('class'=>'table'),array($thead,$tbody));
+          $body = array_merge($body,$this->parse_inner($brackets[1]));
+        }elseif ( $subflg and ! $line ) {
           $this->push_line($line);
           break;
         }else{
-          $body []= self::tag('text',array(),array_merge($this->parse_inner($line),array(array('tag' => 'br','text' => ''))));
+          $body = array_merge($body,$this->parse_inner($line));
+          $body []= self::tag('br');
         }
       }
     }
@@ -297,6 +371,7 @@ class PageParser {
         // BR =>
         $body [] = self::tag('br');
         $text = $matches[1];
+        next;
       }else{
         $body [] = self::tag('text',array(),$text);
         break;

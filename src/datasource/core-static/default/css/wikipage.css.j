@@ -1,5 +1,5 @@
 {
-"etag":"\"8ab9cc74-993b-f3e0-2665bee56cb4facc\"",
+"etag":"\"719ec583-9361-1072-d17ea9c76cb7fe21\"",
 "type":"text/css",
 "exp":"60",
 "desc":"",
@@ -252,7 +252,41 @@ div.wikipage div.credit {\r
   margin: 5px 0;\r
   display: none;\r
 }\r
+div.wikipage table.tab {\r
+  border-spacing: 0;\r
+  text-align: left;\r
+}\r
+div.wikipage table.table {\r
+  border-spacing: 0;\r
+  border-radius: 8px;\r
+  border-color: #888888;\r
+  padding: 3px;\r
+  border: 1px solid;\r
+  text-align: left;\r
+}\r
+div.wikipage table.table > thead > tr > th.th0 {\r
+  border-left-width: 0;\r
+}\r
+div.wikipage table.table > thead > tr > th {\r
+  padding: 5px 3px 2px 3px;\r
+  border-bottom: 1px solid;\r
+//  border-left: 1px dotted;\r
+  vertical-align: top;\r
+}\r
 \r
+div.wikipage table.table > tbody > tr.tr0 > td {\r
+  border-top-width: 0;\r
+}\r
+\r
+div.wikipage table.table > tbody > tr > td.td0 {\r
+  border-left-width: 0;\r
+}\r
+div.wikipage table.table > tbody > tr > td {\r
+  padding: 0px 3px;\r
+//  border-left: 1px dotted;\r
+  border-top: 1px dotted;\r
+  vertical-align: top;\r
+}\r
 div.wikieditlink {\r
   float: right;\r
   font-size: 0.7em;\r
