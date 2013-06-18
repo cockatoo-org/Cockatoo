@@ -198,9 +198,9 @@ class PageParser {
           $tbody = [];
           for( $i = 0; $i < $nbs ; $i++ ) {
             if ( $col == 0 ) {
-              $tr []= self::tag('th',array('style' => $hs[$i]),$this->parse_inner($bs[$i]));
+              $tr []= self::tag('th',array('style' => $hs[$i]),array(self::tag('span',array(),$this->parse_inner($bs[$i]))));
             }else{
-              $tr []= self::tag('td',array('style' => $hs[$i]),$this->parse_inner($bs[$i]));
+              $tr []= self::tag('td',array('style' => $hs[$i]),array(self::tag('span',array(),$this->parse_inner($bs[$i]))));
             }
             $col++;
             if ( $col >= $ncol ){
@@ -222,7 +222,7 @@ class PageParser {
           $col = 0;
           foreach($hs as $h){
             list($c,$s) = explode(',',$h);
-            $th []= self::tag('th',array('class' => 'th'.$col,'style' => $s),$this->parse_inner($c));
+            $th []= self::tag('th',array('class' => 'th'.$col,'style' => $s),array(self::tag('span',array(),$this->parse_inner($c))));
             $col++;
           }
           $thead = self::tag('thead', array(),array(self::tag('tr', array(),$th)));
@@ -238,7 +238,7 @@ class PageParser {
           $tbody = [];
           $tr = [];
           foreach($bs as $b){
-            $tr []= self::tag('td',array('class' => 'td'.$col),$this->parse_inner($b));
+            $tr []= self::tag('td',array('class' => 'td'.$col),array(self::tag('span',array(),$this->parse_inner($b))));
             $col++;
             if ( $col >= $ncol ){
               $tbody []= self::tag('tr', array('class' => 'tr'.$row),$tr);              

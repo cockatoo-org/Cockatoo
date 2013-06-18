@@ -1,5 +1,5 @@
 {
-"etag":"\"719ec583-9361-1072-d17ea9c76cb7fe21\"",
+"etag":"\"b80a4ca1-753a-dada-6d0b43a235fc602d\"",
 "type":"text/css",
 "exp":"60",
 "desc":"",
@@ -193,12 +193,16 @@ div.wikipage img {\r
   max-width: 100%;\r
 }\r
 \r
+div.wikipage b.b0 { \r
+  font-size:   0.8em;\r
+  font-weight: 400;\r
+}\r
 div.wikipage b.b1 { \r
-  font-size:   0.9em;\r
+  font-size:   0.8em;\r
   font-weight: 600;\r
 }\r
 div.wikipage b.b2 { \r
-  font-size:   0.9em;\r
+  font-size:   1.0em;\r
   font-weight: 400;\r
 }\r
 div.wikipage b.b3 { \r
@@ -206,33 +210,27 @@ div.wikipage b.b3 { \r
   font-weight: 600;\r
 }\r
 div.wikipage b.b4 { \r
-  font-size:   1.0em;\r
-  line-height: 1.1em;\r
+  font-size:   1.2em;\r
   font-weight: 400;\r
 }\r
 div.wikipage b.b5 { \r
   font-size:   1.2em;\r
-  line-height: 1.1em;\r
   font-weight: 600;\r
 }\r
 div.wikipage b.b6 { \r
   font-size:   1.5em;\r
-  line-height: 1.2em;\r
   font-weight: 400;\r
 }\r
 div.wikipage b.b7 { \r
   font-size:   1.5em;\r
-  line-height: 1.2em;\r
   font-weight: 600;\r
 }\r
 div.wikipage b.b8 { \r
-  font-size:   2.0em;\r
-  line-height: 1.3em;\r
+  font-size:   1.8em;\r
   font-weight: 400;\r
 }\r
 div.wikipage b.b9 { \r
-  font-size:   2.0em;\r
-  line-height: 1.3em;\r
+  font-size:   1.8em;\r
   font-weight: 600;\r
 }\r
 \r
@@ -263,6 +261,10 @@ div.wikipage table.table {\r
   padding: 3px;\r
   border: 1px solid;\r
   text-align: left;\r
+}\r
+div.wikipage table.tab > tbody > tr > th,\r
+div.wikipage table.tab > tbody > tr > td {\r
+  vertical-align: top;\r
 }\r
 div.wikipage table.table > thead > tr > th.th0 {\r
   border-left-width: 0;\r
