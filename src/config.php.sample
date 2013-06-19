@@ -1,0 +1,97 @@
+<?php
+namespace Cockatoo;
+class Config extends DefaultConfig {
+  /**
+   * Service MODE
+   *   You should set Def::MODE_NORMAL in service environment.
+   */
+  const Mode           = Def::MODE_DEBUG;
+  /**
+   * The default redirect path that when unhandled error occured.
+   */
+  // const ErrorRedirect  = '/core/default/error';
+
+  /**
+   * CMS acl 
+   */
+  // const CMSAuth       = 'Cockatoo\DefaultCmsAuth';
+
+  /**
+   * API timeout
+   */
+  // const ActionTimeout  = 1000;  // This means 1 sec.
+
+  public static function init () {
+    //--------------------
+    // LOG settings
+    //--------------------
+    // self::$Loglv   = Def::LOGLV_TRACE;
+    // self::$LogDataDump = true;
+    /**
+     * Filename , STDOUT or STDIN
+     */
+    // self::$LogFile = self::COCKATOO_ROOT . '/logs/cockatoo.log';
+
+    //--------------------
+    // Request parser switcher
+    //--------------------
+    /* 
+    self::$RequestParser = array (
+      '/core' => 'Cockatoo\CoreRequestParser'
+      <..ADD path and parser..>
+    );
+    */
+
+    //*****************************************************
+    // For cluster settings 
+    //*****************************************************
+
+    //--------------------
+    // Beak cache settings
+    //--------------------
+    // self::$UseMemcache         = array('127.0.0.1:11211');;
+
+    //--------------------
+    // Beak driver switch
+    //--------------------
+    /*
+    self::$BEAKS = array (
+      Def::BP_CMS      => 'Cockatoo\BeakFile'   ,
+      Def::BP_SESSION  => 'Cockatoo\BeakMemcached'   ,
+      Def::BP_LAYOUT   => 'Cockatoo\BeakMongo'   ,
+      Def::BP_COMPONENT=> 'Cockatoo\BeakMongo'   ,
+      Def::BP_STATIC   => 'Cockatoo\BeakMongo'   ,
+      Def::BP_STORAGE  => 'Cockatoo\BeakMongo'   ,
+      Def::BP_ACTION   => 'Cockatoo\BeakProxy' ,
+      Def::BP_ACTION   => 'Cockatoo\BeakAction' , // action://...
+      null
+      );
+    */
+    // Extension switch
+    /*
+    self::$EXT_BEAKS = array (
+      'action://core-action/'   => 'Cockatoo\BeakAction' ,
+      null
+      );
+    */
+    //--------------------
+    // Beak static locations
+    //--------------------
+    /* 
+    self::$BeakLocation = array (
+      'cms://services-cms/'           => array(''),
+      'layout://core-layout/'         => array('127.0.0.1:27017' => array('replicaSet'=>false)),
+      'component://core-component/'   => array('127.0.0.1:27017' => array('replicaSet'=>false)),
+      'static://core-static/'         => array('127.0.0.1:27017' => array('replicaSet'=>false)),
+      'storage://core-storage/'       => array('127.0.0.1:27017' => array('replicaSet'=>false)),
+      'session://core-session/'       => array('127.0.0.1:11211')
+      );
+    */
+
+    //--------------------
+    // Zookeeper ( dynamic locations )
+    //--------------------
+    // self::$UseZookeeper        = array('127.0.0.1:2181');
+    // self::$ZookeeperCacheFile  = self::COCKATOO_ROOT.'daemon/etc/zoo.json';
+  }
+}

@@ -197,7 +197,7 @@ abstract class DefaultConfig {
   /**
    * The default redirect path that when unhandled error occured.
    */
-  const ErrorRedirect  = '/default/error';
+  const ErrorRedirect  = '/core/default/error';
   /**
    * Path to files
    */
@@ -212,8 +212,8 @@ abstract class DefaultConfig {
   /**
    * Request analizer
    */
-  const RequestParser     = 'Cockatoo\DefaultRequestParser';
-  const TemplateSelector    = 'Cockatoo\DefaultTemplateSelector'; 
+  static $DefaultRequestParser;
+  static $RequestParser;
   /**
    * Beak serializer
    */
@@ -263,7 +263,7 @@ abstract class DefaultConfig {
    */
   static public $Loglv       = Def::LOGLV_INFO;
   static public $LogDataDump = false;
-  static public $LogFile     = 'logs/cockatoo.log';
+  static public $LogFile;
   /**
    * Measure of the zmq socket leak
    */
@@ -274,7 +274,11 @@ abstract class DefaultConfig {
   public static function __init__ () {
     if ( self::$init ) {
       self::$init = false;
-      $conf = get_called_class();
+      self::$LogFile = self::COCKATOO_ROOT . '/logs/cockatoo.log';
+      self::$DefaultRequestParser = 'Cockatoo\DefaultRequestParser';
+      self::$RequestParser = array (
+        '/core' => 'Cockatoo\CoreRequestParser'
+        );
       //--------------------
       // Pre init
       //--------------------
@@ -325,6 +329,7 @@ abstract class DefaultConfig {
       //--------------------
       // Call init
       //--------------------
+      $conf = get_called_class();
       $conf::init();
       //--------------------
       // Post init
