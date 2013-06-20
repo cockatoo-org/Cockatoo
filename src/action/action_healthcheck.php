@@ -160,7 +160,7 @@ Usage:
   action_healthcheck.php <BRL> <FRONT-DSN> <BACK-DSN> <HUP-WAIT>
 
 Example:
-  action_healthcheck.php  action://news-action/ tcp://127.0.0.1:9999  100000000
+  action_healthcheck.php  action://core-action/ tcp://127.0.0.1:9999  100000000
 
 _MSG_;
    print $msg;
