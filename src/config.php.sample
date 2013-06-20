@@ -63,7 +63,7 @@ class Config extends DefaultConfig {
       Def::BP_STATIC   => 'Cockatoo\BeakMongo'   ,
       Def::BP_STORAGE  => 'Cockatoo\BeakMongo'   ,
       Def::BP_ACTION   => 'Cockatoo\BeakProxy' ,
-      Def::BP_ACTION   => 'Cockatoo\BeakAction' , // action://...
+      //Def::BP_ACTION   => 'Cockatoo\BeakAction' , // action://...
       null
       );
     */
