@@ -103,7 +103,7 @@ class ActionController {
   function hup($no){
     $this->hupFlg = true;
   }
-  protected $brl;
+  protected $brls;
   protected $ipport;
   /**
    * Constructor
@@ -115,14 +115,14 @@ class ActionController {
    * @param String $numChild Number of Action-process
    * @param String $maxreq   
    */
-  public function __construct($brl,$external,$ipport,$numChild,$maxreq){
-    $this->brl         = $brl;
+  public function __construct($brls,$external,$ipport,$numChild,$maxreq){
+    $this->brls        = $brls;
     $this->external    = $external;
     $this->numChild    = $numChild;
     $this->maxreq      = $maxreq;
     $this->serviceDSN  = 'tcp://'.$ipport;
     $this->beakLocation= BeakLocationSetter::singleton();
-    $this->childDSN    = brl2ipc(self::IPC_SEGMENT,$brl);
+    $this->childDSN    = brl2ipc(self::IPC_SEGMENT,implode("=",$this->brls));
   }
 
   /**
@@ -144,7 +144,7 @@ class ActionController {
           }
         }
         if ( ! $this->healthcheckDaemon ) {
-          $this->healthcheckDaemon = $this->forkChild(self::HealthCheckDaemon,array($this->brl,'tcp://'.$this->external,self::TERM_WAIT*2));
+          $this->healthcheckDaemon = $this->forkChild(self::HealthCheckDaemon,array($this->brls[0],'tcp://'.$this->external,self::TERM_WAIT*2));
         }
 
         // Check and Fork device-child
@@ -166,7 +166,9 @@ class ActionController {
         if ( $this->hupFlg ) {
           $this->hupFlg = false;
           Log::warn(__CLASS__ . '::' . __FUNCTION__ . ' : enter hup');
-          $this->beakLocation->delete($this->brl,$this->external);
+          foreach( $this->brls as $brl ) {
+            $this->beakLocation->delete($brl,$this->external);
+          }
           usleep(self::TERM_WAIT);
           $this->killHealthCheckDaemon(SIGHUP);
           $this->killChildren(SIGTERM);
@@ -177,7 +179,9 @@ class ActionController {
         }
         if ( $this->termFlg ) {
           Log::warn(__CLASS__ . '::' . __FUNCTION__ . ' : enter terminator');
-          $this->beakLocation->delete($this->brl,$this->external);
+          foreach( $this->brls as $brl ) {
+            $this->beakLocation->delete($brl,$this->external);
+          }
           $this->killHealthCheckDaemon(SIGTERM);
           usleep(self::TERM_WAIT);
           $this->killChildren(SIGTERM);
@@ -198,7 +202,9 @@ class ActionController {
       }
       usleep(self::LOOP_SLEEP);
       try {
-        $this->beakLocation->regist($this->brl,$this->external,'');
+          foreach( $this->brls as $brl ) {
+            $this->beakLocation->regist($brl,$this->external,'');
+          }
       }catch ( \Exception $e ) {
         Log::error(__CLASS__ . '::' . __FUNCTION__ . ' : Unexpect exception : ' . $e->getMessage(),$e);
       }
@@ -297,7 +303,7 @@ $conf   =  $options['f'];
 if ( $conf ) {
   $json = file_get_contents($conf);
   $content = json_decode($json,true);
-  $brl     = $content['brl'];
+  $brls     = $content['brl'];
   $external= $content['external'];
   $ipport  = $content['ipport'];
   $worker  = $content['worker'];
@@ -307,7 +313,7 @@ function option( &$options , $key, $default ) {
   return isset($options[$key])?$options[$key]:$default;
 }
 
-$brl     = option($options,'brl',$brl);
+$brls    = option($options,'brl',$brls);
 $external= option($options,'external',$external);
 $ipport  = option($options,'ipport',$ipport);
 $worker  = option($options,'worker',$worker); 
@@ -317,7 +323,7 @@ if ( ! $external ) {
   $external = $ipport;
 }
 
-if ( ! $brl or ! $ipport or ! $worker ) {
+if ( ! $brls or ! $ipport or ! $worker ) {
   $msg = <<<_MSG_
 Invalid arguments !
 
@@ -334,8 +340,10 @@ _MSG_;
    var_dump($argv);
    die ();
 }
-
-Log::warn('ActionController start : ' . $brl . ' ' . $external . ' ' . $ipport . ' ' . $worker);
-$ctrl = new ActionController($brl,$external,$ipport,$worker,$maxreq);
+if ( ! is_array($brls) ){
+  $brls = array($brls);
+}
+Log::warn('ActionController start : ' . var_export($brls,1) . ' ' . $external . ' ' . $ipport . ' ' . $worker);
+$ctrl = new ActionController($brls,$external,$ipport,$worker,$maxreq);
 $ctrl->main();
-Log::warn('ActionController end : ' . $brl . ' ' . $external . ' ' . $ipport . ' ' . $worker);
+Log::warn('ActionController end : ' . var_export($brls,1) . ' ' . $external . ' ' . $ipport . ' ' . $worker);
