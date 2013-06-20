@@ -9,7 +9,7 @@ cd ${ROOT}
 ROOT=`pwd`
 
 function build_mongodb {
-    VERSION='2.0.2'
+    VERSION='2.4.4'
     if [ "$ARCH" = "i686" ];then
 	ARCHIVE=http://fastdl.mongodb.org/linux/mongodb-linux-i686-%s.tgz
     else
@@ -31,8 +31,8 @@ function build_mongodb {
 #    run cp init.js.local usr/local/mongo/conf/init.js
     run mv ${NAME} usr/local/mongo/${NAME}
     run ln -sfT ${NAME}/bin usr/local/mongo/bin
-    run sudo mkdir -p /usr/local/mongo 
-    run sudo cp -r usr/local/mongo /usr/local/
+    # run sudo mkdir -p /usr/local/mongo 
+    # run sudo cp -r usr/local/mongo /usr/local/
     if [ "${WITH_CAPKG}" != "" ]; then
 	run eval ~/.capkg/config/capkg.sh generate -p mongodb${VERSION} -i /usr -s usr/local/
     fi

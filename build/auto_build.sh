@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-source /usr/local/rvm/environments/ruby-1.8.7-p357
+source /usr/local/rvm/environments/ruby-1.8.7-p371
 export CAPKG_NS=cockatoo
+export WITH_CAPKG=1
 ~/.capkg/config/capkg.sh createrep
 ~/.capkg/config/capkg.sh setup
 
