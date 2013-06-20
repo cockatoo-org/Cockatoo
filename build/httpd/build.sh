@@ -84,11 +84,14 @@ function build_httpd(){
     run_edit ${ROOT}/envvars 'LD_LIBRARY_PATH="/usr/local/lib:/usr/local/ssl/lib:/usr/local/apache-'${VERSION}'/lib:$LD_LIBRARY_PATH"' 
     run_edit ${ROOT}/envvars 'export LD_LIBRARY_PATH'
     run cp -fT ${ROOT}/envvars ${ROOT}/usr/local/apache-${VERSION}/bin/envvars
-    run mkdir -p ${ROOT}/conf/usr/local/apache-${VERSION}/conf/conf.d
-    run cp ${ROOT}/httpd.conf ${ROOT}/conf/usr/local/apache-${VERSION}/conf/
+    #run mkdir -p ${ROOT}/conf/usr/local/apache-${VERSION}/conf/conf.d
+    #run cp ${ROOT}/httpd.conf ${ROOT}/conf/usr/local/apache-${VERSION}/conf/
+    run mkdir -p ${ROOT}/usr/local/apache-${VERSION}/conf/conf.d
+    run rm ${ROOT}/usr/local/apache-${VERSION}/conf/httpd.conf
+    run cp ${ROOT}/httpd.conf.template ${ROOT}/usr/local/apache-${VERSION}/conf/httpd.conf.template
     # install
     run sudo cp -rT ${ROOT}/usr/local /usr/local
-    run sudo cp -rT ${ROOT}/conf/usr/local /usr/local
+    # run sudo cp -rT ${ROOT}/conf/usr/local /usr/local
     run popd
 }
 function build_proxy(){
@@ -116,7 +119,7 @@ build_httpd
 #build_proxy
 if [ "${WITH_CAPKG}" != "" ]; then
     run eval ~/.capkg/config/capkg.sh generate -p httpd${VERSION} -i /usr -s usr/local
-    run eval ~/.capkg/config/capkg.sh generate -p httpd${VERSION}-conf -i /usr/local -s conf/usr/local/apache-${VERSION} "--require='httpd${VERSION} 0.0.1 0.0.999'"
+    # run eval ~/.capkg/config/capkg.sh generate -p httpd${VERSION}-conf -i /usr/local -s conf/usr/local/apache-${VERSION} "--require='httpd${VERSION} 0.0.1 0.0.999'"
 fi
 
 # SELinux
