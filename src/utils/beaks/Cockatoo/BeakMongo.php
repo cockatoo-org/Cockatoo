@@ -73,7 +73,9 @@ class BeakMongo extends Beak {
       $ret = $mongocollection->ensureIndex(array('_u' => 1),array('unique' => true,'safe' => true));
       if ( isset($this->queries[Beak::Q_INDEXES]) ){
         foreach(explode(',',$this->queries[Beak::Q_INDEXES]) as $index){
-          $ret = $mongocollection->ensureIndex(array($index=>1),array('unique' => false,'safe' => true));
+          if ( $index ) {
+            $ret = $mongocollection->ensureIndex(array($index=>1),array('unique' => false,'safe' => true));
+          }
         }
       }
       return true;
