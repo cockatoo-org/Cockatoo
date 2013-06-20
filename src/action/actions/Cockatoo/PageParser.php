@@ -140,6 +140,8 @@ class PageParser {
           $dl = self::tag('dl',array(),array(
                             self::tag('dt',array(),$this->parse_inner($matches[1]))));
           $dd = $this->parse_inner($matches[2]);
+          $dd = array_merge($dd,$this->parseContents(1,$liflg));
+
           while ( ($line = $this->pop_line()) !== null ) {
             if ( ! $line ) {  // End of DL
               $dl['children'] []= self::tag('dd',array(),$dd);
@@ -147,11 +149,12 @@ class PageParser {
             }elseif ( preg_match('@^:(.*)@', $line , $matches ) !== 0 ) { // Next DD
               $dl['children'] []= self::tag('dd',array(),$dd);
               $dd = $this->parse_inner($matches[1]);
-            }else{
+              $dd []= $this->parseContents(1,$liflg);
+//            }else{
               // $dd []= self::tag('br');
               // $dd = array_merge($dd,$this->parse_inner($line));
-              $this->push_line($line);
-              $dd []= self::tag('text',array(),$this->parseContents(1,$liflg));
+//              $this->push_line($line);
+//              $dd []= self::tag('text',array(),$this->parseContents(1,$liflg));
               //$this->pop_line(); // trim empty-line
             }
           }
@@ -293,6 +296,8 @@ class PageParser {
         if ( preg_match('@^https?://@', $matches[3] , $matchdummy ) !== 0 ) {
           $body [] = self::tag('a',array('target' => $target , 'href' => $matches[3]),$children);
         }elseif(preg_match('@^#@', $matches[3] , $matchdummy ) !== 0 ) {
+          $body [] = self::tag('a',array('target' => $target , 'href' => $matches[3]),$children);
+        }elseif(preg_match('@^/@', $matches[3] , $matchdummy ) !== 0 ) {
           $body [] = self::tag('a',array('target' => $target , 'href' => $matches[3]),$children);
         }else{
           $body [] = self::tag('a',array('target' => $target , 'href' => $this->basepath . '/' . $matches[3]),$children);
