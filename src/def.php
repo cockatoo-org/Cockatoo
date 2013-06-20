@@ -253,7 +253,7 @@ abstract class DefaultConfig {
    * Dynamic locator switch from zookeeper
    */
   static public $UseZookeeper       = false;
-  static public $ZookeeperCacheFile = 'daemon/etc/zoo.json';
+  static public $ZookeeperCacheFile;
   /**
    * Static locator
    */
@@ -279,6 +279,7 @@ abstract class DefaultConfig {
       self::$RequestParser = array (
         '/core' => 'Cockatoo\CoreRequestParser'
         );
+      self::$ZookeeperCacheFile  = self::COCKATOO_ROOT.'daemon/etc/zoo.json';
       //--------------------
       // Pre init
       //--------------------
