@@ -1,5 +1,5 @@
 {
-"etag":"\"b80a4ca1-753a-dada-6d0b43a235fc602d\"",
+"etag":"\"e1f2385a-93f7-e050-12dd490ee8afc9e9\"",
 "type":"text/css",
 "exp":"60",
 "desc":"",
@@ -319,6 +319,9 @@ div.wikiedit div.danger a.rename {\r
 div.wikiedit div.danger input[name=\"rename\"],\r
 div.wikiedit div.danger input[value=\"rename\"] {\r
   display: none;\r
+}\r
+div.wikiedit div.danger input[name=\"rename\"] {\r
+  width:300px;\r
 }\r
 form.wikiimageaction {\r
   clear: both;\r

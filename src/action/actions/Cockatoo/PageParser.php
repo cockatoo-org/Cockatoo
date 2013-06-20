@@ -135,7 +135,6 @@ class PageParser {
             }
           }
           $body []= $blockquote;
-
         }elseif ( preg_match('@^:([^:]+):(.*)@', $line , $matches ) !== 0 ) {
           // DL DT DD
           $dl = self::tag('dl',array(),array(
@@ -152,8 +151,8 @@ class PageParser {
               // $dd []= self::tag('br');
               // $dd = array_merge($dd,$this->parse_inner($line));
               $this->push_line($line);
-              $dd []= self::tag('text',array(),$this->parseContents(1));
-              $this->pop_line(); // trim empty-line
+              $dd []= self::tag('text',array(),$this->parseContents(1,$liflg));
+              //$this->pop_line(); // trim empty-line
             }
           }
           $body []= $dl;
