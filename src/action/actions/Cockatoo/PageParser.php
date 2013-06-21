@@ -214,7 +214,7 @@ class PageParser {
           $body []= self::tag('table',array('class'=>'tab'),array(self::tag('tbody', array(),$tbody)));
           $body = array_merge($body,$this->parse_inner($brackets[1]));
         }elseif ( preg_match('@^&table\(([^\)]+)\)(.*)@', $line , $matches ) !== 0 ) {
-          // TABLE => &table([<inner>],[style][|[<inner>],[px]..]){<inner>[|<inner>..]};
+          // TABLE => &table([<inner>],[style][|[<inner>],[style]..]){<inner>[|<inner>..]};
           $brackets = self::parse_brackets($matches[2]);
 
           $hs = explode('|',$matches[1]);
@@ -268,16 +268,18 @@ class PageParser {
   private static function parse_brackets($bre){
     $n = strlen($bre);
     $nest = 0;
-    $i = 0;
-    for( ; $i < $n ; $i++ ) {
-      $c = substr($bre,$i,2);
-      if ( preg_match('@^{@',$c,$m) !== 0) {
+    for( $i = 0; $i < $n ; $i++ ) {
+      $c = $bre[$i];
+      if ( $i === 0 && $c !== '{') {
+        return array($bre,'');
+      }
+      if ( $c === '{' ) {
         $nest++;
-      }elseif ( $c === '};' ) {
+      }elseif ( $c === '}' ) {
         $nest--;
       }
       if ( $nest === 0 ){
-        return array(substr($bre,1,$i-1),substr($bre,$i+2));
+        return array(substr($bre,1,$i-1),substr($bre,$i+1));
       }
     }
     return array(substr($bre,1),'');
@@ -288,7 +290,7 @@ class PageParser {
     $text = $line;
     for(;;){
       if ( preg_match('@^([^\[]*)\[(#?)\[([^\]|]+)((?:\|[^\]]+)?)\]\](.*)@', $text , $matches ) !== 0 ) {
-        // A   => [[<text>|<link or url>]]
+        // A   => [[<link or url>|<text>]]
         $target = ($matches[2]==='#')?'_blank':'_self';
         $body = array_merge($body,$this->parse_inner($matches[1]));
         $text = (($matches[4])?ltrim($matches[4],'|'):$matches[3]);
@@ -308,7 +310,27 @@ class PageParser {
         $body = array_merge($body,$this->parse_inner($matches[1]));
         $text = $matches[2];
         next;
-      }elseif ( preg_match('@^&ref\(([^\),]*)(?:,(\d*)(?:,(\d*)(?:,(\S*))?)?)?\);(.*)@', $text , $matches ) !== 0 ) {
+      }elseif ( preg_match('@^&a\(([^\),]+)(?:,(\S*))?\)(.*)@', $text , $matches ) !== 0 ) {
+        // A   => &a(<link or url>,<target>){<text>};
+        $brackets = self::parse_brackets($matches[3]);
+        $target = $matches[2];
+        $text = (($brackets[0])?$brackets[0]:$matches[1]);
+        $children = $this->parse_inner($text);
+        if ( preg_match('@^https?://@', $matches[1] , $matchdummy ) !== 0 ) {
+          $target = ($target)?$target:'_blank';
+          $body [] = self::tag('a',array('target' => $target , 'href' => $matches[1]),$children);
+        }elseif(preg_match('@^#@', $matches[1] , $matchdummy ) !== 0 ) {
+          $body [] = self::tag('a',array('href' => $matches[1]),$children);
+        }elseif(preg_match('@^/@', $matches[1] , $matchdummy ) !== 0 ) {
+          $target = ($target)?$target:'_self';
+          $body [] = self::tag('a',array('target' => $target , 'href' => $matches[1]),$children);
+        }else{
+          $target = ($target)?$target:'_self';
+          $body [] = self::tag('a',array('target' => $target , 'href' => $this->basepath . '/' . $matches[1]),$children);
+        }
+        $text = $brackets[1];
+        next;
+      }elseif ( preg_match('@^&img\(([^\),]*)(?:,(\d*)(?:,(\d*)(?:,(\S*))?)?)?\)(.*)@', $text , $matches ) !== 0 ) {
         // IMG => &ref(<image>,<height>,<width>);
         $attr = array();
         if ( $matches[2] ) {
@@ -336,7 +358,7 @@ class PageParser {
         }
         $text = $matches[5];
         next;
-      }elseif ( preg_match('@^&frame\(([^\),]*)(?:,(\d*)(?:,(\d*))?)?\);(.*)@', $text , $matches ) !== 0 ) {
+      }elseif ( preg_match('@^&frame\(([^\),]*)(?:,(\d*)(?:,(\d*))?)?\)(.*)@', $text , $matches ) !== 0 ) {
         // IFRAME => &frame(<url>,<height>,<width>);
         $attr = array();
         if ( $matches[2] ) {
@@ -348,7 +370,7 @@ class PageParser {
         $body [] = self::tag('iframe',array('src' => $matches[1]),'FRAME : ' . $matches[1]);
         $text = $matches[4];
         next;
-      }elseif ( preg_match('@^&anchor\(([^\)]*)\);(.*)@', $text , $matches ) !== 0 ) {
+      }elseif ( preg_match('@^&anchor\(([^\)]*)\)(.*)@', $text , $matches ) !== 0 ) {
         // ANCHOR => &anchor(<name>);
         $body [] = self::tag('a',array('href' => '#'.$matches[1], 'name' => $matches[1]),'+');
         $text = $matches[2];

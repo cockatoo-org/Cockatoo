@@ -1,5 +1,5 @@
 {
-"etag":"\"70357f45-faba-56ab-23d81ba035814997\"",
+"etag":"\"2d8d533e-aa70-c10d-69985d60d8cefe80\"",
 "type":"text/javascript",
 "exp":"60",
 "desc":"",
@@ -183,7 +183,7 @@ console.log(basePath);\r
 \t\t.text(i)\r
 \t\t.appendTo(tr);\r
 \t\t$('<td class=\"format\" />')\r
-\t\t.text('&ref('+i+');')\r
+\t\t.text('&ref('+i+')')\r
 \t\t.appendTo(tr);\r
 \t\t$('<td class=\"check\" />')\r
 \t\t.html('<input class=\"del\" type=\"button\" name=\"'+i+'\" value=\"delete\" />')\r

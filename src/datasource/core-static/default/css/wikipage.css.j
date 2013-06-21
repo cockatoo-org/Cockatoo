@@ -1,5 +1,5 @@
 {
-"etag":"\"e1f2385a-93f7-e050-12dd490ee8afc9e9\"",
+"etag":"\"7cee00cd-d208-bb6c-98d1bfe21c4da5c7\"",
 "type":"text/css",
 "exp":"60",
 "desc":"",
@@ -253,6 +253,12 @@ div.wikipage div.credit {\r
 div.wikipage table.tab {\r
   border-spacing: 0;\r
   text-align: left;\r
+  border-width:0;\r
+}\r
+div.wikipage table.tab > tbody > tr > th,\r
+div.wikipage table.tab > tbody > tr > td {\r
+  vertical-align: top;\r
+  border-width:0;\r
 }\r
 div.wikipage table.table {\r
   border-spacing: 0;\r
@@ -261,10 +267,6 @@ div.wikipage table.table {\r
   padding: 3px;\r
   border: 1px solid;\r
   text-align: left;\r
-}\r
-div.wikipage table.tab > tbody > tr > th,\r
-div.wikipage table.tab > tbody > tr > td {\r
-  vertical-align: top;\r
 }\r
 div.wikipage table.table > thead > tr > th.th0 {\r
   border-left-width: 0;\r

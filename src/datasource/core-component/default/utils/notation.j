@@ -1,5 +1,5 @@
 {
-"@R":"1369362897",
+"@R":"1371777383",
 "type":"HorizontalWidget",
 "subject":"notation",
 "description":"notation",
@@ -36,8 +36,7 @@ div.page  {\r
 "js":"",
 "id":"",
 "class":"",
-"body":"\r
-<div id=\"page\">\r
+"body":"<div id=\"page\">\r
 <h1>\u8a18\u6cd5\u4e00\u89a7</h1>\r
 <h3>\u884c\u5358\u4f4d</h3>\r
 <table>\r
@@ -75,7 +74,7 @@ div.page  {\r
 *****\u898b\u51fa\u30575\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <div class=\"h2\">\r
 <h2>\r
 \u898b\u51fa\u3057\uff11\r
@@ -124,7 +123,7 @@ div.page  {\r
 \u6c34\u5e73\u7dda\u4e0b\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 \u6c34\u5e73\u7dda\u4e0a\r
 <hr>\r
 \u6c34\u5e73\u7dda\u4e0b\r
@@ -150,7 +149,7 @@ div.page  {\r
 --\u7b87\u6761\u66f8\u304d6\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <ul class=\"ul0\">\r
 <li class=\"ul1\">\r
 \r
@@ -191,7 +190,7 @@ div.page  {\r
 ++\u7b87\u6761\u66f8\u304d6\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <ol class=\"ol0\">\r
 <li class=\"ol1\">\r
 \u7b87\u6761\u66f8\u304d\uff11</li>\r
@@ -225,7 +224,7 @@ div.page  {\r
 >>\u5f15\u7528\u6587\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <blockquote>\r
 \u5f15\u7528\u6587\r
 <br>\r
@@ -250,7 +249,7 @@ div.page  {\r
 \u8aac\u660e\u6587\uff12\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <dl>\r
 <dt>\r
 \u5b9a\u7fa9\u540d</dt>\r
@@ -280,7 +279,7 @@ div.page  {\r
    \u30a4\u30f3\u30c7\u30f3\u30c8\u306f\u518d\u73fe\u3055\u308c\u308b\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <pre>\r
  \u8907\u6570\u884c\u53ef\u80fd\r
    \u6539\u884c\u306f\u518d\u73fe\u3055\u308c\u308b\r
@@ -321,7 +320,7 @@ div.page  {\r
 \u6587\u7ae0\uff11 && \u6587\u7ae0\uff12\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 \u6587\u7ae0\uff11<br>\u6587\u7ae0\uff12\r
 </div>\r
 </td>\r
@@ -331,20 +330,20 @@ div.page  {\r
 \u30ea\u30f3\u30af<div>&lt;A&gt;</div>\r
 </td><td>\r
 <pre class=\"syn\">\r
-[[\u30da\u30fc\u30b8\u540dor\u5916\u90e8\u30ea\u30f3\u30af]]\r
-[[\u8868\u793a\u540d|\u30da\u30fc\u30b8\u540dor\u5916\u90e8\u30ea\u30f3\u30af]]\r
-[#[...]] target=\"_blank\"\u5c5e\u6027\r
+&a(\u30da\u30fc\u30b8\u540dor\u5916\u90e8\u30ea\u30f3\u30af)\r
+&a(\u8868\u793a\u540d){\u30da\u30fc\u30b8\u540dor\u5916\u90e8\u30ea\u30f3\u30af}\r
+&a(\u540c\u4e0a,target\u5c5e\u6027){\u540c\u4e0a}\r
 </pre>\r
 </td><td>\r
 <pre class=\"ex\">\r
-[[link]]\r
-[[Mongo\u5185\u30ea\u30f3\u30af|link]]\r
-[[http://cockatoo.jp]]\r
-[[http://cockatoo.jp|Cockatoo]]\r
-[#[target_blank]]\r
+&a(link)\r
+&a(Mongo\u5185\u30ea\u30f3\u30af){link}\r
+&a(http://cockatoo.jp)\r
+&a(http://cockatoo.jp){Cockatoo}\r
+&a(target,_blank)\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <a href=\"<?cs var:C._base ?>/view/link\">\r
 link</a>\r
 <br>\r
@@ -365,21 +364,21 @@ target_blank</a>\r
 \u753b\u50cf<div>&lt;img&gt;</div>\r
 </td><td>\r
 <pre class=\"syn\">\r
-&amp;ref(\u753b\u50cf\u540d);\r
-&amp;ref(\u753b\u50cf\u540d,height);\r
-&amp;ref(\u753b\u50cf\u540d,height,width);\r
-&amp;ref(\u5916\u90e8URL);\r
-&amp;ref(\u5916\u90e8URL,height);\r
-&amp;ref(\u5916\u90e8URL,height,width);\r
+&amp;img(\u753b\u50cf\u540d)\r
+&amp;img(\u753b\u50cf\u540d,height)\r
+&amp;img(\u753b\u50cf\u540d,height,width)\r
+&amp;img(\u5916\u90e8URL)\r
+&amp;img(\u5916\u90e8URL,height)\r
+&amp;img(\u5916\u90e8URL,height,width)\r
 </pre>\r
 </td><td>\r
 <pre class=\"ex\">\r
-&amp;ref(/_s_/core/default/logo.png);\r
-&amp;ref(/_s_/core/default/logo.png,100);\r
-&amp;ref(/_s_/core/default/logo.png,50);\r
+&amp;img(/_s_/core/default/logo.png)\r
+&amp;img(/_s_/core/default/logo.png,100)\r
+&amp;img(/_s_/core/default/logo.png,50)\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <a href=\"/_s_/core/default/logo.png\">\r
 <img src=\"/_s_/core/default/logo.png\"></img></a>\r
 <br>\r
@@ -394,15 +393,15 @@ target_blank</a>\r
 \u8272<div>&lt;SPAN&gt;</div>\r
 </td><td>\r
 <pre class=\"syn\">\r
-&amp;color(\u8272){\u6587\u5b57\u5217};\r
+&amp;color(\u8272){\u6587\u5b57\u5217}\r
 </pre>\r
 </td><td>\r
 <pre class=\"ex\">\r
-&amp;color(#FF0000){\u8d64};\r
-&amp;color(#0000FF){\u9752};\r
+&amp;color(#FF0000){\u8d64}\r
+&amp;color(#0000FF){\u9752}\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <span style=\"color:#FF0000\">\u8d64</span><br><span style=\"color:#0000FF\">\u9752</span>\r
 </div>\r
 </td><tr>\r
@@ -410,22 +409,22 @@ target_blank</a>\r
 \u592a\u5b57<div>&lt;B&gt;</div>\r
 </td><td>\r
 <pre class=\"syn\">\r
-&amp;b(\u30ec\u30d9\u30eb){\u6587\u5b57\u5217};\r
+&amp;b(\u30ec\u30d9\u30eb){\u6587\u5b57\u5217}\r
 </pre>\r
 </td><td>\r
 <pre class=\"ex\">\r
-&amp;b(1){\u592a\u5b571};\r
-&amp;b(2){\u592a\u5b572};\r
-&amp;b(3){\u592a\u5b573};\r
-&amp;b(4){\u592a\u5b574};\r
-&amp;b(5){\u592a\u5b575};\r
-&amp;b(6){\u592a\u5b576};\r
-&amp;b(7){\u592a\u5b577};\r
-&amp;b(8){\u592a\u5b578};\r
-&amp;b(9){\u592a\u5b579};\r
+&amp;b(1){\u592a\u5b571}\r
+&amp;b(2){\u592a\u5b572}\r
+&amp;b(3){\u592a\u5b573}\r
+&amp;b(4){\u592a\u5b574}\r
+&amp;b(5){\u592a\u5b575}\r
+&amp;b(6){\u592a\u5b576}\r
+&amp;b(7){\u592a\u5b577}\r
+&amp;b(8){\u592a\u5b578}\r
+&amp;b(9){\u592a\u5b579}\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <b class=\"b1\">\u592a\u5b571</b><br>\r
 <b class=\"b2\">\u592a\u5b572</b><br>\r
 <b class=\"b3\">\u592a\u5b573</b><br>\r
@@ -441,15 +440,15 @@ target_blank</a>\r
 \u30a2\u30f3\u30ab\u30fc<div>&lt;A name=&quot;A&quot;&gt;</div>\r
 </td><td>\r
 <pre class=\"syn\">\r
-&amp;anchor(\u30a2\u30f3\u30ab\u30fc\u540d);\r
+&amp;anchor(\u30a2\u30f3\u30ab\u30fc\u540d)\r
 </pre>\r
 </td><td>\r
 <pre class=\"ex\">\r
-\u30a2\u30f3\u30ab\u30fc\uff11&amp;anchor(A1);\r
-\u30a2\u30f3\u30ab\u30fc\uff12&amp;anchor(A2);\r
+\u30a2\u30f3\u30ab\u30fc\uff11&amp;anchor(A1)\r
+\u30a2\u30f3\u30ab\u30fc\uff12&amp;anchor(A2)\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 \u30a2\u30f3\u30ab\u30fc\uff11\r
 <a href=\"#A1\" name=\"A1\">\r
 +</a>\r
@@ -464,18 +463,52 @@ target_blank</a>\r
 \u53d6\u6d88\u7dda<div>&lt;del&gt;</div>\r
 </td><td>\r
 <pre class=\"syn\">\r
-&amp;del{\u6587\u5b57\u5217};\r
+&amp;del{\u6587\u5b57\u5217}\r
 </pre>\r
 </td><td>\r
 <pre class=\"ex\">\r
-&amp;del{\u6587\u5b57\u5217};\r
+&amp;del{\u6587\u5b57\u5217}\r
 </pre>\r
 </td><td>\r
-<div class=\"page\">\r
+<div class=\"wikipage\">\r
 <del>\u6587\u5b57\u5217</del>\r
 </div>\r
 </td>\r
+</tr><tr>\r
+<td>\r
+\u30c6\u30fc\u30d6\u30eb<div>&lt;table&gt;</div>\r
+</td><td>\r
+<pre class=\"syn\">\r
+&amp;table(\u30d8\u30c3\u30c0,style|...){\u8981\u7d20|...}\r
+</pre>\r
+</td><td>\r
+<pre class=\"ex\">\r
+&amp;table(\u30d8\u30c3\u30c01,color:#ffffff;|\u30d8\u30c3\u30c02,color:#ffffff;)\r
+{\u30ab\u30e9\u30e01|\u30ab\u30e9\u30e02|\u30ab\u30e9\u30e01|\u30ab\u30e9\u30e02}\r
+</pre>\r
+</td><td>\r
+<div class=\"wikipage\">\r
+<table class=\"table\"><thead><tr><th class=\"th0\" style=\"color:#ffffff;\"><span>\u30d8\u30c3\u30c01</span></th><th class=\"th1\" style=\"color:#ffffff;\"><span>\u30d8\u30c3\u30c02</span></th></tr></thead><tbody><tr class=\"tr0\"><td class=\"td0\"><span>\u30ab\u30e9\u30e01</span></td><td class=\"td1\"><span>\u30ab\u30e9\u30e02</span></td></tr><tr class=\"tr1\"><td class=\"td0\"><span>\u30ab\u30e9\u30e01</span></td><td class=\"td1\"><span>\u30ab\u30e9\u30e02</span></td></tr></tbody></table>\r
+</div>\r
+</td>\r
+</tr><tr>\r
+<td>\r
+TAB<div>&lt;tab&gt;</div>\r
+</td><td>\r
+<pre class=\"syn\">\r
+&amp;tab(style|...){th\u8981\u7d20|td\u8981\u7d20|...}\r
+</pre>\r
+</td><td>\r
+<pre class=\"ex\">\r
+&amp;tab(width:150px|){th\u8981\u7d20|td\u8981\u7d20|th\u8981\u7d20|td\u8981\u7d20}\r
+</pre>\r
+</td><td>\r
+<div class=\"wikipage\">\r
+<table class=\"tab\"><tbody><tr><th style=\"width:150px\"><span>th\u8981\u7d20</span></th><td style=\"\"><span>td\u8981\u7d20</span></td></tr><tr><th style=\"\"><span>th\u8981\u7d20</span></th><td style=\"\"><span>td\u8981\u7d20</span></td></tr></tbody></table>\r
+</div>\r
+</td>\r
 </tr>\r
+\r
 </tbody>\r
 </table>\r
 \r
