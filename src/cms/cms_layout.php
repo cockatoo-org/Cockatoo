@@ -10,7 +10,7 @@
  */
 namespace Cockatoo;
 require_once(dirname(__FILE__) . '/../def.php');
-require_once(Config::COCKATOO_ROOT.'wwwutils/core/cms_acl.php');
+require_once(Config::COCKATOO_ROOT.'cmsutils/cms_acl.php');
 require_once(Config::COCKATOO_ROOT.'wwwutils/core/reqparser.php');
 require_once(Config::COCKATOO_ROOT.'wwwutils/core/webutils.php');
 require_once(Config::COCKATOO_ROOT.'wwwutils/core/widget.php');
@@ -118,7 +118,7 @@ try {
   }
   $CONTENT_DRAWER->layout($page_layout);
   $CONTENT_DRAWER->components(true);
-  Include Config::COCKATOO_ROOT.'wwwutils/core/cms_frame.php';
+  Include Config::COCKATOO_ROOT.'cmsutils/cms_frame.php';
 }catch ( \Exception $ex ) {
   print $ex->getMessage();
 }

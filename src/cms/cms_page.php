@@ -362,7 +362,7 @@ $(function () {
  <body>
 <?php
   namespace Cockatoo;
-  require_once(Config::COCKATOO_ROOT.'/wwwutils/core/cms_link.php');
+  require_once(Config::COCKATOO_ROOT.'/cmsutils/cms_link.php');
 ?>
    </div>
   </div>

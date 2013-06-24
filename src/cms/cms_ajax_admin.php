@@ -10,7 +10,8 @@
  */
 namespace Cockatoo;
 require_once(dirname(__FILE__) . '/../def.php');
-require_once(Config::COCKATOO_ROOT.'wwwutils/core/cms_acl.php');
+require_once(Config::COCKATOO_ROOT.'cmsutils/cms_core.php');
+require_once(Config::COCKATOO_ROOT.'cmsutils/cms_acl.php');
 require_once(Config::COCKATOO_ROOT.'wwwutils/core/webutils.php');
 require_once(Config::COCKATOO_ROOT.'wwwutils/core/widget.php');
 require_once(Config::COCKATOO_ROOT.'wwwutils/core/content.php');
@@ -78,14 +79,6 @@ try {
   }
 } catch (\Exception $e) {
   $emsg .= $e->getMessage();
-}
-function getS(){
-  $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,'',Beak::M_KEY_LIST);
-  $services = BeakController::beakSimpleQuery($brl);
-  if ( ! $services ) {
-    throw new \Exception('Fail to get : ' . $brl);
-  }
-  return $services;
 }
 
 if ( $emsg !== '' ) {

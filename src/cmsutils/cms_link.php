@@ -9,7 +9,7 @@
  * @copyright Copyright (C) 2011, rakuten 
  */
   namespace Cockatoo;
-  require_once(Config::COCKATOO_ROOT.'wwwutils/core/cms_acl.php');
+  require_once(Config::COCKATOO_ROOT.'cmsutils/cms_acl.php');
 ?>
 <div style="float:right;">Welcome <b style="color:#0000FF">
 <?php
