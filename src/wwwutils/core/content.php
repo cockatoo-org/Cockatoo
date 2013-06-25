@@ -201,12 +201,13 @@ class ContentDrawer {
   public function session(&$HEADER,&$SERVER,&$POST,&$GET,&$COOKIE) {
     $scheme = (isset($SERVER['HTTPS'])?'https':'http');
     $port = '';
-    if ( $scheme === 'https' && $SERVER['SERVER_PORT'] !== '443' ){
-      $port = ':'.$SERVER['SERVER_PORT'];
-    }else if ( $scheme === 'http' && $SERVER['SERVER_PORT'] !== '80' ){
-      $port = ':'.$SERVER['SERVER_PORT'];
-    }
-    $url = $scheme.'://'.$SERVER['SERVER_NAME'].$port.$SERVER['REQUEST_URI'];
+//    if ( $scheme === 'https' && $SERVER['SERVER_PORT'] !== '443' ){
+//      $port = ':'.$SERVER['SERVER_PORT'];
+//    }else if ( $scheme === 'http' && $SERVER['SERVER_PORT'] !== '80' ){
+//      $port = ':'.$SERVER['SERVER_PORT'];
+//    }
+//    $url = $scheme.'://'.$SERVER['SERVER_NAME'].$port.$SERVER['REQUEST_URI'];
+    $url = $scheme.'://'.$SERVER['HTTP_HOST'].$SERVER['REQUEST_URI'];
     $HEADER[Def::CS_CORE_FULLURL] = $url;
     $HEADER[Def::CS_CORE_FULLEURL] = urlencode($url);
     
