@@ -58,8 +58,8 @@ class BeakMemcached extends Beak {
     }
 
   }
-  private function genKey($key) {
-    return $this->prefix  . $key;
+  private function genKey($key,$prefix='') {
+    return ($prefix?$prefix:$this->prefix)  . $key;
   }
 
   public function createColQuery(){
@@ -67,8 +67,9 @@ class BeakMemcached extends Beak {
     }
   }
   public function listColQuery() {
-    $key = $this->genKey($this->path);
-    Log::fatal(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Not supported : ' . $key);
+    if ( ! Config::Mode === Def::MODE_DEBUG ) {
+      Log::fatal(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Not supported : ' . $this->prefix);
+    }
     $cols=array();
     if ( Config::Mode === Def::MODE_DEBUG ) {
       foreach($this->memcached->getServerList() as $server){
@@ -82,40 +83,44 @@ class BeakMemcached extends Beak {
           $out=$pipes[1];
           while ($line=fgets($out,1024)){
             $line=chop($line);
-             if ( preg_match('@^'.$this->prefix.'([^/]+)/$@',$line,$matches) !== 0 ){
-                $cols []= $matches[1];
+             if ( preg_match('@^'.$this->prefix.'([^/]+)/.*$@',$line,$matches) !== 0 ){
+                $cols [$matches[1]]= 1;
              }
           }
           proc_close($h);
         }
       }
-      $this->ret = $cols;
+      $this->ret = array_keys($cols);
     }
   }
-  public function listKeyQuery() {
-    $key = $this->genKey($this->path);
-    Log::fatal(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Not supported : ' . $key);
-    if ( Config::Mode === Def::MODE_DEBUG ) {
-      foreach($this->memcached->getServerList() as $server){
-        $dp=array(
-          0 => array('file','/dev/null','r'),
-          1 => array('pipe','w'),
-          2 => array('file','/dev/null','a')
-          );
-        $h = proc_open('memdump --servers=' . $server['host'] .':'.$server['port'],$dp,$pipes);
-        if ( $h ) {
-          $out=$pipes[1];
-          while ($line=fgets($out,1024)){
-            $line=chop($line);
-             if ( preg_match('@^'.$this->prefix.'(.*)$@',$line,$matches) !== 0 ){
-                $cols []= $matches[1];
-             }
+
+  private function listKey($prefix){
+    foreach($this->memcached->getServerList() as $server){
+      $dp=array(
+        0 => array('file','/dev/null','r'),
+        1 => array('pipe','w'),
+        2 => array('file','/dev/null','a')
+        );
+      $h = proc_open('memdump --servers=' . $server['host'] .':'.$server['port'],$dp,$pipes);
+      if ( $h ) {
+        $out=$pipes[1];
+        while ($line=fgets($out,1024)){
+          $line=chop($line);
+          if ( preg_match('@^'.$prefix.'(.*)$@',$line,$matches) !== 0 ){
+            $cols []= $matches[1];
           }
-          proc_close($h);
         }
+        proc_close($h);
       }
-      $this->ret = $cols;
     }
+    return $cols;
+  }
+
+  public function listKeyQuery() {
+    if ( ! Config::Mode === Def::MODE_DEBUG ) {
+      Log::fatal(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Not supported : ' . $this->prefix);
+    }
+    $this->ret = $this->listKey($this->prefix);
   }
 
   private function filterData(&$data){
@@ -293,16 +298,23 @@ class BeakMemcached extends Beak {
     $this->ret = $paths;
   }
   public function mvColQuery() {
-    $key = $this->genKey($this->path);
-    $dst = $this->genKey($this->queries[Beak::Q_NEWNAME]);
-    $prev = $this->memcached->get($key);
-    if ( $this->memcached->set($dst,$prev) ) {
-      if ( $this->memcached->delete($key) ) {
-        $this->ret = true;
-        return;
+    if ( ! Config::Mode === Def::MODE_DEBUG ) {
+      Log::fatal(__CLASS__ . '::' . __FUNCTION__ . ' : ' . 'Not supported : ' . $this->prefix);
+    }
+
+    $this->ret = true;
+    $new = $this->domain . '/' . $this->queries[Beak::Q_NEWNAME] .'/';
+    $keys = $this->listKey($this->prefix);
+    foreach ($keys as $key ){
+      $srcKey = $this->genKey($key);
+      $data = $this->memcached->get($srcKey);
+      $dstKey = $this->genKey($key,$new);
+      if ( ! ( $this->memcached->set($dstKey,$data) &&
+               $this->memcached->delete($srcKey) ) ) {
+        $this->ret = false;
+        next;
       }
     }
-    $this->ret = false;
   }
   /**
    * System use only

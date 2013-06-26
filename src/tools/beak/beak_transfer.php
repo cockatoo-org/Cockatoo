@@ -17,9 +17,10 @@ class BeakImporter {
     '@^\.\.?$@'
     );
   static $BEAK_DRIVERS = array (
-    'file'  => 'Cockatoo\BeakFile'   ,
-    'mongo' => 'Cockatoo\BeakMongo'  ,
-    'null'  => 'Cockatoo\BeakNull'  ,
+    'file'      => 'Cockatoo\BeakFile'   ,
+    'mongo'     => 'Cockatoo\BeakMongo'  ,
+    'memcached' => 'Cockatoo\BeakMemcached'  ,
+    'null'      => 'Cockatoo\BeakNull'  ,
     null
     );
   private $TO_BEAKS;
@@ -123,6 +124,7 @@ class BeakTransfer {
   static $BEAK_DRIVERS = array (
     'file'  => 'Cockatoo\BeakFile'   ,
     'mongo' => 'Cockatoo\BeakMongo'  ,
+    'memcached' => 'Cockatoo\BeakMemcached'  ,
     'null'  => 'Cockatoo\BeakNull'   ,
     null
     );

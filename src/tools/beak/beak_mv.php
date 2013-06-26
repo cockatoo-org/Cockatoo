@@ -37,6 +37,7 @@ LOCATE:
 DRIVER:
   file       Cockatoo\BeakFile
   mongo      Cockatoo\BeakMongo
+  memcached  Cockatoo\BeakMemcached
   null       Cockatoo\BeakNull
 
 COLLECTION:
