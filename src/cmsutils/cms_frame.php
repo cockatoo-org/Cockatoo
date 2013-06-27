@@ -60,7 +60,24 @@ div.co-Widget > h3 > span {
   color: #FFFFFF;
   float:right;
   cursor: pointer;
-  padding : 0 3px 0 0;
+  margin  : 0 3px 0 0;
+  padding : 0 0 16px 16px;
+  background-image: url(/_cms_/css/ui-darkness/images/ui-icons_ffffff_256x240.png);
+}
+div.co-Widget > h3 > span.prev {
+  background-position: 0 -64px;
+}
+div.co-Widget > h3 > span.next {
+  background-position: -32px -64px;
+}
+div.co-Widget > h3 > span.up {
+  background-position: 0 -48px;
+}
+div.co-Widget > h3 > span.down {
+  background-position: -64px -48px;
+}
+div.co-Widget > h3 > span.del {
+  background-position: -96px -128px;
 }
 
 div.co-Wbody {

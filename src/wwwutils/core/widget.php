@@ -194,8 +194,9 @@ class  Widget {
       $style .= 'min-width:'.$this->prop[Def::K_LAYOUT_MIN_WIDTH].';';
     }
 
+//      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del">x</span><span class="down">v</span><span class="up">^</span><span class="next">&gt;</span><span class="prev">&lt;</span></h3>'.
     $ret = '<div class="' . $clazz . ' ' . $this->clazz .'" ' . Def::K_COMPONENT_TYPE . '="' . $this->component[Def::K_COMPONENT_TYPE] . '" ' . Def::K_LAYOUT_COMPONENT . '="' . $this->prop[Def::K_LAYOUT_COMPONENT] . '" ' . Def::K_LAYOUT_EXTRA . '="'.$this->prop[Def::K_LAYOUT_EXTRA].'" style="'. $style .'">'.
-      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del">x</span><span class="down">v</span><span class="up">^</span><span class="next">&gt;</span><span class="prev">&lt;</span></h3>'.
+      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del"></span><span class="down"></span><span class="up"></span><span class="next"></span><span class="prev"></span></h3>'.
       '<form style="display:none;">'.
       '<div class="label">Class</div><div class="value"><input type="text" name="class" value="'.$this->prop[Def::K_LAYOUT_CLASS].'"></input></div>' .
       '<div class="label">Width</div><div class="value"><input type="text" name="width" value="'.$this->prop[Def::K_LAYOUT_WIDTH].'"></input></div>' .
