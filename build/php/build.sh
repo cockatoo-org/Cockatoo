@@ -48,7 +48,7 @@ function build_php(){
 #	--enable-debug 
     run mkdir -p ${ROOT}/root_php/usr/local/apache-${HTTPD_VERSION}/conf/conf.d/
     run mkdir -p ${ROOT}/root_php/usr/local/apache-${HTTPD_VERSION}/modules/
-    run cp /usr/local/apache-${HTTPD_VERSION}/conf/httpd.conf  ${ROOT}/root_php/usr/local/apache-${HTTPD_VERSION}/conf/httpd.conf
+    run bash ${ROOT}/../httpd/httpd.conf.template localhost > ${ROOT}/root_php/usr/local/apache-${HTTPD_VERSION}/conf/httpd.conf
     run cp ${ROOT}/httpd-php.conf ${ROOT}/root_php/usr/local/apache-${HTTPD_VERSION}/conf/conf.d/
     run make
     run make install INSTALL_ROOT=${ROOT}/root_php
