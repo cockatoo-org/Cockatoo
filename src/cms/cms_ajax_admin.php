@@ -56,7 +56,7 @@ try {
     if ( is_readable($service_id) ){
       $brl = brlgen(Def::BP_CMS,Def::CMS_SERVICES,Def::CMS_SERVICES,$service_id,Beak::M_GET);
       $service = BeakController::beakSimpleQuery($brl);
-      if ( $service ) {
+      if ( $service && $service['account'] ) {
         foreach ( $service['account'] as $k => $v ) {
           $r[] = array(
             'aid'  => $k,

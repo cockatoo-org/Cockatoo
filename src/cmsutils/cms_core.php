@@ -117,6 +117,8 @@ function setC($flg,$rev,$service_id,$component_id,$type,$subject,$description,$c
   if ( ! $flg and $component ) {
     throw new \Exception('Component already exist ! : ' . $component_id);
   }
+  $subject = ($subject?$subject:$component_id);
+
   $component[Beak::ATTR_REV]               = $rev;
   $component[Def::K_COMPONENT_TYPE]        = $type;
   $component[Def::K_COMPONENT_SUBJECT]     = $subject;
