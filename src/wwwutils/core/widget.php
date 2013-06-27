@@ -218,8 +218,9 @@ class  Widget {
    * @return String Returns HTML
    */
   public function templateWalk(){
+//      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del">x</span><span class="down">v</span><span class="up">^</span></h3>'.
     return '<div class="' . $this->clazz .' co-Template" ' . Def::K_COMPONENT_TYPE . '="' . $this->component[Def::K_COMPONENT_TYPE] .'" '. Def::K_LAYOUT_COMPONENT . '="' . $this->prop[Def::K_LAYOUT_COMPONENT] . '" ' . Def::K_LAYOUT_EXTRA . '="'.$this->prop[Def::K_LAYOUT_EXTRA].'">'.
-      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'<span class="del">x</span><span class="down">v</span><span class="up">^</span></h3>'.
+      '<h3>'.$this->component[Def::K_COMPONENT_SUBJECT].'</h3>'.
       '<div class="co-Wbody">' . $this->component[Def::K_COMPONENT_DESCRIPTION] . '</div></div>';
   }
 
