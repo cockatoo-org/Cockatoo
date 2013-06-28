@@ -432,22 +432,27 @@ $(function () {
     $("span.del").click(function (ev) {
       var my = $(this).parents('div.co-Widget:first');
       my.appendTo($('#co-toolbar > div.co-Trash > div.co-Wbody'));
+      //preview();
     });
     $("span.up").click(function (ev) {
       var my = $(this).parents('div.co-Widget:first');
       my.insertBefore(my.prev());
+      preview();
     });
     $("span.down").click(function (ev) {
       var my = $(this).parents('div.co-Widget:first');
       my.insertAfter(my.next());
+      preview();
     });
     $("span.prev").click(function (ev) {
       var my = $(this).parents('div.co-Widget:first');
       my.insertBefore(my.parents('div.co-Widget:first'));
+      preview();
     });
     $("span.next").click(function (ev) {
       var my = $(this).parents('div.co-Widget:first');
       my.appendTo(my.next().find('div.co-Wbody:first'));
+      preview();
     });
 
   function widget_json(widget){
