@@ -58,7 +58,9 @@ div.co-Widget > h3 {
 
 div.co-Widget > h3 > span {
   color: #FFFFFF;
-  float:right;
+/*  float:right; */
+  position: absolute;
+  top: 0;
   cursor: pointer;
   margin  : 0 3px 0 0;
   padding : 0 0 16px 16px;
@@ -66,18 +68,23 @@ div.co-Widget > h3 > span {
 }
 div.co-Widget > h3 > span.prev {
   background-position: 0 -64px;
+  right:38px;
 }
 div.co-Widget > h3 > span.next {
   background-position: -32px -64px;
+  right:19px;
 }
 div.co-Widget > h3 > span.up {
   background-position: 0 -48px;
+  right:76px;
 }
 div.co-Widget > h3 > span.down {
   background-position: -64px -48px;
+  right:57px;
 }
 div.co-Widget > h3 > span.del {
   background-position: -96px -128px;
+  right:0;
 }
 
 div.co-Wbody {
