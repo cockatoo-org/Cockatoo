@@ -361,7 +361,7 @@ div.co-Wbody[over="true"] {
   display: block;
   position: fixed;
   overflow: visible;
-  z-index:99999;
+  z-index:1000;
   text-align: left;
   border: solid 1px #4444FF;
   border-radius: 4px;
@@ -369,6 +369,18 @@ div.co-Wbody[over="true"] {
 }
 div.co-Widget.cursor {
   border: 3px solid #EC0000;
+}
+#loading {
+  position:absolute;
+  height:100%;
+  width :100%;
+  z-index:9999;
+  opacity:0.6;
+  background-color:#888888;
+  color: #ffffff;
+  font-size: 50px;
+  text-align: center;
+  padding-top: 200px;
 }
 --></style>
 
@@ -485,7 +497,7 @@ $(function () {
       scroll: true,
       scrollSensitivity: 50,
       scrollSpeed: 50,
-      zIndex: 9999,
+      zIndex: 1000,
       // revert: true,
       helper: function(e,ui){
 	return $(this).clone();
@@ -497,7 +509,7 @@ $(function () {
       scroll: true,
       scrollSensitivity: 50,
       scrollSpeed: 50,
-      zIndex: 9999,
+      zIndex: 1000,
       revert: true
       // snap: true
     });
@@ -726,14 +738,14 @@ $(function () {
       return;
     }
     $("#co-main").children("div.co-Widget").each(function (){
- 	var ret = widget_json($(this));
+        var ret = widget_json($(this));
         $('#pform > input[name="layout"]').val($.toJSON(ret));
-        
       });
     $("#co-toolbar > div.co-Trash").children("div.co-Wbody").each(function (){
- 	var ret = $(this).html();
+        var ret = $(this).html();
         $('#pform > input[name="trash"]').val(ret);
       });
+    $('<div id="loading">Loading...</div>').prependTo('body');
     $('#pform').submit();
   }
   function fix(op,data){
