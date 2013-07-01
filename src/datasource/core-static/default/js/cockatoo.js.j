@@ -1,7 +1,7 @@
 {
 "etag":"\"c023a050-5721-4c87-22a9dc92a7d3ab0d\"",
 "type":"text/javascript",
-"exp":"3600",
+"exp":"0",
 "desc":"",
 "data":"// Extend string\r
 String.prototype.replaceAll = function (org, dest){  \r

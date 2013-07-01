@@ -191,6 +191,8 @@ $(function () {
       redirect   : { label: 'top page (301)' , type : 'text'},
       eredirect  : { label: 'error page (302)' , type : 'text'},
       layout     : { label: 'Layout editor' , type : 'html'},
+      pre_action  : { label: 'global pre  action', type : 'text'},
+      post_action : { label: 'global post action' , type : 'text'},
       session     : { label: 'default session object' , type : 'select', options : { use :1 , temporary: 0 , disable :-1} , def : 0},
       session_exp : { label: 'default session expire' , type : 'text' , def : 0},
       expires      : { label: 'expires header' , type : 'select', options : { enable :1, disable :0} , def : 0},
@@ -207,15 +209,21 @@ $(function () {
     },
     validator: {
       rules: {
-	name: {
+        name: {
           required: true
         },
-	session_exp: {
-	  number: true
-	},
-	expires_time: {
-	  number: true
-	}
+        pre_action: {
+          brl: true
+        },
+				post_action: {
+					brl: true
+				},
+				session_exp: {
+					number: true
+				},
+				expires_time: {
+					number: true
+				}
       }
     },
     change : function (data) { path.settings.args.service_id=data.service_id; path.settings.args.template_id=data.template_id; path.list();},

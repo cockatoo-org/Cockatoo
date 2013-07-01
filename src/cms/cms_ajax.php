@@ -82,6 +82,8 @@ try {
         $header     = $default_layout[Def::K_LAYOUT_HEADER];
         $pheader    = $default_layout[Def::K_LAYOUT_PHEADER];
         $bottom     = $default_layout[Def::K_LAYOUT_BOTTOM];
+        $pre_action = $default_layout[Def::K_LAYOUT_PRE_ACTION];
+        $post_action= $default_layout[Def::K_LAYOUT_POST_ACTION];
         $session_exp= $default_layout[Def::K_LAYOUT_SESSION_EXP];
         $expires    = $default_layout[Def::K_LAYOUT_EXPIRES];
         // css
@@ -100,6 +102,8 @@ try {
                      'redirect' => $redirect,
                      'css' => $css ,
                      'js' => $js,
+                     'pre_action' => $pre_action,
+                     'post_action' => $post_action,
                      'session' => $session_exp,
                      'session_exp' => $session_exp,
                      'expires'      => $expires,
@@ -118,10 +122,10 @@ try {
     $layout = array(Def::K_LAYOUT_TYPE => 'HorizontalWidget' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/horizontal#critical" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array(
                       array(Def::K_LAYOUT_TYPE => 'PageLayout' , Def::K_LAYOUT_COMPONENT => "component://core-component/default/pagelayout" , Def::K_LAYOUT_EXTRA => null ,  Def::K_LAYOUT_CHILDREN => array())
                       ));
-    setD(false,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
+    setD(false,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout);
   } elseif( $op === 'setD' ) {
     check_writable($service_id);
-    setD(true,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,null);
+    setD(true,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,null);
   } elseif( $op === 'getP' ) {
     if ( is_readable($service_id) ){
       $page_ids = getP($service_id,$template_id);
@@ -153,6 +157,7 @@ try {
       $CONTENT_DRAWER->components();
       $contents = '';
       $contents .= "$CONTENT_DRAWER->layoutBrl\n";
+      $contents .= " * $CONTENT_DRAWER->globalPreAction\n";
       $contents .= " * $CONTENT_DRAWER->preAction\n";
       foreach ( $CONTENT_DRAWER->componentDatas as $b => $c ) {
         $contents .= " - $b\n";
@@ -165,6 +170,7 @@ try {
         }
       }
       $contents .= " * $CONTENT_DRAWER->postAction\n";
+      $contents .= " * $CONTENT_DRAWER->globalPostAction\n";
       $r = array('rev'         => $CONTENT_DRAWER->layoutData[Beak::ATTR_REV],
                  'ctype'       => $CONTENT_DRAWER->ctype,
                  'pre_action'  => $CONTENT_DRAWER->preAction,

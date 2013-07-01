@@ -1,12 +1,13 @@
 {
-"@R":"1362019310",
+"@R":"1372661864",
 "eredirect":"",
 "redirect":"",
-"pre_action":"action:\/\/core-action\/Cockatoo\/AccountAction",
+"pre_action":"action://core-action/Cockatoo/AccountAction?set",
 "post_action":"",
 "session_exp":"86400",
 "expires":"0",
-"header":"<meta name=\"description\" content=\"\">\r\n",
+"header":"<meta name=\"description\" content=\"\">\r
+",
 "pheader":"",
 "bottom":"",
 "layout":{
@@ -17,12 +18,12 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/horizontal#critical",
+"component":"component://core-component/default/horizontal#critical",
 "children":[
 {
 "type":"HorizontalWidget",
 "extra":"",
-"component":"component:\/\/core-component\/default\/utils\/errmsg?get",
+"component":"component://core-component/default/utils/errmsg?get",
 "children":[
 
 ]
@@ -35,7 +36,7 @@
 "min_height":"",
 "min_width":"",
 "extra":"",
-"component":"component:\/\/core-component\/default\/utils\/profile?get",
+"component":"component://core-component/default/utils/profile?get",
 "children":[
 
 ]

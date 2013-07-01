@@ -37,6 +37,10 @@ class ContentDrawer {
   public    $componentDatas;
   public    $actionBrls;
   protected $actionResults;
+  public    $globalPreAction;
+  protected $globalPreActionResults;
+  public    $globalPostAction;
+  protected $globalPostActionResults;
   public    $preAction;
   protected $preActionResults;
   public    $postAction;
@@ -143,11 +147,12 @@ class ContentDrawer {
           return $datas[$this->baseLayoutBrl][Def::K_LAYOUT_REDIRECT]; // Redirect to Top page 
         }
       }
-
       $this->baseEredirect = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_EREDIRECT];
       $this->baseHeader    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_HEADER];
       $this->basePHeader   = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_PHEADER];
       $this->baseBottom    = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_BOTTOM];
+      $this->globalPreAction = $datas[$this->baseLayoutBrl][Def::K_LAYOUT_PRE_ACTION];
+      $this->globalPostAction= $datas[$this->baseLayoutBrl][Def::K_LAYOUT_POST_ACTION];
       $this->baseSessionExp= $datas[$this->baseLayoutBrl][Def::K_LAYOUT_SESSION_EXP];
 
       // Page layout
@@ -352,6 +357,10 @@ class ContentDrawer {
   }
 
   public function preAction() {
+    if ( $this->globalPreAction ) {
+      $brls = array($this->globalPreAction);
+      $this->globalPreActionResults = $this->doActions($brls);
+    }
     if ( $this->preAction ) {
       $brls = array($this->preAction);
       $this->preActionResults = $this->doActions($brls);
@@ -361,6 +370,10 @@ class ContentDrawer {
     if ( $this->postAction ) {
       $brls = array($this->postAction);
       $this->postActionResults = $this->doActions($brls);
+    }
+    if ( $this->globalPostAction ) {
+      $brls = array($this->globalPostAction);
+      $this->globalPostActionResults = $this->doActions($brls);
     }
   }
   public function actions() {
@@ -395,33 +408,27 @@ class ContentDrawer {
       }
     }
   }
+
+  private function prepareDrawActionResults(&$results){
+    if ( is_array($results) && count($results) > 0 ) {
+      foreach( $results as $brl => $rets ) {
+        if( $rets) {
+          $this->array2hdf($rets[2],$this->hdf,Def::CS_ACTION . ($rets[1]?'.'.$rets[1]:''));
+        }
+      }
+    }
+  }
   public function prepareDraw() {
     // template variable (hdf)
     $this->hdf = \hdf_init();
     if ( $this->core ) {
       $this->array2hdf($this->core,$this->hdf,Def::CS_CORE);
     }
-    if ( is_array($this->preActionResults) && count($this->preActionResults) > 0 ) {
-      foreach( $this->preActionResults as $brl => $rets ) {
-        if( $rets) {
-          $this->array2hdf($rets[2],$this->hdf,Def::CS_ACTION . ($rets[1]?'.'.$rets[1]:''));
-        }
-      }
-    }
-    if ( is_array($this->actionResults) && count($this->actionResults) > 0 ) {
-      foreach( $this->actionResults as $brl => $rets ) {
-        if ( $rets ) {
-          $this->array2hdf($rets[2],$this->hdf,Def::CS_ACTION . ($rets[1]?'.'.$rets[1]:''));
-        }
-      }
-    }
-    if ( is_array($this->postActionResults) && count($this->postActionResults) > 0 ) {
-      foreach( $this->postActionResults as $brl => $rets ) {
-        if( $rets) {
-          $this->array2hdf($rets[2],$this->hdf,Def::CS_ACTION . ($rets[1]?'.'.$rets[1]:''));
-        }
-      }
-    }
+    $this->prepareDrawActionResults($this->globalPreActionResults);
+    $this->prepareDrawActionResults($this->preActionResults);
+    $this->prepareDrawActionResults($this->actionResults);
+    $this->prepareDrawActionResults($this->postActionResults);
+    $this->prepareDrawActionResults($this->globalPostActionResults);
     if ( $this->session ) {
       $this->array2hdf($this->session,$this->hdf,Def::CS_SESSION);
     }

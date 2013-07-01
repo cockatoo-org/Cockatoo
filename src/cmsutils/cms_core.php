@@ -27,7 +27,7 @@ function getP($service_id,$template_id){
   return $page_layout;
 }
 
-function setD($flg,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
+function setD($flg,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$pre_action,$post_action,$session_exp,$expires_time,$header,$pheader,$bottom,$layout){
   if ( preg_match('@\s@',$template_id,$matches) !== 0 ) { 
     throw new \Exception('Cannot use blank-charactor as TEMPLATE : ' . $page_id);
   }
@@ -64,6 +64,8 @@ function setD($flg,$rev,$service_id,$template_id,$eredirect,$redirect,$css,$js,$
   $default_layout[Def::K_LAYOUT_HEADER]      = $header;
   $default_layout[Def::K_LAYOUT_PHEADER]     = $pheader;
   $default_layout[Def::K_LAYOUT_BOTTOM]      = $bottom;
+  $default_layout[Def::K_LAYOUT_PRE_ACTION]  = $pre_action;
+  $default_layout[Def::K_LAYOUT_POST_ACTION] = $post_action;
   $default_layout[Def::K_LAYOUT_SESSION_EXP] = $session_exp;
   $default_layout[Def::K_LAYOUT_EXPIRES]     = $expires_time;
   $brl = brlgen(Def::BP_LAYOUT,$service_id,$template_id,'/',Beak::M_SET,array(),array(Beak::COMMENT_KIND_REV));

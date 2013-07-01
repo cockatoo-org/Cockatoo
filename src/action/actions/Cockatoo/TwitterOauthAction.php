@@ -70,9 +70,6 @@ class TwitterOauthAction extends AccountAction {
     $this->setMovedTemporary($authURL);
     return $user_data;
   }
-  protected function already_hook(&$user_data) {
-    return $user_data;
-  }
 
   public function postProc(){
   }

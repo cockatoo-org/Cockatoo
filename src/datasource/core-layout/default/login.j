@@ -2,7 +2,7 @@
 "@R":"1362018512",
 "eredirect":"",
 "redirect":"",
-"pre_action":"action:\/\/core-action\/Cockatoo\/AccountAction",
+"pre_action":"",
 "post_action":"",
 "session_exp":"86400",
 "expires":"0",

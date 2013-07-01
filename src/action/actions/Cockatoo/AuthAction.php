@@ -21,13 +21,8 @@ abstract class AuthAction extends Action {
 
   protected $NAMESPACE = 'login';
 
-  protected function first_hook() {}
   abstract protected function login_hook(&$user_data);
-  abstract protected function already_hook(&$user_data);
 
-  protected function success_hook(&$user_data){
-    return $user_data;
-  }
   protected function error_hook(&$e){
     $s[Def::SESSION_KEY_ERROR] = $e->getMessage();
     $this->updateSession($s);
@@ -35,16 +30,59 @@ abstract class AuthAction extends Action {
     Log::error(__CLASS__ . '::' . __FUNCTION__ . $e->getMessage(),$e);
   }
 
-
+  public function get(){
+    try {
+      $this->setNamespace($NAMESPACE);
+      $now = time();
+      $session = $this->getSession();
+      $user_data = $session[AccountUtil::SESSION_LOGIN];
+      if ( $user_data && $user_data[AccountUtil::KEY_USER] ) {
+        // Validate user_data
+        if ( $user_data[AccountUtil::KEY_EXPIRES] < $now ) {
+          $user_data = null;
+        }else{
+          $user_data[AccountUtil::KEY_EXPIRES] = $now + $this->EXPIRES;
+        }
+        $s[AccountUtil::SESSION_LOGIN] = $user_data;
+        $this->updateSession($s);
+      }
+    }catch ( \Exception $e ) {
+      $s[AccountUtil::SESSION_LOGIN] = null;
+      $this->updateSession($s);
+      $this->error_hook($e);
+    }
+    return array();
+  }  
+  public function set(){
+    try {
+      $this->setNamespace($NAMESPACE);
+      $now = time();
+      $session = $this->getSession();
+      $user_data = $session[AccountUtil::SESSION_LOGIN];
+      $user_data = $this->login_hook($user_data);
+      if ( $user_data && $user_data[AccountUtil::KEY_USER] ) {
+        $user_data[AccountUtil::KEY_EXPIRES] = $now + $this->EXPIRES;
+      }
+      $s[AccountUtil::SESSION_LOGIN] = $user_data;
+      $this->updateSession($s);
+    }catch ( \Exception $e ) {
+      $s[AccountUtil::SESSION_LOGIN] = null;
+      $this->updateSession($s);
+      $this->error_hook($e);
+    }
+    return array();
+  }
+/*
   final public function proc(){
     try {
       $this->first_hook();
       $this->setNamespace($NAMESPACE);
       $now = time();
-
+      
       $session = $this->getSession();
       $user_data = $session[AccountUtil::SESSION_LOGIN];
       if ( $user_data && $user_data[AccountUtil::KEY_USER] ) {
+        // Validate user_data
         $user_data = $session[AccountUtil::SESSION_LOGIN];
         if ( $user_data[AccountUtil::KEY_EXPIRES] < $now ) {
           throw new \Exception('Login expired !! : ' );
@@ -71,6 +109,7 @@ abstract class AuthAction extends Action {
     }
     return array();
   }
+*/
   public function postProc(){
   }
 }

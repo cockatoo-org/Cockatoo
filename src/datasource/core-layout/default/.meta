@@ -1,14 +1,14 @@
 {
-"@R":"1362993264",
+"@R":"1372661876",
 "eredirect":"",
 "layout":{
 "type":"HorizontalWidget",
-"component":"component:\/\/core-component\/default\/horizontal#critical",
+"component":"component://core-component/default/horizontal#critical",
 "extra":null,
 "children":[
 {
 "type":"PageLayout",
-"component":"component:\/\/core-component\/default\/pagelayout",
+"component":"component://core-component/default/pagelayout",
 "extra":null,
 "children":[
 
@@ -16,11 +16,17 @@
 }
 ]
 },
-"header":"<meta http-equiv=\"content-type\" content=\"text\/html; charset=utf-8\">\r\n<meta http-equiv=\"content-style-type\" content=\"text\/css\">\r\n<meta http-equiv=\"content-script-type\" content=\"text\/javascript\">\r\n",
+"header":"<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\r
+<meta http-equiv=\"content-style-type\" content=\"text/css\">\r
+<meta http-equiv=\"content-script-type\" content=\"text/javascript\">\r
+",
 "pheader":"",
-"bottom":"<script type=\"text\/javascript\" src=\"\/_s_\/core\/default\/js\/jquery-1.7.2.min.js\"><\/script>\r\n",
+"bottom":"<script type=\"text/javascript\" src=\"/_s_/core/default/js/jquery-1.7.2.min.js\"></script>\r
+",
 "session_exp":"-1",
 "expires":"0",
 "_u":"",
-"redirect":""
+"redirect":"",
+"pre_action":"action://core-action/Cockatoo/AccountAction?get",
+"post_action":""
 }

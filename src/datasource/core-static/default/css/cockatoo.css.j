@@ -1,7 +1,7 @@
 {
 "etag":"\"6fbeecf5-2a08-c93c-e1b10aff7dfd0b2b\"",
 "type":"text/css",
-"exp":"3600",
+"exp":"0",
 "desc":"",
 "data":"#co-frame {\r
 }\r

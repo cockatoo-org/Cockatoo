@@ -1,17 +1,119 @@
 {
-"@R":"1364285688",
+"@R":"1372663095",
 "type":"HorizontalWidget",
 "subject":"login",
 "description":"login",
-"css":"#login form {\r\n  display:inline;\r\n}\r\n#login {\r\n  text-align:center;\r\n}\r\n#login div.input {\r\n    text-align: left;\r\n}\r\n#login div.input > h6 {\r\n    margin:0;\r\n    padding:0;\r\n    text-align: left;\r\n    width: 80px;\r\n}\r\n#login  div.user {\r\n\/*   float: right;  *\/\r\n}\r\n#login  div.user > span {\r\n\/*  color: blue; *\/\r\n}\r\n\r\n#login h5 {\r\n  margin: 0 0 0 0;\r\n  padding: 0 2px 0 2px;\r\n  font-size: 1.2em;\r\n}\r\n#login div.input > input[type=\"text\"],\r\n#login div.input > input[type=\"password\"] {\r\n    margin: 0 0 0 0;\r\n    padding: 0 0 0 0;\r\n    position: relative;\r\n    text-align: left;\r\n    width: 180px;\r\n }\r\n\r\n#login div.oauth  {\r\n  font-size: 0.8em;\r\n}\r\n\r\n#login div.oauth img {\r\n  height:16px;\r\n  width:16px;\r\n}\r\n",
-"js":"",
+"css":"#login form {\r
+  display:inline;\r
+}\r
+#login {\r
+  text-align:center;\r
+}\r
+#login div.input {\r
+    text-align: left;\r
+}\r
+#login div.input > h6 {\r
+    margin:0;\r
+    padding:0;\r
+    text-align: left;\r
+    width: 80px;\r
+}\r
+#login  div.user {\r
+/*   float: right;  */\r
+}\r
+#login  div.user > span {\r
+/*  color: blue; */\r
+}\r
+\r
+#login h5 {\r
+  margin: 0 0 0 0;\r
+  padding: 0 2px 0 2px;\r
+  font-size: 1.2em;\r
+}\r
+#login div.input > input[type=\"text\"],\r
+#login div.input > input[type=\"password\"] {\r
+    margin: 0 0 0 0;\r
+    padding: 0 0 0 0;\r
+    position: relative;\r
+    text-align: left;\r
+    width: 180px;\r
+ }\r
+\r
+\r
+#login div.oauth div {\r
+  border-radius: 4px;\r
+  border-style: solid;\r
+  border-width: 1px;\r
+//  border-color: #2020cc;\r
+  margin: 5px auto;\r
+  padding: 5px;\r
+  width: 300px;\r
+}\r
+#login div.oauth div a {\r
+  font-size: 1.8em;\r
+}\r
+\r
+#login div.oauth img {\r
+  height:16px;\r
+  width:16px;\r
+}\r
+#login div.admin {\r
+  float: right;\r
+  padding: 5px;\r
+  width: 200px;\r
+}\r
+#login div.admin a.admin {\r
+  cursor: pointer;\r
+}\r
+#login div.admin form {\r
+  display: none;\r
+}\r
+",
+"js":"$(function(){\r
+  $('#login div.admin a.admin').click(function(ev){\r
+    $(this).next('form').slideToggle();\r
+  });\r
+});",
 "id":"login",
-"class":"core",
-"body":"<?cs if: S.login.user ?>\r\n<div class=\"window\">\r\n <div class=\"user\">\r\n   Welcome <span><?cs var:S.login.user ?><\/span>\r\n <div>\r\n <form method=\"POST\" action=\"<?cs var:C._base ?>\/profile\">\r\n   <?cs if:?S._g.r ?>\r\n   <input name=\"r\" type=\"hidden\" value=\"<?cs var:S._g.r ?>\" \/>\r\n   <?cs \/if ?> \r\n   <input name=\"submit\" type=\"submit\" value=\"logout\" \/>\r\n <\/form>\r\n <form method=\"GET\" action=\"<?cs var:C._base ?>\/profile\">\r\n   <?cs if:?S._g.r ?>\r\n   <input name=\"r\" type=\"hidden\" value=\"<?cs var:S._g.r ?>\" \/>\r\n   <?cs \/if ?> \r\n   <input name=\"submit\" type=\"submit\" value=\"profile\" \/>\r\n <\/form>\r\n <\/div>\r\n<?cs if: S.login.root ?>\r\n<a id=\"reset\" href=\"<?cs var:C._base ?>\/admin\">admin tool<\/a>\r\n<?cs \/if ?>\r\n <\/div>\r\n<\/div>\r\n<?cs else ?>\r\n<div class=\"window\">\r\n  <form method=\"POST\" action=\"<?cs var:C._base ?>\/login\">\r\n   <div class=\"input\"><h6>User<\/h6> <input name=\"user\" type=\"text\" value=\"\" \/><\/div>\r\n   <div class=\"input\"><h6>Password<\/h6> <input name=\"passwd\" type=\"password\" value=\"\" \/><\/div>\r\n   <?cs if:?S._g.r ?>\r\n   <div class=\"input\"><input name=\"r\" type=\"hidden\" value=\"<?cs var:S._g.r ?>\" \/><\/div>\r\n   <?cs \/if ?> \r\n   <div class=\"input\"> <input name=\"submit\" type=\"submit\" value=\"login\" \/><input name=\"submit\" type=\"submit\" value=\"password reset\" \/><\/div>\r\n  <\/form>\r\n  <div class=\"oauth\">\r\n  <div class=\"twitter\">\r\n  <a href=\"<?cs var:C._base ?>\/logintwitter?r=<?cs if:S._g.r ?><?cs var:S._g.r ?><?cs else ?><?cs var:S._r._eurl ?><?cs \/if ?>\"><img src=\"\/_s_\/core\/default\/twitter.gif\" alt=\"twitter oauth\"><\/img> Twitter\u3067\u30ed\u30b0\u30a4\u30f3<\/a>\r\n  <\/div>\r\n  <div class=\"google\">  \r\n  <a href=\"<?cs var:C._base ?>\/logingoogle?r=<?cs if:S._g.r ?><?cs var:S._g.r ?><?cs else ?><?cs var:S._r._eurl ?><?cs \/if ?>\"><img src=\"\/_s_\/core\/default\/google.gif\" alt=\"google oauth\"><\/img> Google\u3067\u30ed\u30b0\u30a4\u30f3<\/a>\r\n  <\/div>\r\n  <\/div>\r\n<\/div>\r\n<?cs \/if ?>\r\n\r\n",
+"class":"",
+"body":"<?cs if: S.login.user ?>\r
+<div class=\"window\">\r
+ <div class=\"user\">\r
+   Welcome <span><?cs var:S.login.user ?></span>\r
+<?cs if: S.login.root ?>\r
+<a id=\"reset\" href=\"<?cs var:C._base ?>/admin\">admin tool</a>\r
+<?cs /if ?>\r
+ </div>\r
+</div>\r
+<?cs else ?>\r
+<div class=\"window\">\r
+  <div class=\"oauth\">\r
+  <div class=\"twitter\">\r
+  <a href=\"<?cs var:C._base ?>/logintwitter?r=<?cs if:S._g.r ?><?cs var:S._g.r ?><?cs else ?><?cs var:S._r._eurl ?><?cs /if ?>\"><img src=\"/_s_/core/default/twitter.gif\" alt=\"twitter oauth\"></img> Twitter\u3067\u30ed\u30b0\u30a4\u30f3</a>\r
+  </div>\r
+  <div class=\"google\">  \r
+  <a href=\"<?cs var:C._base ?>/logingoogle?r=<?cs if:S._g.r ?><?cs var:S._g.r ?><?cs else ?><?cs var:S._r._eurl ?><?cs /if ?>\"><img src=\"/_s_/core/default/google.gif\" alt=\"google oauth\"></img> Google\u3067\u30ed\u30b0\u30a4\u30f3</a>\r
+  </div>\r
+  </div>\r
+  <div class=\"admin\">\r
+  <a class=\"admin\">\u7ba1\u7406\u8005\u30c4\u30fc\u30eb</a>\r
+  <form method=\"POST\" action=\"<?cs var:C._base ?>/profile?r=<?cs if:S._g.r ?><?cs var:S._g.r ?><?cs else ?><?cs var:S._r._eurl ?><?cs /if ?>\">\r
+   <div class=\"input\"><h6>User</h6> <input name=\"user\" type=\"text\" value=\"\" /></div>\r
+   <div class=\"input\"><h6>Password</h6> <input name=\"passwd\" type=\"password\" value=\"\" /></div>\r
+   <?cs if:?S._g.r ?>\r
+   <div class=\"input\"><input name=\"r\" type=\"hidden\" value=\"<?cs var:S._g.r ?>\" /></div>\r
+   <?cs /if ?> \r
+   <div class=\"input\"> <input name=\"submit\" type=\"submit\" value=\"login\" /><input name=\"submit\" type=\"submit\" value=\"password reset\" /></div>\r
+  </form>\r
+  </div>\r
+</div>\r
+<?cs /if ?>\r
+\r
+",
 "action":[
 ""
 ],
-"_u":"utils\/login",
+"_u":"utils/login",
 "header":"",
 "bottom":""
 }
