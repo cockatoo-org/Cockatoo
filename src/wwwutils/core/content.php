@@ -53,6 +53,7 @@ class ContentDrawer {
   protected $core;
   protected $hdf;
   protected $cs;
+  protected $encoding;
 
   public function __construct ($service,$template,$path,$args,$session_path,$mode) {
     $this->service      = $service;
@@ -418,7 +419,20 @@ class ContentDrawer {
       }
     }
   }
+  public function startEncode(){
+    if ( isset($this->args[Def::ARGS_ENCODING]))  {
+      ob_start();
+    }
+  }
+  public function endEncode(){
+    if ( isset($this->args[Def::ARGS_ENCODING]))  {
+      $orgout = ob_get_contents();
+      ob_end_clean();
+      print mb_convert_encoding($orgout,$this->args[Def::ARGS_ENCODING]);
+    }
+  }
   public function prepareDraw() {
+
     // template variable (hdf)
     $this->hdf = \hdf_init();
     if ( $this->core ) {

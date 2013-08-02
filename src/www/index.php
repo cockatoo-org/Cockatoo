@@ -54,18 +54,22 @@ try {
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
       $CONTENT_DRAWER->postAction();
+      $CONTENT_DRAWER->startEncode();
       $CONTENT_DRAWER->prepareDraw();
       $CONTENT_DRAWER->drawPHeader('text/html');
       Include Config::COCKATOO_ROOT.'wwwutils/core/frame.php';
+      $CONTENT_DRAWER->endEncode();
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_PLAIN) === 0 ) {
       $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE);
       $CONTENT_DRAWER->components();  
       $CONTENT_DRAWER->preAction();  
       $CONTENT_DRAWER->actions();  
       $CONTENT_DRAWER->postAction();
+      $CONTENT_DRAWER->startEncode();
       $CONTENT_DRAWER->prepareDraw();
       $CONTENT_DRAWER->drawPHeader('text/plain');
       $CONTENT_DRAWER->drawMain();
+      $CONTENT_DRAWER->endEncode();
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_JSON) === 0 ) {
       $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE);
       $CONTENT_DRAWER->components();  
@@ -75,8 +79,10 @@ try {
       if ( Config::Mode === Def::MODE_DEBUG ) {
         $CONTENT_DRAWER->prepareDraw();
       }
+      $CONTENT_DRAWER->startEncode();
       $CONTENT_DRAWER->drawPHeader('text/javascript');
       $CONTENT_DRAWER->drawJson();
+      $CONTENT_DRAWER->endEncode();
     } elseif ( strcmp($CONTENT_DRAWER->ctype,Def::K_LAYOUT_CTYPE_BIN) === 0 ) {
       $CONTENT_DRAWER->session($HEADER,$_SERVER,$POST,$_GET,$_COOKIE);
 //      $CONTENT_DRAWER->tmpSession($HEADER,$_SERVER,$POST,$_GET,$_COOKIE);

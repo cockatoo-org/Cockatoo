@@ -150,6 +150,7 @@ class Def {
   const  CS_CORE_FULLURL          = '_url';
   const  CS_CORE_FULLEURL         = '_eurl';
 
+  const  ARGS_ENCODING            = '_ENC';
 
   const  MODE_NORMAL              = 0;
   const  MODE_DEBUG               = 1;
@@ -338,6 +339,7 @@ abstract class DefaultConfig {
       if ( Config::Mode == Def::MODE_DEBUG ) {
         ini_set('display_errors','On');
       }
+      mb_internal_encoding('utf-8');
     }
   }
   //abstract public static function init();
