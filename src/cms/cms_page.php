@@ -185,9 +185,9 @@ $(function () {
     form : {
       rev        : { label: '' , type : 'hidden' },
       template_id        : { label: '' , type : 'hidden' },
-      name       : { label: 'Template' , type : 'text'},
+      name       : { label: 'Template' , type : 'text', def : 'default'},
 /*    template     : { label: 'template type' , type : 'select', options : { default :'default', iPhone :'iphone', iPad :'ipad', Android :'android', Xperia :'xperia', GALAPAGOS :'galapagos', au : 'au' , softbank : 'softbank' , docomo : 'docomo' } , def : 'default'},  */
-      template     : { label: 'template type' , type : 'text', def : 'default'},
+/*      template     : { label: 'template type' , type : 'text', def : 'default'}, */
       redirect   : { label: 'top page (301)' , type : 'text'},
       eredirect  : { label: 'error page (302)' , type : 'text'},
       layout     : { label: 'Layout editor' , type : 'html'},
