@@ -119,9 +119,9 @@ $(function () {
     dialog : { width: 500 , height: 150  , post_init: function ( root ) { 
       var $kind = root.attr('kind');
       root.find('input[name="layout"]').attr("readonly","readonly");
+      var $sname = root.find('input[name="name"]');
       if ( $kind == 'update') {
-	var $sname = root.find('input[name="name"]');
-	  $sname.attr("readonly","readonly");
+        $sname.attr("readonly","readonly");
       }
     }},
     form : {
@@ -154,8 +154,8 @@ $(function () {
     dialog : { width: 600 , height: 630 , post_init: function ( root ) { 
       var $kind = root.attr('kind');
       var $sname = root.find('input[name="name"]');
-	$sname.attr("readonly","readonly");
       if ( $kind == 'update' || $kind == 'del') {
+        $sname.attr("readonly","readonly");
         var $select = root.find('input[name="template"]').attr("readonly","readonly");
       }
       if ( $kind == 'update' || $kind == 'del') {
@@ -245,52 +245,52 @@ $(function () {
       root.find('input[name="layout"]').attr("readonly","readonly");
       //root.find('textarea[name="contents"]').attr("readonly","readonly");
       root.find('textarea[name="contents"]').attr("disabled","disabled");
+      var $sname = root.find('input[name="name"]');
       if ( $kind == 'update') {
-	var $sname = root.find('input[name="name"]');
-	  $sname.attr("readonly","readonly");
+        $sname.attr("readonly","readonly");
       }
       var $session = root.find('select[name="session"]');
-	$session.change( function (){
+      $session.change( function (){
           var $session_exp = $(this).parents('form').find('input[name="session_exp"]');
-	    $session_exp.removeAttr('readonly');
-	    $session_exp.val($(this).val());
+          $session_exp.removeAttr('readonly');
+          $session_exp.val($(this).val());
           if ( $(this).val() == -1 ) {
-	      $session_exp.attr('readonly','readonly');
+            $session_exp.attr('readonly','readonly');
           }else if ( $(this).val() == 0 ) {
-	      $session_exp.attr('readonly','readonly');
+            $session_exp.attr('readonly','readonly');
           } else if ( $(this).val() == 0x7fffffff ) {
-	      $session_exp.attr('readonly','readonly');
-	  }
+            $session_exp.attr('readonly','readonly');
+          }
         });
       var $expires = root.find('select[name="expires"]');
-	$expires.change( function (){
-	  var $expires_time = $(this).parents('form').find('input[name="expires_time"]');
-	    $expires_time.removeAttr('readonly');
-	    $expires_time.val($(this).val());
+      $expires.change( function (){
+          var $expires_time = $(this).parents('form').find('input[name="expires_time"]');
+          $expires_time.removeAttr('readonly');
+          $expires_time.val($(this).val());
           if ( $(this).val() == 0 ) {
-	      $expires_time.attr('readonly','readonly');
-	  }
+            $expires_time.attr('readonly','readonly');
+          }
         });
       var $ctype = root.find('select[name="_ctype"]');
-	$ctype.change( function(){
-	    $('input[name="ctype"]').val($(this).val());
-	  if ( $(this).val() === 'plain' ) {
-	    $('textarea[name="header"]').attr('disabled','disabled');
-	  }else if ( $(this).val() === 'json' ) {
-	    $('textarea[name="header"]').attr('disabled','disabled');
-	  }else if ( $(this).val() === 'binary' ) {
-	    $('textarea[name="header"]').attr('disabled','disabled');
-	  }else if ( $(this).val() === 'html' ) {
-	    $('textarea[name="header"]').removeAttr('disabled');
-	  }
-	  $(':input').show();
-	  $(':input[disabled]').hide();
-	});
-	$ctype.val($('input[name="ctype"]').val());
-	$ctype.change();
-	$ctype.attr('disabled','disabled');
-    }},
-    form : {
+      $ctype.change( function(){
+          $('input[name="ctype"]').val($(this).val());
+          if ( $(this).val() === 'plain' ) {
+            $('textarea[name="header"]').attr('disabled','disabled');
+          }else if ( $(this).val() === 'json' ) {
+            $('textarea[name="header"]').attr('disabled','disabled');
+          }else if ( $(this).val() === 'binary' ) {
+            $('textarea[name="header"]').attr('disabled','disabled');
+          }else if ( $(this).val() === 'html' ) {
+            $('textarea[name="header"]').removeAttr('disabled');
+          }
+          $(':input').show();
+          $(':input[disabled]').hide();
+        });
+      $ctype.val($('input[name="ctype"]').val());
+      $ctype.change();
+      $ctype.attr('disabled','disabled');
+        }},
+        form : {
       rev   : { label: '' , type : 'hidden' },
       page_id   : { label: '' , type : 'hidden' },
       name  : { label: 'Path' , type : 'text'},
